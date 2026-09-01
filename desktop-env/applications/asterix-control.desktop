@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Command & Control Hub
+GenericName=Security Control Center
+Comment=Next-Gen Cybernetic Security Platform Master Control Center
+Exec=x-terminal-emulator -T "ASTERIX CONTROL HUB" -e "/usr/local/bin/asterix"
+Icon=utilities-terminal
+Terminal=false
+Categories=System;Security;Network;
+StartupNotify=true
+Keywords=asterix;security;nmap;metasploit;wireshark;persistence;

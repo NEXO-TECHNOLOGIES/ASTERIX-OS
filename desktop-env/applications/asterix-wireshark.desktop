@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Wireshark Packet Sniffer
+GenericName=Packet Analyzer
+Comment=Deep packet inspection and real-time protocol analysis
+Exec=wireshark
+Icon=wireshark
+Terminal=false
+Categories=Network;Security;
+StartupNotify=true
+Keywords=network;sniffer;packet;pcap;tshark;

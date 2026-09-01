@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Persistence Storage Vault
+GenericName=Persistent Vault Manager
+Comment=Manage encrypted persistent storage, scan reports, and loot archives
+Exec=x-terminal-emulator -T "ASTERIX PERSISTENCE VAULT" -e "/usr/local/bin/asterix --menu"
+Icon=drive-harddisk
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true
+Keywords=persistence;vault;storage;backup;loot;

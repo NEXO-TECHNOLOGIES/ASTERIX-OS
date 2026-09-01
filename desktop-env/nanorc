@@ -1,0 +1,17 @@
+# =====================================================================
+# ASTERIX OS - Nano Editor Cyber Configuration
+# Enables syntax highlighting, line numbers, and mouse support
+# =====================================================================
+
+# Editor Interface
+set linenumbers
+set mouse
+set smooth
+set autoindent
+set constantshow
+set tabsize 4
+set tabstospaces
+set boldtext
+
+# Include default syntax highlighting rules
+include "/usr/share/nano/*.nanorc"

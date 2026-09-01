@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Metasploit Framework
+GenericName=Security Auditing Framework
+Comment=Exploit development, security auditing, and payload generation suite
+Exec=x-terminal-emulator -T "METASPLOIT FRAMEWORK" -e "msfconsole"
+Icon=utilities-terminal
+Terminal=false
+Categories=Security;Auditing;
+StartupNotify=true
+Keywords=metasploit;msf;exploit;payload;audit;

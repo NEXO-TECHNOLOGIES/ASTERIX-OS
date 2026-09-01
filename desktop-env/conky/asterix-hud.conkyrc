@@ -1,0 +1,68 @@
+conky.config = {
+    alignment = 'top_right',
+    background = true,
+    border_width = 1,
+    cpu_avg_samples = 2,
+    default_color = '#e2e8f0',
+    default_outline_color = '#00f0ff',
+    default_shade_color = '#000000',
+    double_buffer = true,
+    draw_borders = true,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+    extra_newline = false,
+    font = 'Fira Code:size=10',
+    gap_x = 30,
+    gap_y = 50,
+    minimum_height = 5,
+    minimum_width = 320,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_ncurses = false,
+    out_to_stderr = false,
+    out_to_x = true,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'desktop',
+    own_window_transparent = false,
+    own_window_argb_visual = true,
+    own_window_argb_value = 200,
+    own_window_colour = '#090c14',
+    show_graph_range = false,
+    show_graph_scale = false,
+    stippled_borders = 0,
+    update_interval = 1.0,
+    uppercase = false,
+    use_spacer = 'none',
+    use_xft = true,
+}
+
+conky.text = [[
+${color #00f0ff}${font Orbitron:size=14:bold}ASTERIX OS${font} ${color #ff007f}v1.0-SEC$color
+${color #00f0ff}${hr 2}$color
+${color #8492a6}HOST:$color $nodename ${alignr}${color #8492a6}UPTIME:$color $uptime
+${color #8492a6}KERNEL:$color $kernel ${alignr}${color #8492a6}ARCH:$color $machine
+
+${color #00f0ff}${font Orbitron:size=10:bold}SUBSYSTEM METRICS$font$color
+${color #8492a6}CPU:$color ${cpu cpu0}% ${color #00f0ff}${cpubar 6,180}$color
+${color #8492a6}RAM:$color $mem/$memmax ${color #ff007f}${membar 6,160}$color
+${color #8492a6}ROOT FS:$color ${fs_used /}/${fs_size /} ${color #00ff88}${fs_bar 6,140 /}$color
+
+${color #00f0ff}${font Orbitron:size=10:bold}PERSISTENCE STATUS$font$color
+${if_existing /asterix_persistent}${color #00ff88}[✔] PERSISTENCE ACTIVE (/asterix_persistent)$color
+${color #8492a6}VAULT USAGE:$color ${fs_used /asterix_persistent}/${fs_size /asterix_persistent}
+${else}${color #fbee0e}[i] SIMULATED [Local Storage Mode]$color
+${endif}
+${color #00f0ff}${font Orbitron:size=10:bold}NETWORK ADAPTERS$font$color
+${color #8492a6}LOCAL IP:$color ${addr eth0}
+${color #8492a6}DOWN:$color ${downspeed eth0} ${alignr}${color #8492a6}UP:$color ${upspeed eth0}
+
+${color #00f0ff}${font Orbitron:size=10:bold}KEYBOARD MATRIX$font$color
+${color #00f0ff}Ctrl + Alt + T$color ${alignr}ASTERIX Terminal
+${color #00f0ff}Ctrl + A then |$color ${alignr}Vertical Split
+${color #00f0ff}Ctrl + A then -$color ${alignr}Horizontal Split
+${color #00f0ff}Super + D$color      ${alignr}Application Menu
+${color #00f0ff}${hr 2}$color
+]]

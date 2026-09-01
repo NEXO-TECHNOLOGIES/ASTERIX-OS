@@ -1,0 +1,15 @@
+# Build artifacts & binaries
+target/
+*.iso
+*.img
+*.qcow2
+*.log
+asterix-live-build/
+desktop-env/plymouth/frames/*.png
+
+# OS metadata & temporary files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak

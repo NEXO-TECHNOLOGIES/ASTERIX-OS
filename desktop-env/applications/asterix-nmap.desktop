@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Nmap Network Scanner
+GenericName=Network Scanner
+Comment=Network discovery, vulnerability detection, and port auditing
+Exec=x-terminal-emulator -T "ASTERIX NMAP SCANNER" -e "nmap -h"
+Icon=utilities-terminal
+Terminal=false
+Categories=Network;Security;
+StartupNotify=true
+Keywords=nmap;scan;ports;host;network;

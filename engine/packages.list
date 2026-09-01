@@ -1,0 +1,97 @@
+# =====================================================================
+# ASTERIX OS - Core Package Manifest
+# =====================================================================
+
+# Core System & Shell
+bash
+zsh
+tmux
+screen
+htop
+neofetch
+btop
+curl
+wget
+git
+sudo
+ca-certificates
+gnupg
+lsb-release
+pciutils
+usbutils
+
+# Network Analysis & Diagnostics
+wireshark
+tshark
+tcpdump
+netcat-traditional
+netcat-openbsd
+socat
+nmap
+ettercap-text-only
+dsniff
+iptables
+nftables
+dnsutils
+traceroute
+whois
+aircrack-ng
+macchanger
+
+# Text Editors & Code Development
+nano
+vim
+micro
+build-essential
+clang
+gcc
+g++
+make
+gdb
+rustc
+cargo
+golang-go
+
+# Terminal UI & Python Runtime
+python3
+python3-pip
+python3-venv
+python3-rich
+python3-dev
+dialog
+whiptail
+
+# Storage & Persistence Tools
+fdisk
+parted
+e2fsprogs
+dosfstools
+cryptsetup
+rsync
+
+# Desktop Environment & Graphical Home Screen
+xfce4
+xfce4-terminal
+xfce4-panel
+xfce4-whiskermenu-plugin
+xfce4-settings
+lightdm
+lightdm-gtk-greeter
+conky-all
+feh
+picom
+nitrogen
+x11-xserver-utils
+desktop-file-utils
+
+# Boot & Graphical / Plymouth Splash
+plymouth
+plymouth-themes
+grub-efi-amd64-bin
+grub-pc-bin
+syslinux
+syslinux-utils
+isolinux
+live-boot
+live-config
+live-config-systemd
