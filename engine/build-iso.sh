@@ -138,9 +138,44 @@ fi
 # Make helper scripts executable and symlink globally
 chmod +x config/includes.chroot/etc/asterix/*.sh 2>/dev/null || true
 chmod +x config/includes.chroot/etc/asterix/ui-core/*.sh 2>/dev/null || true
+chmod +x config/includes.chroot/etc/asterix/scripts-hub/*.sh 2>/dev/null || true
 ln -sf /etc/asterix/ui-core/asterix-discord.sh config/includes.chroot/usr/local/bin/as-discord 2>/dev/null || true
 ln -sf /etc/asterix/ui-core/asterix-web-portal.sh config/includes.chroot/usr/local/bin/as-portal 2>/dev/null || true
 ln -sf /etc/asterix/ui-core/asterix-cloud.sh config/includes.chroot/usr/local/bin/as-cloud 2>/dev/null || true
+ln -sf /etc/asterix/scripts-hub/net-recon.sh config/includes.chroot/usr/local/bin/as-netrecon 2>/dev/null || true
+ln -sf /etc/asterix/scripts-hub/dev-bootstrap.sh config/includes.chroot/usr/local/bin/as-scaffold 2>/dev/null || true
+ln -sf /etc/asterix/scripts-hub/secure-cleanup.sh config/includes.chroot/usr/local/bin/as-cleanup 2>/dev/null || true
+ln -sf /etc/asterix/scripts-hub/backup-cloud.sh config/includes.chroot/usr/local/bin/as-backup 2>/dev/null || true
+
+# Compile Native C Systems Utilities
+if [ -d "../../core-utils-c" ]; then
+    echo -e "${CYAN}[*] Compiling Native C Systems Utilities...${NC}"
+    mkdir -p config/hooks/normal
+    cat << 'HOOK' > config/hooks/normal/0100-build-c-utils.hook.chroot
+#!/bin/sh
+set -e
+if [ -d /etc/asterix/core-utils-c ]; then
+    cd /etc/asterix/core-utils-c
+    if command -v gcc >/dev/null 2>&1; then
+        ./build.sh
+        echo "[✔] Native C utilities compiled and installed."
+    fi
+fi
+HOOK
+    chmod +x config/hooks/normal/0100-build-c-utils.hook.chroot
+    cp -r ../../core-utils-c config/includes.chroot/etc/asterix/
+fi
+
+# Compile System Tracer
+if [ -d "../../system-tracer" ]; then
+    cp -r ../../system-tracer config/includes.chroot/etc/asterix/
+fi
+
+# Copy Scripts Hub
+if [ -d "../../scripts-hub" ]; then
+    mkdir -p config/includes.chroot/etc/asterix/scripts-hub
+    cp -r ../../scripts-hub/* config/includes.chroot/etc/asterix/scripts-hub/
+fi
 
 # Inject GRUB Boot Theme
 if [ -d "../../engine/grub-theme" ]; then

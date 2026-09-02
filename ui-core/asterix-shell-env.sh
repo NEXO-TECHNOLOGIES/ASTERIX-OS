@@ -94,6 +94,20 @@ as-cloud() {
     fi
 }
 
+# Native C Systems Utilities Shortcuts
+alias as-sysinfo='asterix-sysinfo'
+alias as-memview='asterix-memview'
+alias as-netprobe='asterix-netprobe'
+alias as-hasher='asterix-hasher'
+alias as-shredder='asterix-shredder'
+alias as-proctrace='asterix-proctrace'
+
+# Scripts Hub Shortcuts
+alias as-netrecon='/etc/asterix/scripts-hub/net-recon.sh'
+alias as-cleanup='/etc/asterix/scripts-hub/secure-cleanup.sh'
+alias as-backup='/etc/asterix/scripts-hub/backup-cloud.sh'
+as-scaffold() { /etc/asterix/scripts-hub/dev-bootstrap.sh "$@"; }
+
 # Launch Instant Quad-Grid Workspace
 as-quad() {
     if [ -f /etc/asterix/asterix.tmux.conf ]; then
