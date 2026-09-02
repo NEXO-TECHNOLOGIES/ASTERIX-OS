@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Quad-Grid Studio
+GenericName=Multi-Terminal Multiplexer
+Comment=4-Way Synchronized Cyber Workspace with Mouse Scroll
+Exec=x-terminal-emulator -T "ASTERIX QUAD-GRID" -e "/usr/local/bin/asterix --quad"
+Icon=utilities-terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+StartupNotify=true
+Keywords=terminal;tmux;quad;split;grid;multi;

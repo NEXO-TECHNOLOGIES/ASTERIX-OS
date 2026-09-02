@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Forensics & Stego
+GenericName=Digital Forensics
+Comment=Binwalk, Foremost, Steghide, Exiftool, Chkrootkit
+Exec=x-terminal-emulator -T "ASTERIX FORENSICS" -e "/usr/local/bin/asterix --forensics"
+Icon=utilities-terminal
+Terminal=false
+Categories=Security;
+StartupNotify=true
+Keywords=forensics;binwalk;foremost;steghide;exiftool;rootkit;

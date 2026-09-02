@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Recon & OSINT Hub
+GenericName=Information Gathering
+Comment=Nmap, Masscan, DnsRecon, Whois, Netdiscover
+Exec=x-terminal-emulator -T "ASTERIX RECON" -e "/usr/local/bin/asterix --recon"
+Icon=utilities-terminal
+Terminal=false
+Categories=Security;Network;
+StartupNotify=true
+Keywords=recon;nmap;masscan;osint;dns;whois;scan;

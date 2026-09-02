@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Web Security Studio
+GenericName=Web Application Testing
+Comment=SQLMap, Gobuster, Nikto, FFUF, Wafw00f
+Exec=x-terminal-emulator -T "ASTERIX WEB SECURITY" -e "/usr/local/bin/asterix --web-audit"
+Icon=utilities-terminal
+Terminal=false
+Categories=Security;Network;WebDevelopment;
+StartupNotify=true
+Keywords=web;sqlmap;gobuster;nikto;ffuf;wafw00f;http;

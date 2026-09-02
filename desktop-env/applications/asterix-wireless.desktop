@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Wireless Warfare
+GenericName=802.11 & Radio Security
+Comment=Aircrack-ng, Wifite, Reaver, Kismet
+Exec=x-terminal-emulator -T "ASTERIX WIRELESS" -e "/usr/local/bin/asterix --wireless"
+Icon=utilities-terminal
+Terminal=false
+Categories=Security;Network;
+StartupNotify=true
+Keywords=wifi;wireless;aircrack;wifite;reaver;wpa;wps;

@@ -1,9 +1,9 @@
 # =====================================================================
-# ASTERIX OS - Master Package Manifest
-# Full-Stack Developer, Security Audit & Systems Engineering Suite
+# ASTERIX OS - Master Security & Full-Stack Package Manifest
+# Maximum Tier: Recon, Web, Exploit, Crypto, Wireless, Forensics, Dev
 # =====================================================================
 
-# Core System & Modern Shell Utilities
+# Core System, Modern Shell & Terminal Productivity
 bash
 zsh
 tmux
@@ -32,8 +32,16 @@ fzf
 zoxide
 jq
 yq
+zip
+unzip
+tar
+p7zip-full
+parallel
+pv
+whiptail
+dialog
 
-# Full-Stack Programming Runtimes & Compilers
+# Full-Stack Programming Languages, Compilers & Debuggers
 build-essential
 gcc
 g++
@@ -64,42 +72,89 @@ vim
 micro
 neovim
 
-# Binary Analysis & Reverse Engineering
-radare2
-binwalk
-hexedit
-xxd
-
-# Databases & API Development
-sqlite3
-postgresql-client
-redis-tools
-httpie
-
-# Network Warfare & Security Auditing
-wireshark
-tshark
-tcpdump
-netcat-traditional
-netcat-openbsd
-socat
+# 1. Information Gathering & Reconnaissance (OSINT)
 nmap
 masscan
+whois
+dnsutils
+dnsrecon
+fping
+arp-scan
+netdiscover
+smbclient
+snmp
+traceroute
+
+# 2. Web Application Security & Auditing
+sqlmap
+nikto
+gobuster
+whatweb
+ffuf
+wafw00f
+commix
+skipfish
+
+# 3. Exploitation & Post-Exploitation
+socat
+netcat-traditional
+netcat-openbsd
 ettercap-text-only
 dsniff
 iptables
 nftables
-dnsutils
-traceroute
-whois
-aircrack-ng
-macchanger
-sqlmap
-hydra
+
+# 4. Password Auditing & Hash Cracking
 john
 hashcat
-nikto
-gobuster
+hydra
+medusa
+ncrack
+crunch
+cewl
+hashid
+
+# 5. Sniffing, Spoofing & Traffic Interception
+wireshark
+tshark
+tcpdump
+dsniff
+hping3
+macchanger
+
+# 6. Wireless, Bluetooth & Radio Security
+aircrack-ng
+wifite
+reaver
+bully
+pixiewps
+kismet
+bluez
+wireless-tools
+iw
+
+# 7. Forensics, Steganography & File Analysis
+binwalk
+foremost
+scalpel
+steghide
+exiftool
+sleuthkit
+chkrootkit
+rkhunter
+wipe
+secure-delete
+
+# 8. Binary Analysis & Reverse Engineering
+radare2
+hexedit
+xxd
+
+# 9. Databases & API Client Toolchain
+sqlite3
+postgresql-client
+redis-tools
+httpie
 
 # Storage & Persistence Tools
 fdisk
@@ -109,7 +164,7 @@ dosfstools
 cryptsetup
 rsync
 
-# Desktop Environment & Graphical Home Screen
+# Desktop Environment & Graphical Home Screen (XFCE4 + Compositor)
 xfce4
 xfce4-terminal
 xfce4-panel

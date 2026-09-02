@@ -152,32 +152,16 @@ if [ -f "../../desktop-env/nanorc" ]; then
     cp "../../desktop-env/nanorc" config/includes.chroot/etc/skel/.nanorc
 fi
 
+if [ -f "../../ui-core/asterix-shell-env.sh" ]; then
+    cp "../../ui-core/asterix-shell-env.sh" config/includes.chroot/etc/asterix/asterix-shell-env.sh
+fi
+
 cat << 'AUTORUN' >> /etc/skel/.bashrc
 
-# Developer Scripting Helpers
-run-rs() {
-    if [ -z "$1" ]; then
-        echo "Usage: run-rs <file.rs>"
-        return 1
-    fi
-    out_bin="${1%.rs}"
-    rustc -O "$1" -o "$out_bin" && ./"$out_bin"
-}
-
-run-c() {
-    if [ -z "$1" ]; then
-        echo "Usage: run-c <file.c>"
-        return 1
-    fi
-    out_bin="${1%.c}"
-    gcc -O2 "$1" -o "$out_bin" && ./"$out_bin"
-}
-
-run-py() {
-    python3 "$@"
-}
-
-alias edit='nano'
+# Source ASTERIX Cyber Shell Environment
+if [ -f /etc/asterix/asterix-shell-env.sh ]; then
+    source /etc/asterix/asterix-shell-env.sh
+fi
 
 # Launch ASTERIX OS Native Rust Banner on interactive terminal session
 if [ -x /usr/local/bin/asterix-loader ] && [ "$TERM" != "dumb" ]; then
