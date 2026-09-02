@@ -66,6 +66,24 @@ as-wifi() { asterix --wireless; }
 as-forensic() { asterix --forensics; }
 as-rev() { asterix --reverse; }
 as-dev() { asterix --dev; }
+as-portal() {
+    if [ -f /etc/asterix/ui-core/asterix-web-portal.sh ]; then
+        /etc/asterix/ui-core/asterix-web-portal.sh
+    elif [ -f ui-core/asterix-web-portal.sh ]; then
+        ./ui-core/asterix-web-portal.sh
+    else
+        asterix-web-portal
+    fi
+}
+as-discord() {
+    if [ -f /etc/asterix/ui-core/asterix-discord.sh ]; then
+        /etc/asterix/ui-core/asterix-discord.sh "$@"
+    elif [ -f ui-core/asterix-discord.sh ]; then
+        ./ui-core/asterix-discord.sh "$@"
+    else
+        asterix-discord "$@"
+    fi
+}
 
 # Launch Instant Quad-Grid Workspace
 as-quad() {

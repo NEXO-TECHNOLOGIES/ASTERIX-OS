@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTERIX OS // Master Operations Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Cyber Background Grid -->
+    <div class="cyber-grid"></div>
+    <div class="cyber-scanline"></div>
+
+    <!-- Header Navigation -->
+    <header class="cyber-header">
+        <div class="header-left">
+            <div class="glitch-logo" data-text="ASTERIX OS">ASTERIX OS</div>
+            <span class="badge cyber-badge">v4.9.0-SEC</span>
+            <span class="badge online-badge">● LIVE NODE</span>
+        </div>
+        <nav class="header-nav">
+            <a href="#telemetry" class="nav-link active">Telemetry</a>
+            <a href="#gallery" class="nav-link">ISO Wallpapers</a>
+            <a href="#subsystems" class="nav-link">12 Subsystems</a>
+            <a href="#discord" class="nav-link">Discord Bridge</a>
+            <a href="#terminal" class="nav-link">Terminal Matrix</a>
+        </nav>
+        <div class="header-right">
+            <div class="persistence-indicator">
+                <span class="pulse-dot"></span> PERSISTENCE: <strong>ACTIVE</strong>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Hero Telemetry Section -->
+        <section id="telemetry" class="panel hero-panel">
+            <div class="hero-content">
+                <h1 class="hero-title">CYBERNETIC MASTER COMMAND MATRIX</h1>
+                <p class="hero-subtitle">Next-Gen Offensive Security, Multi-Language Engineering & Hybrid Live Persistence</p>
+                <div class="telemetry-grid">
+                    <div class="tele-card">
+                        <span class="tele-label">SYSTEM KERNEL</span>
+                        <span class="tele-value cyan">Linux 6.1-sec (Debian Core)</span>
+                    </div>
+                    <div class="tele-card">
+                        <span class="tele-label">SECURITY TIER</span>
+                        <span class="tele-value magenta">MAXIMUM (BlackArch/Kali Scale)</span>
+                    </div>
+                    <div class="tele-card">
+                        <span class="tele-label">STORAGE VAULT</span>
+                        <span class="tele-value green">/asterix_persistent (Dual-Layer)</span>
+                    </div>
+                    <div class="tele-card">
+                        <span class="tele-label">ACTIVE WORKSPACE</span>
+                        <span class="tele-value yellow">Quad-Grid Tmux Studio</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ISO Wallpapers & Media Showcase Gallery -->
+        <section id="gallery" class="panel">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <span class="section-icon">🖼️</span>
+                    <h2>DISTRO-GRADE ISO WALLPAPERS & SPLASHES</h2>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Media</button>
+                    <button class="filter-btn" data-filter="boot">GRUB Splashes</button>
+                    <button class="filter-btn" data-filter="neon">Cyberpunk</button>
+                    <button class="filter-btn" data-filter="cosmic">Cosmic Space</button>
+                </div>
+            </div>
+
+            <div class="gallery-grid" id="wallpaperGrid">
+                <!-- Wallpapers injected dynamically via app.js -->
+            </div>
+        </section>
+
+        <!-- 12 Master Security & Engineering Subsystems -->
+        <section id="subsystems" class="panel">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <span class="section-icon">⚡</span>
+                    <h2>12 MASTER COMMAND SUBSYSTEMS</h2>
+                </div>
+                <input type="text" id="toolSearch" class="cyber-input" placeholder="Search tool (e.g. nmap, rust, sqlmap, hashcat)...">
+            </div>
+
+            <div class="subsystems-grid" id="subsystemsGrid">
+                <!-- Subsystems Cards injected dynamically via app.js -->
+            </div>
+        </section>
+
+        <!-- Discord Cloud Storage & Task Bridge Section -->
+        <section id="discord" class="panel discord-panel">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <span class="section-icon">🤖</span>
+                    <h2>DISCORD CLOUD VAULT & ASYNC TASK BRIDGE</h2>
+                </div>
+                <span class="badge discord-badge">50-Coins Panel & Webhook Ready</span>
+            </div>
+
+            <div class="discord-grid">
+                <div class="discord-card">
+                    <h3>⚡ Webhook Dispatcher</h3>
+                    <p>Transmit instant alerts, telemetry snapshots, and automated scan logs directly to your private Discord server.</p>
+                    
+                    <div class="form-group">
+                        <label>Discord Webhook URL:</label>
+                        <input type="password" id="discordWebhookInput" class="cyber-input" placeholder="https://discord.com/api/webhooks/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Payload Message:</label>
+                        <input type="text" id="discordMsgInput" class="cyber-input" placeholder="ASTERIX OS Node task completed successfully!">
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="cyber-btn cyan-btn" onclick="sendDiscordTest()">📤 Transmit Test Alert</button>
+                        <button class="cyber-btn magenta-btn" onclick="sendDiscordStatus()">📊 Push Telemetry Report</button>
+                    </div>
+                    <div id="discordStatusMsg" class="status-box"></div>
+                </div>
+
+                <div class="discord-card">
+                    <h3>💾 CLI Commands for Discord Cloud</h3>
+                    <div class="code-block">
+                        <pre><code># 1. Configure Webhook URL
+as-discord setup
+
+# 2. Push Instant Alert
+as-discord notify "Port scan on subnet 10.0.0.0/24 finished!"
+
+# 3. Upload File or Loot Archive (up to 25MB)
+as-discord send /tmp/scan_results.txt "Target Recon Report"
+
+# 4. Backup Entire Persistent Storage Vault
+as-discord backup</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Terminal Matrix & Aliases -->
+        <section id="terminal" class="panel">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <span class="section-icon">🪟</span>
+                    <h2>ULTIMATE TERMINAL MATRIX CHEATSHEET</h2>
+                </div>
+            </div>
+
+            <div class="terminal-table-wrapper">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Command / Alias</th>
+                            <th>Description</th>
+                            <th>Shortcut Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>as-quad</code></td>
+                            <td>Instant 4-Way Quad-Grid Tmux Workspace (Sniffer, Scanner, Shell, Monitor)</td>
+                            <td><span class="key-badge">Ctrl+A</span> <span class="key-badge">q</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>as-recon</code></td>
+                            <td>Jump to 01. Reconnaissance & OSINT Hub (Nmap, Masscan, DnsRecon)</td>
+                            <td><span class="key-badge">asterix --recon</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>as-web</code></td>
+                            <td>Jump to 02. Web Application Warfare (SQLMap, Gobuster, Nikto, FFUF)</td>
+                            <td><span class="key-badge">asterix --web-audit</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>as-exploit</code></td>
+                            <td>Jump to 03. Exploitation & Payloads (Metasploit MSF, SearchSploit)</td>
+                            <td><span class="key-badge">asterix --exploit</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>as-crack</code></td>
+                            <td>Jump to 04. Password & Hash Auditing (Hashcat, John The Ripper, Hydra)</td>
+                            <td><span class="key-badge">asterix --passwords</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>as-dev</code></td>
+                            <td>Jump to 09. Full-Stack Developer Studio (Rust, Go, C/C++, Python, Node)</td>
+                            <td><span class="key-badge">asterix --dev</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>run-rs &lt;file.rs&gt;</code></td>
+                            <td>Compile and run standalone Rust script in one step</td>
+                            <td><span class="key-badge">rustc</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Fullscreen Image Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div id="modalCaption" class="modal-caption"></div>
+    </div>
+
+    <footer class="cyber-footer">
+        <p>ASTERIX OS // NEXT-GENERATION CYBERNETIC PLATFORM &middot; BUILT FOR OPERATORS &amp; DEVELOPERS</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

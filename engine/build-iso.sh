@@ -126,6 +126,16 @@ if [ -d "../../assets" ]; then
     mkdir -p config/includes.chroot/etc/asterix/assets
     cp -r ../../assets/* config/includes.chroot/etc/asterix/assets/
 fi
+if [ -d "../../web-dashboard" ]; then
+    mkdir -p config/includes.chroot/etc/asterix/web-dashboard
+    cp -r ../../web-dashboard/* config/includes.chroot/etc/asterix/web-dashboard/
+fi
+
+# Make helper scripts executable and symlink globally
+chmod +x config/includes.chroot/etc/asterix/*.sh 2>/dev/null || true
+chmod +x config/includes.chroot/etc/asterix/ui-core/*.sh 2>/dev/null || true
+ln -sf /etc/asterix/ui-core/asterix-discord.sh config/includes.chroot/usr/local/bin/as-discord 2>/dev/null || true
+ln -sf /etc/asterix/ui-core/asterix-web-portal.sh config/includes.chroot/usr/local/bin/as-portal 2>/dev/null || true
 
 # Inject GRUB Boot Theme
 if [ -d "../../engine/grub-theme" ]; then

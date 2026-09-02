@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Discord Cloud Bridge
+GenericName=Cloud Storage & Notifications
+Comment=Configure Discord Webhook for vault backups, loot upload, and task alerts
+Exec=x-terminal-emulator -T "ASTERIX DISCORD BRIDGE" -e "/etc/asterix/ui-core/asterix-discord.sh setup"
+Icon=utilities-terminal
+Terminal=false
+Categories=Network;System;Utility;
+StartupNotify=true
+Keywords=discord;webhook;cloud;storage;backup;notify;alert;

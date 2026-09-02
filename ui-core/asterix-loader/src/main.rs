@@ -664,6 +664,24 @@ fn main() {
     if args.iter().any(|a| a == "--reverse") { sub_menu_reverse(); return; }
     if args.iter().any(|a| a == "--dev") { sub_menu_developer(); return; }
     if args.iter().any(|a| a == "--quad") { launch_quad_grid(); return; }
+    if args.iter().any(|a| a == "--portal") {
+        let portal_script = if Path::new("/etc/asterix/ui-core/asterix-web-portal.sh").exists() {
+            "/etc/asterix/ui-core/asterix-web-portal.sh"
+        } else {
+            "ui-core/asterix-web-portal.sh"
+        };
+        let _ = Command::new(portal_script).status();
+        return;
+    }
+    if args.iter().any(|a| a == "--discord") {
+        let discord_script = if Path::new("/etc/asterix/ui-core/asterix-discord.sh").exists() {
+            "/etc/asterix/ui-core/asterix-discord.sh"
+        } else {
+            "ui-core/asterix-discord.sh"
+        };
+        let _ = Command::new(discord_script).args(["setup"]).status();
+        return;
+    }
 
     if !skip && !menu_only {
         run_boot_animation(fast);
@@ -688,9 +706,11 @@ fn main() {
         menu_item("8",  "⚙️", "08. Reverse Engineering (R2)", "Radare2, GDB, Hexedit, XXD, Strings");
         menu_item("9",  "🛠️", "09. Full-Stack Dev Studio", "Rust, Go, C/C++, Python, Node, LazyGit");
         menu_item("10", "💾", "10. ASTERIX Persistent Vault", "Manage encrypted data & loot storage");
-        menu_item("11", "🪟", "11. Quad-Grid Tmux Studio", "4-way synchronized terminal workspace");
-        menu_item("12", "⚡", "12. Hardware & Resource HUD", "Btop, Htop, CPU & Memory Telemetry");
-        menu_item("13", "💻", "13. Superuser Shell Prompt", "Drop into enhanced cyber Zsh/Bash");
+        menu_item("11", "🤖", "11. Discord Cloud Vault Bridge", "Sync backups, loot & task alerts");
+        menu_item("12", "🌐", "12. Web Operations Portal", "Launch localhost:7777 media & HUD portal");
+        menu_item("13", "🪟", "13. Quad-Grid Tmux Studio", "4-way synchronized terminal workspace");
+        menu_item("14", "⚡", "14. Hardware & Resource HUD", "Btop, Htop, CPU & Memory Telemetry");
+        menu_item("15", "💻", "15. Superuser Shell Prompt", "Drop into enhanced cyber Zsh/Bash");
         menu_item("0",  "⛔", "Power Off / Exit System", "Terminate session or shutdown");
 
         let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-CONTROL » {C_RESET}"));
@@ -706,8 +726,25 @@ fn main() {
             "8" => sub_menu_reverse(),
             "9" => sub_menu_developer(),
             "10" => sub_menu_persistence(),
-            "11" => launch_quad_grid(),
+            "11" => {
+                let discord_script = if Path::new("/etc/asterix/ui-core/asterix-discord.sh").exists() {
+                    "/etc/asterix/ui-core/asterix-discord.sh"
+                } else {
+                    "ui-core/asterix-discord.sh"
+                };
+                let _ = Command::new(discord_script).status();
+                pause_for_user();
+            }
             "12" => {
+                let portal_script = if Path::new("/etc/asterix/ui-core/asterix-web-portal.sh").exists() {
+                    "/etc/asterix/ui-core/asterix-web-portal.sh"
+                } else {
+                    "ui-core/asterix-web-portal.sh"
+                };
+                let _ = Command::new(portal_script).status();
+            }
+            "13" => launch_quad_grid(),
+            "14" => {
                 let monitor = if Command::new("btop").stdout(Stdio::null()).spawn().is_ok() {
                     "btop"
                 } else if Command::new("htop").stdout(Stdio::null()).spawn().is_ok() {
@@ -717,7 +754,7 @@ fn main() {
                 };
                 execute_command(monitor, &[]);
             }
-            "13" => {
+            "15" => {
                 let shell = env::var("SHELL").unwrap_or_else(|_| "/bin/bash".to_string());
                 println!("\n{C_GREEN}[*] Spawning ASTERIX Interactive Superuser Shell (type 'exit' to return)...{C_RESET}");
                 let _ = Command::new(shell).status();

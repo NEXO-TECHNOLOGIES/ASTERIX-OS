@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Web Operations Portal
+GenericName=Web Operations Matrix
+Comment=Live ISO wallpaper showcase, telemetry dashboard, and Discord cloud bridge
+Exec=/etc/asterix/ui-core/asterix-web-portal.sh
+Icon=applications-internet
+Terminal=true
+Categories=System;Utility;Network;
+StartupNotify=true
+Keywords=web;portal;dashboard;wallpapers;gallery;discord;telemetry;
