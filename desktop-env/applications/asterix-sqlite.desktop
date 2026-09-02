@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX SQLite Database Console
+GenericName=Database Management
+Comment=Interactive relational database query console
+Exec=x-terminal-emulator -T "ASTERIX SQLITE" -e "sqlite3"
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;Database;
+StartupNotify=true
+Keywords=sqlite;sql;db;database;query;table;

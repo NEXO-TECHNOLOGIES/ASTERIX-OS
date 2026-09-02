@@ -17,13 +17,17 @@
 
 ## ⚡ Core Features
 
-* 🦀 **100% Native Rust Boot & Control Engine (`asterix-loader`):** Blazing-fast cyberpunk glitch animation and interactive command matrix with zero external runtime dependencies.
+* 🛠️ **Full-Stack Developer & Reverse Engineering Arsenal:**
+  - **Languages & Compilers:** Rust (`rustc`, `cargo`), Go (`golang-go`), C/C++ (`gcc`, `g++`, `clang`, `llvm`, `cmake`, `make`), Python 3 (`python3-dev`, `pip`, `ipython`), Node.js (`npm`), GDB, Valgrind, Strace.
+  - **Binary & Firmware Analysis:** Radare2 / R2, Binwalk, Hexedit, XXD.
+  - **Databases & API Debuggers:** SQLite3, PostgreSQL client, Redis-tools, HTTPie, Socat.
+  - **Modern Productivity CLI:** Ripgrep (`rg`), Fd-find (`fd`), Bat (`batcat`), Eza, FZF, Zoxide, LazyGit, JQ, YQ, TLDR, NCDU.
 * 💾 **Dual-Layer Data Persistence (`ASTERIX PERSISTENCE`):**
   - **Live USB Mode:** Dedicated `persistence.conf` partition overlay preserving all user files across reboots.
   - **Termux Mobile Mode:** Automated bridge binding `$HOME/asterix_persistent` directly to Android internal storage `/sdcard/ASTERIX_PERSISTENCE`.
 * 🦈 **Pre-Configured Security Toolchain:**
-  - **Network & Sniffing:** Wireshark, TShark, Tcpdump, Nmap, Netcat / Ncat, MacChanger, Socat.
-  - **Auditing & Exploitation:** Metasploit Framework (`msfconsole`), SearchSploit.
+  - **Network & Sniffing:** Wireshark, TShark, Tcpdump, Nmap, Masscan, Netcat / Ncat, MacChanger, Socat.
+  - **Auditing & Exploitation:** Metasploit Framework (`msfconsole`), SearchSploit, Sqlmap, Hydra, John, Hashcat, Nikto, Gobuster.
 * 🪟 **Multi-Terminal Studio & Mouse Scrolling:**
   - Integrated Tmux engine with mouse scroll support, vertical/horizontal splits (<kbd>Ctrl+A</kbd> <kbd>|</kbd> and <kbd>Ctrl+A</kbd> <kbd>-</kbd>), and cyber status bar.
 * 🖼️ **Custom Visuals & Media Asset Vault:**
@@ -35,7 +39,7 @@
 
 ```
 ASTERIX OS/
-├── assets/                       # User Media Vault (Drop your ISO images & videos here)
+├── assets/                       # User Media Vault (Wallpapers, GRUB themes & Boot Videos)
 │   ├── wallpapers/               # Desktop & Terminal Backgrounds
 │   ├── animations/               # Boot Animation Videos / GIFs
 │   └── iso-branding/             # GRUB splash & OS logos
@@ -46,7 +50,7 @@ ASTERIX OS/
 │   └── install-desktop.sh        # Desktop profile installer
 ├── engine/                       # Live ISO Build Engine (Debian live-build)
 │   ├── build-iso.sh              # ISO compile script
-│   ├── packages.list             # Core security package manifest
+│   ├── packages.list             # Master developer & security package manifest
 │   ├── persistence-setup.sh      # USB persistence partition formatter
 │   └── Dockerfile                # Isolated container build environment
 ├── ui-core/                      # Native Rust Cybernetic Visuals & Multiplexer
@@ -61,6 +65,7 @@ ASTERIX OS/
 │   ├── asterix-termux-init.sh    # Mobile session initializer
 │   └── setup-persistence.sh      # Android /sdcard/ storage linker
 └── docs/                         # Master Documentation & Architecture Guides
+    ├── DEVELOPER_TOOLCHAIN_GUIDE.md # Compilers, Runtimes, R2, GDB & DBs
     ├── MODULAR_GITHUB_GUIDE.md   # Splitting across multiple GitHub accounts
     ├── ASTERIX_TERMINAL_AND_WORKFLOW_GUIDE.md # Terminal tabs, splits & scrolling
     └── ROOTING_AND_DEVICE_GUIDE.md # Mobile PRoot vs. Hardware Rooted
@@ -97,6 +102,7 @@ Once installed, type `asterix` anytime to launch the cybernetic OS environment.
 ---
 
 ## 📚 Detailed Documentation
+* 🛠️ [Developer Toolchain & Engineering Guide](docs/DEVELOPER_TOOLCHAIN_GUIDE.md)
 * 📖 [Multi-Repository GitHub Deployment Guide](docs/MODULAR_GITHUB_GUIDE.md)
 * 🖥️ [ASTERIX Terminal, Splitting & Scrolling Guide](docs/ASTERIX_TERMINAL_AND_WORKFLOW_GUIDE.md)
 * 📱 [Android Rooting & Architecture Guide](docs/ROOTING_AND_DEVICE_GUIDE.md)

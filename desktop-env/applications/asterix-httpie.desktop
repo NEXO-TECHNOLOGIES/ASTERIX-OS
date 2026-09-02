@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX HTTPie API Studio
+GenericName=API & HTTP Client
+Comment=Modern command-line HTTP client and API debugger
+Exec=x-terminal-emulator -T "ASTERIX HTTPIE STUDIO" -e "http --help"
+Icon=applications-internet
+Terminal=false
+Categories=Development;Network;WebDevelopment;
+StartupNotify=true
+Keywords=http;httpie;api;rest;json;curl;request;

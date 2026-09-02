@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX LazyGit Studio
+GenericName=Git Terminal Interface
+Comment=Terminal UI for Git version control and commit management
+Exec=x-terminal-emulator -T "ASTERIX LAZYGIT" -e "lazygit"
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;RevisionControl;
+StartupNotify=true
+Keywords=git;lazygit;vcs;branch;commit;diff;

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Developer Studio
+GenericName=Full-Stack Developer Hub
+Comment=Multi-language compiler, debugger, and build studio
+Exec=x-terminal-emulator -T "ASTERIX DEVELOPER STUDIO" -e "/usr/local/bin/asterix --dev"
+Icon=applications-development
+Terminal=false
+Categories=Development;IDE;
+StartupNotify=true
+Keywords=dev;rust;go;python;c;cpp;build;cargo;gcc;

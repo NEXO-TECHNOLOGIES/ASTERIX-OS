@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Radare2 Disassembler
+GenericName=Binary Analysis Framework
+Comment=Advanced reverse engineering, disassembler, and debugger
+Exec=x-terminal-emulator -T "ASTERIX RADARE2" -e "r2 -h"
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;Security;Debugger;
+StartupNotify=true
+Keywords=radare2;r2;reverse;binary;disasm;debug;

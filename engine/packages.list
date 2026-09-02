@@ -1,26 +1,82 @@
 # =====================================================================
-# ASTERIX OS - Core Package Manifest
+# ASTERIX OS - Master Package Manifest
+# Full-Stack Developer, Security Audit & Systems Engineering Suite
 # =====================================================================
 
-# Core System & Shell
+# Core System & Modern Shell Utilities
 bash
 zsh
 tmux
 screen
 htop
-neofetch
 btop
+neofetch
 curl
 wget
 git
+lazygit
 sudo
 ca-certificates
 gnupg
 lsb-release
 pciutils
 usbutils
+lsof
+tree
+ncdu
+tldr
+ripgrep
+fd-find
+bat
+fzf
+zoxide
+jq
+yq
 
-# Network Analysis & Diagnostics
+# Full-Stack Programming Runtimes & Compilers
+build-essential
+gcc
+g++
+clang
+llvm
+cmake
+ninja-build
+make
+gdb
+valgrind
+strace
+ltrace
+rustc
+cargo
+golang-go
+nodejs
+npm
+python3
+python3-pip
+python3-venv
+python3-dev
+ipython3
+pipx
+
+# Text Editors & Code Workbenches
+nano
+vim
+micro
+neovim
+
+# Binary Analysis & Reverse Engineering
+radare2
+binwalk
+hexedit
+xxd
+
+# Databases & API Development
+sqlite3
+postgresql-client
+redis-tools
+httpie
+
+# Network Warfare & Security Auditing
 wireshark
 tshark
 tcpdump
@@ -28,6 +84,7 @@ netcat-traditional
 netcat-openbsd
 socat
 nmap
+masscan
 ettercap-text-only
 dsniff
 iptables
@@ -37,29 +94,12 @@ traceroute
 whois
 aircrack-ng
 macchanger
-
-# Text Editors & Code Development
-nano
-vim
-micro
-build-essential
-clang
-gcc
-g++
-make
-gdb
-rustc
-cargo
-golang-go
-
-# Terminal UI & Python Runtime
-python3
-python3-pip
-python3-venv
-python3-rich
-python3-dev
-dialog
-whiptail
+sqlmap
+hydra
+john
+hashcat
+nikto
+gobuster
 
 # Storage & Persistence Tools
 fdisk

@@ -385,12 +385,91 @@ fn sub_menu_persistence() {
     }
 }
 
+fn sub_menu_developer() {
+    loop {
+        let tel = get_system_telemetry();
+        print_header(&tel);
+        println!("{C_CYAN}{C_BOLD} [ SUBSYSTEM: FULL-STACK DEVELOPER & BINARY STUDIO ] {C_RESET}\n");
+
+        menu_item("1", "🦀", "Rust & Cargo Studio", "rustc, cargo build, cargo run, clippy");
+        menu_item("2", "🐹", "Go (Golang) Workspace", "go build, go run, go test, go install");
+        menu_item("3", "🐍", "Python & Pip Workspace", "python3, pip, ipython, venv manager");
+        menu_item("4", "⚡", "C / C++ & Build Systems", "gcc, g++, clang, make, cmake, gdb");
+        menu_item("5", "🌐", "Node.js & Web Studio", "node, npm, npx, yarn package engine");
+        menu_item("6", "🐙", "LazyGit & VCS Hub", "Launch interactive terminal Git interface");
+        menu_item("7", "🔬", "Binary Disassembler (R2)", "Radare2 / Rizin reverse engineering");
+        menu_item("8", "📡", "HTTPie API Workbench", "REST API, JSON debug & HTTP client");
+        menu_item("9", "🗄️", "Database Console (SQLite)", "SQLite3 interactive relational engine");
+        menu_item("10", "🚀", "CLI Power Utilities", "ripgrep (rg), fzf, bat, eza");
+        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+
+        let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-DEV » {C_RESET}"));
+        match choice.as_str() {
+            "1" => {
+                println!("\n{C_GREEN}[*] Rust Toolchain Environment:{C_RESET}");
+                execute_command("rustc", &["--version"]);
+            }
+            "2" => {
+                println!("\n{C_CYAN}[*] Go Toolchain Environment:{C_RESET}");
+                execute_command("go", &["version"]);
+            }
+            "3" => {
+                println!("\n{C_YELLOW}[*] Spawning IPython Interactive Shell...{C_RESET}");
+                execute_command("ipython3", &[]);
+            }
+            "4" => {
+                println!("\n{C_MAGENTA}[*] C/C++ Compiler Versions:{C_RESET}");
+                execute_command("gcc", &["--version"]);
+            }
+            "5" => {
+                println!("\n{C_GREEN}[*] Node.js Runtime Version:{C_RESET}");
+                execute_command("node", &["--version"]);
+            }
+            "6" => execute_command("lazygit", &[]),
+            "7" => {
+                let target = read_user_input(&format!("{C_YELLOW}Enter Binary Path to Disassemble (e.g. /bin/ls): {C_RESET}"));
+                if !target.is_empty() {
+                    execute_command("r2", &["-AA", &target]);
+                }
+            }
+            "8" => {
+                let url = read_user_input(&format!("{C_YELLOW}Enter API URL to query (e.g. https://httpbin.org/get): {C_RESET}"));
+                if !url.is_empty() {
+                    execute_command("http", &[&url]);
+                }
+            }
+            "9" => {
+                let db = read_user_input(&format!("{C_YELLOW}Enter SQLite database file (default: dev.db): {C_RESET}"));
+                let db_path = if db.is_empty() { "dev.db" } else { &db };
+                execute_command("sqlite3", &[db_path]);
+            }
+            "10" => {
+                println!("\n{C_CYAN}{C_BOLD}[*] Power CLI Tools Available in PATH:{C_RESET}");
+                println!("  • ripgrep:  rg <pattern>     (blazing fast grep)");
+                println!("  • fzf:      fzf              (interactive fuzzy finder)");
+                println!("  • bat:      batcat <file>    (syntax highlighted cat)");
+                println!("  • eza:      eza -la --icons  (modern ls with metadata)");
+                println!("  • zoxide:   z <dir>          (smart fuzzy cd)");
+                pause_for_user();
+            }
+            "0" | "exit" | "q" => break,
+            _ => {}
+        }
+    }
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let fast = args.iter().any(|a| a == "--fast");
     let skip = args.iter().any(|a| a == "--skip");
     let menu_only = args.iter().any(|a| a == "--menu");
     let boot_only = args.iter().any(|a| a == "--boot-only");
+    let dev_only = args.iter().any(|a| a == "--dev");
+
+    if dev_only {
+        sub_menu_developer();
+        return;
+    }
 
     if !skip && !menu_only {
         run_boot_animation(fast);
@@ -407,13 +486,14 @@ fn main() {
         println!("{C_WHITE}{C_BOLD} [ PRIMARY OPERATIONAL MATRIX ] {C_RESET}\n");
         menu_item("1", "📡", "Network & Packet Warfare", "Wireshark, Nmap, Tcpdump, Netcat");
         menu_item("2", "⚔️", "Auditing & Security Suite", "Metasploit MSF, SearchSploit, Socat");
-        menu_item("3", "💾", "ASTERIX Persistent Storage", "Manage user data, vaults & backups");
-        menu_item("4", "🪟", "Multi-Terminal / Tmux Studio", "Mouse scrolling & live split screen");
-        menu_item("5", "🖼️", "Visual & Media Asset Vault", "Inspect wallpapers & loading animations");
-        menu_item("6", "⚡", "Subsystem Diagnostics", "Monitor CPU, RAM, network streams");
-        menu_item("7", "📱", "Termux / Mobile Bridge", "Configure Android PRoot integration");
-        menu_item("8", "💻", "ASTERIX Superuser Shell", "Drop into enhanced bash/zsh prompt");
-        menu_item("9", "🔄", "Replay Boot Animation", "Show loading matrix sequence");
+        menu_item("3", "🛠️", "Developer & Binary Studio", "Rust, Go, C/C++, Python, Node, R2");
+        menu_item("4", "💾", "ASTERIX Persistent Storage", "Manage user data, vaults & backups");
+        menu_item("5", "🪟", "Multi-Terminal / Tmux Studio", "Mouse scrolling & live split screen");
+        menu_item("6", "🖼️", "Visual & Media Asset Vault", "Inspect wallpapers & loading animations");
+        menu_item("7", "⚡", "Subsystem Diagnostics", "Monitor CPU, RAM, network streams");
+        menu_item("8", "📱", "Termux / Mobile Bridge", "Configure Android PRoot integration");
+        menu_item("9", "💻", "ASTERIX Superuser Shell", "Drop into enhanced bash/zsh prompt");
+        menu_item("10", "🔄", "Replay Boot Animation", "Show loading matrix sequence");
         menu_item("0", "⛔", "Power Off / Exit", "Shutdown or exit control environment");
 
         let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-CONTROL » {C_RESET}"));
@@ -421,8 +501,9 @@ fn main() {
         match choice.as_str() {
             "1" => sub_menu_network(),
             "2" => sub_menu_exploitation(),
-            "3" => sub_menu_persistence(),
-            "4" => {
+            "3" => sub_menu_developer(),
+            "4" => sub_menu_persistence(),
+            "5" => {
                 println!("\n{C_CYAN}{C_BOLD}[*] Starting ASTERIX Multi-Terminal Workspace (Tmux)...{C_RESET}");
                 println!("{C_YELLOW}Quick Controls:{C_RESET}");
                 println!("  • Mouse Scroll:    Scroll wheel enabled up/down");
@@ -441,7 +522,7 @@ fn main() {
                     let _ = Command::new("tmux").status();
                 }
             }
-            "5" => {
+            "6" => {
                 println!("\n{C_MAGENTA}{C_BOLD}[*] ASTERIX Media & Visual Asset Status:{C_RESET}\n");
                 let wp_dir = "assets/wallpapers";
                 let anim_dir = "assets/animations";
@@ -471,7 +552,7 @@ fn main() {
                 }
                 pause_for_user();
             }
-            "6" => {
+            "7" => {
                 let monitor = if Command::new("btop").stdout(Stdio::null()).spawn().is_ok() {
                     "btop"
                 } else if Command::new("htop").stdout(Stdio::null()).spawn().is_ok() {
@@ -481,18 +562,18 @@ fn main() {
                 };
                 execute_command(monitor, &[]);
             }
-            "7" => {
+            "8" => {
                 println!("\n{C_CYAN}[*] Termux Mobile Bridge Configuration:{C_RESET}");
                 println!("  Storage Bridge: /data/data/com.termux/files/home/asterix_persistent");
-                println!("  PRoot Distro:   Debian / Kali Rootless Container");
+                println!("  PRoot Distro:   Debian / Linux Rootless Container");
                 pause_for_user();
             }
-            "8" => {
+            "9" => {
                 let shell = env::var("SHELL").unwrap_or_else(|_| "/bin/bash".to_string());
                 println!("\n{C_GREEN}[*] Spawning ASTERIX Interactive Shell (type 'exit' to return)...{C_RESET}");
                 let _ = Command::new(shell).status();
             }
-            "9" => run_boot_animation(false),
+            "10" => run_boot_animation(false),
             "0" | "exit" | "quit" | "q" => {
                 println!("\n{C_RED}[*] Terminating ASTERIX Control Center... Goodbye.{C_RESET}\n");
                 break;
