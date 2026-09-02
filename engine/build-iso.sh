@@ -130,12 +130,17 @@ if [ -d "../../web-dashboard" ]; then
     mkdir -p config/includes.chroot/etc/asterix/web-dashboard
     cp -r ../../web-dashboard/* config/includes.chroot/etc/asterix/web-dashboard/
 fi
+if [ -d "../../cloud-panel" ]; then
+    mkdir -p config/includes.chroot/etc/asterix/cloud-panel
+    cp -r ../../cloud-panel/* config/includes.chroot/etc/asterix/cloud-panel/
+fi
 
 # Make helper scripts executable and symlink globally
 chmod +x config/includes.chroot/etc/asterix/*.sh 2>/dev/null || true
 chmod +x config/includes.chroot/etc/asterix/ui-core/*.sh 2>/dev/null || true
 ln -sf /etc/asterix/ui-core/asterix-discord.sh config/includes.chroot/usr/local/bin/as-discord 2>/dev/null || true
 ln -sf /etc/asterix/ui-core/asterix-web-portal.sh config/includes.chroot/usr/local/bin/as-portal 2>/dev/null || true
+ln -sf /etc/asterix/ui-core/asterix-cloud.sh config/includes.chroot/usr/local/bin/as-cloud 2>/dev/null || true
 
 # Inject GRUB Boot Theme
 if [ -d "../../engine/grub-theme" ]; then

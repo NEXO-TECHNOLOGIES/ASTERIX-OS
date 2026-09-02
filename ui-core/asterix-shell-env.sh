@@ -84,6 +84,15 @@ as-discord() {
         asterix-discord "$@"
     fi
 }
+as-cloud() {
+    if [ -f /etc/asterix/ui-core/asterix-cloud.sh ]; then
+        /etc/asterix/ui-core/asterix-cloud.sh "$@"
+    elif [ -f ui-core/asterix-cloud.sh ]; then
+        ./ui-core/asterix-cloud.sh "$@"
+    else
+        asterix-cloud "$@"
+    fi
+}
 
 # Launch Instant Quad-Grid Workspace
 as-quad() {

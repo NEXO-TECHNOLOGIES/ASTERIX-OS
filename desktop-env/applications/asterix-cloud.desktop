@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Cloud Compute & Storage
+GenericName=Panel Cloud Worker Client
+Comment=Offload heavy calculations, compilations, and cloud vault storage to 50-coins panel
+Exec=x-terminal-emulator -T "ASTERIX CLOUD COMPUTE" -e "/etc/asterix/ui-core/asterix-cloud.sh"
+Icon=utilities-terminal
+Terminal=false
+Categories=Network;System;Development;
+StartupNotify=true
+Keywords=cloud;compute;storage;panel;worker;discord;remote;
