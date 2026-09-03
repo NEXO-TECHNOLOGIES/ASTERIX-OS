@@ -101,6 +101,18 @@ alias as-netprobe='asterix-netprobe'
 alias as-hasher='asterix-hasher'
 alias as-shredder='asterix-shredder'
 alias as-proctrace='asterix-proctrace'
+alias as-rootkit='asterix-rootkit-detect'
+alias as-syscall='asterix-syscall-mon'
+alias as-envdump='asterix-env-dump'
+
+# Native C++ Cyber Utilities
+alias as-packetcraft='asterix-packetcraft'
+alias as-vulnscan='asterix-vulnscan'
+alias as-logwatch='asterix-logwatch'
+
+# x86-64 Pure Assembly & Go Engines
+alias as-rawinfo='asterix-raw-info'
+alias as-webrecon='asterix-webrecon'
 
 # Scripts Hub Shortcuts
 alias as-netrecon='/etc/asterix/scripts-hub/net-recon.sh'

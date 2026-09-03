@@ -11,13 +11,19 @@ SRCS = src/asterix-sysinfo.c \
        src/asterix-memview.c \
        src/asterix-netprobe.c \
        src/asterix-hasher.c \
-       src/asterix-shredder.c
+       src/asterix-shredder.c \
+       src/asterix-rootkit-detect.c \
+       src/asterix-syscall-mon.c \
+       src/asterix-env-dump.c
 
 BINS = bin/asterix-sysinfo \
        bin/asterix-memview \
        bin/asterix-netprobe \
        bin/asterix-hasher \
-       bin/asterix-shredder
+       bin/asterix-shredder \
+       bin/asterix-rootkit-detect \
+       bin/asterix-syscall-mon \
+       bin/asterix-env-dump
 
 all: directories $(BINS)
 
@@ -37,6 +43,15 @@ bin/asterix-hasher: src/asterix-hasher.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 bin/asterix-shredder: src/asterix-shredder.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
+bin/asterix-rootkit-detect: src/asterix-rootkit-detect.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
+bin/asterix-syscall-mon: src/asterix-syscall-mon.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
+bin/asterix-env-dump: src/asterix-env-dump.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 install: all

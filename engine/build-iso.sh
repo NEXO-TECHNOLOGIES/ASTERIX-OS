@@ -166,6 +166,63 @@ HOOK
     cp -r ../../core-utils-c config/includes.chroot/etc/asterix/
 fi
 
+# Compile Native C++ Systems Utilities
+if [ -d "../../core-utils-cpp" ]; then
+    echo -e "${CYAN}[*] Compiling Native C++ Cyber Utilities...${NC}"
+    cat << 'HOOK' > config/hooks/normal/0110-build-cpp-utils.hook.chroot
+#!/bin/sh
+set -e
+if [ -d /etc/asterix/core-utils-cpp ]; then
+    cd /etc/asterix/core-utils-cpp
+    if command -v g++ >/dev/null 2>&1; then
+        make all
+        make install
+        echo "[✔] Native C++ cyber utilities compiled and installed."
+    fi
+fi
+HOOK
+    chmod +x config/hooks/normal/0110-build-cpp-utils.hook.chroot
+    cp -r ../../core-utils-cpp config/includes.chroot/etc/asterix/
+fi
+
+# Compile x86-64 Assembly Engine
+if [ -d "../../boot-asm" ]; then
+    echo -e "${CYAN}[*] Assembling x86-64 MBR & Raw Syscall Engine...${NC}"
+    cat << 'HOOK' > config/hooks/normal/0120-build-asm-utils.hook.chroot
+#!/bin/sh
+set -e
+if [ -d /etc/asterix/boot-asm ]; then
+    cd /etc/asterix/boot-asm
+    if command -v nasm >/dev/null 2>&1; then
+        make all
+        make install
+        echo "[✔] Assembly tools assembled and installed."
+    fi
+fi
+HOOK
+    chmod +x config/hooks/normal/0120-build-asm-utils.hook.chroot
+    cp -r ../../boot-asm config/includes.chroot/etc/asterix/
+fi
+
+# Compile Go Web Recon
+if [ -d "../../core-utils-go" ]; then
+    echo -e "${CYAN}[*] Building Go Cyber Engine...${NC}"
+    cat << 'HOOK' > config/hooks/normal/0130-build-go-utils.hook.chroot
+#!/bin/sh
+set -e
+if [ -d /etc/asterix/core-utils-go/asterix-webrecon ]; then
+    cd /etc/asterix/core-utils-go/asterix-webrecon
+    if command -v go >/dev/null 2>&1; then
+        go build -ldflags="-s -w" -o /usr/local/bin/asterix-webrecon .
+        chmod 755 /usr/local/bin/asterix-webrecon
+        echo "[✔] Go Web Recon compiled and installed."
+    fi
+fi
+HOOK
+    chmod +x config/hooks/normal/0130-build-go-utils.hook.chroot
+    cp -r ../../core-utils-go config/includes.chroot/etc/asterix/
+fi
+
 # Compile System Tracer
 if [ -d "../../system-tracer" ]; then
     cp -r ../../system-tracer config/includes.chroot/etc/asterix/
