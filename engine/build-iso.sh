@@ -92,8 +92,17 @@ if [ -d "../../ui-core/asterix-loader" ]; then
     chmod +x config/includes.chroot/usr/local/bin/asterix-loader 2>/dev/null || true
 fi
 
-# Set up main asterix launcher wrapper
-cat << 'EOF' > config/includes.chroot/usr/local/bin/asterix
+# Install Master ax and asterix CLI
+if [ -f "../../bin/ax" ]; then
+    cp "../../bin/ax" config/includes.chroot/usr/local/bin/ax
+    chmod 755 config/includes.chroot/usr/local/bin/ax
+    ln -sf /usr/local/bin/ax config/includes.chroot/usr/local/bin/asterix
+    mkdir -p config/includes.chroot/etc/asterix/bin
+    cp "../../bin/ax" config/includes.chroot/etc/asterix/bin/ax
+    chmod 755 config/includes.chroot/etc/asterix/bin/ax
+else
+    # Fallback wrapper
+    cat << 'EOF' > config/includes.chroot/usr/local/bin/asterix
 #!/bin/bash
 if [ -x /usr/local/bin/asterix-loader ]; then
     /usr/local/bin/asterix-loader "$@"
@@ -101,7 +110,9 @@ elif [ -f /etc/asterix/loading_screen.sh ]; then
     /etc/asterix/loading_screen.sh
 fi
 EOF
-chmod +x config/includes.chroot/usr/local/bin/asterix
+    chmod +x config/includes.chroot/usr/local/bin/asterix
+    ln -sf /usr/local/bin/asterix config/includes.chroot/usr/local/bin/ax
+fi
 
 # Copy visual assets and desktop configurations to /etc/asterix
 if [ -d "../../ui-core" ]; then

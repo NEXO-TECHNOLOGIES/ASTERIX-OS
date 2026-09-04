@@ -12,4 +12,8 @@ if [ -x "$PREFIX/bin/asterix-loader" ]; then
 fi
 
 # Enter PRoot Debian container with persistent storage bound
-exec proot-distro login --bind "$PERSIST_DIR":/asterix_persistent debian
+if [ $# -gt 0 ]; then
+    exec proot-distro login --bind "$PERSIST_DIR":/asterix_persistent debian -- "$@"
+else
+    exec proot-distro login --bind "$PERSIST_DIR":/asterix_persistent debian
+fi

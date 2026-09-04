@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ASTERIX Update & Maintenance (ax)
+GenericName=System & Arsenal Updater
+Comment=Update repositories, upgrade tools, and run system health checks
+Exec=x-terminal-emulator -T "ASTERIX SYSTEM UPDATER" -e "/usr/local/bin/ax maintenance"
+Icon=system-software-update
+Terminal=false
+Categories=System;Settings;PackageManager;
+StartupNotify=true
+Keywords=ax;asterix;update;upgrade;doctor;maintenance;packages;

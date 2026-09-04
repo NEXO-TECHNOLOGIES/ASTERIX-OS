@@ -113,13 +113,35 @@ proot-distro login debian -- bash -c "
         || true
 "
 
-echo -e "${YELLOW}[*] Step 7: Creating Global 'asterix' Launch Command...${NC}"
-cat << 'EOF' > "$PREFIX/bin/asterix"
+echo -e "${YELLOW}[*] Step 7: Creating Global 'ax' & 'asterix' Launch Commands...${NC}"
+cat << 'EOF' > "$PREFIX/bin/ax"
 #!/data/data/com.termux/files/usr/bin/bash
-asterix-loader
-proot-distro login --bind /data/data/com.termux/files/home/asterix_persistent:/asterix_persistent debian
+if [ -z "$1" ]; then
+    asterix-loader
+    exec proot-distro login --bind /data/data/com.termux/files/home/asterix_persistent:/asterix_persistent debian
+elif [ "$1" = "update" ]; then
+    echo -e "\033[38;5;51m[*] Updating Termux & PRoot Repositories...\033[0m"
+    pkg update -y
+    proot-distro login debian -- apt-get update -y
+elif [ "$1" = "upgrade" ]; then
+    echo -e "\033[38;5;51m[*] Upgrading Termux & PRoot Environments...\033[0m"
+    pkg upgrade -y
+    proot-distro login debian -- apt-get upgrade -y
+elif [ "$1" = "doctor" ]; then
+    echo -e "\033[38;5;51m[*] Running Termux ASTERIX Environment Check...\033[0m"
+    which rustc clang proot-distro nmap tshark 2>/dev/null || true
+else
+    # Forward command into PRoot sandbox
+    exec proot-distro login --bind /data/data/com.termux/files/home/asterix_persistent:/asterix_persistent debian -- "$@"
+fi
 EOF
-chmod +x "$PREFIX/bin/asterix"
+chmod +x "$PREFIX/bin/ax"
+ln -sf "$PREFIX/bin/ax" "$PREFIX/bin/asterix"
+
+# Also configure ax and asterix inside the PRoot Debian sandbox
+proot-distro login debian -- bash -c "
+    ln -sf /usr/local/bin/ax /usr/local/bin/asterix 2>/dev/null || true
+"
 
 # Configure autostart in ~/.bashrc if not already present
 if ! grep -q "asterix-loader" "$HOME/.bashrc" 2>/dev/null; then
@@ -128,7 +150,7 @@ if ! grep -q "asterix-loader" "$HOME/.bashrc" 2>/dev/null; then
 # ASTERIX OS Startup
 if [ -t 1 ]; then
     asterix-loader
-    echo -e "\033[38;5;220mType '\033[1masterix\033[0m\033[38;5;220m' to enter the ASTERIX Security Sandbox.\033[0m\n"
+    echo -e "\033[38;5;220mType '\033[1max\033[0m\033[38;5;220m' or '\033[1masterix\033[0m\033[38;5;220m' to enter the ASTERIX Security Sandbox.\033[0m\n"
 fi
 AUTO
 fi
@@ -136,5 +158,6 @@ fi
 echo -e "\n${GREEN}${BOLD}══════════════════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}${BOLD}[✔] ASTERIX OS MOBILE INSTALLATION COMPLETE!${NC}"
 echo -e "${CYAN}Persistent Data Vault:${NC} $PERSIST_LOCAL"
-echo -e "${CYAN}Launch Command:${NC}       Type ${YELLOW}asterix${NC} anywhere in Termux"
+echo -e "${CYAN}Launch Commands:${NC}       Type ${YELLOW}ax${NC} or ${YELLOW}asterix${NC} anywhere in Termux"
+echo -e "${CYAN}System Maintenance:${NC}    ${YELLOW}ax update${NC} | ${YELLOW}ax upgrade${NC} | ${YELLOW}ax doctor${NC}"
 echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════════════${NC}\n"
