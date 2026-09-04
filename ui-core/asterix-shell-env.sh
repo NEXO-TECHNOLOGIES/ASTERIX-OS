@@ -198,6 +198,22 @@ alias ax-escape='ax container-escape'
 alias ax-knock='ax port-knock'
 alias ax-memmap='ax mem-regions'
 
+# Deep Core Root & Kernel Hardening (v2.9.0)
+alias ax-kmod='ax kmod-audit'
+alias ax-ghost='ax deleted-procs'
+alias ax-cap='ax cap-audit'
+alias ax-ebpf='ax ebpf-audit'
+alias ax-persistence='ax root-persistence'
+alias ax-seccomp='ax seccomp-audit'
+alias ax-ttysnoop='ax tty-snoop'
+alias ax-kexec='ax kexec-lockdown'
+alias ax-memprotect='ax mem-protect'
+alias ax-mountaudit='ax mount-hardening'
+alias ax-ipc='ax ipc-audit'
+alias ax-dmesg-exploit='ax dmesg-exploit'
+alias ax-rootjail='ax root-jail'
+alias ax-coredump='ax core-dump-audit'
+
 # ASTERIX One-Touch Domain Launchers
 as-hub() { ax "$@"; }
 as-recon() { ax recon "$@"; }

@@ -12,8 +12,9 @@
    - [Tactical Cyber Warfare, Deception & Anti-Forensics](#51-tactical-cyber-warfare-deception--anti-forensics)
    - [Network & OSINT Reconnaissance](#52-network--osint-reconnaissance)
    - [Security, Cryptography & Forensics](#53-security-cryptography--forensics)
-   - [System Hardware, Workspace & Desktop HUD](#54-system-hardware-workspace--desktop-hud)
-   - [Direct Subsystem Jumpers & Interactive Hub](#55-direct-subsystem-jumpers--interactive-hub)
+   - [Deep Core Root & Kernel Hardening](#54-deep-core-root--kernel-hardening)
+   - [System Hardware, Workspace & Desktop HUD](#55-system-hardware-workspace--desktop-hud)
+   - [Direct Subsystem Jumpers & Interactive Hub](#56-direct-subsystem-jumpers--interactive-hub)
 6. [Shell Integration & Velocity Shortcuts (`ax-*`)](#6-shell-integration--velocity-shortcuts)
 7. [Diagnostics, Health Audits & Troubleshooting](#7-diagnostics-health-audits--troubleshooting)
 
@@ -313,7 +314,28 @@ You can prepend `ax` to **any system command**. For example:
 
 ---
 
-### 5.4 System Hardware, Workspace & Desktop HUD
+### 5.4 Deep Core Root & Kernel Hardening
+
+| Command | Usage | Description |
+| :--- | :--- | :--- |
+| **`ax kmod-audit`** | `ax kmod-audit` | Decodes kernel taint bitmask, checks module loading locks & unindexed LKMs. |
+| **`ax deleted-procs`** | `ax deleted-procs` | Detects stealth ghost processes executing from unlinked binaries (`/proc/*/exe`). |
+| **`ax cap-audit`** | `ax cap-audit` | Audits high-privilege file capabilities (`cap_setuid`, `cap_sys_admin`) and process bounding sets. |
+| **`ax ebpf-audit`** | `ax ebpf-audit` | Audits loaded eBPF programs, maps, and unprivileged BPF disable state. |
+| **`ax root-persistence`** | `ax root-persistence` | Scans `/etc/ld.so.preload`, systemd generators, cron hooks, and PAM triggers. |
+| **`ax seccomp-audit`** | `ax seccomp-audit` | Audits Seccomp-BPF sandbox isolation across all running processes. |
+| **`ax tty-snoop`** | `ax tty-snoop` | Checks TIOCSTI ioctl injection prevention and audits active pseudo-terminals. |
+| **`ax kexec-lockdown`** | `ax kexec-lockdown` | Audits Linux kernel lockdown mode (`integrity`/`confidentiality`) and kexec status. |
+| **`ax mem-protect`** | `ax mem-protect` | Verifies hardware exploit mitigations: SMEP, SMAP, NX/XD, PTI, and sysfs vulnerabilities. |
+| **`ax mount-hardening`** | `ax mount-hardening` | Checks `/tmp`, `/dev/shm`, and `/var/tmp` for `nosuid`, `nodev`, and `noexec` flags. |
+| **`ax ipc-audit`** | `ax ipc-audit` | Audits shared memory segments, message queues, and semaphores (`ipcs`). |
+| **`ax dmesg-exploit`** | `ax dmesg-exploit` | Scans kernel ring buffer for general protection faults, stack canaries, and ROP/slab corruptions. |
+| **`ax root-jail`** | `ax root-jail` | Instantly spawns an ephemeral zero-privilege namespace isolation sandbox via `unshare`. |
+| **`ax core-dump-audit`** | `ax core-dump-audit` | Audits `core_pattern` handlers and `fs.suid_dumpable` memory leakage risks. |
+
+---
+
+### 5.5 System Hardware, Workspace & Desktop HUD
 
 | Command | Usage | Description |
 | :--- | :--- | :--- |

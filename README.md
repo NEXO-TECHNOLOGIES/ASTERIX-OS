@@ -149,6 +149,22 @@ ax genpass [len]        # Generate high-entropy cryptographic password
 ax entropy <file>       # Detect packed, encrypted or obfuscated binaries
 ax qr <text|url>        # Generate terminal ASCII QR code
 
+# Deep Core Root & Kernel Hardening
+ax kmod-audit           # Deep kernel module analysis, taint bitmask & unlinked LKM check
+ax deleted-procs        # Ghost process detection: running binaries unlinked from disk
+ax cap-audit            # Linux file capabilities & ambient process bounding set audit
+ax ebpf-audit           # Inspect loaded eBPF programs, maps & unprivileged BPF state
+ax root-persistence     # Scan ld.so.preload, systemd generators & PAM backdoor hooks
+ax seccomp-audit        # Audit Seccomp-BPF filter isolation status across all processes
+ax tty-snoop            # Detect TIOCSTI ioctl injection & audit pseudo-terminals
+ax kexec-lockdown       # Kernel lockdown level & kexec hot-swap disable state check
+ax mem-protect          # Verify CPU hardware exploit mitigations (SMEP, SMAP, NX)
+ax mount-hardening      # Inspect /tmp & /dev/shm for nosuid, noexec, nodev flags
+ax ipc-audit            # Audit shared memory segments, message queues & semaphores
+ax dmesg-exploit        # Scan dmesg for slab corruption, ROP or stack canary crashes
+ax root-jail            # Spawn ephemeral zero-privilege namespace isolation sandbox
+ax core-dump-audit      # Inspect core_pattern handler & suid_dumpable memory policy
+
 # Vault, Workspace & Desktop HUD
 ax backup               # Sync and compress vault to Discord and Cloud Panel
 ax loot                 # Browse captured hashes, scan reports & intelligence

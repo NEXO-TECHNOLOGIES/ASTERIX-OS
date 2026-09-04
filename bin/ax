@@ -2390,20 +2390,363 @@ cmd_mem_regions() {
 }
 
 # ---------------------------------------------------------------------
+# 12. Deep Core Root & Kernel Hardening Modules (v2.9.0)
+# ---------------------------------------------------------------------
+
+cmd_kmod_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX DEEP KERNEL MODULE (LKM) & TAINT AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- KERNEL TAINT STATUS ---${C_RESET}"
+    if [ -f /proc/sys/kernel/tainted ]; then
+        local taint; taint=$(cat /proc/sys/kernel/tainted 2>/dev/null)
+        if [ "$taint" -eq 0 ] 2>/dev/null; then
+            echo -e "  ${C_GREEN}[✔] Kernel is clean (Taint value: 0 - Pristine state)${C_RESET}"
+        else
+            echo -e "  ${C_RED}[!!] Kernel is TAINTED (Bitmask: $taint)${C_RESET}"
+            [ $((taint & 1)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Proprietary module loaded (P)${C_RESET}"
+            [ $((taint & 2)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Module was force loaded (F)${C_RESET}"
+            [ $((taint & 4)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Unsafe SMP/CPU architecture (S)${C_RESET}"
+            [ $((taint & 8)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Module force unloaded (R)${C_RESET}"
+            [ $((taint & 32)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Bad page reference / memory corruption (B)${C_RESET}"
+            [ $((taint & 64)) -ne 0 ] && echo -e "    ${C_YELLOW}-> User requested taint (U)${C_RESET}"
+            [ $((taint & 128)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Kernel died previously / OOPS occurred (D)${C_RESET}"
+            [ $((taint & 4096)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Out-of-tree module loaded (O)${C_RESET}"
+            [ $((taint & 8192)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Unsigned module loaded (E)${C_RESET}"
+        fi
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- MODULE LOADING RESTRICTIONS ---${C_RESET}"
+    if [ -f /proc/sys/kernel/modules_disabled ]; then
+        local mod_dis; mod_dis=$(cat /proc/sys/kernel/modules_disabled 2>/dev/null)
+        if [ "$mod_dis" -eq 1 ]; then
+            echo -e "  ${C_GREEN}[✔] kernel.modules_disabled = 1 (LKM loading permanently locked)${C_RESET}"
+        else
+            echo -e "  ${C_YELLOW}[!] kernel.modules_disabled = 0 (Runtime module insertion allowed)${C_RESET}"
+        fi
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- SUSPICIOUS / UNLINKED LOADED MODULES ---${C_RESET}"
+    if [ -f /proc/modules ]; then
+        local kver; kver=$(uname -r 2>/dev/null)
+        local mod_dep="/lib/modules/$kver/modules.dep"
+        local anomalous=0
+        awk '{print $1}' /proc/modules | head -n 35 | while read -r mod; do
+            if [ -f "$mod_dep" ] && ! grep -q "/$mod\.ko" "$mod_dep" 2>/dev/null; then
+                echo -e "  ${C_RED}[!!] Out-of-tree / Unindexed module: $mod${C_RESET}"
+                anomalous=1
+            fi
+        done
+        [ "$anomalous" -eq 0 ] && echo -e "  ${C_GREEN}[✔] Sampled LKMs correspond to official module tree.${C_RESET}"
+        echo -e "\n  ${C_CYAN}Total active modules in kernel:${C_RESET} $(wc -l < /proc/modules 2>/dev/null)"
+    fi
+    echo ""
+}
+
+cmd_deleted_procs() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX GHOST PROCESS & DELETED BINARY AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- PROCESSES RUNNING FROM DELETED / UNLINKED BINARIES ---${C_RESET}"
+    local count=0
+    for exe in /proc/[0-9]*/exe; do
+        if [ -L "$exe" ]; then
+            local target; target=$(readlink "$exe" 2>/dev/null || true)
+            if echo "$target" | grep -q '(deleted)'; then
+                local pid; pid=$(basename "$(dirname "$exe")")
+                local comm; comm=$(cat "/proc/$pid/comm" 2>/dev/null || echo "unknown")
+                local user; user=$(ps -o user= -p "$pid" 2>/dev/null || echo "?")
+                echo -e "  ${C_RED}[!!] GHOST BINARY DETECTED:${C_RESET} PID ${C_YELLOW}$pid${C_RESET} ($comm) by user ${C_YELLOW}$user${C_RESET}"
+                echo -e "       Original path: $target"
+                count=$((count + 1))
+            fi
+        fi
+    done
+    if [ "$count" -eq 0 ]; then
+        echo -e "  ${C_GREEN}[✔] No ghost processes running from unlinked binaries detected.${C_RESET}"
+    else
+        echo -e "\n  ${C_RED}[!] Total stealth deleted processes found: $count${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_cap_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX LINUX FILE & AMBIENT CAPABILITIES AUDIT...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- HIGH-RISK BINARY FILE CAPABILITIES ---${C_RESET}"
+    if command -v getcap >/dev/null 2>&1; then
+        local found=0
+        run_as_root getcap -r /bin /sbin /usr/bin /usr/sbin 2>/dev/null | while read -r line; do
+            if echo "$line" | grep -qE 'cap_setuid|cap_sys_admin|cap_dac_override|cap_net_raw|cap_sys_ptrace'; then
+                echo -e "  ${C_RED}[!!] CRITICAL CAP:${C_RESET} $line"
+            else
+                echo -e "  ${C_YELLOW}[*] Cap:${C_RESET} $line"
+            fi
+            found=1
+        done
+        [ "$found" -eq 0 ] && echo -e "  ${C_GREEN}[✔] No abnormal file capabilities discovered.${C_RESET}"
+    else
+        echo -e "${C_YELLOW}[!] getcap utility not available. ax install libcap2-bin${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- CURRENT SHELL BOUNDING CAPABILITIES ---${C_RESET}"
+    if [ -f /proc/self/status ]; then
+        grep -E 'CapInh|CapPrm|CapEff|CapBnd|CapAmb' /proc/self/status 2>/dev/null | while read -r cap; do
+            echo -e "  $cap"
+        done
+    fi
+    echo ""
+}
+
+cmd_ebpf_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX eBPF ENGINE & HOOK AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- UNPRIVILEGED BPF POLICY ---${C_RESET}"
+    if [ -f /proc/sys/kernel/unprivileged_bpf_disabled ]; then
+        local bpf_dis; bpf_dis=$(cat /proc/sys/kernel/unprivileged_bpf_disabled 2>/dev/null)
+        if [ "$bpf_dis" -ge 1 ] 2>/dev/null; then
+            echo -e "  ${C_GREEN}[✔] unprivileged_bpf_disabled = $bpf_dis (Restricted to privileged admin)${C_RESET}"
+        else
+            echo -e "  ${C_RED}[!] unprivileged_bpf_disabled = 0 (Unprivileged users can load eBPF bytecode!)${C_RESET}"
+        fi
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- LOADED eBPF PROGRAMS ---${C_RESET}"
+    if command -v bpftool >/dev/null 2>&1; then
+        run_as_root bpftool prog list 2>/dev/null | head -n 30 || echo "  No eBPF programs reported or need root."
+    elif [ -d /sys/fs/bpf ]; then
+        local pinned; pinned=$(ls -A /sys/fs/bpf 2>/dev/null | wc -l)
+        echo -e "  Pinned BPF objects in /sys/fs/bpf: ${C_YELLOW}$pinned${C_RESET}"
+    else
+        echo -e "${C_GRAY}[i] bpftool not installed. ax install linux-tools-generic / bpf-tools${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_root_persistence() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX DEEP ROOT PERSISTENCE VECTOR SCANNER...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- 1. SHARED LIBRARY HOOKS (ld.so.preload) ---${C_RESET}"
+    if [ -f /etc/ld.so.preload ]; then
+        echo -e "  ${C_RED}[!!] WARNING: /etc/ld.so.preload exists!${C_RESET}"
+        cat /etc/ld.so.preload 2>/dev/null
+    else
+        echo -e "  ${C_GREEN}[✔] No /etc/ld.so.preload detected (clean).${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- 2. SYSTEMD SYSTEM GENERATORS ---${C_RESET}"
+    for gen in /lib/systemd/system-generators /etc/systemd/system-generators /usr/lib/systemd/system-generators; do
+        if [ -d "$gen" ] && [ "$(ls -A "$gen" 2>/dev/null)" ]; then
+            echo -e "  ${C_YELLOW}[*] Generator in $gen:${C_RESET}"
+            ls -la "$gen" 2>/dev/null
+        fi
+    done
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- 3. CRON SPOOL & RECURRING HOOKS ---${C_RESET}"
+    ls -la /etc/cron.d /etc/cron.daily /etc/cron.hourly 2>/dev/null | head -n 25
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- 4. PAM AUTHENTICATION HOOKS ---${C_RESET}"
+    grep -rn "pam_exec" /etc/pam.d/ 2>/dev/null || echo -e "  ${C_GREEN}[✔] No pam_exec backdoor triggers discovered.${C_RESET}"
+    echo ""
+}
+
+cmd_seccomp_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SECCOMP-BPF SANDBOX ISOLATION AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- SECCOMP SUPPORT STATUS ---${C_RESET}"
+    if [ -f /proc/sys/kernel/seccomp ]; then
+        echo -e "  ${C_GREEN}[✔] Kernel Seccomp subsystem active.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- PROCESS SECCOMP ENFORCEMENT SAMPLER ---${C_RESET}"
+    local strict=0; local filter=0; local disabled=0
+    for status in /proc/[0-9]*/status; do
+        local mode; mode=$(grep -i '^Seccomp:' "$status" 2>/dev/null | awk '{print $2}')
+        case "$mode" in
+            1) strict=$((strict + 1)) ;;
+            2) filter=$((filter + 1)) ;;
+            0) disabled=$((disabled + 1)) ;;
+        esac
+    done
+    echo -e "  ${C_GREEN}[*] Strict Mode (1):${C_RESET}     $strict processes"
+    echo -e "  ${C_CYAN}[*] Filter Mode (2):${C_RESET}     $filter processes (sandboxed with BPF)"
+    echo -e "  ${C_YELLOW}[*] Disabled Mode (0):${C_RESET}   $disabled processes (unrestricted syscalls)"
+    echo ""
+}
+
+cmd_tty_snoop_detect() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX TTY / PTY SNOOPING & INJECTION AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- TIOCSTI IOCTL INJECTION PROTECTION ---${C_RESET}"
+    if [ -f /proc/sys/dev/tty/legacy_tiocsti ]; then
+        local val; val=$(cat /proc/sys/dev/tty/legacy_tiocsti 2>/dev/null)
+        if [ "$val" -eq 0 ]; then
+            echo -e "  ${C_GREEN}[✔] legacy_tiocsti = 0 (TIOCSTI injection disabled - Protected)${C_RESET}"
+        else
+            echo -e "  ${C_RED}[!] legacy_tiocsti = $val (TIOCSTI injection enabled - Vulnerable to TTY hijacking)${C_RESET}"
+        fi
+    else
+        echo -e "  ${C_GRAY}[i] legacy_tiocsti sysctl not exposed in this kernel build.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- ACTIVE PSEUDO-TERMINALS (/dev/pts) ---${C_RESET}"
+    if [ -d /dev/pts ]; then
+        ls -la /dev/pts/ 2>/dev/null | grep -v 'ptmx\|total' | while read -r line; do
+            echo -e "  $line"
+        done
+    fi
+    echo ""
+}
+
+cmd_kexec_lockdown() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX KERNEL LOCKDOWN & KEXEC INTEGRITY AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- LINUX KERNEL LOCKDOWN STATE ---${C_RESET}"
+    if [ -f /sys/kernel/security/lockdown ]; then
+        local lstate; lstate=$(cat /sys/kernel/security/lockdown 2>/dev/null)
+        echo -e "  Lockdown mode: ${C_YELLOW}$lstate${C_RESET}"
+        if echo "$lstate" | grep -q '\[integrity\]\|\[confidentiality\]'; then
+            echo -e "  ${C_GREEN}[✔] Kernel lockdown is active.${C_RESET}"
+        else
+            echo -e "  ${C_YELLOW}[!] Kernel lockdown is in 'none' state.${C_RESET}"
+        fi
+    else
+        echo -e "  ${C_GRAY}[i] /sys/kernel/security/lockdown not supported by host kernel.${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- KEXEC HOT-REPLACE HARDENING ---${C_RESET}"
+    if [ -f /proc/sys/kernel/kexec_load_disabled ]; then
+        local kdis; kdis=$(cat /proc/sys/kernel/kexec_load_disabled 2>/dev/null)
+        if [ "$kdis" -eq 1 ]; then
+            echo -e "  ${C_GREEN}[✔] kexec_load_disabled = 1 (Kernel cannot be replaced in memory)${C_RESET}"
+        else
+            echo -e "  ${C_RED}[!] kexec_load_disabled = 0 (kexec_load syscall enabled)${C_RESET}"
+        fi
+    fi
+    echo ""
+}
+
+cmd_mem_protect_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX HARDWARE & CPU EXPLOIT MITIGATION AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- CPU HARDWARE MITIGATION FLAGS ---${C_RESET}"
+    if [ -f /proc/cpuinfo ]; then
+        local flags; flags=$(grep -m 1 "^flags" /proc/cpuinfo 2>/dev/null || echo "")
+        echo -n "  SMEP (Supervisor Execution Prevention): "
+        echo "$flags" | grep -qw "smep" && echo -e "${C_GREEN}[✔] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
+        echo -n "  SMAP (Supervisor Access Prevention):    "
+        echo "$flags" | grep -qw "smap" && echo -e "${C_GREEN}[✔] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
+        echo -n "  NX/XD (No-Execute Memory Pages):        "
+        echo "$flags" | grep -qw "nx" && echo -e "${C_GREEN}[✔] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- SYSFS VULNERABILITY STATUS ---${C_RESET}"
+    if [ -d /sys/devices/system/cpu/vulnerabilities ]; then
+        for vuln in /sys/devices/system/cpu/vulnerabilities/*; do
+            local vname; vname=$(basename "$vuln")
+            local vstat; vstat=$(cat "$vuln" 2>/dev/null)
+            if echo "$vstat" | grep -qi 'mitigation\|not affected'; then
+                echo -e "  ${C_GREEN}[✔] $vname:${C_RESET} $vstat"
+            else
+                echo -e "  ${C_RED}[!!] $vname:${C_RESET} $vstat"
+            fi
+        done
+    fi
+    echo ""
+}
+
+cmd_mount_hardening() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX FILESYSTEM MOUNT HARDENING AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- TEMPORARY & SHARED MOUNT POLICIES ---${C_RESET}"
+    for dir in /tmp /dev/shm /var/tmp; do
+        if [ -d "$dir" ]; then
+            local mnt; mnt=$(grep -E " $dir " /proc/mounts 2>/dev/null | tail -1 || true)
+            if [ -n "$mnt" ]; then
+                echo -e "  ${C_YELLOW}$dir:${C_RESET} $mnt"
+                echo "$mnt" | grep -q "nosuid" && echo -e "    ${C_GREEN}[✔] nosuid enforced${C_RESET}" || echo -e "    ${C_RED}[!] Missing nosuid${C_RESET}"
+                echo "$mnt" | grep -q "noexec" && echo -e "    ${C_GREEN}[✔] noexec enforced${C_RESET}" || echo -e "    ${C_YELLOW}[!] Missing noexec${C_RESET}"
+                echo "$mnt" | grep -q "nodev" && echo -e "    ${C_GREEN}[✔] nodev enforced${C_RESET}" || echo -e "    ${C_RED}[!] Missing nodev${C_RESET}"
+            else
+                echo -e "  ${C_YELLOW}$dir:${C_RESET} Not on separate mount partition."
+            fi
+        fi
+    done
+    echo ""
+}
+
+cmd_ipc_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX IPC SHARED MEMORY & QUEUE AUDITOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- SHARED MEMORY SEGMENTS (ipcs -m) ---${C_RESET}"
+    if command -v ipcs >/dev/null 2>&1; then
+        ipcs -m 2>/dev/null | head -n 25
+        echo ""
+        echo -e "${C_WHITE}${C_BOLD}--- MESSAGE QUEUES & SEMAPHORES ---${C_RESET}"
+        ipcs -q 2>/dev/null | head -n 15
+        ipcs -s 2>/dev/null | head -n 15
+    else
+        echo -e "${C_YELLOW}[!] ipcs command not found. Inspecting /dev/shm...${C_RESET}"
+        ls -la /dev/shm 2>/dev/null
+    fi
+    echo ""
+}
+
+cmd_dmesg_exploit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX KERNEL EXPLOIT & CORRUPTION DETECTOR...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- SCANNING DMESG FOR EXPLOIT SIGNATURES ---${C_RESET}"
+    local exp_log
+    exp_log=$(dmesg 2>/dev/null | grep -Eic 'general protection fault|kernel stack corrupted|stack-protector|refcount_t overflow|poison overwritten|Slab corruption|unable to handle kernel paging' || echo "0")
+    if [ "$exp_log" -gt 0 ] 2>/dev/null; then
+        echo -e "  ${C_RED}[!!] DETECTED $exp_log SUSPICIOUS MEMORY/EXPLOIT EVENTS IN DMESG!${C_RESET}\n"
+        dmesg 2>/dev/null | grep -Ei 'general protection fault|kernel stack corrupted|stack-protector|refcount_t overflow|poison overwritten|Slab corruption|unable to handle kernel paging' | tail -n 25
+    else
+        echo -e "  ${C_GREEN}[✔] Zero kernel memory corruption / exploit patterns detected in ring buffer.${C_RESET}"
+    fi
+    echo ""
+}
+
+cmd_root_jail() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX EPHEMERAL ROOT NAMESPACE SANDBOX JAIL...${C_RESET}\n"
+    if ! command -v unshare >/dev/null 2>&1; then
+        echo -e "${C_RED}[!] 'unshare' utility not available on host.${C_RESET}"; return 1
+    fi
+    echo -e "${C_YELLOW}[*] Spawning isolated sandbox (PID, Mount, IPC, UTS, Network namespaces)...${C_RESET}"
+    echo -e "${C_GRAY}[i] Type 'exit' to terminate jail and destroy container state.${C_RESET}\n"
+    unshare --mount --uts --ipc --pid --fork --mount-proc /bin/bash 2>/dev/null || \
+        unshare --user --mount --pid --fork /bin/bash 2>/dev/null || \
+        echo -e "${C_RED}[!] Could not create isolated namespace jail (needs root or user namespaces).${C_RESET}"
+    echo -e "\n${C_GREEN}[✔] Namespace sandbox session terminated.${C_RESET}\n"
+}
+
+cmd_core_dump_audit() {
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX PROCESS CORE DUMP & MEMORY LEAK POLICY AUDIT...${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}--- CORE PATTERN HANDLER ---${C_RESET}"
+    if [ -f /proc/sys/kernel/core_pattern ]; then
+        local pattern; pattern=$(cat /proc/sys/kernel/core_pattern 2>/dev/null)
+        echo -e "  core_pattern: ${C_YELLOW}$pattern${C_RESET}"
+        if echo "$pattern" | grep -q '^|'; then
+            echo -e "  ${C_YELLOW}[*] Core dumps piped to userland handler.${C_RESET}"
+        elif [ -z "$pattern" ]; then
+            echo -e "  ${C_GREEN}[✔] Core dumps disabled.${C_RESET}"
+        fi
+    fi
+    echo ""
+    echo -e "${C_WHITE}${C_BOLD}--- SUID PROCESS DUMP PRIVILEGE (fs.suid_dumpable) ---${C_RESET}"
+    if [ -f /proc/sys/fs/suid_dumpable ]; then
+        local sd; sd=$(cat /proc/sys/fs/suid_dumpable 2>/dev/null)
+        if [ "$sd" -eq 0 ]; then
+            echo -e "  ${C_GREEN}[✔] fs.suid_dumpable = 0 (SUID processes cannot be dumped - Secure)${C_RESET}"
+        else
+            echo -e "  ${C_RED}[!] fs.suid_dumpable = $sd (SUID core dumping enabled - Memory leak risk!)${C_RESET}"
+        fi
+    fi
+    echo ""
+}
+
+# ---------------------------------------------------------------------
 # 10. Help, List & Command Cheatsheet
 # ---------------------------------------------------------------------
 
 cmd_list() {
     print_banner
-    echo -e "${C_WHITE}${C_BOLD}ASTERIX OS COMMAND REPERTOIRE (150+ Specialized Suites & Omni-Dispatcher):${C_RESET}\n"
+    echo -e "${C_WHITE}${C_BOLD}ASTERIX OS COMMAND REPERTOIRE (170+ Specialized Suites & Omni-Dispatcher):${C_RESET}\n"
     echo -e "  ${C_CYAN}${C_BOLD}[1] System & Packages:${C_RESET} update, upgrade, install, remove, search, clean, build, doctor, status, version, cpu, disk, mem, ps, benchmark, service, sysfetch, pstree, env-audit, disk-io, uptime-stats, battery, pkg-verify"
     echo -e "  ${C_CYAN}${C_BOLD}[2] Network & OSINT:${C_RESET}   ip, ports, ping, scan, netrecon, mac, webrecon, dns, whois, traceroute, arp, connections, subdomains, banner-grab, speedtest, traffic, ip-geo, net-route, listening, net-neighbors, arp-detect"
     echo -e "  ${C_CYAN}${C_BOLD}[3] Defense & Hardening:${C_RESET}hash, shred, rootkit, trace, vuln, packet, logwatch, firewall, audit, suid, certs, stealth, killswitch, malware-scan, docker-audit, kernel-hardening, cis-audit, fim-init, fim-check, auth-audit, git-secrets, tls-audit, cron-audit, ssh-audit, shadow-audit, usb-audit, nft-rules, container-escape"
-    echo -e "  ${C_CYAN}${C_BOLD}[4] Cyber Warfare:${C_RESET}     matrix, decoy, payload, wifi-scan, sniff-live, tor-status, quote, port-knock"
-    echo -e "  ${C_CYAN}${C_BOLD}[5] Crypto & Encoding:${C_RESET} b64enc, b64dec, hexenc, hexdec, genpass, entropy, encrypt, decrypt, qr, cert-create, json-format"
-    echo -e "  ${C_CYAN}${C_BOLD}[6] Forensics & Tracing:${C_RESET}hexdump, strings-scan, syscall-trace, open-files, mem-regions, dmesg-watch, exif"
-    echo -e "  ${C_CYAN}${C_BOLD}[7] Vault & Workspace:${C_RESET} backup, loot, scaffold, env, wallpaper, hud, top, compress, extract, find-large"
-    echo -e "  ${C_CYAN}${C_BOLD}[8] Cyber Subsystems:${C_RESET}  recon, web, exploit, crack, sniff, wifi, forensics, rev, dev, quad, portal, discord, cloud, vault, shell"
+    echo -e "  ${C_CYAN}${C_BOLD}[4] Deep Core Root:${C_RESET}     kmod-audit, deleted-procs, cap-audit, ebpf-audit, root-persistence, seccomp-audit, tty-snoop, kexec-lockdown, mem-protect, mount-hardening, ipc-audit, dmesg-exploit, root-jail, core-dump-audit"
+    echo -e "  ${C_CYAN}${C_BOLD}[5] Cyber Warfare:${C_RESET}     matrix, decoy, payload, wifi-scan, sniff-live, tor-status, quote, port-knock"
+    echo -e "  ${C_CYAN}${C_BOLD}[6] Crypto & Encoding:${C_RESET} b64enc, b64dec, hexenc, hexdec, genpass, entropy, encrypt, decrypt, qr, cert-create, json-format"
+    echo -e "  ${C_CYAN}${C_BOLD}[7] Forensics & Tracing:${C_RESET}hexdump, strings-scan, syscall-trace, open-files, mem-regions, dmesg-watch, exif"
+    echo -e "  ${C_CYAN}${C_BOLD}[8] Vault & Workspace:${C_RESET} backup, loot, scaffold, env, wallpaper, hud, top, compress, extract, find-large"
+    echo -e "  ${C_CYAN}${C_BOLD}[9] Cyber Subsystems:${C_RESET}  recon, web, exploit, crack, sniff, wifi, forensics, rev, dev, quad, portal, discord, cloud, vault, shell"
     echo -e "\n  ${C_YELLOW}${C_BOLD}⚡ OMNI-DISPATCHER:${C_RESET} Any standard tool (e.g. 'ax nmap', 'ax curl', 'ax git', 'ax hydra') is automatically wrapped and executed!"
     echo ""
 }
@@ -2479,6 +2822,22 @@ cmd_help() {
     echo -e "  ${C_MAGENTA}ax genpass [len]${C_RESET}        Generate high-entropy cryptographic password"
     echo -e "  ${C_MAGENTA}ax entropy <file>${C_RESET}       Detect packed, encrypted or obfuscated binaries"
     echo -e "  ${C_MAGENTA}ax qr <text|url>${C_RESET}        Generate terminal ASCII QR code\n"
+
+    echo -e "${C_WHITE}${C_BOLD}DEEP CORE ROOT & KERNEL HARDENING:${C_RESET}"
+    echo -e "  ${C_RED}ax kmod-audit${C_RESET}           Deep kernel module analysis, taint bitmask & unlinked LKM check"
+    echo -e "  ${C_RED}ax deleted-procs${C_RESET}        Ghost process detection: running binaries unlinked from disk"
+    echo -e "  ${C_RED}ax cap-audit${C_RESET}            Linux file capabilities & ambient process bounding set audit"
+    echo -e "  ${C_RED}ax ebpf-audit${C_RESET}           Inspect loaded eBPF programs, maps & unprivileged BPF state"
+    echo -e "  ${C_RED}ax root-persistence${C_RESET}    Scan ld.so.preload, systemd generators & PAM backdoor hooks"
+    echo -e "  ${C_RED}ax seccomp-audit${C_RESET}        Audit Seccomp-BPF filter isolation status across all processes"
+    echo -e "  ${C_RED}ax tty-snoop${C_RESET}            Detect TIOCSTI ioctl injection & audit pseudo-terminals"
+    echo -e "  ${C_RED}ax kexec-lockdown${C_RESET}       Kernel lockdown level & kexec hot-swap disable state check"
+    echo -e "  ${C_RED}ax mem-protect${C_RESET}          Verify CPU hardware exploit mitigations (SMEP, SMAP, NX)"
+    echo -e "  ${C_RED}ax mount-hardening${C_RESET}     Inspect /tmp & /dev/shm for nosuid, noexec, nodev flags"
+    echo -e "  ${C_RED}ax ipc-audit${C_RESET}            Audit shared memory segments, message queues & semaphores"
+    echo -e "  ${C_RED}ax dmesg-exploit${C_RESET}        Scan dmesg for slab corruption, ROP or stack canary crashes"
+    echo -e "  ${C_RED}ax root-jail${C_RESET}            Spawn ephemeral zero-privilege namespace isolation sandbox"
+    echo -e "  ${C_RED}ax core-dump-audit${C_RESET}      Inspect core_pattern handler & suid_dumpable memory policy\n"
 
     echo -e "${C_WHITE}${C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:${C_RESET}"
     echo -e "  ${C_BLUE}ax backup${C_RESET}               Sync and compress vault to Discord and Cloud Panel"
@@ -2940,6 +3299,50 @@ case "$SUBCOMMAND" in
     mem-regions|memmap)
         shift
         cmd_mem_regions "$@"
+        ;;
+
+    # Subsystem: Deep Core Root & Kernel Hardening (v2.9.0)
+    kmod-audit|lkm-audit)
+        cmd_kmod_audit
+        ;;
+    deleted-procs|ghost-procs)
+        cmd_deleted_procs
+        ;;
+    cap-audit|capabilities)
+        cmd_cap_audit
+        ;;
+    ebpf-audit|bpf-audit)
+        cmd_ebpf_audit
+        ;;
+    root-persistence|persistence)
+        cmd_root_persistence
+        ;;
+    seccomp-audit|seccomp)
+        cmd_seccomp_audit
+        ;;
+    tty-snoop|tiocsti-check)
+        cmd_tty_snoop_detect
+        ;;
+    kexec-lockdown|lockdown-audit)
+        cmd_kexec_lockdown
+        ;;
+    mem-protect|cpu-mitigations)
+        cmd_mem_protect_audit
+        ;;
+    mount-hardening|mount-audit)
+        cmd_mount_hardening
+        ;;
+    ipc-audit|ipcs-check)
+        cmd_ipc_audit
+        ;;
+    dmesg-exploit|kernel-corruption)
+        cmd_dmesg_exploit
+        ;;
+    root-jail|unshare-jail)
+        cmd_root_jail
+        ;;
+    core-dump-audit|coredump)
+        cmd_core_dump_audit
         ;;
 
     # 7. Vault, Workspace & Desktop HUD

@@ -1044,6 +1044,22 @@ fn main() {
         "port-knock" | "knock" => { dispatch_ax_tool(&args[1..]); return; }
         "mem-regions" | "memmap" => { dispatch_ax_tool(&args[1..]); return; }
 
+        // Deep Core Root & Kernel Hardening (v2.9.0)
+        "kmod-audit" | "lkm-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "deleted-procs" | "ghost-procs" => { dispatch_ax_tool(&args[1..]); return; }
+        "cap-audit" | "capabilities" => { dispatch_ax_tool(&args[1..]); return; }
+        "ebpf-audit" | "bpf-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "root-persistence" | "persistence" => { dispatch_ax_tool(&args[1..]); return; }
+        "seccomp-audit" | "seccomp" => { dispatch_ax_tool(&args[1..]); return; }
+        "tty-snoop" | "tiocsti-check" => { dispatch_ax_tool(&args[1..]); return; }
+        "kexec-lockdown" | "lockdown-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "mem-protect" | "cpu-mitigations" => { dispatch_ax_tool(&args[1..]); return; }
+        "mount-hardening" | "mount-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "ipc-audit" | "ipcs-check" => { dispatch_ax_tool(&args[1..]); return; }
+        "dmesg-exploit" | "kernel-corruption" => { dispatch_ax_tool(&args[1..]); return; }
+        "root-jail" | "unshare-jail" => { dispatch_ax_tool(&args[1..]); return; }
+        "core-dump-audit" | "coredump" => { dispatch_ax_tool(&args[1..]); return; }
+
         // Omni-Dispatcher Fallback: dynamically executes any OS tool via ax
         _ => {
             if !first_arg.is_empty() && !first_arg.starts_with("--") {
