@@ -289,6 +289,29 @@ case "$action" in
         echo -e "  ${C_MAGENTA}${C_BOLD}  ASTERIX OS — Built by NEXO TECHNOLOGIES. Engineered for supremacy.${C_RESET}\n"
         ;;
 
+    teach|learn|remember)
+        fact="$*"
+        echo -e "  ${C_GREEN}${C_BOLD}[✔] ASTERIX AI LEARNED:${C_RESET} \"${fact}\""
+        echo -e "  ${C_GRAY}[i] Persistence requires Python 3 (ax ai profile to view).${C_RESET}"
+        if command -v python3 >/dev/null 2>&1; then
+            _ai_dir="$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")"
+            python3 "${_ai_dir}/user_input_learner.py" teach "$fact" 2>/dev/null
+        fi
+        exit 0
+        ;;
+
+    profile|memory|learner|stats|whoami)
+        echo -e "\n  ${C_CYAN}${C_BOLD}[ ASTERIX AI // COGNITIVE MEMORY PROFILE ]${C_RESET}\n"
+        if command -v python3 >/dev/null 2>&1; then
+            _ai_dir="$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")"
+            python3 "${_ai_dir}/user_input_learner.py" profile
+        else
+            echo -e "  ${C_YELLOW}[i] AI memory profile requires Python 3.${C_RESET}"
+            echo -e "  ${C_GRAY}Install Python 3 and run: ax ai profile${C_RESET}\n"
+        fi
+        exit 0
+        ;;
+
     audit|*)
         echo -e "  ${C_BOLD}EVALUATING ACTIVE KNOWLEDGE BASE RULES:${C_RESET}\n"
         passed=0

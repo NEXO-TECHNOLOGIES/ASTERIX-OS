@@ -3413,6 +3413,35 @@ cmd_proxychains() {
     fi
 }
 
+
+cmd_autoupdate() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    local au_dir=""
+    if [ -n "$ax_root" ] && [ -d "${ax_root}/auto-updater" ]; then
+        au_dir="${ax_root}/auto-updater"
+    elif [ -d "/etc/asterix/auto-updater" ]; then
+        au_dir="/etc/asterix/auto-updater"
+    elif [ -d "auto-updater" ]; then
+        au_dir="auto-updater"
+    elif [ -d "$HOME/asterix/auto-updater" ]; then
+        au_dir="$HOME/asterix/auto-updater"
+    fi
+
+    if [ -z "$au_dir" ]; then
+        echo -e "${C_RED}[!] Error: auto-updater directory not located.${C_RESET}"
+        return 1
+    fi
+
+    if command -v python3 >/dev/null 2>&1 && [ -f "${au_dir}/update_daemon.py" ]; then
+        python3 "${au_dir}/update_daemon.py" "$@"
+    elif [ -f "${au_dir}/update_daemon.sh" ]; then
+        bash "${au_dir}/update_daemon.sh" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Neither update_daemon.py nor update_daemon.sh found in ${au_dir}.${C_RESET}"
+        return 1
+    fi
+}
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
     find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
@@ -5442,14 +5471,17 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax code-repair [fix] [dir]${C_RESET}  Native Rust/C engine: detect & auto-heal broken source files"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
-    echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain\n"
+    echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
+    echo -e "  ${C_CYAN}ax auto-update [start|stop|check|status|log]${C_RESET}  F-Droid-style live repo sync daemon\n"
 
     echo -e "${C_WHITE}${C_BOLD}CONVERSATIONAL SOC AI & EXPERT COPILOT:${C_RESET}"
     echo -e "  ${C_MAGENTA}ax ai chat${C_RESET}              Interactive ChatGPT-style conversational cybersecurity session"
     echo -e "  ${C_MAGENTA}ax ai ask \"<query>\"${C_RESET}    Natural language threat model, attack vector & remediation"
     echo -e "  ${C_MAGENTA}ax ai audit${C_RESET}             Evaluate live host against knowledge base & score resilience"
     echo -e "  ${C_MAGENTA}ax ai about [lang]${C_RESET}      Multilingual system overview (en, es, fr, de, zh, ar, ru)"
-    echo -e "  ${C_MAGENTA}ax ai rules${C_RESET}             List all active knowledge base rules, IDs and severity\n"
+    echo -e "  ${C_MAGENTA}ax ai rules${C_RESET}             List all active knowledge base rules, IDs and severity"
+    echo -e "  ${C_MAGENTA}ax ai teach \"<fact>\"${C_RESET}    Teach ASTERIX AI a custom rule or preference (cognitive memory)"
+    echo -e "  ${C_MAGENTA}ax ai profile${C_RESET}           Show AI cognitive memory profile, interaction heatmap, learned facts\n"
 
     echo -e "${C_WHITE}${C_BOLD}TACTICAL CYBER WARFARE, DECEPTION & ANTI-FORENSICS:${C_RESET}"
     echo -e "  ${C_RED}ax matrix${C_RESET}               Stream cyberpunk animated digital rain visualizer"
@@ -6314,6 +6346,10 @@ case "$SUBCOMMAND" in
         shift
         cmd_code_repair "$@"
         ;;
+    auto-update|update-daemon|live-sync|fdroid-sync|updater)
+        shift
+        cmd_autoupdate "$@"
+        ;;
     proxychains|proxy-chains|proxychains-creator|proxy-creator|proxy)
         shift
         cmd_proxychains "$@"
@@ -6391,3 +6427,4 @@ case "$SUBCOMMAND" in
         fi
         ;;
 esac
+

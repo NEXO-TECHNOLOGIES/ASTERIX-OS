@@ -1,0 +1,21 @@
+[Unit]
+Description=ASTERIX OS Live Auto-Updater Daemon (F-Droid Style)
+Documentation=https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env python3 /opt/asterix-os/auto-updater/update_daemon.py start
+ExecStop=/usr/bin/env python3 /opt/asterix-os/auto-updater/update_daemon.py stop
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=asterix-updater
+# Run as current user (change if installed system-wide)
+# User=asterix
+# Group=asterix
+
+[Install]
+WantedBy=multi-user.target

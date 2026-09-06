@@ -237,6 +237,11 @@ alias os-repair='ax code-repair fix'
 alias ax-proxy='ax proxychains'
 alias ax-proxychains='ax proxychains'
 alias proxy-chain='ax proxychains'
+alias ax-memory='ax ai profile'
+alias ax-teach='ax ai teach'
+alias ai-memory='ax ai profile'
+alias ax-learn='ax ai teach'
+alias auto-update='ax auto-update check'
 
 # ax Crypto, Encoding & Passwords
 alias ax-encrypt='ax encrypt'

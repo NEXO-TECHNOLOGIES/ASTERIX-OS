@@ -459,3 +459,23 @@ ax proxychains status            # Display current active proxy chains configura
 
 
 
+
+## UPDATE 16 — AI Cognitive Adaptation Engine
+
+- NEW: `asterix-ai/user_input_learner.py` — Full cognitive profile engine
+- Persistent memory at `~/.asterix_vault/ai_memory/user_profile.json`
+- Tracks 6 interest domains, infers technical level, detects preferred languages
+- `ax ai teach "fact"` — store custom rules permanently into AI memory
+- `ax ai profile` — rich color-coded memory HUD
+- Every query auto-ingests and recalls relevant learned facts
+- New aliases: `ax-memory`, `ax-teach`, `ai-memory`, `ax-learn`
+
+## UPDATE 17 — Live Auto-Update Daemon (F-Droid Style)
+
+- NEW: `auto-updater/update_daemon.py` — Python background daemon
+- NEW: `auto-updater/update_daemon.sh` — Bash fallback daemon
+- NEW: `auto-updater/asterix-updater.service` — systemd unit
+- Polls GitHub API every 60s for new commits, auto-pulls on change
+- `ax auto-update start|stop|status|check|log`
+- State + log stored in `~/.asterix_vault/auto-updater/`
+- New alias: `auto-update`

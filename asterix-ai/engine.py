@@ -12,6 +12,14 @@ import os
 import json
 import re
 
+try:
+    from . import user_input_learner
+except ImportError:
+    try:
+        import user_input_learner
+    except ImportError:
+        user_input_learner = None
+
 C_RESET = "\033[0m"
 C_BOLD = "\033[1m"
 C_CYAN = "\033[38;5;51m"
@@ -164,6 +172,20 @@ def cmd_ask(query, in_chat=False):
     else:
         print()
 
+    recalled_facts = []
+    if user_input_learner:
+        try:
+            user_input_learner.ingest_query(query)
+            recalled_facts = user_input_learner.recall_relevant_facts(query)
+        except Exception:
+            pass
+
+    if recalled_facts:
+        print(f"  {C_YELLOW}{C_BOLD}🧠 COGNITIVE MEMORY ENGAGED [Context Recalled]:{C_RESET}")
+        for fact in recalled_facts:
+            print(f"   {C_CYAN}•{C_RESET} {C_WHITE}{fact}{C_RESET}")
+        print()
+
     rules = load_rules()
     tokens = set(re.findall(r"\w+", query.lower()))
 
@@ -261,6 +283,14 @@ def cmd_chat():
             if prompt.lower() in ("exit", "quit", "bye", "q"):
                 print(f"\n  {C_MAGENTA}ASTERIX AI session terminated. Stay vigilant.{C_RESET}\n")
                 break
+            if prompt.lower().startswith(("teach:", "remember:", "learn:")):
+                fact_text = prompt.split(":", 1)[1].strip()
+                if user_input_learner:
+                    count = user_input_learner.teach_fact(fact_text)
+                    print(f"\n  {C_GREEN}{C_BOLD}ASTERIX AI ❯{C_RESET} I have permanently recorded this in my memory [Memory Bank: {count} Facts]:")
+                    print(f"  {C_CYAN}\"{fact_text}\"{C_RESET}")
+                    print(f"  I will adapt future advice and threat models accordingly.\n")
+                continue
             cmd_ask(prompt, in_chat=True)
         except (KeyboardInterrupt, EOFError):
             print(f"\n\n  {C_MAGENTA}ASTERIX AI session terminated.{C_RESET}\n")
@@ -584,6 +614,21 @@ def main():
         cmd_ask(query)
     elif args[0] in ("rules", "list"):
         cmd_list_rules()
+    elif args[0] in ("profile", "memory", "learner", "stats"):
+        if user_input_learner:
+            user_input_learner.display_profile()
+        else:
+            print("User memory module not available.")
+    elif args[0] in ("teach", "learn", "remember"):
+        if len(args) > 1:
+            fact = " ".join(args[1:])
+            if user_input_learner:
+                count = user_input_learner.teach_fact(fact)
+                print(f"\n  {C_GREEN}{C_BOLD}[✔] ASTERIX AI Learned New Fact [Total Memory: {count} Facts]:{C_RESET}")
+                print(f"  {C_CYAN}\"{fact}\"{C_RESET}\n")
+                print(f"  {C_WHITE}This rule will adapt future AI responses and threat models.{C_RESET}\n")
+        else:
+            print(f"{C_RED}[!] Usage: ax ai teach \"<fact or preference to remember>\"{C_RESET}")
     elif args[0] in ("about", "what", "info", "overview", "features", "whoami", "what-is"):
         lang = args[1] if len(args) > 1 else os.environ.get("ASTERIX_LANG", "en")
         cmd_about(lang)

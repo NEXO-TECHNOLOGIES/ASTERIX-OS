@@ -459,3 +459,48 @@ ax proxychains status            # Display current active proxy chains configura
 
 
 
+
+---
+
+## [16] AI Cognitive Adaptation Engine — User Input Learner
+
+**Added:** `asterix-ai/user_input_learner.py`
+
+ASTERIX AI now learns and adapts to the user's thinking style in real time:
+
+- Persistent cognitive profile stored at `~/.asterix_vault/ai_memory/user_profile.json`
+- Tracks interest weights across 6 domains: kernel hardening, exploit mitigation, autonomous healing, network warfare, web security, reverse engineering
+- Infers technical level (intermediate → advanced → elite) from query complexity
+- Detects preferred programming languages automatically
+- `ax ai teach "fact"` — teach the AI a custom rule or preference, stored permanently
+- `ax ai profile` — display full AI memory HUD: interaction telemetry, topic heatmap, learned facts
+- Every `ax ai ask` query now triggers cognitive ingestion + relevant fact recall (displayed as `🧠 COGNITIVE MEMORY ENGAGED`)
+- `ax ai chat` REPL supports `teach: ...` / `learn: ...` prefix to teach mid-conversation
+
+**New aliases:** `ax-memory`, `ax-teach`, `ai-memory`, `ax-learn`
+
+---
+
+## [17] Live Auto-Update Daemon (F-Droid Style)
+
+**Added:** `auto-updater/update_daemon.py`, `auto-updater/update_daemon.sh`, `auto-updater/asterix-updater.service`
+
+ASTERIX OS now detects new GitHub commits and applies updates instantly — exactly like F-Droid:
+
+- `ax auto-update start` — start background daemon that polls GitHub API every 60 seconds
+- `ax auto-update start 30` — custom poll interval
+- `ax auto-update stop` — stop the daemon
+- `ax auto-update status` — show daemon PID, last sync time, update count, local vs remote SHA
+- `ax auto-update check` — one-shot manual check and pull
+- `ax auto-update log [N]` — view last N update log entries
+
+Detection mechanism:
+1. Queries `https://api.github.com/repos/NEXO-TECHNOLOGIES/ASTERIX-OS/commits/main`
+2. Compares remote SHA vs `git rev-parse HEAD`
+3. On mismatch → executes `git pull origin main --rebase=false`
+4. Logs all events with UTC timestamps to `~/.asterix_vault/auto-updater/update.log`
+
+**systemd:** `asterix-updater.service` unit provided for system-wide Linux install
+**Bash fallback:** `update_daemon.sh` uses `curl`/`wget` + `git` — works without Python
+
+**New alias:** `auto-update` → `ax auto-update check`

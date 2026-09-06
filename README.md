@@ -106,6 +106,11 @@ ASTERIX OS/
 ├── proxychains-creator/       # Proxy Discovery, SOCKS4/5 Validation & Chain Generator
 │   ├── proxy_manager.py      # Python 3 socket handshake, geo lookup & chain generator
 │   └── proxy_manager.sh      # Pure Bash fallback proxy tester
+├── auto-updater/              # F-Droid-Style Live Repository Sync Daemon
+│   ├── update_daemon.py      # Python 3 GitHub API poller & git-pull daemon (zero deps)
+│   ├── update_daemon.sh      # Pure Bash fallback daemon (curl/wget + git)
+│   ├── asterix-updater.service # systemd unit for Linux system-wide install
+│   └── README.md             # Auto-updater documentation
 ├── setup.sh                  # 1-command bootstrap: clones packages & compiles engines
 ├── packages/                 # Auto-synchronized external security suites
 │   ├── README.md             # Package registry documentation
