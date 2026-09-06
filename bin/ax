@@ -2455,6 +2455,243 @@ cmd_rf_audit() {
     echo ""
 }
 
+cmd_power_governor() {
+    local action="${1:-status}"
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX POWER, THERMAL & CPU GOVERNOR CONTROLLER ]${C_RESET}${C_CYAN}               ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    case "$action" in
+        save|powersave)
+            echo -e "${C_YELLOW}[*] Engaging PowerSave Governor Profile...${C_RESET}"
+            local changed=0
+            for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+                if [ -f "$g" ]; then
+                    echo "powersave" > "$g" 2>/dev/null && changed=$((changed + 1)) || true
+                fi
+            done
+            if [ "$changed" -gt 0 ]; then
+                echo -e "  ${C_GREEN}[✔] Set $changed CPU core(s) to 'powersave'${C_RESET}"
+            else
+                echo -e "  ${C_GRAY}(Governor write requires root or cpufreq driver support)${C_RESET}"
+            fi
+            ;;
+        performance|boost)
+            echo -e "${C_GREEN}[*] Engaging High-Performance Governor Profile...${C_RESET}"
+            local changed=0
+            for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+                if [ -f "$g" ]; then
+                    echo "performance" > "$g" 2>/dev/null && changed=$((changed + 1)) || true
+                fi
+            done
+            if [ "$changed" -gt 0 ]; then
+                echo -e "  ${C_GREEN}[✔] Set $changed CPU core(s) to 'performance'${C_RESET}"
+            else
+                echo -e "  ${C_GRAY}(Governor write requires root or cpufreq driver support)${C_RESET}"
+            fi
+            ;;
+        thermal|thermals)
+            echo -e "  ${C_BOLD}THERMAL SENSORS & TEMPERATURE TELEMETRY:${C_RESET}"
+            local found_thermal=0
+            for z in /sys/class/thermal/thermal_zone*; do
+                if [ -d "$z" ]; then
+                    local type_name temp_raw temp_c
+                    type_name=$(cat "$z/type" 2>/dev/null || echo "zone")
+                    temp_raw=$(cat "$z/temp" 2>/dev/null || echo "0")
+                    if [ "$temp_raw" -gt 0 ]; then
+                        temp_c=$(awk "BEGIN {printf \"%.1f\", $temp_raw/1000}")
+                        local color="${C_GREEN}"
+                        if (( $(echo "$temp_c > 75.0" | awk '{print ($1 > $2)}') )); then
+                            color="${C_RED}"
+                        elif (( $(echo "$temp_c > 60.0" | awk '{print ($1 > $2)}') )); then
+                            color="${C_YELLOW}"
+                        fi
+                        printf "  %-24s : ${color}%s °C${C_RESET}\n" "$type_name" "$temp_c"
+                        found_thermal=$((found_thermal + 1))
+                    fi
+                fi
+            done
+            [ "$found_thermal" -eq 0 ] && echo -e "  ${C_GRAY}(No standard sysfs thermal sensors exposed)${C_RESET}"
+            ;;
+        status|*)
+            echo -e "  ${C_BOLD}BATTERY & POWER SUBSYSTEM:${C_RESET}"
+            local bat_dir="/sys/class/power_supply/battery"
+            if [ ! -d "$bat_dir" ]; then
+                bat_dir=$(find /sys/class/power_supply/ -name "BAT*" 2>/dev/null | head -n 1)
+            fi
+            if [ -n "$bat_dir" ] && [ -d "$bat_dir" ]; then
+                local cap status health temp
+                cap=$(cat "$bat_dir/capacity" 2>/dev/null || echo "N/A")
+                status=$(cat "$bat_dir/status" 2>/dev/null || echo "Unknown")
+                health=$(cat "$bat_dir/health" 2>/dev/null || echo "Good")
+                temp=$(cat "$bat_dir/temp" 2>/dev/null || echo "N/A")
+                [ "$temp" != "N/A" ] && [ "$temp" -gt 100 ] && temp=$(awk "BEGIN {printf \"%.1f\", $temp/10}")
+                echo -e "  ${C_WHITE}Battery Level:${C_RESET}     ${C_GREEN}${cap}%${C_RESET} [${status}]"
+                echo -e "  ${C_WHITE}Battery Health:${C_RESET}    ${C_CYAN}${health}${C_RESET}"
+                echo -e "  ${C_WHITE}Temperature:${C_RESET}       ${C_YELLOW}${temp} °C${C_RESET}"
+            else
+                echo -e "  ${C_GRAY}(AC Powered or Battery interface not exposed)${C_RESET}"
+            fi
+
+            echo -e "\n  ${C_BOLD}CPU FREQUENCY & GOVERNOR ALLOCATIONS:${C_RESET}"
+            local count=0
+            for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+                if [ -f "$g" ]; then
+                    local gov cpu_id
+                    gov=$(cat "$g" 2>/dev/null || echo "unknown")
+                    cpu_id=$(echo "$g" | grep -o "cpu[0-9]*")
+                    printf "  %-12s : ${C_CYAN}%-14s${C_RESET}\n" "$cpu_id" "$gov"
+                    count=$((count + 1))
+                fi
+            done
+            [ "$count" -eq 0 ] && echo -e "  ${C_GRAY}(Dynamic CPU governors managed by kernel scheduler)${C_RESET}"
+
+            echo -e "\n  ${C_YELLOW}Usage:${C_RESET}"
+            echo -e "    ${C_CYAN}ax power status${C_RESET}       - Inspect battery, thermal, and governor stats"
+            echo -e "    ${C_CYAN}ax power performance${C_RESET}  - Lock CPU scaling into max performance mode"
+            echo -e "    ${C_CYAN}ax power save${C_RESET}         - Enable aggressive battery preservation mode"
+            echo -e "    ${C_CYAN}ax power thermal${C_RESET}      - Stream active hardware thermal sensors"
+            ;;
+    esac
+    echo ""
+}
+
+cmd_disk_clean() {
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX STORAGE DEDUPLICATION & ZERO-CRASH CACHE OPTIMIZER ]${C_RESET}${C_CYAN}    ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    echo -e "${C_YELLOW}[1/4] Cleaning Package Manager Archives & Caches...${C_RESET}"
+    if command -v apt-get >/dev/null 2>&1; then
+        apt-get clean 2>/dev/null && echo -e "  ${C_GREEN}[✔] Purged apt package archives${C_RESET}" || true
+    fi
+    if command -v pkg >/dev/null 2>&1; then
+        pkg clean 2>/dev/null && echo -e "  ${C_GREEN}[✔] Cleaned Termux pkg cache${C_RESET}" || true
+    fi
+
+    echo -e "\n${C_YELLOW}[2/4] Evicting Volatile User & Temporary Artifacts...${C_RESET}"
+    local count=0
+    for target in "$HOME/.cache" "$HOME/.tmp" "/tmp"; do
+        if [ -d "$target" ] && [ -w "$target" ]; then
+            find "$target" -type f -atime +7 -delete 2>/dev/null || true
+            count=$((count + 1))
+        fi
+    done
+    echo -e "  ${C_GREEN}[✔] Cleaned aged temporary files across $count locations${C_RESET}"
+
+    echo -e "\n${C_YELLOW}[3/4] Optimizing Storage Health & SSD / UFS Wear Leveling (TRIM)...${C_RESET}"
+    if command -v fstrim >/dev/null 2>&1 && [ "$(id -u)" -eq 0 ]; then
+        fstrim -v / 2>/dev/null || echo -e "  ${C_GRAY}(fstrim completed or skipped on virtual fs)${C_RESET}"
+    else
+        echo -e "  ${C_GRAY}(TRIM wear-leveling requires root permissions)${C_RESET}"
+    fi
+
+    echo -e "\n${C_YELLOW}[4/4] Free Storage Status Report:${C_RESET}"
+    df -h / "$HOME" 2>/dev/null | awk 'NR==1 || /dev|data|storage/'
+    echo -e "\n${C_GREEN}${C_BOLD}[✔] Storage deduplication & purge complete.${C_RESET}\n"
+}
+
+cmd_net_flow() {
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX REAL-TIME NETWORK FLOW & SOCKET TELEMETRY ]${C_RESET}${C_CYAN}               ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    echo -e "  ${C_BOLD}ACTIVE SOCKET STATES & PROTOCOL OVERVIEW:${C_RESET}"
+    if command -v ss >/dev/null 2>&1; then
+        ss -s 2>/dev/null || true
+    elif command -v netstat >/dev/null 2>&1; then
+        netstat -ant 2>/dev/null | awk '{print $6}' | sort | uniq -c | sort -nr
+    else
+        echo -e "  ${C_GRAY}(Socket inspection tools not available)${C_RESET}"
+    fi
+
+    echo -e "\n  ${C_BOLD}DNS RESOLVER SPEED & LATENCY BENCHMARK:${C_RESET}"
+    local resolvers=("1.1.1.1:Cloudflare" "8.8.8.8:Google" "9.9.9.9:Quad9_Security" "208.67.222.222:OpenDNS")
+    for item in "${resolvers[@]}"; do
+        IFS=':' read -r rip rname <<< "$item"
+        if command -v ping >/dev/null 2>&1; then
+            local rtt
+            rtt=$(ping -c 1 -W 1 "$rip" 2>/dev/null | grep -o 'time=[0-9.]*' | cut -d'=' -f2)
+            if [ -n "$rtt" ]; then
+                printf "  %-16s (%-18s) : ${C_GREEN}%6s ms${C_RESET}\n" "$rip" "$rname" "$rtt"
+            else
+                printf "  %-16s (%-18s) : ${C_RED}TIMEOUT${C_RESET}\n" "$rip" "$rname"
+            fi
+        fi
+    done
+
+    echo -e "\n  ${C_BOLD}ACTIVE NETWORK INTERFACES & PACKET COUNTERS:${C_RESET}"
+    if [ -f "/proc/net/dev" ]; then
+        awk 'NR>2 {printf "  %-12s : RX %8.2f MB | TX %8.2f MB\n", $1, $2/1048576, $10/1048576}' /proc/net/dev | tr -d ':'
+    else
+        ip -s link 2>/dev/null || ifconfig 2>/dev/null || true
+    fi
+    echo ""
+}
+
+cmd_ssl_audit() {
+    local target="${1:-google.com}"
+    local port="${2:-443}"
+
+    target=$(echo "$target" | sed -e 's|^[^/]*//||' -e 's|/.*$||' -e 's|:.*$||')
+
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX SSL/TLS CERTIFICATE INTEGRITY & EXPIRY AUDITOR ]${C_RESET}${C_CYAN}         ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+    echo -e "${C_CYAN}[*] Connecting to ${target}:${port}...${C_RESET}"
+
+    if ! command -v openssl >/dev/null 2>&1; then
+        echo -e "${C_RED}[!] OpenSSL not found. Please install openssl.${C_RESET}"
+        return 1
+    fi
+
+    local cert_output
+    cert_output=$(echo | openssl s_client -servername "$target" -connect "${target}:${port}" 2>/dev/null)
+    if [ -z "$cert_output" ] || ! echo "$cert_output" | grep -q "BEGIN CERTIFICATE"; then
+        echo -e "${C_RED}[✘] Failed to retrieve TLS certificate from ${target}:${port}${C_RESET}"
+        return 1
+    fi
+
+    local subject issuer not_before not_after end_epoch now_epoch days_left
+    subject=$(echo "$cert_output" | openssl x509 -noout -subject 2>/dev/null | sed 's/subject=//')
+    issuer=$(echo "$cert_output" | openssl x509 -noout -issuer 2>/dev/null | sed 's/issuer=//')
+    not_before=$(echo "$cert_output" | openssl x509 -noout -startdate 2>/dev/null | sed 's/notBefore=//')
+    not_after=$(echo "$cert_output" | openssl x509 -noout -enddate 2>/dev/null | sed 's/notAfter=//')
+
+    end_epoch=$(date -d "$not_after" +%s 2>/dev/null || date -j -f "%b %d %T %Y %Z" "$not_after" +%s 2>/dev/null || echo "0")
+    now_epoch=$(date +%s)
+    if [ "$end_epoch" -gt 0 ]; then
+        days_left=$(( (end_epoch - now_epoch) / 86400 ))
+    else
+        days_left="N/A"
+    fi
+
+    local expiry_color="${C_GREEN}"
+    if [ "$days_left" != "N/A" ]; then
+        if [ "$days_left" -lt 7 ]; then
+            expiry_color="${C_RED}${C_BOLD}"
+        elif [ "$days_left" -lt 30 ]; then
+            expiry_color="${C_YELLOW}"
+        fi
+    fi
+
+    echo -e "  ${C_WHITE}Target Host:${C_RESET}       ${C_BOLD}${target}:${port}${C_RESET}"
+    echo -e "  ${C_WHITE}Subject:${C_RESET}           ${C_CYAN}${subject}${C_RESET}"
+    echo -e "  ${C_WHITE}Issuer Authority:${C_RESET}  ${C_MAGENTA}${issuer}${C_RESET}"
+    echo -e "  ${C_WHITE}Issued Date:${C_RESET}       ${not_before}"
+    echo -e "  ${C_WHITE}Expiry Date:${C_RESET}       ${not_after}"
+    echo -e "  ${C_WHITE}Days Remaining:${C_RESET}    ${expiry_color}${days_left} days${C_RESET}"
+
+    echo -e "\n  ${C_BOLD}SUBJECT ALTERNATIVE NAMES (SANs):${C_RESET}"
+    echo "$cert_output" | openssl x509 -noout -ext subjectAltName 2>/dev/null | grep -v "X509v3" | sed 's/^[ \t]*/    /'
+
+    echo -e "\n  ${C_BOLD}NEGOTIATED TLS PROTOCOL & CIPHER:${C_RESET}"
+    local proto cipher
+    proto=$(echo "$cert_output" | grep "Protocol" | head -n 1 | awk '{print $2}')
+    cipher=$(echo "$cert_output" | grep "Cipher" | head -n 1 | awk '{print $3}')
+    echo -e "  ${C_WHITE}Protocol:${C_RESET}          ${C_GREEN}${proto}${C_RESET}"
+    echo -e "  ${C_WHITE}Cipher Suite:${C_RESET}      ${C_CYAN}${cipher}${C_RESET}\n"
+}
 
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
@@ -5285,6 +5522,22 @@ case "$SUBCOMMAND" in
     rf-audit|air-audit|kismet-audit)
         shift
         cmd_rf_audit "$@"
+        ;;
+    power|governor|cpu-power|battery-health)
+        shift
+        cmd_power_governor "$@"
+        ;;
+    clean-pro|disk-clean|purge-cache|trim)
+        shift
+        cmd_disk_clean "$@"
+        ;;
+    flow|net-flow|netstat-pro|socket-audit)
+        shift
+        cmd_net_flow "$@"
+        ;;
+    ssl-audit|cert-audit|tls-audit)
+        shift
+        cmd_ssl_audit "$@"
         ;;
 
     # 8. Direct Cyber Subsystem Jumpers

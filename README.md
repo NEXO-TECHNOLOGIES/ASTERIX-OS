@@ -186,6 +186,12 @@ ax tweaks                       # Kali Tweaks: MAC address randomization, IPv6 p
 ax forensic-mode [audit|engage] # Kali Forensic Mode: Hardware write-blocker, no-swap, no automount
 ax rf-audit                     # Full wireless RF spectrum audit: Wi-Fi, Bluetooth, NFC, SDR hardware
 
+# Performance, Power & Network Health Subsystem
+ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
+ax clean-pro                    # Zero-crash package archive purge, cache evictor & SSD/UFS TRIM
+ax flow                         # Real-time TCP/UDP socket states, interface I/O & DNS latency benchmark
+ax ssl-audit <domain>           # Deep SSL/TLS cipher auditor, expiry tracker & SAN certificate inspector
+
 # Package Management & GitHub Synchronization
 ax pkg status                # Check status and git commits of all security packages
 ax pkg sync [all|<name>]     # Auto-clone or pull latest tools and compile binaries
@@ -338,6 +344,24 @@ Once installed, type `ax` or `asterix` anytime to launch the cybernetic OS envir
 ```bash
 curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/setup.sh | bash
 ```
+
+### 5. Termux Troubleshooting & Instant Fixes
+
+* **Commands showing `Error: shell '/bin/sh' is not available in container 'debian'`?**  
+  Connect `ax` directly to native Termux for 100% native execution:
+  ```bash
+  ln -sf ~/ASTERIX-OS/bin/ax $PREFIX/bin/ax && ln -sf ~/ASTERIX-OS/bin/ax $PREFIX/bin/asterix
+  ```
+* **Corrupted or half-downloaded Debian PRoot container?**  
+  Cleanly reinstall the container:
+  ```bash
+  proot-distro reset debian
+  ```
+* **Termux out of disk space (`E: You don't have enough free space`)?**  
+  Purge package cache:
+  ```bash
+  apt clean && pkg clean
+  ```
 
 ---
 

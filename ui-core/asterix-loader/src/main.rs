@@ -783,6 +783,10 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax tweaks [mac|ipv6|dns]${C_RESET}   Kali Tweaks MAC randomizer, DNS & IPv6 leak armor");
     println!("  {C_MAGENTA}ax forensic-mode <enable>${C_RESET}  Kali Live forensic write-blocker (noswap noautomount)");
     println!("  {C_MAGENTA}ax rf-audit${C_RESET}                Multi-radio wireless, monitor mode & Bluetooth audit");
+    println!("  {C_MAGENTA}ax power [status|boost|save]${C_RESET} Mobile/Linux CPU governor, thermal & battery controller");
+    println!("  {C_MAGENTA}ax clean-pro${C_RESET}               Zero-crash cache purge, temporary file cleanup & SSD TRIM");
+    println!("  {C_MAGENTA}ax flow${C_RESET}                    Real-time socket states, DNS latency benchmark & flow monitor");
+    println!("  {C_MAGENTA}ax ssl-audit <domain>${C_RESET}      Deep SSL/TLS cipher auditor, expiry tracker & SAN inspector");
     println!("  {C_MAGENTA}ax logwatch${C_RESET}             Real-time security log and auth anomaly watcher\n");
 
     println!("{C_WHITE}{C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:{C_RESET}");
@@ -1046,6 +1050,10 @@ fn main() {
         "tweaks" | "kali-tweaks" | "sys-tune" => { dispatch_ax_tool(&args[1..]); return; }
         "forensic-mode" | "forensics-mode" | "write-block" => { dispatch_ax_tool(&args[1..]); return; }
         "rf-audit" | "air-audit" | "kismet-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "power" | "governor" | "cpu-power" | "battery-health" => { dispatch_ax_tool(&args[1..]); return; }
+        "clean-pro" | "disk-clean" | "purge-cache" | "trim" => { dispatch_ax_tool(&args[1..]); return; }
+        "flow" | "net-flow" | "netstat-pro" | "socket-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "ssl-audit" | "cert-audit" | "tls-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "darktrace" => { dispatch_ax_tool(&args[1..]); return; }
         "shadowcam" | "cctv" | "cam-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "dark-engine" => { dispatch_ax_tool(&args[1..]); return; }
@@ -1080,7 +1088,7 @@ fn main() {
         "auth-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "git-secrets" | "secrets" => { dispatch_ax_tool(&args[1..]); return; }
         "cis-audit" | "compliance" => { dispatch_ax_tool(&args[1..]); return; }
-        "tls-audit" | "cert-check" => { dispatch_ax_tool(&args[1..]); return; }
+        "cert-check" => { dispatch_ax_tool(&args[1..]); return; }
         "pstree" | "process-tree" => { dispatch_ax_tool(&args[1..]); return; }
         "env-audit" => { dispatch_ax_tool(&args[1..]); return; }
 
@@ -1097,7 +1105,7 @@ fn main() {
         // System Power & I/O Telemetry
         "disk-io" | "iostats" => { dispatch_ax_tool(&args[1..]); return; }
         "uptime-stats" | "loadavg" => { dispatch_ax_tool(&args[1..]); return; }
-        "battery" | "power" => { dispatch_ax_tool(&args[1..]); return; }
+        "battery" => { dispatch_ax_tool(&args[1..]); return; }
         "pkg-verify" | "debsums" => { dispatch_ax_tool(&args[1..]); return; }
 
         // Advanced Offensive & Forensics (v2.8.0)

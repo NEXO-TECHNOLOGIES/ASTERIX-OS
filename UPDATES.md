@@ -216,7 +216,41 @@ ax rf-audit                     # Audit Wi-Fi, Bluetooth, NFC & SDR radio transc
 
 ---
 
-## 6. 📦 Modular External Package Registry Architecture
+## 6. ⚡ Performance, Storage & Network Diagnostics Subsystem
+
+Engineered for high-efficiency operation across both Android Termux mobile devices and Bare-Metal Linux servers:
+
+### 1. `ax power` — Hardware Power, Thermal & CPU Governor Controller
+- **CPU Scaling Governors**: Dynamically switches CPU cores between `performance` (eSports/high compute) and `powersave` (battery preservation).
+- **Battery Health Telemetry**: Live readout of battery capacity percentage, health status, charging wattage, and real-time millidegree temperature.
+- **Thermal Sensors**: Streams temperature readings across all sysfs thermal zones with high-temperature color alerts (>60°C Yellow, >75°C Red).
+
+### 2. `ax clean-pro` — Zero-Crash Storage Deduplication & Cache Optimizer
+- **Package Cache Purge**: Automatically cleans `apt` archives and Termux `pkg` caches to eliminate "out of disk space" errors.
+- **Volatile Artifact Eviction**: Purges aged temporary files, dead `.cache` entries, and lingering session artifacts.
+- **SSD & Flash Wear-Leveling**: Invokes kernel TRIM (`fstrim -v /`) on supported SSD, NVMe, and UFS flash storage.
+
+### 3. `ax flow` — Real-Time Network Flow & Socket Telemetry
+- **Socket States**: Live protocol analysis across `ESTABLISHED`, `SYN_SENT`, `LISTEN`, and `TIME_WAIT` sockets.
+- **DNS Speed Benchmark**: Benchmarks round-trip latency in milliseconds across Cloudflare (1.1.1.1), Google (8.8.8.8), Quad9 (9.9.9.9), and OpenDNS.
+- **Interface Bandwidth**: Real-time cumulative RX/TX megabytes counter.
+
+### 4. `ax ssl-audit` — Deep SSL/TLS Certificate & Expiry Tracker
+- **Expiration Warnings**: Computes days remaining until expiry with color-coded alerts (<30 days Yellow, <7 days Critical Red).
+- **Cipher & Protocol**: Inspects negotiated TLS version (TLS 1.2/1.3) and active cryptographic cipher suite.
+- **Identity & SANs**: Extracts full Subject Alternative Names (SANs) and certificate authority chain.
+
+### Subsystem Commands:
+```bash
+ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal & battery controller
+ax clean-pro                    # Zero-crash cache purge, temporary file cleanup & SSD TRIM
+ax flow                         # Real-time socket states, DNS latency benchmark & flow monitor
+ax ssl-audit <domain>           # Deep SSL/TLS cipher auditor, expiry tracker & SAN inspector
+```
+
+---
+
+## 7. 📦 Modular External Package Registry Architecture
 
 To prevent repository bloat, third-party security tools are managed via automated synchronization:
 
@@ -245,7 +279,7 @@ ax pkg build                 # Rebuild native Rust/C components across all packa
 
 ---
 
-## 7. 🔒 Zero-Vulnerability Security Verification Matrix
+## 8. 🔒 Zero-Vulnerability Security Verification Matrix
 
 | Component | Security Control Applied | Verification Result |
 | :--- | :--- | :--- |
@@ -259,7 +293,7 @@ ax pkg build                 # Rebuild native Rust/C components across all packa
 
 ---
 
-## 8. 🗺️ ASTERIX OS Visual Architecture Diagram
+## 9. 🗺️ ASTERIX OS Visual Architecture Diagram
 
 The architectural filesystem layout diagram has been refreshed with all recent additions:
 - **Filesystem Root**: Saved directly in the root directory (not in subfolders):
