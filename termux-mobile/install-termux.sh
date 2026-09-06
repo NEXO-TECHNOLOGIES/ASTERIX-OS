@@ -1,4 +1,4 @@
-﻿#!/data/data/com.termux/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 # =====================================================================
 # ASTERIX OS - Termux Rootless Mobile Installer v3.1 (Resilient & Auto)
 # Automated deployment of full ASTERIX OS inside Termux with Rust Engine,
@@ -50,11 +50,17 @@ else
 fi
 
 echo -e "${YELLOW}[*] Step 4: Installing ASTERIX Rootless Linux Environment (Debian)...${NC}"
-if proot-distro list 2>/dev/null | grep -q "debian"; then
-    echo -e "${GREEN}[✔] Debian base environment already installed in proot-distro.${NC}"
-else
+DEBIAN_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/debian"
+if [ -d "$DEBIAN_ROOT" ] && [ -f "$DEBIAN_ROOT/bin/sh" ]; then
+    echo -e "${GREEN}[✔] Debian base environment already installed and healthy.${NC}"
+elif [ -d "$DEBIAN_ROOT" ] && [ ! -f "$DEBIAN_ROOT/bin/sh" ]; then
+    echo -e "${YELLOW}[!] Corrupted Debian rootfs detected (missing /bin/sh from prior full disk). Resetting...${NC}"
+    proot-distro reset debian || true
+elif ! proot-distro list 2>/dev/null | grep -q "debian"; then
     echo -e "${CYAN}[*] Downloading and deploying Debian rootfs...${NC}"
     proot-distro install debian || true
+else
+    echo -e "${GREEN}[✔] Debian base environment registered.${NC}"
 fi
 
 echo -e "${YELLOW}[*] Step 5: Compiling Native Rust ASTERIX Loader & Animation Engine...${NC}"
@@ -156,30 +162,34 @@ ASTERIX_DIR="$HOME/ASTERIX-OS"
 PERSIST="$HOME/.asterix_storage"
 mkdir -p "$PERSIST" 2>/dev/null || true
 
-# Handle arguments
+# Direct commands
 if [ -z "$1" ]; then
     if [ -x "$PREFIX/bin/asterix-loader" ]; then
         "$PREFIX/bin/asterix-loader"
     fi
-    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian
+    exec bash "$ASTERIX_DIR/bin/ax"
+elif [ "$1" = "debian" ] || [ "$1" = "proot" ]; then
+    shift
+    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian -- "$@"
 elif [ "$1" = "update" ]; then
     echo -e "\033[38;5;51m[*] Updating ASTERIX OS & Repositories...\033[0m"
     (cd "$ASTERIX_DIR" && git pull 2>/dev/null || true)
     pkg update -y || true
-    proot-distro login debian -- apt-get update -y || true
 elif [ "$1" = "upgrade" ]; then
-    echo -e "\033[38;5;51m[*] Upgrading Termux & PRoot Environments...\033[0m"
+    echo -e "\033[38;5;51m[*] Upgrading Termux Packages...\033[0m"
     pkg upgrade -y || true
-    proot-distro login debian -- apt-get upgrade -y || true
 elif [ "$1" = "doctor" ]; then
     echo -e "\033[38;5;51m[*] Running Termux ASTERIX Environment Check...\033[0m"
     which rustc clang proot-distro nmap tshark 2>/dev/null || true
     echo -e "\033[38;5;46m[✔] ASTERIX OS Core: $ASTERIX_DIR\033[0m"
 elif [ -f "$ASTERIX_DIR/bin/ax" ]; then
-    # Run through full master CLI dispatcher with PRoot bind
-    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian -- /opt/ASTERIX-OS/bin/ax "$@"
+    # Run natively in Termux with full performance and zero PRoot errors!
+    exec bash "$ASTERIX_DIR/bin/ax" "$@"
+elif command -v ax >/dev/null 2>&1; then
+    exec ax "$@"
 else
-    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian -- "$@"
+    echo "Error: ASTERIX OS not found at $ASTERIX_DIR"
+    exit 1
 fi
 EOF
 chmod +x "$PREFIX/bin/ax"
