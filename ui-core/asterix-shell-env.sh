@@ -230,6 +230,9 @@ alias ax-fix='ax auto-compile'
 alias ax-os='ax os-computing'
 alias host-sync='ax os-computing collaborate'
 alias os-bridge='ax os-computing'
+alias ax-repair='ax code-repair'
+alias ax-heal='ax code-repair fix'
+alias os-repair='ax code-repair fix'
 
 # ax Crypto, Encoding & Passwords
 alias ax-encrypt='ax encrypt'

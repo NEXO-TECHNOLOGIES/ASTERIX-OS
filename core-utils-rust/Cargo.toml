@@ -8,6 +8,7 @@ members = [
     "asterix-dark-engine",
     "asterix-log-hunter",
     "asterix-defender-core",
+    "asterix-code-repair",
 ]
 resolver = "2"
 

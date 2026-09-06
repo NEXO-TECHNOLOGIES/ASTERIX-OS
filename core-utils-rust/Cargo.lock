@@ -7,6 +7,10 @@ name = "asterix-bin-inspector"
 version = "1.0.0"
 
 [[package]]
+name = "asterix-code-repair"
+version = "1.0.0"
+
+[[package]]
 name = "asterix-crypto-core"
 version = "1.0.0"
 

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # =====================================================================
 # ASTERIX OS - Native Rust Security Engines Suite Builder
 # =====================================================================
@@ -14,7 +14,7 @@ C_RESET='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_DIR="${1:-/usr/local/bin}"
 
-echo -e "${C_CYAN}${C_BOLD}[*] Building ASTERIX Pure-Rust Security & Systems Engines Suite (7 Engines)...${C_RESET}"
+echo -e "${C_CYAN}${C_BOLD}[*] Building ASTERIX Pure-Rust Security & Systems Engines Suite (8 Engines)...${C_RESET}"
 
 cd "${SCRIPT_DIR}"
 
@@ -26,6 +26,7 @@ ENGINES=(
     "asterix-guard-engine"
     "asterix-dark-engine"
     "asterix-log-hunter"
+    "asterix-code-repair"
 )
 
 mkdir -p "${SCRIPT_DIR}/../dist"
@@ -54,4 +55,4 @@ else
     exit 1
 fi
 
-echo -e "${C_GREEN}${C_BOLD}[✔] All 7 ASTERIX Rust Engines compiled successfully!${C_RESET}"
+echo -e "${C_GREEN}${C_BOLD}[✔] All 8 ASTERIX Rust Engines compiled successfully!${C_RESET}"

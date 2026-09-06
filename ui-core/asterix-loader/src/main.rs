@@ -1069,6 +1069,7 @@ fn main() {
         "ai" | "asterix-ai" | "ask-ai" | "expert-system" => { dispatch_ax_tool(&args[1..]); return; }
         "auto-compile" | "autocompile" | "compile-fix" | "autofix-build" => { dispatch_ax_tool(&args[1..]); return; }
         "os-computing" | "os-collaborate" | "host-sync" | "os-bridge" | "os-imitate" => { dispatch_ax_tool(&args[1..]); return; }
+        "code-repair" | "code-fix" | "fix-code" | "os-fix" | "repair-code" | "heal-code" => { dispatch_ax_tool(&args[1..]); return; }
         "darktrace" => { dispatch_ax_tool(&args[1..]); return; }
         "shadowcam" | "cctv" | "cam-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "dark-engine" => { dispatch_ax_tool(&args[1..]); return; }

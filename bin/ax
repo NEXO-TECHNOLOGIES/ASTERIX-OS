@@ -3337,6 +3337,53 @@ cmd_os_computing() {
     fi
 }
 
+cmd_code_repair() {
+    local action="${1:-scan}"
+    local target="${2:-.}"
+    if [ "$action" != "scan" ] && [ "$action" != "fix" ] && [ "$action" != "repair" ] && [ "$action" != "--fix" ]; then
+        target="$action"
+        action="scan"
+    fi
+
+    echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX NATIVE CODE-REPAIR & HEALING SUITE...${C_RESET}\n"
+
+    # 1. Try Native Pure-Rust engine
+    if command -v asterix-code-repair >/dev/null 2>&1; then
+        asterix-code-repair "$action" "$target"
+        return $?
+    elif [ -x "core-utils-rust/target/release/asterix-code-repair" ]; then
+        core-utils-rust/target/release/asterix-code-repair "$action" "$target"
+        return $?
+    elif [ -x "/usr/local/bin/asterix-code-repair" ]; then
+        /usr/local/bin/asterix-code-repair "$action" "$target"
+        return $?
+    fi
+
+    # 2. Try Native C engine
+    if command -v asterix-code-repair-c >/dev/null 2>&1; then
+        asterix-code-repair-c "$action" "$target"
+        return $?
+    elif [ -x "core-utils-c/bin/asterix-code-repair" ]; then
+        core-utils-c/bin/asterix-code-repair "$action" "$target"
+        return $?
+    fi
+
+    # 3. Fallback to auto-compiler heuristic repair
+    if [ -f "auto-compiler/autocompile.py" ] && command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
+        python3 auto-compiler/autocompile.py "$target"
+    elif [ -f "auto-compiler/autocompile.sh" ]; then
+        bash auto-compiler/autocompile.sh "$target"
+    else
+        echo -e "${C_YELLOW}[!] Running native Rust engine via cargo...${C_RESET}"
+        if command -v cargo >/dev/null 2>&1; then
+            cargo run --manifest-path core-utils-rust/asterix-code-repair/Cargo.toml --release -- "$action" "$target"
+        else
+            echo -e "${C_RED}[!] No code repair compiler runtime available.${C_RESET}"
+            return 1
+        fi
+    fi
+}
+
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
     find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
@@ -5362,8 +5409,9 @@ cmd_help() {
     echo -e "  ${C_GREEN}ax list${C_RESET}                 View all available ASTERIX OS commands"
     echo -e "  ${C_GREEN}ax version${C_RESET}              Show ASTERIX OS release information\n"
 
-    echo -e "${C_WHITE}${C_BOLD}AUTONOMOUS COMPILATION & HOST OS COLLABORATION:${C_RESET}"
+    echo -e "${C_WHITE}${C_BOLD}AUTONOMOUS COMPILATION, CODE-REPAIR & HOST OS COLLABORATION:${C_RESET}"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
+    echo -e "  ${C_CYAN}ax code-repair [fix] [dir]${C_RESET}  Native Rust/C engine: detect & auto-heal broken source files"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)\n"
 
     echo -e "${C_WHITE}${C_BOLD}RULE-BASED EXPERT AI & SOC TRIAGE:${C_RESET}"
@@ -6229,6 +6277,10 @@ case "$SUBCOMMAND" in
     os-computing|os-collaborate|host-sync|os-bridge|os-imitate)
         shift
         cmd_os_computing "$@"
+        ;;
+    code-repair|code-fix|fix-code|os-fix|repair-code|heal-code)
+        shift
+        cmd_code_repair "$@"
         ;;
 
     # 8. Direct Cyber Subsystem Jumpers

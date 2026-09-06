@@ -78,7 +78,7 @@ if [ -d "${SCRIPT_DIR}/core-utils-rust" ]; then
         ./build.sh "$INSTALL_DIR"
     elif command -v cargo &>/dev/null; then
         cargo build --release
-        for eng in asterix-bin-inspector asterix-net-sentinel asterix-crypto-core asterix-sys-mon asterix-guard-engine asterix-dark-engine asterix-log-hunter; do
+        for eng in asterix-bin-inspector asterix-net-sentinel asterix-crypto-core asterix-sys-mon asterix-guard-engine asterix-dark-engine asterix-log-hunter asterix-code-repair; do
             if [ -f "target/release/${eng}" ]; then
                 sudo cp "target/release/${eng}" "$INSTALL_DIR/" 2>/dev/null || cp "target/release/${eng}" "${SCRIPT_DIR}/dist/"
                 echo -e "${C_GREEN}  [✔] ${eng} installed${C_RESET}"
