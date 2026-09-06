@@ -3442,6 +3442,35 @@ cmd_autoupdate() {
         return 1
     fi
 }
+cmd_secure_chat() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    local sc_dir=""
+    if [ -n "$ax_root" ] && [ -d "${ax_root}/secure-chat" ]; then
+        sc_dir="${ax_root}/secure-chat"
+    elif [ -d "/etc/asterix/secure-chat" ]; then
+        sc_dir="/etc/asterix/secure-chat"
+    elif [ -d "secure-chat" ]; then
+        sc_dir="secure-chat"
+    elif [ -d "$HOME/asterix/secure-chat" ]; then
+        sc_dir="$HOME/asterix/secure-chat"
+    fi
+
+    if [ -z "$sc_dir" ]; then
+        echo -e "${C_RED}[!] Error: secure-chat directory not located.${C_RESET}"
+        return 1
+    fi
+
+    if [ -f "${sc_dir}/server.sh" ]; then
+        bash "${sc_dir}/server.sh" "$@"
+    elif command -v python3 >/dev/null 2>&1 && [ -f "${sc_dir}/server.py" ]; then
+        python3 "${sc_dir}/server.py" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Neither server.sh nor server.py found in ${sc_dir}.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
     find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
@@ -5472,7 +5501,8 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax code-repair [fix] [dir]${C_RESET}  Native Rust/C engine: detect & auto-heal broken source files"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
-    echo -e "  ${C_CYAN}ax auto-update [start|stop|check|status|log]${C_RESET}  F-Droid-style live repo sync daemon\n"
+    echo -e "  ${C_CYAN}ax auto-update [on|off|start|stop|check|status|log]${C_RESET}  F-Droid-style live repo sync daemon"
+    echo -e "  ${C_CYAN}ax secure-chat [start|lan|client|status]${C_RESET} Zero-knowledge E2EE localhost chat vault\n"
 
     echo -e "${C_WHITE}${C_BOLD}CONVERSATIONAL SOC AI & EXPERT COPILOT:${C_RESET}"
     echo -e "  ${C_MAGENTA}ax ai chat${C_RESET}              Interactive ChatGPT-style conversational cybersecurity session"
@@ -6353,6 +6383,10 @@ case "$SUBCOMMAND" in
     proxychains|proxy-chains|proxychains-creator|proxy-creator|proxy)
         shift
         cmd_proxychains "$@"
+        ;;
+    secure-chat|chat-server|private-chat|chat-vault)
+        shift
+        cmd_secure_chat "$@"
         ;;
 
     # 8. Direct Cyber Subsystem Jumpers

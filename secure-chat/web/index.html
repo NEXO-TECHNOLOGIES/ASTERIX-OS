@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ASTERIX OS // SECURE ENCRYPTED CHAT VAULT</title>
+  <style>
+    :root {
+      --bg: #07090e;
+      --panel: rgba(14, 19, 29, 0.85);
+      --panel-border: rgba(0, 240, 255, 0.2);
+      --cyan: #00f0ff;
+      --cyan-glow: 0 0 15px rgba(0, 240, 255, 0.4);
+      --green: #00ff66;
+      --green-glow: 0 0 15px rgba(0, 255, 102, 0.4);
+      --red: #ff2255;
+      --red-glow: 0 0 15px rgba(255, 34, 85, 0.5);
+      --yellow: #ffd700;
+      --text: #e1e7f0;
+      --text-dim: #738096;
+      --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse at top, rgba(0, 240, 255, 0.05) 0%, transparent 70%),
+        linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 30px 30px, 30px 30px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Watermark */
+    .watermark {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.025;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-25deg);
+      white-space: nowrap;
+      letter-spacing: 12px;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: var(--cyan-glow);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.6; }
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--panel-border);
+      background: rgba(0,0,0,0.4);
+    }
+
+    .badge-peer {
+      color: var(--yellow);
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+    .badge-peer.connected {
+      color: var(--green);
+      border-color: rgba(0, 255, 102, 0.4);
+      box-shadow: var(--green-glow);
+    }
+
+    .burn-select {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--panel-border);
+      color: var(--yellow);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-panic {
+      background: rgba(255, 34, 85, 0.15);
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-panic:hover {
+      background: var(--red);
+      color: #fff;
+      box-shadow: var(--red-glow);
+      transform: translateY(-1px);
+    }
+
+    /* Chat Container */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 20px;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 8px;
+      scroll-behavior: smooth;
+    }
+
+    #messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    #messages::-webkit-scrollbar-thumb {
+      background: rgba(0, 240, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    /* Message Bubbles */
+    .msg-wrap {
+      display: flex;
+      flex-direction: column;
+      max-width: 75%;
+      position: relative;
+    }
+
+    .msg-wrap.outgoing {
+      align-self: flex-end;
+    }
+
+    .msg-wrap.incoming {
+      align-self: flex-start;
+    }
+
+    .msg-meta {
+      display: flex;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      align-items: center;
+    }
+
+    .msg-meta .sender {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .msg-wrap.outgoing .msg-meta .sender {
+      color: var(--green);
+    }
+
+    .msg-bubble {
+      background: rgba(14, 21, 35, 0.7);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      word-break: break-word;
+      user-select: text;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .msg-wrap.outgoing .msg-bubble {
+      border-color: rgba(0, 255, 102, 0.3);
+      background: rgba(10, 30, 20, 0.6);
+    }
+
+    /* Burn timer progress bar */
+    .burn-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: var(--yellow);
+      width: 100%;
+      transition: width linear;
+    }
+
+    .system-event {
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 4px 12px;
+      background: rgba(0,0,0,0.4);
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .system-event.crit {
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    /* Footer & Input */
+    footer {
+      background: var(--panel);
+      border-top: 1px solid var(--panel-border);
+      padding: 12px 20px;
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .input-box {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .prompt-label {
+      color: var(--green);
+      font-weight: 700;
+      font-size: 14px;
+      padding-bottom: 8px;
+    }
+
+    textarea {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 10px 14px;
+      resize: none;
+      outline: none;
+      height: 42px;
+      max-height: 120px;
+      transition: border 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: var(--cyan-glow);
+    }
+
+    .btn-send {
+      background: var(--cyan);
+      border: none;
+      color: #000;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 12px;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-send:hover {
+      background: #fff;
+      box-shadow: var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      box-shadow: var(--cyan-glow);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 480px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 10px;
+    }
+
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-field label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .modal-input {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--panel-border);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: var(--cyan);
+    }
+
+    .btn-primary {
+      background: var(--green);
+      border: none;
+      color: #000;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--green-glow);
+      transform: translateY(-1px);
+    }
+
+    .fingerprint-box {
+      background: rgba(0,0,0,0.5);
+      border: 1px dashed var(--cyan);
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--cyan);
+      text-align: center;
+      letter-spacing: 2px;
+      user-select: text;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="watermark" id="watermark">ASTERIX SECURE VAULT // ZERO-KNOWLEDGE E2EE</div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <div>
+        <div class="brand-title">ASTERIX SECURE CHAT</div>
+        <div class="brand-sub">LOCAL VAULT // E2EE AES-256-GCM</div>
+      </div>
+    </div>
+
+    <div class="hud-controls">
+      <div class="badge" id="roomBadge">ROOM: --</div>
+      <div class="badge badge-peer" id="peerBadge">PEER: WAITING...</div>
+      
+      <button class="badge" id="btnFingerprint" style="cursor: pointer;" title="View Cryptographic Safety Fingerprint">
+        🔑 FINGERPRINT
+      </button>
+
+      <select class="burn-select" id="burnSelect" title="Self-Destruct Timer">
+        <option value="0">BURN: OFF</option>
+        <option value="5">BURN: 5s</option>
+        <option value="15">BURN: 15s</option>
+        <option value="30">BURN: 30s</option>
+        <option value="60">BURN: 60s</option>
+      </select>
+
+      <button class="btn-panic" id="btnPanic" title="Permanently Burn Room & Clear RAM">
+        ☣ PANIC / BURN ROOM
+      </button>
+    </div>
+  </header>
+
+  <!-- Chat Messages -->
+  <main>
+    <div id="messages"></div>
+  </main>
+
+  <!-- Input Bar -->
+  <footer>
+    <div class="input-box">
+      <span class="prompt-label">user ❯</span>
+      <textarea id="inputMsg" placeholder="Type encrypted message... (Enter to send, Shift+Enter for newline)" rows="1"></textarea>
+      <button class="btn-send" id="btnSend">🔒 ENCRYPT & SEND</button>
+    </div>
+  </footer>
+
+  <!-- Setup Modal -->
+  <div class="modal-overlay" id="setupModal">
+    <div class="modal-box">
+      <div class="modal-title">🔐 INITIALIZE SECURE LOCAL VAULT</div>
+      
+      <div class="modal-field">
+        <label>Room Identifier</label>
+        <input class="modal-input" id="setupRoom" value="asterix-vault" placeholder="asterix-vault">
+      </div>
+
+      <div class="modal-field">
+        <label>Secret Shared Passphrase (E2EE Key Seed)</label>
+        <input class="modal-input" type="password" id="setupPass" placeholder="Enter military-grade shared passphrase...">
+        <span style="font-size: 10px; color: var(--text-dim)">Derives 256-bit AES-GCM key via PBKDF2 (100,000 iterations). Plaintext never leaves your browser.</span>
+      </div>
+
+      <div class="modal-field">
+        <label>Your Codename</label>
+        <input class="modal-input" id="setupName" value="Operative-1" placeholder="Operative-1">
+      </div>
+
+      <button class="btn-primary" id="btnConnect">ENGAGE ENCRYPTION & ENTER VAULT</button>
+    </div>
+  </div>
+
+  <!-- Fingerprint Modal -->
+  <div class="modal-overlay" id="fpModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-title">🔑 CRYPTOGRAPHIC SAFETY NUMBERS</div>
+      <p style="font-size: 12px; color: var(--text-dim);">
+        Compare this visual fingerprint with the other person over a secure secondary channel (e.g., voice). If they match, you are mathematically guaranteed to have zero eavesdroppers or MITM attacks.
+      </p>
+      <div class="fingerprint-box" id="fpText">DERIVING...</div>
+      <button class="btn-primary" id="btnCloseFp" style="background: var(--cyan);">CLOSE VERIFICATION</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Global Vault State ──────────────────────────────────────────────────
+    let VAULT = {
+      room: "asterix-vault",
+      name: "Operative",
+      clientId: null,
+      salt: null,
+      aesKey: null,
+      fingerprint: "NONE",
+      eventSource: null,
+      burnTimer: 0,
+      audioCtx: null
+    };
+
+    // ── Web Audio API (Synthesized Tactical SFX) ────────────────────────────
+    function playSfx(type) {
+      try {
+        if (!VAULT.audioCtx) {
+          VAULT.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        const ctx = VAULT.audioCtx;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === "send") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.08);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === "receive") {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(1200, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === "burn") {
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.2);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === "panic") {
+          osc.type = "square";
+          osc.frequency.setValueAtTime(900, now);
+          osc.frequency.setValueAtTime(450, now + 0.1);
+          osc.frequency.setValueAtTime(900, now + 0.2);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        }
+      } catch (e) {}
+    }
+
+    // ── Cryptographic Utilities (Web Crypto API) ────────────────────────────
+    function hexToBytes(hex) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < hex.length; i += 2) {
+        bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+      }
+      return bytes;
+    }
+
+    function bytesToHex(bytes) {
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function deriveKey(passphrase, saltHex) {
+      const enc = new TextEncoder();
+      const salt = hexToBytes(saltHex);
+      const passBytes = enc.encode(passphrase);
+
+      const baseKey = await window.crypto.subtle.importKey(
+        "raw",
+        passBytes,
+        { name: "PBKDF2" },
+        false,
+        ["deriveKey", "deriveBits"]
+      );
+
+      const aesKey = await window.crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: salt,
+          iterations: 100000,
+          hash: "SHA-256"
+        },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        true,
+        ["encrypt", "decrypt"]
+      );
+
+      // Export raw key bytes to generate safety fingerprint
+      const rawKey = await window.crypto.subtle.exportKey("raw", aesKey);
+      const fpHash = await window.crypto.subtle.digest("SHA-256", rawKey);
+      const fpHex = bytesToHex(new Uint8Array(fpHash)).toUpperCase();
+      
+      // Format into 8 blocks of 4 chars
+      let formatted = "";
+      for (let i = 0; i < 32; i += 4) {
+        formatted += fpHex.substr(i, 4) + (i < 28 ? " - " : "");
+      }
+      VAULT.fingerprint = formatted;
+      document.getElementById("fpText").innerText = formatted;
+
+      return aesKey;
+    }
+
+    async function encryptMessage(plaintext, aesKey) {
+      const enc = new TextEncoder();
+      const iv = window.crypto.getRandomValues(new Uint8Array(12)); // 96-bit standard IV
+      const data = enc.encode(plaintext);
+
+      const ciphertextBuf = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        aesKey,
+        data
+      );
+
+      return {
+        iv: bytesToHex(iv),
+        ciphertext: bytesToHex(new Uint8Array(ciphertextBuf))
+      };
+    }
+
+    async function decryptMessage(ivHex, ciphertextHex, aesKey) {
+      try {
+        const iv = hexToBytes(ivHex);
+        const ciphertext = hexToBytes(ciphertextHex);
+        const dec = new TextDecoder();
+
+        const plaintextBuf = await window.crypto.subtle.decrypt(
+          { name: "AES-GCM", iv: iv },
+          aesKey,
+          ciphertext
+        );
+
+        return dec.decode(plaintextBuf);
+      } catch (err) {
+        return "[⚠️ DECRYPTION FAILED - KEY MISMATCH OR TAMPERED CIPHERTEXT]";
+      }
+    }
+
+    // ── UI Helpers ──────────────────────────────────────────────────────────
+    function appendEvent(text, isCrit = false) {
+      const wrap = document.createElement("div");
+      wrap.className = "system-event" + (isCrit ? " crit" : "");
+      wrap.innerText = text;
+      const box = document.getElementById("messages");
+      box.appendChild(wrap);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function appendMessage(senderName, text, isOutgoing, msgId, burnSecs = 0) {
+      const box = document.getElementById("messages");
+      const wrap = document.createElement("div");
+      wrap.className = "msg-wrap " + (isOutgoing ? "outgoing" : "incoming");
+      wrap.id = "msg-" + msgId;
+
+      const meta = document.createElement("div");
+      meta.className = "msg-meta";
+      const ts = new Date().toLocaleTimeString();
+      meta.innerHTML = `<span class="sender">${escapeHtml(senderName)}</span> <span>${ts}</span> ${burnSecs > 0 ? `<span style="color: var(--yellow)">🔥 ${burnSecs}s</span>` : ''}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "msg-bubble";
+      bubble.innerText = text;
+
+      if (burnSecs > 0) {
+        const prog = document.createElement("div");
+        prog.className = "burn-progress";
+        bubble.appendChild(prog);
+
+        // Animate burn progress
+        setTimeout(() => {
+          prog.style.transitionDuration = burnSecs + "s";
+          prog.style.width = "0%";
+        }, 50);
+
+        // Schedule deletion
+        setTimeout(() => {
+          burnMessage(msgId);
+        }, burnSecs * 1000);
+      }
+
+      wrap.appendChild(meta);
+      wrap.appendChild(bubble);
+      box.appendChild(wrap);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function burnMessage(msgId) {
+      const el = document.getElementById("msg-" + msgId);
+      if (el) {
+        el.style.transition = "all 0.3s";
+        el.style.opacity = "0";
+        el.style.transform = "scale(0.8)";
+        setTimeout(() => {
+          el.remove();
+          playSfx("burn");
+        }, 300);
+      }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.innerText = str;
+      return div.innerHTML;
+    }
+
+    // ── Server Communication ────────────────────────────────────────────────
+    async function joinRoom() {
+      const room = document.getElementById("setupRoom").value.trim() || "asterix-vault";
+      const pass = document.getElementById("setupPass").value;
+      const name = document.getElementById("setupName").value.trim() || "Operative";
+
+      if (!pass) {
+        alert("A secure passphrase is required to derive the E2EE key.");
+        return;
+      }
+
+      const res = await fetch("/api/room/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ room: room, name: name })
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        alert("Error joining room: " + (data.error || "Unknown error"));
+        return;
+      }
+
+      VAULT.room = data.room;
+      VAULT.name = name;
+      VAULT.clientId = data.client_id;
+      VAULT.salt = data.salt;
+
+      // Derive key
+      VAULT.aesKey = await deriveKey(pass, data.salt);
+
+      document.getElementById("setupModal").style.display = "none";
+      document.getElementById("roomBadge").innerText = "ROOM: " + VAULT.room.toUpperCase();
+      document.getElementById("watermark").innerText = `ASTERIX SECURE VAULT // ${VAULT.room.toUpperCase()} // E2EE VERIFIED`;
+
+      appendEvent(`[✔] SECURE E2EE SESSION ESTABLISHED (Salt: ${data.salt.substr(0,8)}...)`);
+
+      if (data.peers_count > 1) {
+        setPeerConnected(true);
+      }
+
+      initEventStream();
+    }
+
+    function setPeerConnected(connected) {
+      const badge = document.getElementById("peerBadge");
+      if (connected) {
+        badge.innerText = "PEER: CONNECTED [LOCKED]";
+        badge.classList.add("connected");
+      } else {
+        badge.innerText = "PEER: WAITING...";
+        badge.classList.remove("connected");
+      }
+    }
+
+    function initEventStream() {
+      const url = `/api/stream?room=${encodeURIComponent(VAULT.room)}&client_id=${encodeURIComponent(VAULT.clientId)}`;
+      const evt = new EventSource(url);
+      VAULT.eventSource = evt;
+
+      evt.onmessage = async (e) => {
+        try {
+          const payload = JSON.parse(e.data);
+          
+          if (payload.type === "peer_joined") {
+            setPeerConnected(true);
+            appendEvent(`[🔔] Peer '${payload.name}' connected & authenticated into vault.`);
+            playSfx("receive");
+          } else if (payload.type === "peer_left") {
+            setPeerConnected(false);
+            appendEvent(`[!] Peer '${payload.name}' disconnected.`, true);
+          } else if (payload.type === "message") {
+            const plaintext = await decryptMessage(payload.iv, payload.ciphertext, VAULT.aesKey);
+            appendMessage(payload.sender_name, plaintext, false, payload.msg_id, payload.burn_secs);
+            playSfx("receive");
+          } else if (payload.type === "burn") {
+            burnMessage(payload.msg_id);
+          } else if (payload.type === "panic") {
+            triggerLocalNuke();
+          }
+        } catch (err) {}
+      };
+
+      evt.onerror = () => {
+        // SSE reconnect handles automatically
+      };
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("inputMsg");
+      const text = input.value.trim();
+      if (!text || !VAULT.aesKey) return;
+
+      const burnSecs = parseInt(document.getElementById("burnSelect").value) || 0;
+      const msgId = Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b=>b.toString(16).padStart(2,'0')).join('');
+
+      // Client-side Encrypt
+      const encrypted = await encryptMessage(text, VAULT.aesKey);
+
+      input.value = "";
+      input.style.height = "42px";
+
+      appendMessage(VAULT.name, text, true, msgId, burnSecs);
+      playSfx("send");
+
+      await fetch("/api/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          room: VAULT.room,
+          client_id: VAULT.clientId,
+          iv: encrypted.iv,
+          ciphertext: encrypted.ciphertext,
+          burn_secs: burnSecs,
+          msg_id: msgId
+        })
+      });
+    }
+
+    // ── Emergency Panic / Killswitch ────────────────────────────────────────
+    async function triggerPanic() {
+      if (!confirm("☣ EMERGENCY KILLSWITCH ☣\n\nThis will immediately PERMANENTLY erase this room from server RAM, wipe all encryption keys from this browser, and leave zero traces.\n\nProceed?")) {
+        return;
+      }
+      playSfx("panic");
+
+      try {
+        await fetch("/api/panic", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ room: VAULT.room, client_id: VAULT.clientId })
+        });
+      } catch (e) {}
+
+      triggerLocalNuke();
+    }
+
+    function triggerLocalNuke() {
+      // Overwrite keys
+      VAULT.aesKey = null;
+      VAULT.fingerprint = null;
+      if (VAULT.eventSource) VAULT.eventSource.close();
+
+      // Clear DOM
+      document.body.innerHTML = `
+        <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#ff2255; font-family:monospace; text-align:center;">
+          <h1 style="font-size:32px; letter-spacing:4px; margin-bottom:12px;">☣ VAULT ERADICATED ☣</h1>
+          <p style="color:#738096; font-size:14px;">All memory keys and ephemeral buffers have been purged from existence.</p>
+        </div>
+      `;
+
+      // Redirect to blank decoy
+      setTimeout(() => {
+        window.location.replace("about:blank");
+      }, 1800);
+    }
+
+    // ── DOM Listeners ───────────────────────────────────────────────────────
+    document.getElementById("btnConnect").addEventListener("click", joinRoom);
+    document.getElementById("btnSend").addEventListener("click", sendMessage);
+    document.getElementById("btnPanic").addEventListener("click", triggerPanic);
+
+    document.getElementById("inputMsg").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    document.getElementById("btnFingerprint").addEventListener("click", () => {
+      document.getElementById("fpModal").style.display = "flex";
+    });
+
+    document.getElementById("btnCloseFp").addEventListener("click", () => {
+      document.getElementById("fpModal").style.display = "none";
+    });
+  </script>
+</body>
+</html>

@@ -242,6 +242,12 @@ alias ax-teach='ax ai teach'
 alias ai-memory='ax ai profile'
 alias ax-learn='ax ai teach'
 alias auto-update='ax auto-update check'
+alias auto-update-on='ax auto-update on'
+alias auto-update-off='ax auto-update off'
+alias ax-chat='ax secure-chat'
+alias ax-secure-chat='ax secure-chat'
+alias secure-chat='ax secure-chat'
+alias chat-room='ax secure-chat'
 
 # ax Crypto, Encoding & Passwords
 alias ax-encrypt='ax encrypt'

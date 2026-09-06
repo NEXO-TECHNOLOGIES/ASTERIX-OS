@@ -1072,6 +1072,7 @@ fn main() {
         "code-repair" | "code-fix" | "fix-code" | "os-fix" | "repair-code" | "heal-code" => { dispatch_ax_tool(&args[1..]); return; }
         "proxychains" | "proxy-chains" | "proxychains-creator" | "proxy-creator" | "proxy" => { dispatch_ax_tool(&args[1..]); return; }
         "auto-update" | "update-daemon" | "live-sync" | "fdroid-sync" | "updater" => { dispatch_ax_tool(&args[1..]); return; }
+        "secure-chat" | "chat-server" | "private-chat" | "chat-vault" | "ax-chat" => { dispatch_ax_tool(&args[1..]); return; }
         "darktrace" => { dispatch_ax_tool(&args[1..]); return; }
         "shadowcam" | "cctv" | "cam-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "dark-engine" => { dispatch_ax_tool(&args[1..]); return; }

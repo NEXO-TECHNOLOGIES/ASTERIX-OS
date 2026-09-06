@@ -111,6 +111,13 @@ ASTERIX OS/
 │   ├── update_daemon.sh      # Pure Bash fallback daemon (curl/wget + git)
 │   ├── asterix-updater.service # systemd unit for Linux system-wide install
 │   └── README.md             # Auto-updater documentation
+├── secure-chat/               # Military-Grade Localhost E2EE Chat Vault
+│   ├── server.py             # Pure Python 3 multi-threaded zero-knowledge server
+│   ├── server.sh             # Bash launcher & status checker
+│   ├── client.py             # Interactive CLI terminal chat client
+│   ├── web/
+│   │   └── index.html        # Web Crypto API (AES-256-GCM + PBKDF2), Burn & Panic UI
+│   └── README.md             # E2EE architecture & security threat model
 ├── setup.sh                  # 1-command bootstrap: clones packages & compiles engines
 ├── packages/                 # Auto-synchronized external security suites
 │   ├── README.md             # Package registry documentation

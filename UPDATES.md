@@ -504,3 +504,52 @@ Detection mechanism:
 **Bash fallback:** `update_daemon.sh` uses `curl`/`wget` + `git` — works without Python
 
 **New alias:** `auto-update` → `ax auto-update check`
+
+---
+
+## [18] Auto-Updater Explicit Control System (ON / OFF Toggling)
+
+**Updated:** `auto-updater/update_daemon.py`, `auto-updater/update_daemon.sh`, `bin/ax`, `ui-core/asterix-shell-env.sh`
+
+Gave the user complete operational control over the live auto-updater:
+
+- `ax auto-update on` / `ax auto-update enable`:
+  - Sets `"enabled": true` in persistent state
+  - Automatically starts or restarts the background polling daemon
+- `ax auto-update off` / `ax auto-update disable`:
+  - Sets `"enabled": false` in persistent state
+  - Immediately terminates any running background daemon and halts sync
+- `ax auto-update status`:
+  - Accurately displays `Auto-Update: ENABLED [ON]` or `DISABLED [OFF]` with color-coded telemetry
+- `ax auto-update check`:
+  - Respects the disabled state and warns unless `--force` is specified
+- Quick aliases: `auto-update-on`, `auto-update-off`
+
+---
+
+## [19] Secure Localhost Chatting System (Zero-Knowledge E2EE Vault)
+
+**Added:** `secure-chat/` (`server.py`, `web/index.html`, `client.py`, `server.sh`, `README.md`)
+
+A military-grade, two-party encrypted communications bridge designed specifically for secure local communication:
+
+- **Client-Side End-to-End Encryption (E2EE):**
+  - Uses native browser **Web Crypto API** (`crypto.subtle`).
+  - Key derivation: **PBKDF2-HMAC-SHA256** (100,000 iterations) from secret shared passphrase.
+  - Encryption: **256-bit AES-GCM** with 96-bit random IV per message.
+  - Server sees **ONLY** encrypted ciphertext envelopes (`iv`, `ciphertext`).
+- **Strict 2-Party Bound ("u and the person"):**
+  - Room strictly limited to 2 active peers. Unauthorized third parties are rejected.
+- **Zero Disk Persistence (100% In-Memory RAM):**
+  - Ephemeral message queues. Zero logs, zero database writes.
+- **Cryptographic Safety Numbers / Fingerprint:**
+  - Visual SHA-256 fingerprint displayed in 4-character blocks for out-of-band MITM verification.
+- **Self-Destruct Timers:**
+  - Messages burn after 5s, 15s, 30s, or 60s with visual countdown progress bar.
+- **☣ 1-Click Panic Burn Killswitch:**
+  - Instantly wipes encryption keys from browser memory, purges room from server RAM, clears DOM, and redirects to `about:blank`.
+- **Synthesized Web Audio API SFX:**
+  - Real-time mathematical sound generation for send, receive, burn, and alarm sirens (zero external audio files).
+- **Interactive Terminal CLI Client:**
+  - `ax secure-chat client` allows chatting directly from the terminal prompt (`user ❯ `).
+- **Quick Aliases:** `ax-chat`, `ax-secure-chat`, `secure-chat`, `chat-room`.

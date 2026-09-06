@@ -68,9 +68,12 @@ def log(msg, level="INFO"):
 def load_state():
     try:
         with open(STATE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            if "enabled" not in data:
+                data["enabled"] = True
+            return data
     except Exception:
-        return {"last_known_sha": None, "last_checked": None, "update_count": 0}
+        return {"enabled": True, "last_known_sha": None, "last_checked": None, "update_count": 0}
 
 def save_state(state):
     os.makedirs(STATE_DIR, exist_ok=True)
@@ -128,7 +131,13 @@ def fetch_remote_sha():
             time.sleep(5 * attempt)
     return None
 
-def check_and_update(state, verbose=True):
+def check_and_update(state, verbose=True, force=False):
+    if not state.get("enabled", True) and not force:
+        if verbose:
+            print(f"  {C_YELLOW}[!] Auto-Update is currently DISABLED [OFF].{C_RESET}")
+            print(f"  {C_GRAY}Run 'ax auto-update on' to enable, or 'ax auto-update check --force' to override.{C_RESET}\n")
+        return state
+
     if verbose:
         print(f"  {C_CYAN}[*] Checking remote repository for updates...{C_RESET}")
     remote_sha = fetch_remote_sha()
@@ -237,6 +246,38 @@ def cmd_stop():
     except PermissionError:
         print(f"  {C_RED}[X] Permission denied - cannot stop PID {pid}.{C_RESET}\n")
 
+def cmd_enable():
+    banner()
+    state = load_state()
+    state["enabled"] = True
+    save_state(state)
+    log("Auto-update ENABLED by user", "CONFIG")
+    print(f"  {C_GREEN}{C_BOLD}[✔] ASTERIX AUTO-UPDATE: ENABLED [ON]{C_RESET}")
+    print(f"  {C_GRAY}Live repository synchronization is now active.{C_RESET}\n")
+    pid = read_pid()
+    alive = False
+    if pid:
+        try:
+            os.kill(pid, 0)
+            alive = True
+        except Exception:
+            pass
+    if not alive:
+        print(f"  {C_CYAN}[*] Starting background auto-update daemon...{C_RESET}")
+        cmd_start()
+
+def cmd_disable():
+    banner()
+    state = load_state()
+    state["enabled"] = False
+    save_state(state)
+    log("Auto-update DISABLED by user", "CONFIG")
+    print(f"  {C_YELLOW}{C_BOLD}[!] ASTERIX AUTO-UPDATE: DISABLED [OFF]{C_RESET}")
+    print(f"  {C_GRAY}Automatic repository synchronization is now paused.{C_RESET}\n")
+    pid = read_pid()
+    if pid:
+        cmd_stop()
+
 def cmd_status():
     banner()
     state = load_state()
@@ -250,7 +291,10 @@ def cmd_status():
         except Exception:
             pass
     status_str = f"{C_GREEN}RUNNING  PID {pid}{C_RESET}" if alive else f"{C_GRAY}STOPPED{C_RESET}"
-    print(f"  Daemon         : {status_str}")
+    enabled = state.get("enabled", True)
+    toggle_str = f"{C_GREEN}ENABLED  [ON]{C_RESET}" if enabled else f"{C_RED}DISABLED [OFF]{C_RESET}"
+    print(f"  Auto-Update    : {toggle_str}")
+    print(f"  Daemon Process : {status_str}")
     print(f"  Remote repo    : {C_CYAN}github.com/{GITHUB_OWNER}/{GITHUB_REPO}{C_RESET} ({BRANCH})")
     print(f"  Last checked   : {C_WHITE}{state.get('last_checked', 'Never')}{C_RESET}")
     print(f"  Local HEAD     : {C_WHITE}{get_local_sha()[:14] or 'unknown'}{C_RESET}")
@@ -258,10 +302,10 @@ def cmd_status():
     print(f"  Updates pulled : {C_GREEN}{state.get('update_count', 0)}{C_RESET}")
     print(f"  Log file       : {C_GRAY}{LOG_FILE}{C_RESET}\n")
 
-def cmd_check():
+def cmd_check(force=False):
     banner()
     state = load_state()
-    check_and_update(state, verbose=True)
+    check_and_update(state, verbose=True, force=force)
 
 def cmd_log(lines=20):
     banner()
@@ -282,7 +326,11 @@ def main():
         cmd_status()
         return
     cmd = args[0].lower()
-    if cmd in ("start", "daemon", "run", "watch"):
+    if cmd in ("on", "enable", "activate"):
+        cmd_enable()
+    elif cmd in ("off", "disable", "deactivate"):
+        cmd_disable()
+    elif cmd in ("start", "daemon", "run", "watch"):
         interval = int(args[1]) if len(args) > 1 and args[1].isdigit() else POLL_INTERVAL
         cmd_start(interval)
     elif cmd in ("stop", "kill", "halt"):
@@ -290,7 +338,8 @@ def main():
     elif cmd in ("status", "info", "state"):
         cmd_status()
     elif cmd in ("check", "sync", "now", "force"):
-        cmd_check()
+        force = ("--force" in args or "-f" in args or cmd == "force")
+        cmd_check(force=force)
     elif cmd in ("log", "logs", "history"):
         lines = int(args[1]) if len(args) > 1 and args[1].isdigit() else 20
         cmd_log(lines)
@@ -298,9 +347,11 @@ def main():
         banner()
         print(f"  {C_YELLOW}Usage:{C_RESET} ax auto-update <command>\n")
         print(f"  Commands:")
+        print(f"    on / enable   - Turn live auto-update ON and start daemon")
+        print(f"    off / disable - Turn live auto-update OFF and stop daemon")
         print(f"    start [secs]  - Start background daemon (default: {POLL_INTERVAL}s)")
         print(f"    stop          - Stop the running daemon")
-        print(f"    status        - Show daemon status and last sync info")
+        print(f"    status        - Show daemon status and sync telemetry")
         print(f"    check         - One-shot check and pull if update available")
         print(f"    log [N]       - Show last N update log entries\n")
 

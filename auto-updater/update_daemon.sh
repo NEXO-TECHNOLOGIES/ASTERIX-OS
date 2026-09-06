@@ -19,6 +19,7 @@ POLL_INTERVAL=60
 STATE_DIR="${HOME}/.asterix_vault/auto-updater"
 LOG_FILE="${STATE_DIR}/update.log"
 PID_FILE="${STATE_DIR}/daemon.pid"
+DISABLED_FILE="${STATE_DIR}/disabled"
 
 mkdir -p "${STATE_DIR}"
 
@@ -51,6 +52,11 @@ fetch_remote_sha() {
 }
 
 check_and_update() {
+    if [ -f "${DISABLED_FILE}" ] && [ "$1" != "--force" ] && [ "$1" != "-f" ]; then
+        echo -e "  ${C_YELLOW}[!] Auto-Update is currently DISABLED [OFF].${C_RESET}"
+        echo -e "  ${C_GRAY}Run 'ax auto-update on' to enable, or 'ax auto-update check --force' to override.${C_RESET}\n"
+        return
+    fi
     echo -e "  ${C_CYAN}[*] Checking remote repository for updates...${C_RESET}"
     local remote_sha; remote_sha=$(fetch_remote_sha)
     local local_sha;  local_sha=$(get_local_sha)
@@ -118,9 +124,35 @@ cmd_stop() {
     fi
 }
 
+cmd_enable() {
+    banner
+    rm -f "${DISABLED_FILE}"
+    log "Auto-update ENABLED by user" "CONFIG"
+    echo -e "  ${C_GREEN}${C_BOLD}[✔] ASTERIX AUTO-UPDATE: ENABLED [ON]${C_RESET}"
+    echo -e "  ${C_GRAY}Live repository synchronization is now active.${C_RESET}\n"
+    local pid=""
+    [ -f "${PID_FILE}" ] && pid=$(cat "${PID_FILE}")
+    if [ -z "$pid" ] || ! kill -0 "$pid" 2>/dev/null; then
+        echo -e "  ${C_CYAN}[*] Starting background auto-update daemon...${C_RESET}"
+        cmd_start &
+    fi
+}
+
+cmd_disable() {
+    banner
+    touch "${DISABLED_FILE}"
+    log "Auto-update DISABLED by user" "CONFIG"
+    echo -e "  ${C_YELLOW}${C_BOLD}[!] ASTERIX AUTO-UPDATE: DISABLED [OFF]${C_RESET}"
+    echo -e "  ${C_GRAY}Automatic repository synchronization is now paused.${C_RESET}\n"
+    cmd_stop
+}
+
 cmd_status() {
     banner
     echo -e "  ${C_CYAN}${C_BOLD}[ ASTERIX AUTO-UPDATER STATUS ]${C_RESET}\n"
+    local toggle_str="${C_GREEN}ENABLED  [ON]${C_RESET}"
+    [ -f "${DISABLED_FILE}" ] && toggle_str="${C_RED}DISABLED [OFF]${C_RESET}"
+    echo -e "  Auto-Update: ${toggle_str}"
     local pid=""
     [ -f "${PID_FILE}" ] && pid=$(cat "${PID_FILE}")
     if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
@@ -133,7 +165,7 @@ cmd_status() {
     echo -e "  Log file   : ${C_GRAY}${LOG_FILE}${C_RESET}\n"
 }
 
-cmd_check() { banner; check_and_update; }
+cmd_check() { banner; check_and_update "$@"; }
 
 cmd_log() {
     banner
@@ -152,18 +184,22 @@ action="${1:-status}"
 shift || true
 
 case "$action" in
+    on|enable|activate)      cmd_enable ;;
+    off|disable|deactivate)  cmd_disable ;;
     start|daemon|run|watch)  cmd_start ;;
     stop|kill|halt)          cmd_stop  ;;
     status|info|state)       cmd_status ;;
-    check|sync|now|force)    cmd_check  ;;
+    check|sync|now|force)    cmd_check "$@" ;;
     log|logs|history)        cmd_log "$1" ;;
     *)
         banner
         echo -e "  ${C_YELLOW}Usage:${C_RESET} ax auto-update <command>\n"
         echo -e "  Commands:"
+        echo -e "    on / enable   - Turn live auto-update ON and start daemon"
+        echo -e "    off / disable - Turn live auto-update OFF and stop daemon"
         echo -e "    start         - Start background daemon (poll every ${POLL_INTERVAL}s)"
         echo -e "    stop          - Stop the running daemon"
-        echo -e "    status        - Show daemon status"
+        echo -e "    status        - Show daemon status and sync telemetry"
         echo -e "    check         - One-shot check and pull"
         echo -e "    log [N]       - Show last N log entries\n"
         ;;

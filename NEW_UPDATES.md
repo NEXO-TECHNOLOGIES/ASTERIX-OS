@@ -479,3 +479,23 @@ ax proxychains status            # Display current active proxy chains configura
 - `ax auto-update start|stop|status|check|log`
 - State + log stored in `~/.asterix_vault/auto-updater/`
 - New alias: `auto-update`
+
+## UPDATE 18 — Auto-Updater ON / OFF Toggling
+- Added `ax auto-update on` / `ax auto-update off` controls
+- Toggles persistent `"enabled"` state in `~/.asterix_vault/auto-updater/state.json`
+- Automatic daemon lifecycle management (stops on OFF, starts on ON)
+- New aliases: `auto-update-on`, `auto-update-off`
+
+## UPDATE 19 — Secure Localhost Chatting Vault (Zero-Knowledge E2EE)
+- NEW: `secure-chat/` ecosystem
+  - `server.py` — Python 3 multi-threaded zero-knowledge server (zero pip deps)
+  - `web/index.html` — Cyber-dark glassmorphism UI with native Web Crypto API (AES-256-GCM + PBKDF2)
+  - `client.py` — CLI terminal client
+  - `server.sh` — Bash launcher
+- Strict 2-party limit ("u and the person")
+- 100% In-memory ephemeral storage (zero disk logs)
+- Message self-destruct timers (5s, 15s, 30s, 60s)
+- ☣ 1-click Emergency Panic Killswitch
+- Cryptographic safety numbers / fingerprint
+- Synthesized Web Audio API sound effects
+- New aliases: `ax-chat`, `ax-secure-chat`, `secure-chat`, `chat-room`
