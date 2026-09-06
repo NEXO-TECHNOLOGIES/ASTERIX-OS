@@ -1,53 +1,64 @@
-# ASTERIX OS — Secure Localhost Chatting Vault
+# ASTERIX OS — Secure Localhost Chatting Vault v2.0
 
-> **Military-grade, zero-knowledge, end-to-end encrypted (E2EE) private communications bridge.**
-> Strict 2-party peer limit ("u and the person"), ephemeral in-memory storage, self-destruct timers, and 1-click panic burn killswitch.
+> **Military-grade, zero-knowledge, end-to-end encrypted (E2EE) communications bridge.**
+> Supports **Direct 1-on-1** & **Group Vaults**, customized room passwords on creation, full Admin Controls, and a built-in **3-Strike Intrusion Detection System (IDS)** with OS-level counter-attack alerts.
 
 ---
 
-## Key Security Features
+## Key Security & Architectural Features
 
 1. **Client-Side End-to-End Encryption (E2EE):**
-   - Implemented using the native **Web Crypto API** (`crypto.subtle`).
-   - Keys are derived in your browser using **PBKDF2-HMAC-SHA256** with 100,000 iterations from your shared secret passphrase.
-   - Every message is encrypted using **256-bit AES-GCM** with a unique 96-bit Initialization Vector (`IV`).
-   - Plaintext **NEVER** leaves your browser. The server only sees encrypted ciphertext envelopes.
+   - Built on the native browser **Web Crypto API** (`crypto.subtle`).
+   - Keys derived via **PBKDF2-HMAC-SHA256** (100,000 iterations) from user secret passphrase + cryptographic salt.
+   - Encrypted with **256-bit AES-GCM** using unique 96-bit random IVs per message.
+   - Plaintext **never leaves the browser**; server only handles encrypted envelopes.
 
-2. **Strict 2-Party Peer Limit:**
-   - Designed exclusively for private two-party communication ("u and the person").
-   - Rooms strictly reject any third party attempt to join.
+2. **Group Vaults & Direct 1-on-1:**
+   - **Group Vault:** Multi-operative room for teams over localhost or LAN.
+   - **Direct 1-on-1:** Strict 2-party peer limit ("u and the person"). Additional connections are automatically blocked.
 
-3. **Zero Disk Persistence (100% In-Memory RAM):**
-   - Zero logs written to disk.
-   - Zero message databases.
-   - Terminating the server or closing the room instantly eradicates all active sessions.
+3. **Custom Password Configuration on Room Creation:**
+   - When creating a vault, the creator sets a custom secret password.
+   - Joining operatives must authenticate with the exact password to enter.
 
-4. **Cryptographic Safety Numbers / Fingerprint:**
-   - Displays a visual SHA-256 fingerprint formatted in 4-character blocks.
-   - Compare out-of-band to mathematically verify 0% Man-in-the-Middle (MITM).
+4. **🚨 3-Strike Intrusion Detection System (IDS) & OS Alerts:**
+   - Tracks failed password attempts per remote IP.
+   - If an unauthorized snooper fails authentication **3 times**:
+     - An **OS-level alarm banner** is triggered in the terminal:  
+       `🚨 [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
+     - Displays the attacker's **Target IP and Port**, targeted room, and timestamp.
+     - Outlines recommended countermeasures with preinstalled tools:
+       - `ax nmap -sV -O <IP>` — Fingerprint & vulnerability scan
+       - `ax killswitch` — Instant network isolation
+       - `ax decoy <PORT>` — Deploy trap listener
+       - `ax traceroute <IP>` — Geolocation & routing trace
+     - Pushes a real-time flashing **INTRUSION ALERT** to all connected web room members.
 
-5. **Self-Destruct / Burn Timers:**
-   - Configurable message burn timers: 5s, 15s, 30s, 60s.
-   - Smooth animated countdown bar followed by DOM and memory wipe.
+5. **👑 Group Admin Controls:**
+   - The creator receives a cryptographically secure `admin_token`.
+   - **Kick:** Force-disconnect and remove suspicious members.
+   - **Mute/Unmute:** Prevent specific members from transmitting messages.
+   - **Purge:** Instantly wipe chat history across all connected screens.
+   - **Member List:** View active operatives, endpoints (IP:Port), and status.
 
-6. **☣ 1-Click Panic Burn Killswitch:**
-   - Instantly wipes encryption keys from browser memory.
-   - Sends emergency purge signal to erase the room from server RAM.
-   - Clears the DOM and immediately redirects to a blank decoy page (`about:blank`).
+6. **Anti-Forensics & Ephemeral RAM:**
+   - 100% In-Memory RAM storage (zero disk logs, zero database).
+   - Message self-destruct timers (5s, 15s, 30s, 60s) with visual countdown bars.
+   - ☣ 1-Click **Panic Burn** killswitch immediately destroys the room from RAM and redirects to `about:blank`.
 
-7. **Synthesized Tactical SFX (Web Audio API):**
-   - Transmit, receive, burn, and alarm sound effects generated mathematically in real time with zero external audio assets.
+7. **Synthesized Web Audio API SFX:**
+   - Mathematically generated audio for message transmit, receive, and intrusion alarm siren.
 
 ---
 
 ## Commands
 
 ```bash
-ax secure-chat               # Start localhost encrypted vault (http://127.0.0.1:8765)
+ax secure-chat               # Start localhost vault on http://127.0.0.1:8765 and open browser
 ax secure-chat start 9000    # Start on custom port 9000
-ax secure-chat lan           # Bind to 0.0.0.0 for LAN sharing
+ax secure-chat lan           # Bind to 0.0.0.0 for LAN group access
 ax secure-chat client        # Launch interactive CLI terminal client
-ax secure-chat status        # Check if vault server is online
+ax secure-chat status        # Check vault server health
 ```
 
 ## Quick Aliases
@@ -57,20 +68,6 @@ ax-chat                      # Quick alias for: ax secure-chat
 ax-secure-chat               # Quick alias for: ax secure-chat
 secure-chat                  # Quick alias for: ax secure-chat
 chat-room                    # Quick alias for: ax secure-chat
-```
-
-## Connecting Across Machines
-
-### Option A: Local Network (LAN)
-```bash
-ax secure-chat lan
-# Share: http://<your-lan-ip>:8765
-```
-
-### Option B: Encrypted SSH Tunnel (Remote)
-```bash
-ssh -L 8765:localhost:8765 user@remote-host
-# Open on your machine: http://127.0.0.1:8765
 ```
 
 ---

@@ -553,3 +553,30 @@ A military-grade, two-party encrypted communications bridge designed specificall
 - **Interactive Terminal CLI Client:**
   - `ax secure-chat client` allows chatting directly from the terminal prompt (`user ❯ `).
 - **Quick Aliases:** `ax-chat`, `ax-secure-chat`, `secure-chat`, `chat-room`.
+
+---
+
+## [20] Secure Chat v2.0: Group Vaults, Admin Controls & 3-Strike Intrusion Defense
+
+**Updated:** `secure-chat/server.py`, `secure-chat/web/index.html`, `secure-chat/client.py`, `secure-chat/README.md`
+
+Major expansion of the ASTERIX Secure Chat system based on user specifications:
+
+- **Group Vaults & Direct 1-on-1 Mode:**
+  - Create rooms in either `direct` mode (strict 2-peer cap) or `group` mode (multi-operative team communication over localhost or LAN).
+- **Custom Room Password on Creation:**
+  - Room creators explicitly specify their secret room password during initialization.
+  - PBKDF2-HMAC-SHA256 (100,000 iterations) with 32-byte salt verifies joining users.
+- **🚨 3-Strike Intrusion Detection System (IDS) & OS Counter-Attack Alerts:**
+  - If a user/attacker inputs a wrong password 3 or more times:
+    - Triggers an OS-level terminal alarm:
+      `🚨 [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
+    - Displays the attacker's **Target IP, Port, Targeted Room, and Timestamp**.
+    - Recommends tactical counter-attacks using preinstalled tools:
+      `ax nmap -sV -O <IP>`, `ax killswitch`, `ax decoy <PORT>`, `ax traceroute <IP>`, `ax stealth`.
+    - Broadcasts an emergency real-time `intrusion_alert` to all connected web room members with audio alarm siren.
+- **👑 Group Admin Control Suite:**
+  - Room creator receives a cryptographic `admin_token` and `👑 VAULT ADMIN` badge.
+  - Member management panel (`👥 MEMBERS`): view all connected operatives with network endpoints (IP:Port).
+  - 1-Click **Kick Member** and **Mute/Unmute Member**.
+  - 1-Click **Purge Chat History** across all connected screens.

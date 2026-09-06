@@ -499,3 +499,13 @@ ax proxychains status            # Display current active proxy chains configura
 - Cryptographic safety numbers / fingerprint
 - Synthesized Web Audio API sound effects
 - New aliases: `ax-chat`, `ax-secure-chat`, `secure-chat`, `chat-room`
+
+## UPDATE 20 — Secure Chat v2.0: Group Vaults, Admin Controls & 3-Strike IDS
+- Added **Group Vault** multi-user architecture alongside Direct 1-on-1 mode
+- Custom password creation on room setup with PBKDF2 verification
+- **🚨 3-Strike Intrusion Detection System (IDS):**
+  - Triggers OS terminal alert: `🚨 ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
+  - Logs intruder IP and Port + counter-attack tool recommendations (`ax nmap`, `ax killswitch`, `ax decoy`)
+  - Real-time intrusion alarm broadcast to connected web vault users
+- **👑 Group Admin Suite:** Kick members, mute/unmute, purge chat history
+- Full CLI client integration with `/kick`, `/mute`, `/purge`, `/members`
