@@ -134,6 +134,73 @@ alias ax-auth='ax auth-audit'
 alias ax-secrets='ax git-secrets'
 alias ax-cis='ax cis-audit'
 alias ax-tls='ax tls-audit'
+alias ax-darktrace='ax darktrace'
+alias ax-shadowcam='ax shadowcam'
+alias ax-dark-engine='ax dark-engine'
+alias ax-log-hunter='ax log-hunter'
+
+# ASTERIX Anti-Network Attack & Defense Suite
+alias ax-antinet='ax anti-net'
+alias ax-antiemail='ax anti-email'
+alias ax-antiarp='ax anti-arp'
+alias ax-antisyn='ax anti-syn'
+alias ax-antidns='ax anti-dns'
+alias ax-antiscan='ax anti-scan'
+alias ax-antirev='ax anti-rev'
+
+# ASTERIX External Packages & THUNDER Defender
+alias ax-pkg='ax pkg'
+alias ax-pkgsync='ax pkg sync'
+alias ax-pkgstatus='ax pkg status'
+alias ax-thunder='ax thunder'
+alias thunder='ax thunder'
+alias ax-iprotator='ax ip-rotator'
+alias iprotator='ax ip-rotator'
+alias ax-wscan='ax wscan'
+alias wscan='ax wscan'
+alias ax-lightning='ax lightning'
+alias lightning='ax lightning'
+alias ax-defender='ax defender'
+alias defender='ax defender'
+alias ax-firewall='ax firewall'
+alias ax-isolate='ax isolate'
+alias ax-quarantine='ax quarantine'
+alias ax-game='ax game'
+alias game='ax game'
+alias ax-overdrive='ax overdrive'
+alias overdrive='ax overdrive'
+alias apex-overdrive='ax overdrive'
+alias ax-snapshot='ax snapshot'
+alias snapshot='ax snapshot'
+alias ax-restore='ax snapshot restore'
+alias ax-events='ax event-log'
+alias ax-eventlog='ax event-log'
+alias ax-sfc='ax sfc'
+alias sfc='ax sfc'
+alias ax-taskmgr='ax taskmgr'
+alias taskmgr='ax taskmgr'
+alias ax-secpol='ax secpol'
+alias secpol='ax secpol'
+alias ax-sandbox='ax sandbox'
+alias sandbox='ax sandbox'
+alias ax-applocker='ax applocker'
+alias applocker='ax applocker'
+alias ax-bitlocker='ax bitlocker'
+alias bitlocker='ax bitlocker'
+alias ax-credguard='ax cred-guard'
+alias credguard='ax cred-guard'
+alias ax-exploitguard='ax exploit-guard'
+alias exploitguard='ax exploit-guard'
+alias ax-undercover='ax undercover'
+alias undercover='ax undercover'
+alias ax-nuke='ax nuke'
+alias nuke='ax nuke'
+alias ax-tweaks='ax tweaks'
+alias tweaks='ax tweaks'
+alias ax-forensic='ax forensic-mode'
+alias forensic='ax forensic-mode'
+alias ax-rfaudit='ax rf-audit'
+alias rfaudit='ax rf-audit'
 
 # ax Crypto, Encoding & Passwords
 alias ax-encrypt='ax encrypt'
@@ -214,18 +281,18 @@ alias ax-dmesg-exploit='ax dmesg-exploit'
 alias ax-rootjail='ax root-jail'
 alias ax-coredump='ax core-dump-audit'
 
-# ASTERIX One-Touch Domain Launchers
-as-hub() { ax "$@"; }
-as-recon() { ax recon "$@"; }
-as-web() { ax web "$@"; }
-as-exploit() { ax exploit "$@"; }
-as-crack() { ax crack "$@"; }
-as-sniff() { ax sniff "$@"; }
-as-wifi() { ax wifi "$@"; }
-as-forensic() { ax forensics "$@"; }
-as-rev() { ax rev "$@"; }
-as-dev() { ax dev "$@"; }
-as-portal() {
+# ASTERIX One-Touch Domain Launchers (ax-* and asterix-*)
+ax-hub() { ax "$@"; }
+ax-recon() { ax recon "$@"; }
+ax-web() { ax web "$@"; }
+ax-exploit() { ax exploit "$@"; }
+ax-crack() { ax crack "$@"; }
+ax-sniff() { ax sniff "$@"; }
+ax-wifi() { ax wifi "$@"; }
+ax-forensic() { ax forensics "$@"; }
+ax-rev() { ax rev "$@"; }
+ax-dev() { ax dev "$@"; }
+ax-portal() {
     if [ -f /etc/asterix/ui-core/asterix-web-portal.sh ]; then
         /etc/asterix/ui-core/asterix-web-portal.sh
     elif [ -f ui-core/asterix-web-portal.sh ]; then
@@ -234,7 +301,7 @@ as-portal() {
         asterix-web-portal
     fi
 }
-as-discord() {
+ax-discord() {
     if [ -f /etc/asterix/ui-core/asterix-discord.sh ]; then
         /etc/asterix/ui-core/asterix-discord.sh "$@"
     elif [ -f ui-core/asterix-discord.sh ]; then
@@ -243,7 +310,7 @@ as-discord() {
         asterix-discord "$@"
     fi
 }
-as-cloud() {
+ax-cloud() {
     if [ -f /etc/asterix/ui-core/asterix-cloud.sh ]; then
         /etc/asterix/ui-core/asterix-cloud.sh "$@"
     elif [ -f ui-core/asterix-cloud.sh ]; then
@@ -253,34 +320,85 @@ as-cloud() {
     fi
 }
 
-# Native C Systems Utilities Shortcuts
-alias as-sysinfo='asterix-sysinfo'
-alias as-memview='asterix-memview'
-alias as-netprobe='asterix-netprobe'
-alias as-hasher='asterix-hasher'
-alias as-shredder='asterix-shredder'
-alias as-proctrace='asterix-proctrace'
-alias as-rootkit='asterix-rootkit-detect'
-alias as-syscall='asterix-syscall-mon'
-alias as-envdump='asterix-env-dump'
+# Full "asterix-*" form aliases
+alias asterix-hub='ax-hub'
+alias asterix-recon='ax-recon'
+alias asterix-web='ax-web'
+alias asterix-exploit='ax-exploit'
+alias asterix-darktrace='ax darktrace'
+alias asterix-shadowcam='ax shadowcam'
+alias asterix-dark-engine='ax dark-engine'
+alias asterix-log-hunter='ax log-hunter'
+alias asterix-crack='ax-crack'
+alias asterix-sniff='ax-sniff'
+alias asterix-wifi='ax-wifi'
+alias asterix-forensic='ax-forensic'
+alias asterix-rev='ax-rev'
+alias asterix-dev='ax-dev'
+alias asterix-portal='ax-portal'
+alias asterix-discord='ax-discord'
+alias asterix-cloud='ax-cloud'
+alias asterix-quad='ax-quad'
+
+# Backward-compatibility fallback (as-*)
+alias as-hub='ax-hub'
+alias as-recon='ax-recon'
+alias as-web='ax-web'
+alias as-exploit='ax-exploit'
+alias as-crack='ax-crack'
+alias as-sniff='ax-sniff'
+alias as-wifi='ax-wifi'
+alias as-forensic='ax-forensic'
+alias as-rev='ax-rev'
+alias as-dev='ax-dev'
+alias as-portal='ax-portal'
+alias as-discord='ax-discord'
+alias as-cloud='ax-cloud'
+alias as-quad='ax-quad'
+
+# Native C Systems Utilities Shortcuts (ax-* and asterix-*)
+alias ax-sysinfo='asterix-sysinfo'
+alias ax-memview='asterix-memview'
+alias ax-netprobe='asterix-netprobe'
+alias ax-hasher='asterix-hasher'
+alias ax-shredder='asterix-shredder'
+alias ax-proctrace='asterix-proctrace'
+alias ax-rootkit='asterix-rootkit-detect'
+alias ax-syscall='asterix-syscall-mon'
+alias ax-envdump='asterix-env-dump'
 
 # Native C++ Cyber Utilities
-alias as-packetcraft='asterix-packetcraft'
-alias as-vulnscan='asterix-vulnscan'
-alias as-logwatch='asterix-logwatch'
+alias ax-packetcraft='asterix-packetcraft'
+alias ax-vulnscan='asterix-vulnscan'
+alias ax-logwatch='asterix-logwatch'
 
 # x86-64 Pure Assembly & Go Engines
-alias as-rawinfo='asterix-raw-info'
-alias as-webrecon='asterix-webrecon'
+alias ax-rawinfo='asterix-raw-info'
+alias ax-cipher='asterix-cipher-asm'
+alias ax-webrecon='asterix-webrecon'
+
+# Pure Rust Security & Systems Engines Suite
+alias ax-bininspect='asterix-bin-inspector'
+alias ax-sentinel='asterix-net-sentinel'
+alias ax-crypto='asterix-crypto-core'
+alias ax-sysmon='asterix-sys-mon'
+alias ax-guard='asterix-guard-engine'
+alias asterix-bininspect='asterix-bin-inspector'
+alias asterix-sentinel='asterix-net-sentinel'
+alias asterix-crypto='asterix-crypto-core'
+alias asterix-sysmon='asterix-sys-mon'
+alias asterix-guard='asterix-guard-engine'
+alias asterix-cipher='asterix-cipher-asm'
 
 # Scripts Hub Shortcuts
-alias as-netrecon='/etc/asterix/scripts-hub/net-recon.sh'
-alias as-cleanup='/etc/asterix/scripts-hub/secure-cleanup.sh'
-alias as-backup='/etc/asterix/scripts-hub/backup-cloud.sh'
-as-scaffold() { /etc/asterix/scripts-hub/dev-bootstrap.sh "$@"; }
+alias ax-netrecon='/etc/asterix/scripts-hub/net-recon.sh'
+alias ax-cleanup='/etc/asterix/scripts-hub/secure-cleanup.sh'
+alias ax-backup='/etc/asterix/scripts-hub/backup-cloud.sh'
+ax-scaffold() { /etc/asterix/scripts-hub/dev-bootstrap.sh "$@"; }
+alias asterix-scaffold='ax-scaffold'
 
 # Launch Instant Quad-Grid Workspace
-as-quad() {
+ax-quad() {
     if [ -f /etc/asterix/asterix.tmux.conf ]; then
         tmux -f /etc/asterix/asterix.tmux.conf new-session \; split-window -h \; split-window -v \; select-pane -t 0 \; split-window -v \; select-layout tiled
     elif [ -f ui-core/asterix.tmux.conf ]; then

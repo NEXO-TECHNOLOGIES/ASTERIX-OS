@@ -747,6 +747,42 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax trace [pid]${C_RESET}          Live syscall monitor and process tracer");
     println!("  {C_MAGENTA}ax vuln [target]${C_RESET}        Cyber vulnerability assessment scanner");
     println!("  {C_MAGENTA}ax packet${C_RESET}               Interactive raw packet crafting and injection");
+    println!("  {C_MAGENTA}ax darktrace [mod]${C_RESET}        Stealth memory triage, entropy audit & telemetry");
+    println!("  {C_MAGENTA}ax shadowcam <audit|scan>${C_RESET}Camera & RTSP/ONVIF surveillance security auditor");
+    println!("  {C_MAGENTA}ax dark-engine [sub]${C_RESET}      Pure-Rust Shannon entropy & W^X memory page scanner");
+    println!("  {C_MAGENTA}ax log-hunter <scan|stream>${C_RESET}Pure-Rust threat-pattern security log analyzer");
+    println!("  {C_MAGENTA}ax defender [status|scan]${C_RESET}   Pure-Rust Antivirus & Windows Security Center shield");
+    println!("  {C_MAGENTA}ax firewall [status|rules]${C_RESET}  Host packet filter & stealth drop firewall rules");
+    println!("  {C_MAGENTA}ax isolate [lockdown|unlock]${C_RESET}Emergency endpoint network isolation killswitch");
+    println!("  {C_MAGENTA}ax anti-net${C_RESET}                Master Anti-Network Attack interactive defense hub");
+    println!("  {C_MAGENTA}ax anti-email <audit|breach>${C_RESET}Defensive email & account security (SPF/DMARC/breach)");
+    println!("  {C_MAGENTA}ax anti-arp <status|lock>${C_RESET}   ARP poisoning defense & permanent gateway locking");
+    println!("  {C_MAGENTA}ax anti-syn <enable|status>${C_RESET} TCP SYN flood shield & embryonic rate limiter");
+    println!("  {C_MAGENTA}ax anti-dns <check|lock>${C_RESET}   DNS poisoning detector & immutable resolver lock");
+    println!("  {C_MAGENTA}ax anti-scan <status|enable>${C_RESET}Port scan detector & dynamic 30-min auto-quarantine");
+    println!("  {C_MAGENTA}ax anti-rev <audit|watch>${C_RESET}  Process anti-debugging, dumpable lock & anti-tampering");
+    println!("  {C_MAGENTA}ax thunder [args]${C_RESET}          THUNDER Enterprise Network & Device Defender");
+    println!("  {C_MAGENTA}ax ip-rotator [args]${C_RESET}       THUNDER 105-endpoint IP rotator & MAC randomizer");
+    println!("  {C_MAGENTA}ax pkg <sync|status>${C_RESET}       Synchronize & manage external security packages");
+    println!("  {C_MAGENTA}ax wscan [url]${C_RESET}             WSCAN web weakness & vulnerability scanner");
+    println!("  {C_MAGENTA}ax lightning{C_RESET}               LIGHTNING WAF reverse-proxy, Web SOC & IDS engine");
+    println!("  {C_MAGENTA}ax game [boost|status]${C_RESET}     eSports kernel game mode, CPU/RAM/TCP latency optimizer");
+    println!("  {C_MAGENTA}ax overdrive${C_RESET}               APEX OVERDRIVE 60 FPS glassmorphic gaming HUD (port 4888)");
+    println!("  {C_MAGENTA}ax snapshot <create|list|restore>${C_RESET} System Restore & VSS cryptographic point-in-time rollback");
+    println!("  {C_MAGENTA}ax event-log <audit|stream>${C_RESET}  Windows Event Viewer & System Reliability Index monitor");
+    println!("  {C_MAGENTA}ax sfc <scan|repair>${C_RESET}        System File Checker & DISM binary integrity verification");
+    println!("  {C_MAGENTA}ax taskmgr <priority|eco|audit>${C_RESET}Task Manager & EcoQoS Efficiency Mode process priority");
+    println!("  {C_MAGENTA}ax secpol <audit|enforce>${C_RESET}   Local Security Policy & NSA/CIS Zero-Vulnerability baseline");
+    println!("  {C_MAGENTA}ax sandbox [launch|run]${C_RESET}     Disposable ephemeral sandbox (Windows Sandbox equivalent)");
+    println!("  {C_MAGENTA}ax applocker [audit|lockdown]${C_RESET}Application identity & binary whitelisting (AppLocker)");
+    println!("  {C_MAGENTA}ax bitlocker [status|audit]${C_RESET}  LUKS2 AES-256-XTS volume & swap encryption (BitLocker)");
+    println!("  {C_MAGENTA}ax cred-guard [audit|lockdown]${C_RESET}Process memory anti-dumping & credential vault shield");
+    println!("  {C_MAGENTA}ax exploit-guard [audit|asr]${C_RESET} Hardware DEP/NX & Attack Surface Reduction (ASR) rules");
+    println!("  {C_MAGENTA}ax undercover [on|off]${C_RESET}     Kali Undercover instant Windows PowerShell disguise");
+    println!("  {C_MAGENTA}ax nuke [wipe|test]${C_RESET}          Emergency anti-forensic duress wipe & history shredder");
+    println!("  {C_MAGENTA}ax tweaks [mac|ipv6|dns]${C_RESET}   Kali Tweaks MAC randomizer, DNS & IPv6 leak armor");
+    println!("  {C_MAGENTA}ax forensic-mode <enable>${C_RESET}  Kali Live forensic write-blocker (noswap noautomount)");
+    println!("  {C_MAGENTA}ax rf-audit${C_RESET}                Multi-radio wireless, monitor mode & Bluetooth audit");
     println!("  {C_MAGENTA}ax logwatch${C_RESET}             Real-time security log and auth anomaly watcher\n");
 
     println!("{C_WHITE}{C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:{C_RESET}");
@@ -978,6 +1014,42 @@ fn main() {
         "list" | "commands" => { dispatch_ax_tool(&args[1..]); return; }
 
         // Tactical Cyber Operations, Deception & Anti-Forensics
+        "anti-net" | "antinet" => { dispatch_ax_tool(&args[1..]); return; }
+        "anti-email" | "antiemail" | "anti-gmail" => { dispatch_ax_tool(&args[1..]); return; }
+        "anti-arp" | "antiarp" => { dispatch_ax_tool(&args[1..]); return; }
+        "anti-syn" | "antisyn" => { dispatch_ax_tool(&args[1..]); return; }
+        "anti-dns" | "antidns" => { dispatch_ax_tool(&args[1..]); return; }
+        "anti-scan" | "antiscan" => { dispatch_ax_tool(&args[1..]); return; }
+        "anti-rev" | "antirev" | "anti-reverse" => { dispatch_ax_tool(&args[1..]); return; }
+        "thunder" => { dispatch_ax_tool(&args[1..]); return; }
+        "defender" | "antivirus" | "av" | "shield" => { dispatch_ax_tool(&args[1..]); return; }
+        "fw" | "virus-scan" => { dispatch_ax_tool(&args[1..]); return; }
+        "isolate" | "unisolate" | "quarantine" => { dispatch_ax_tool(&args[1..]); return; }
+        "ip-rotator" | "iprotator" => { dispatch_ax_tool(&args[1..]); return; }
+        "pkg" | "packages" | "pkg-sync" => { dispatch_ax_tool(&args[1..]); return; }
+        "wscan" | "web-scan" | "frality" => { dispatch_ax_tool(&args[1..]); return; }
+        "lightning" | "waf" | "soc" => { dispatch_ax_tool(&args[1..]); return; }
+        "game" | "gaming" | "boost" => { dispatch_ax_tool(&args[1..]); return; }
+        "overdrive" | "apex" | "apex-overdrive" => { dispatch_ax_tool(&args[1..]); return; }
+        "snapshot" | "restore" | "vss" => { dispatch_ax_tool(&args[1..]); return; }
+        "event-log" | "eventvwr" | "events" | "reliability" => { dispatch_ax_tool(&args[1..]); return; }
+        "sfc" | "integrity" | "scannow" => { dispatch_ax_tool(&args[1..]); return; }
+        "taskmgr" | "task" | "tasks" | "eco" => { dispatch_ax_tool(&args[1..]); return; }
+        "secpol" | "security-policy" | "gpo" => { dispatch_ax_tool(&args[1..]); return; }
+        "sandbox" | "isolate-run" => { dispatch_ax_tool(&args[1..]); return; }
+        "applocker" | "whitelist" | "app-id" => { dispatch_ax_tool(&args[1..]); return; }
+        "bitlocker" | "luks" | "vault-crypt" => { dispatch_ax_tool(&args[1..]); return; }
+        "cred-guard" | "credguard" | "key-vault" => { dispatch_ax_tool(&args[1..]); return; }
+        "exploit-guard" | "exploitguard" | "asr" => { dispatch_ax_tool(&args[1..]); return; }
+        "undercover" | "stealth-desktop" | "disguise" => { dispatch_ax_tool(&args[1..]); return; }
+        "nuke" | "duress" | "emergency-wipe" => { dispatch_ax_tool(&args[1..]); return; }
+        "tweaks" | "kali-tweaks" | "sys-tune" => { dispatch_ax_tool(&args[1..]); return; }
+        "forensic-mode" | "forensics-mode" | "write-block" => { dispatch_ax_tool(&args[1..]); return; }
+        "rf-audit" | "air-audit" | "kismet-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "darktrace" => { dispatch_ax_tool(&args[1..]); return; }
+        "shadowcam" | "cctv" | "cam-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "dark-engine" => { dispatch_ax_tool(&args[1..]); return; }
+        "log-hunter" | "loghunter" => { dispatch_ax_tool(&args[1..]); return; }
         "matrix" => { dispatch_ax_tool(&args[1..]); return; }
         "stealth" | "ghost" => { dispatch_ax_tool(&args[1..]); return; }
         "killswitch" | "lockdown" => { dispatch_ax_tool(&args[1..]); return; }

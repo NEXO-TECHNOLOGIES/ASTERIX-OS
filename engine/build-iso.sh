@@ -48,7 +48,7 @@ lb config \
     --distribution "${DISTRIBUTION}" \
     --architectures "${ARCH}" \
     --archive-areas "main contrib non-free non-free-firmware" \
-    --bootloader grub-efi \
+    --bootloader syslinux,grub-efi \
     --binary-images iso-hybrid \
     --iso-application "ASTERIX Security OS" \
     --iso-preparer "ASTERIX OS Project" \
@@ -57,7 +57,7 @@ lb config \
     --linux-packages "linux-image" \
     --memtest none \
     --system live \
-    --bootappend-live "boot=live components quiet splash persistence persistence-encryption=none"
+    --bootappend-live "boot=live components quiet splash persistence findiso=\${iso_path}"
 
 echo -e "${YELLOW}[*] Step 4: Injecting ASTERIX Package Manifest...${NC}"
 mkdir -p config/package-lists
@@ -90,6 +90,24 @@ if [ -d "../../ui-core/asterix-loader" ]; then
     fi
     cd "$WORK_DIR"
     chmod +x config/includes.chroot/usr/local/bin/asterix-loader 2>/dev/null || true
+fi
+
+# Compile Native Rust Security & Systems Engines (core-utils-rust)
+if [ -d "../../core-utils-rust" ]; then
+    echo -e "${CYAN}[*] Compiling 5 Native Rust Security Engines (core-utils-rust)...${NC}"
+    cd "../../core-utils-rust"
+    if command -v cargo >/dev/null 2>&1; then
+        cargo build --release
+        for eng in asterix-bin-inspector asterix-net-sentinel asterix-crypto-core asterix-sys-mon asterix-guard-engine; do
+            if [ -f "target/release/${eng}" ]; then
+                cp "target/release/${eng}" "$WORK_DIR/config/includes.chroot/usr/local/bin/${eng}"
+                chmod 755 "$WORK_DIR/config/includes.chroot/usr/local/bin/${eng}"
+                echo -e "${GREEN}  [✔] ${eng} baked into live ISO${NC}"
+            fi
+        done
+    fi
+    cd "$WORK_DIR"
+    cp -r ../../core-utils-rust config/includes.chroot/etc/asterix/
 fi
 
 # Install Master ax and asterix CLI
@@ -245,13 +263,23 @@ if [ -d "../../scripts-hub" ]; then
     cp -r ../../scripts-hub/* config/includes.chroot/etc/asterix/scripts-hub/
 fi
 
-# Inject GRUB Boot Theme
+# Inject GRUB & ISOLINUX Dual-Boot Architecture (UEFI & BIOS)
+echo -e "${CYAN}[*] Injecting Multi-Profile GRUB & ISOLINUX Bootloader Engine...${NC}"
+mkdir -p config/bootloaders/grub-pc
+mkdir -p config/bootloaders/grub-efi
+mkdir -p config/bootloaders/isolinux
+mkdir -p config/includes.binary/boot/grub
+mkdir -p config/includes.binary/isolinux
+
 if [ -d "../../engine/grub-theme" ]; then
-    echo -e "${CYAN}[*] Injecting GRUB Bootloader Splash Theme...${NC}"
-    mkdir -p config/bootloaders/grub-pc
-    mkdir -p config/bootloaders/grub-efi
     cp -r ../../engine/grub-theme/* config/bootloaders/grub-pc/ 2>/dev/null || true
     cp -r ../../engine/grub-theme/* config/bootloaders/grub-efi/ 2>/dev/null || true
+    cp -r ../../engine/grub-theme/* config/includes.binary/boot/grub/ 2>/dev/null || true
+fi
+
+if [ -d "../../engine/isolinux" ]; then
+    cp -r ../../engine/isolinux/* config/bootloaders/isolinux/ 2>/dev/null || true
+    cp -r ../../engine/isolinux/* config/includes.binary/isolinux/ 2>/dev/null || true
 fi
 
 # Metasploit installer hook

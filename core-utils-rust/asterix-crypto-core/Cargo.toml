@@ -1,0 +1,8 @@
+[package]
+name = "asterix-crypto-core"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Security Team"]
+description = "Pure Rust Cryptographic Analysis, Multi-Hash Engine & File Integrity Manifest Suite"
+
+[dependencies]

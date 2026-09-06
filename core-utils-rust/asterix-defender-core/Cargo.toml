@@ -1,0 +1,8 @@
+[package]
+name = "asterix-defender-core"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Cyber Security Team"]
+description = "Pure Rust Real-Time Antivirus Scanner, Host Firewall & Endpoint Security Center"
+
+[dependencies]

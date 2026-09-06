@@ -1,0 +1,19 @@
+[workspace]
+members = [
+    "asterix-bin-inspector",
+    "asterix-net-sentinel",
+    "asterix-crypto-core",
+    "asterix-sys-mon",
+    "asterix-guard-engine",
+    "asterix-dark-engine",
+    "asterix-log-hunter",
+    "asterix-defender-core",
+]
+resolver = "2"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

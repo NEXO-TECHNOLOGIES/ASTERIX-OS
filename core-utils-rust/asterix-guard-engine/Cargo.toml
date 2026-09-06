@@ -1,0 +1,8 @@
+[package]
+name = "asterix-guard-engine"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Security Team"]
+description = "Pure Rust Automated Security Hardening, Kernel Protection Evaluator & Compliance Engine"
+
+[dependencies]

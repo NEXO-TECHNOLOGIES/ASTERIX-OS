@@ -13,3 +13,8 @@ Thumbs.db
 desktop.ini
 *.tmp
 *.bak
+
+# Auto-cloned external security packages
+packages/*
+!packages/README.md
+!packages/.gitkeep

@@ -1,0 +1,8 @@
+[package]
+name = "asterix-net-sentinel"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Security Team"]
+description = "Pure Rust High-Performance Network Telemetry, Service Scanner & Protocol Sentinel"
+
+[dependencies]

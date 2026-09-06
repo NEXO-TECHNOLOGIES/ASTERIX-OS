@@ -13,6 +13,10 @@
 
 **ASTERIX OS** is a modular security environment and operating system designed for both **x86_64/ARM64 Live Bootable ISO systems (with Persistent USB storage)** and **Android Mobile devices via Termux PRoot**.
 
+> [!NOTE]
+> 🚀 **Latest Release & New Updates Documentation**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE (eSports Gaming & 60 FPS HUD)**, **LIGHTNING WAF & Web SOC**, and **Upgraded Windows Enterprise Features** (`ax snapshot`, `ax event-log`, `ax sfc`, `ax taskmgr`, `ax secpol`).
+> 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
+
 ---
 
 ## ⚡ Core Features
@@ -20,12 +24,12 @@
 * 🌌 **Master Command & Control Core (12 Subsystems in Pure Rust):**
   - Instant one-touch access to **Reconnaissance**, **Web Security**, **Exploitation**, **Password Auditing**, **Sniffing**, **Wireless Warfare**, **Forensics**, **Reverse Engineering**, **Developer Studio**, **Persistence Vault**, **Quad-Grid Tmux**, and **System Telemetry**.
 * 🪟 **Ultimate Multi-Terminal Quad-Grid Multiplexer Studio:**
-  - 4-way balanced cyber workspace (<kbd>Ctrl+A</kbd> <kbd>q</kbd> or `as-quad`) running Sniffer, Scanner, Shell, and Monitor simultaneously.
+  - 4-way balanced cyber workspace (<kbd>Ctrl+A</kbd> <kbd>q</kbd>, `ax-quad`, or `asterix-quad`) running Sniffer, Scanner, Shell, and Monitor simultaneously.
   - Mouse scroll up to **100,000 lines**, pane synchronization toggle (<kbd>Ctrl+A</kbd> <kbd>y</kbd>), and cyber neon telemetry status bar.
-* ⚡ **Supercharged Cyber Shell Environment (`as-shell`):**
+* ⚡ **Supercharged Cyber Shell Environment (`ax-shell` / `asterix-shell`):**
   - High-tech dynamic prompt for Bash & Zsh with Git branch, root badge, execution timer, and IP badge.
   - **FZF Fuzzy Search Suite:** <kbd>Ctrl+R</kbd> (history), <kbd>Ctrl+T</kbd> (files), <kbd>Alt+C</kbd> (directory jumping).
-  - Fast domain aliases: `as-recon`, `as-web`, `as-sniff`, `as-crack`, `as-wifi`, `as-rev`, `as-forensic`, `as-dev`, `as-quad`.
+  - Fast domain shortcuts (`ax-*` & `asterix-*`): `ax-recon`, `ax-web`, `ax-sniff`, `ax-crack`, `ax-wifi`, `ax-rev`, `ax-forensic`, `ax-dev`, `ax-quad`, `ax-cipher`, `ax-crypto`, `ax-sysmon`, `ax-guard`, `ax-bininspect`.
 * 🦈 **BlackArch & Kali Grade Master Security Toolchain:**
   - **Recon & OSINT:** Nmap, Masscan, Amass, TheHarvester, DnsRecon, Whois, Netdiscover.
   - **Web Application Auditing:** SQLMap, Gobuster, Nikto, FFUF, WPScan, Commix, WhatWeb, Wafw00f.
@@ -51,15 +55,29 @@ ASTERIX OS/
 │   ├── wallpapers/               # Desktop & Terminal Backgrounds
 │   ├── animations/               # Boot Animation Videos / GIFs
 │   └── iso-branding/             # GRUB splash & OS logos
+├── core-utils-c/                 # Deep Kernel & System Analysis C Utilities (8 Native Tools)
+├── core-utils-cpp/               # High-Performance C++ Cyber Tools (PacketCraft, VulnScan, LogWatch)
+├── core-utils-go/                # High-Concurrency Go Reconnaissance Engine (asterix-webrecon)
+├── core-utils-rust/              # Native Pure-Rust Security & Systems Engines Suite (7 Engines)
+│   ├── asterix-bin-inspector/    # Binary analysis, ELF/PE/Mach-O parsing & section entropy
+│   ├── asterix-net-sentinel/     # Thread-pooled TCP scanner, banner grabber & CIDR engine
+│   ├── asterix-crypto-core/      # SHA256/512/MD5 hash engine, identifier & manifest suite
+│   ├── asterix-sys-mon/          # Real-time microsecond kernel & process telemetry HUD
+│   ├── asterix-guard-engine/     # Automated security hardening audit & compliance score
+│   ├── asterix-dark-engine/      # Shannon entropy, W^X memory page inspector & stealth radar HUD
+│   └── asterix-log-hunter/       # Multi-signature threat log analyzer & real-time log streamer
+├── boot-asm/                     # x86-64 Assembly Bootloader (MBR Sector Chainloader & Telemetry)
 ├── desktop-env/                  # Linux Desktop Home Screen & HUD Environment
 │   ├── applications/             # 12+ Linux .desktop application menu shortcuts
 │   ├── conky/                    # Real-time desktop telemetry HUD overlay
 │   ├── autostart/                # Auto-load wallpaper & HUD daemon
 │   └── install-desktop.sh        # Desktop profile installer
-├── engine/                       # Live ISO Build Engine (Debian live-build)
-│   ├── build-iso.sh              # ISO compile script
+├── engine/                       # Live ISO Build Engine (Debian live-build, UEFI+BIOS Hybrid)
+│   ├── build-iso.sh              # ISO compile script with dual bootloaders & chroot hooks
+│   ├── grub-theme/               # Multi-profile GRUB menu (Live, Persistence, LUKS, Forensic, Fail-safe)
+│   ├── isolinux/                 # Legacy BIOS isolinux bootloader menus
 │   ├── packages.list             # Master maximum-tier package manifest
-│   ├── persistence-setup.sh      # USB persistence partition formatter
+│   ├── persistence-setup.sh      # Dual-mode USB persistence provisioner (Standard & LUKS Encrypted)
 │   └── Dockerfile                # Isolated container build environment
 ├── ui-core/                      # Native Rust Cybernetic Visuals & Multiplexer
 │   ├── asterix-loader/           # Pure Rust 12-subsystem master control hub
@@ -68,11 +86,18 @@ ASTERIX OS/
 │   │   └── src/main.rs
 │   ├── asterix.tmux.conf         # Quad-Grid split & mouse scroll config
 │   ├── asterix-shell-env.sh      # Cyber shell environment (FZF, aliases, prompts)
-│   └── loading_screen.sh         # Pure bash fallback animation
-├── termux-mobile/                # Android Mobile PRoot Environment
-│   ├── install-termux.sh         # 1-command installer for Termux
-│   ├── asterix-termux-init.sh    # Mobile session initializer
-│   └── setup-persistence.sh      # Android /sdcard/ storage linker
+├── termux-mobile/            # Android Mobile PRoot Environment
+│   ├── install-termux.sh     # 1-command installer for Termux (with auto-packages)
+│   ├── asterix-termux-init.sh# Cybernetic mobile session initializer
+│   └── setup-persistence.sh  # Android /sdcard/ storage bridge
+├── setup.sh                  # 1-command bootstrap: clones packages & compiles engines
+├── packages/                 # Auto-synchronized external security suites
+│   ├── README.md             # Package registry documentation
+│   ├── Asterix-Anti-Network-Attack/ # Auto-cloned (ARP, SYN, DNS, Sentinel, Email)
+│   ├── THUNDER/              # Auto-cloned (Wi-Fi deauth, IP Rotator, ASR, Defender)
+│   ├── ASTERISK-Web-Frality-scanner/ # Auto-cloned (WSCAN Web Weakness Scanner)
+│   ├── LIGHTNING-/            # Auto-cloned (WAF Proxy, Web SOC Dashboard & IDS)
+│   └── APEX-OVERDRIVE-/       # Auto-cloned (eSports Gaming Optimizer & 60 FPS HUD)
 └── docs/                         # Master Documentation & Architecture Guides
     ├── MASTER_TOOLCHAIN_MANUAL.md # Complete toolchain command encyclopedia
     ├── DEVELOPER_TOOLCHAIN_GUIDE.md # Compilers, Runtimes, R2, GDB & DBs
@@ -101,6 +126,76 @@ ax status               # Real-time telemetry HUD (Node, IP, Storage, Kernel)
 ax sysfetch             # Cyberpunk ASCII system information fetch display
 ax list                 # Browse all 80+ native specialized commands
 ax version              # Show ASTERIX OS release information
+
+# Active Anti-Network Attack & Account Defense
+ax anti-net             # Master Anti-Network Attack interactive defense dashboard
+ax anti-email <audit|breach> # Defensive email/account security (SPF/DMARC/breach check)
+ax anti-arp <status|lock>    # ARP poisoning detection & permanent gateway locking
+ax anti-syn <enable|status>  # TCP SYN flood shield & embryonic rate limiter
+ax anti-dns <check|lock>     # DNS poisoning detector & immutable resolver lock
+ax anti-scan <status|enable> # Port scan detector & dynamic 30-min auto-quarantine
+ax anti-rev <audit|watch>    # Process anti-debugging, dumpable lock & anti-tampering
+
+# THUNDER Enterprise Defender & Privacy Armor
+ax thunder [args]            # THUNDER Enterprise Network & Device Defender
+ax thunder --shield-all      # Arm all defensive shields simultaneously
+ax thunder --scan <dir>      # Directory malware scan & interactive cyberpunk HTML report
+ax ip-rotator [args]         # 105-endpoint IP rotator & network MAC randomizer
+
+# WSCAN Web Weakness & Vulnerability Scanner
+ax wscan [url]               # Interactive / automated web vulnerability audit
+ax wscan <url> --sensitive   # Probe for exposed .env, .git, and config leaks
+ax wscan <url> --method sql,xss # Active injection testing on target endpoints
+
+# LIGHTNING WAF & Web SOC Command Center
+ax lightning                 # Launch the full 16-module autonomous defense engine
+ax waf                       # Alias — starts WAF reverse-proxy + Web SOC dashboard
+ax soc                       # Alias — same as above (Web SOC entry point)
+
+# ASTERIX DEFENDER CORE (Pure-Rust Antivirus & Host Firewall)
+ax defender                  # Windows Security Center-style real-time status dashboard
+ax defender scan [path]      # Real-time antivirus scanner (EICAR, Webshells, Reverse Shells, Miners)
+ax defender scan --quarantine # Automatically neutralize and isolate detected threats
+ax firewall                  # Inspect active host packet filter and stealth drop rules
+ax isolate                   # Emergency endpoint network isolation (quarantines device from network)
+ax unisolate                 # Restore normal external network connectivity
+ax quarantine                # Inspect safely isolated threats in the encrypted quarantine vault
+
+# Gaming Optimization & APEX OVERDRIVE Suite
+ax game                      # Inspect gaming mode status, CPU scheduler, RAM, and TCP tuning
+ax game boost                # Activate 5-stage eSports low-latency gaming engine
+ax game hags                 # Flush GPU shader caches & trigger maximum hardware clocks
+ax overdrive                 # Launch APEX OVERDRIVE 60 FPS glassmorphic HUD dashboard (port 4888)
+
+# Upgraded Windows Enterprise Features (Zero-Vulnerability Architecture)
+ax snapshot [create|list|restore] # System Restore & Volume Shadow Copy (VSS) cryptographic rollback
+ax event-log [audit|stream]       # Windows Event Viewer & System Reliability Monitor (Events 4624/4625/4672)
+ax sfc [scan|repair]              # Windows System File Checker & DISM component store verification
+ax taskmgr [priority|eco|audit]   # Task Manager process priority & Windows EcoQoS Efficiency Mode
+ax secpol [audit|enforce]         # Local Security Policy (secpol.msc) 11-rule kernel hardening baseline
+ax sandbox [launch|run]           # Disposable ephemeral sandbox container (Windows Sandbox equivalent)
+ax applocker [audit|lockdown]     # Application Identity & binary whitelisting (AppLocker equivalent)
+ax bitlocker [status|audit]       # LUKS2 AES-256-XTS volume & swap encryption (BitLocker equivalent)
+ax cred-guard [audit|lockdown]    # Process memory anti-dumping & credential shield (Credential Guard)
+ax exploit-guard [audit|asr]      # Hardware DEP/NX & Attack Surface Reduction (Exploit Guard / ASR)
+
+# Kali Linux Live Tactical Features & Anti-Forensics
+ax undercover                   # Kali Undercover mode: Disguise shell as Windows PowerShell
+ax nuke [dry-run|shred]         # Cryptographic emergency nuke: Multi-pass DOD wipe of keys, vaults & logs
+ax tweaks                       # Kali Tweaks: MAC address randomization, IPv6 privacy, DNS resolver
+ax forensic-mode [audit|engage] # Kali Forensic Mode: Hardware write-blocker, no-swap, no automount
+ax rf-audit                     # Full wireless RF spectrum audit: Wi-Fi, Bluetooth, NFC, SDR hardware
+
+# Package Management & GitHub Synchronization
+ax pkg status                # Check status and git commits of all security packages
+ax pkg sync [all|<name>]     # Auto-clone or pull latest tools and compile binaries
+ax pkg list                  # View all registered external packages
+
+# Dark Cyber Security & Forensic Analysis
+ax darktrace [mod]      # Stealth memory triage, entropy scan, log anomaly & net telemetry
+ax shadowcam <target>   # RTSP / ONVIF stream & network camera security auditor
+ax dark-engine <subcmd> # Pure-Rust Shannon entropy & W^X process memory page scanner
+ax log-hunter <subcmd>  # Pure-Rust security log threat hunter & live threat stream monitor
 
 # Tactical Cyber Warfare, Deception & Anti-Forensics
 ax matrix               # Stream cyberpunk animated digital rain visualizer
@@ -240,6 +335,8 @@ Once installed, type `ax` or `asterix` anytime to launch the cybernetic OS envir
 ---
 
 ## 📚 Detailed Documentation
+* 🚀 [New Updates & Releases Guide (Defender, APEX, Windows Features)](UPDATES.md)
+* 🗺️ [Master Visual Architecture Diagram](ASTERIX_OS_DIAGRAM.png)
 * 🌌 [Master Toolchain & Command Encyclopedia](docs/MASTER_TOOLCHAIN_MANUAL.md)
 * 🛠️ [Developer Toolchain & Engineering Guide](docs/DEVELOPER_TOOLCHAIN_GUIDE.md)
 * 📖 [Multi-Repository GitHub Deployment Guide](docs/MODULAR_GITHUB_GUIDE.md)

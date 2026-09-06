@@ -1,0 +1,9 @@
+﻿[package]
+name = "asterix-dark-engine"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Project"]
+description = "Pure-Rust Stealth Forensic Telemetry & Entropy Scanner Engine"
+
+[dependencies]
+# Zero external runtime dependencies for maximum portability!

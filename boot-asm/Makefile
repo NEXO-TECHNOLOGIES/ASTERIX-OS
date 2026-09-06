@@ -7,7 +7,7 @@ NASM   ?= nasm
 LD     ?= ld
 DESTDIR ?= /usr/local/bin
 
-all: bin/asterix-mbr.bin bin/asterix-raw-info
+all: bin/asterix-mbr.bin bin/asterix-raw-info bin/asterix-cipher-asm
 
 bin/asterix-mbr.bin: asterix-mbr.asm
 	@mkdir -p bin
@@ -20,12 +20,19 @@ bin/asterix-raw-info: asterix-raw-info.asm
 	$(LD) /tmp/asterix-raw-info.o -o $@
 	@echo "[✔] ELF64 binary: bin/asterix-raw-info (zero libc)"
 
+bin/asterix-cipher-asm: asterix-cipher-asm.asm
+	@mkdir -p bin
+	$(NASM) -f elf64 $< -o /tmp/asterix-cipher-asm.o
+	$(LD) /tmp/asterix-cipher-asm.o -o $@
+	@echo "[✔] ELF64 binary: bin/asterix-cipher-asm (assembly cipher engine)"
+
 install: all
 	cp bin/asterix-raw-info $(DESTDIR)/asterix-raw-info
-	chmod 755 $(DESTDIR)/asterix-raw-info
+	cp bin/asterix-cipher-asm $(DESTDIR)/asterix-cipher-asm
+	chmod 755 $(DESTDIR)/asterix-raw-info $(DESTDIR)/asterix-cipher-asm
 	@echo "[✔] Assembly binaries installed to $(DESTDIR)"
 	@echo "[!] NOTE: asterix-mbr.bin is a raw sector — write to device with:"
 	@echo "    dd if=bin/asterix-mbr.bin of=/dev/sdX bs=512 count=1"
 
 clean:
-	rm -rf bin /tmp/asterix-raw-info.o
+	rm -rf bin /tmp/asterix-raw-info.o /tmp/asterix-cipher-asm.o

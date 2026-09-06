@@ -70,8 +70,30 @@ else
     echo -e "${C_YELLOW}[!] go not found — install: apt install golang${C_RESET}"
 fi
 
+# ── Rust Security & Systems Engines (core-utils-rust) ────────────────
+echo -e "${C_YELLOW}[5/6] Compiling Native Rust Security Engines (core-utils-rust)...${C_RESET}"
+if [ -d "${SCRIPT_DIR}/core-utils-rust" ]; then
+    cd "${SCRIPT_DIR}/core-utils-rust"
+    if [ -x "./build.sh" ]; then
+        ./build.sh "$INSTALL_DIR"
+    elif command -v cargo &>/dev/null; then
+        cargo build --release
+        for eng in asterix-bin-inspector asterix-net-sentinel asterix-crypto-core asterix-sys-mon asterix-guard-engine asterix-dark-engine asterix-log-hunter; do
+            if [ -f "target/release/${eng}" ]; then
+                sudo cp "target/release/${eng}" "$INSTALL_DIR/" 2>/dev/null || cp "target/release/${eng}" "${SCRIPT_DIR}/dist/"
+                echo -e "${C_GREEN}  [✔] ${eng} installed${C_RESET}"
+            fi
+        done
+    fi
+fi
+
+# ── Package Sentinel & Native Components ─────────────────────────────
+if [ -f "${SCRIPT_DIR}/scripts-hub/ax-pkg-sync.sh" ]; then
+    bash "${SCRIPT_DIR}/scripts-hub/ax-pkg-sync.sh" build 2>/dev/null || true
+fi
+
 # ── Rust Core & Master ax / asterix CLI ──────────────────────────────
-echo -e "${C_YELLOW}[5/5] Compiling Rust Control Core & Installing ax/asterix CLI...${C_RESET}"
+echo -e "${C_YELLOW}[6/6] Compiling Rust Control Core & Installing ax/asterix CLI...${C_RESET}"
 if [ -d "${SCRIPT_DIR}/ui-core/asterix-loader" ]; then
     cd "${SCRIPT_DIR}/ui-core/asterix-loader"
     if command -v cargo &>/dev/null; then
@@ -98,6 +120,6 @@ fi
 echo ""
 echo -e "${C_GREEN}${C_BOLD}[✔] ASTERIX OS Master Build Complete!${C_RESET}"
 echo -e "${C_CYAN}    Binaries installed to: ${INSTALL_DIR}${C_RESET}"
-echo -e "${C_CYAN}    Commands available:    ax, asterix, asterix-*, as-*${C_RESET}"
+echo -e "${C_CYAN}    Commands available:    ax, asterix, ax-*, asterix-*${C_RESET}"
 echo ""
 ls -l "${INSTALL_DIR}"/ax "${INSTALL_DIR}"/asterix* 2>/dev/null || true

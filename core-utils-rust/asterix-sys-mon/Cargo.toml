@@ -1,0 +1,8 @@
+[package]
+name = "asterix-sys-mon"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Security Team"]
+description = "Pure Rust Real-Time Microsecond Kernel & Process Telemetry HUD"
+
+[dependencies]

@@ -1,0 +1,9 @@
+﻿[package]
+name = "asterix-log-hunter"
+version = "1.0.0"
+edition = "2021"
+authors = ["ASTERIX OS Project"]
+description = "Pure-Rust High-Velocity Security Log Threat Pattern & Anomaly Hunter"
+
+[dependencies]
+# Zero external runtime dependencies for maximum portability!
