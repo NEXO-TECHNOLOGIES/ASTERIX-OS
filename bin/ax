@@ -3250,6 +3250,93 @@ cmd_carve() {
     echo -e "  ${C_GREEN}${C_BOLD}[✔] Carving complete.${C_RESET} ${recovered} media artifact(s) indexed into ${output_dir}\n"
 }
 
+cmd_ai() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    local ai_dir=""
+    if [ -n "$ax_root" ] && [ -d "${ax_root}/asterix-ai" ]; then
+        ai_dir="${ax_root}/asterix-ai"
+    elif [ -d "/etc/asterix/asterix-ai" ]; then
+        ai_dir="/etc/asterix/asterix-ai"
+    elif [ -d "asterix-ai" ]; then
+        ai_dir="asterix-ai"
+    elif [ -d "$HOME/asterix/asterix-ai" ]; then
+        ai_dir="$HOME/asterix/asterix-ai"
+    fi
+
+    if [ -z "$ai_dir" ]; then
+        echo -e "${C_RED}[!] Error: asterix-ai directory not located.${C_RESET}"
+        return 1
+    fi
+
+    if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1 && [ -f "${ai_dir}/engine.py" ]; then
+        python3 "${ai_dir}/engine.py" "$@"
+    elif [ -f "${ai_dir}/engine.sh" ]; then
+        bash "${ai_dir}/engine.sh" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Neither engine.py nor engine.sh found in ${ai_dir}.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_autocompile() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    local ac_dir=""
+    if [ -n "$ax_root" ] && [ -d "${ax_root}/auto-compiler" ]; then
+        ac_dir="${ax_root}/auto-compiler"
+    elif [ -d "/etc/asterix/auto-compiler" ]; then
+        ac_dir="/etc/asterix/auto-compiler"
+    elif [ -d "auto-compiler" ]; then
+        ac_dir="auto-compiler"
+    elif [ -d "$HOME/asterix/auto-compiler" ]; then
+        ac_dir="$HOME/asterix/auto-compiler"
+    fi
+
+    if [ -z "$ac_dir" ]; then
+        echo -e "${C_RED}[!] Error: auto-compiler directory not located.${C_RESET}"
+        return 1
+    fi
+
+    if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1 && [ -f "${ac_dir}/autocompile.py" ]; then
+        python3 "${ac_dir}/autocompile.py" "$@"
+    elif [ -f "${ac_dir}/autocompile.sh" ]; then
+        bash "${ac_dir}/autocompile.sh" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Neither autocompile.py nor autocompile.sh found in ${ac_dir}.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_os_computing() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    local osc_dir=""
+    if [ -n "$ax_root" ] && [ -d "${ax_root}/os-computing" ]; then
+        osc_dir="${ax_root}/os-computing"
+    elif [ -d "/etc/asterix/os-computing" ]; then
+        osc_dir="/etc/asterix/os-computing"
+    elif [ -d "os-computing" ]; then
+        osc_dir="os-computing"
+    elif [ -d "$HOME/asterix/os-computing" ]; then
+        osc_dir="$HOME/asterix/os-computing"
+    fi
+
+    if [ -z "$osc_dir" ]; then
+        echo -e "${C_RED}[!] Error: os-computing directory not located.${C_RESET}"
+        return 1
+    fi
+
+    if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1 && [ -f "${osc_dir}/os_bridge.py" ]; then
+        python3 "${osc_dir}/os_bridge.py" "$@"
+    elif [ -f "${osc_dir}/os_bridge.sh" ]; then
+        bash "${osc_dir}/os_bridge.sh" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Neither os_bridge.py nor os_bridge.sh found in ${osc_dir}.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
     find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
@@ -5249,6 +5336,8 @@ cmd_list() {
     echo -e "  ${C_CYAN}${C_BOLD}[7] Forensics & Tracing:${C_RESET}hexdump, strings-scan, syscall-trace, open-files, mem-regions, dmesg-watch, exif"
     echo -e "  ${C_CYAN}${C_BOLD}[8] Vault & Workspace:${C_RESET} backup, loot, scaffold, env, wallpaper, hud, top, compress, extract, find-large"
     echo -e "  ${C_CYAN}${C_BOLD}[9] Cyber Subsystems:${C_RESET}  recon, web, exploit, crack, sniff, wifi, forensics, rev, dev, quad, portal, discord, cloud, vault, shell"
+    echo -e "  ${C_CYAN}${C_BOLD}[10] Expert AI & SOC:${C_RESET}  ai (audit, ask, rules)"
+    echo -e "  ${C_CYAN}${C_BOLD}[11] Autonomous Engines:${C_RESET}auto-compile, os-computing"
     echo -e "\n  ${C_YELLOW}${C_BOLD}⚡ OMNI-DISPATCHER:${C_RESET} Any standard tool (e.g. 'ax nmap', 'ax curl', 'ax git', 'ax hydra') is automatically wrapped and executed!"
     echo ""
 }
@@ -5272,6 +5361,15 @@ cmd_help() {
     echo -e "  ${C_GREEN}ax sysfetch${C_RESET}             Cyberpunk ASCII system information neofetch display"
     echo -e "  ${C_GREEN}ax list${C_RESET}                 View all available ASTERIX OS commands"
     echo -e "  ${C_GREEN}ax version${C_RESET}              Show ASTERIX OS release information\n"
+
+    echo -e "${C_WHITE}${C_BOLD}AUTONOMOUS COMPILATION & HOST OS COLLABORATION:${C_RESET}"
+    echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
+    echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)\n"
+
+    echo -e "${C_WHITE}${C_BOLD}RULE-BASED EXPERT AI & SOC TRIAGE:${C_RESET}"
+    echo -e "  ${C_MAGENTA}ax ai [audit]${C_RESET}           Evaluate live host against knowledge base & score resilience"
+    echo -e "  ${C_MAGENTA}ax ai ask \"<query>\"${C_RESET}    Natural language query matching for mitigations & remediation"
+    echo -e "  ${C_MAGENTA}ax ai rules${C_RESET}             List all active knowledge base rules, IDs and severity\n"
 
     echo -e "${C_WHITE}${C_BOLD}TACTICAL CYBER WARFARE, DECEPTION & ANTI-FORENSICS:${C_RESET}"
     echo -e "  ${C_RED}ax matrix${C_RESET}               Stream cyberpunk animated digital rain visualizer"
@@ -6119,6 +6217,18 @@ case "$SUBCOMMAND" in
     carve|foremost|recover-media|scalpel)
         shift
         cmd_carve "$@"
+        ;;
+    ai|asterix-ai|ask-ai|expert-system)
+        shift
+        cmd_ai "$@"
+        ;;
+    auto-compile|autocompile|compile-fix|autofix-build)
+        shift
+        cmd_autocompile "$@"
+        ;;
+    os-computing|os-collaborate|host-sync|os-bridge|os-imitate)
+        shift
+        cmd_os_computing "$@"
         ;;
 
     # 8. Direct Cyber Subsystem Jumpers

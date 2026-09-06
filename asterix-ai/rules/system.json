@@ -1,0 +1,41 @@
+[
+  {
+    "id": "SYS-001",
+    "name": "Memory Swappiness Tuning",
+    "category": "system",
+    "target": "/proc/sys/vm/swappiness",
+    "expected_range": [10, 60],
+    "severity": "MEDIUM",
+    "keywords": ["swappiness", "ram", "memory", "swap", "lag", "slow", "freeze"],
+    "description": "Checks kernel memory swappiness tendency. Values >60 cause unnecessary disk paging.",
+    "pass_msg": "Swappiness is well-balanced for low-latency memory operations.",
+    "fail_msg": "Swappiness value is non-optimal - System may page aggressively to disk.",
+    "remediation": "sysctl -w vm.swappiness=10"
+  },
+  {
+    "id": "SYS-002",
+    "name": "Storage Space & Disk Pressure",
+    "category": "system",
+    "target": "metric:disk_free_mb",
+    "min_expected": 500,
+    "severity": "HIGH",
+    "keywords": ["disk", "space", "storage", "full", "cache", "apt clean", "trim"],
+    "description": "Detects if primary storage partition has fallen below safe operational threshold (500 MB).",
+    "pass_msg": "Ample free storage space available for system operations and caches.",
+    "fail_msg": "Low disk space alert - Risk of APT/package manager crashes or container lockup.",
+    "remediation": "ax clean-pro"
+  },
+  {
+    "id": "SYS-003",
+    "name": "Hardware Thermal Throttling",
+    "category": "system",
+    "target": "metric:cpu_temp_c",
+    "max_expected": 75.0,
+    "severity": "HIGH",
+    "keywords": ["temp", "thermal", "heat", "hot", "throttle", "overheat", "fan"],
+    "description": "Monitors CPU package temperature to prevent thermal throttling or hardware damage.",
+    "pass_msg": "Thermal temperatures within safe operational limits.",
+    "fail_msg": "High CPU temperature detected - Hardware may throttle clock frequency to dissipate heat.",
+    "remediation": "ax power save"
+  }
+]

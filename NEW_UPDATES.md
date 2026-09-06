@@ -335,3 +335,74 @@ The architectural filesystem layout diagram has been refreshed with all recent a
 - **Visual Features**:
   - Cyan 3D wireframe **A** logo centered on a dark cybernetic grid.
   - Multi-tier structured boxes showing `bin/`, `ui-core/`, `engine/`, `termux-mobile/`, `boot-asm/`, `core-utils-rust/` (including `asterix-defender-core`), `packages/` (including `APEX-OVERDRIVE-` and `LIGHTNING-`), and Tier 5 Windows Enterprise Subsystems (`snapshot`, `event-log`, `sfc`, `taskmgr`, `secpol`).
+
+---
+
+## 10. 🧠 ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
+
+Located in `asterix-ai/`, this is an offline expert triage system operating with **zero cloud dependencies** and **zero GPU requirements**:
+- **Dual Runtime Architecture**:
+  - `engine.py`: Pure Python 3 standard library heuristic inference and natural language query matching.
+  - `engine.sh`: Pure native Bash fallback for minimal environments where Python is not available.
+- **Knowledge Base Categories (`rules/`)**:
+  - `security.json`: ASLR Level 2 validation, `kptr_restrict`, unprivileged `dmesg` restrictions, TCP SYN flood defense, and ICMP redirect mitigation.
+  - `system.json`: Memory swappiness latency optimization, partition storage pressure thresholds, and CPU thermal throttling detection.
+  - `network.json`: Localhost DNS privacy checks and promiscuous interface packet-sniffing detection.
+- **Resilience Scoring & Actionable Remediations**:
+  - Computes a comprehensive 0–100 Cyber Resilience Score.
+  - Generates immediate terminal remediation commands for any non-compliant rules.
+- **Natural Language Triage**:
+  - Query via `ax ai ask "<question>"` for instant root-cause analysis and configuration fixes.
+
+### CLI Commands:
+```bash
+ax ai [audit]                    # Evaluate live system state and generate resilience score
+ax ai ask "<query>"              # Natural language question triage (e.g. "how do I fix memory swappiness?")
+ax ai rules                      # Display active knowledge base rules, severity, and categories
+```
+
+---
+
+## 11. ⚡ ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
+
+Located in `auto-compiler/`, this engine automates the entire compilation, linting, and bug-healing process with zero manual intervention:
+- **Zero-Manual Error Healing**:
+  - **Implicit Function Resolution**: Intercepts compiler errors and automatically injects missing standard library headers (`<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<unistd.h>`).
+  - **Semicolon Insertion**: Parses line-and-column compiler diagnostics, automatically inserts missing `;` terminators, and preserves a `.bak` backup copy.
+  - **Dynamic Linker Flag Injection**: When code triggers undefined references, dynamically adds `-lpthread`, `-lm`, `-lssl`, `-lcrypto`, or `-lpcap`.
+  - **Header-to-Package Mapping**: Employs `recipes/headers.json` to resolve missing library headers to Linux packages (`libssl-dev`, `libpcap-dev`).
+  - **Symbol Stripping**: Automatically invokes `strip --strip-unneeded` to produce compact, production-ready binaries.
+
+### CLI Commands:
+```bash
+ax auto-compile <source>         # Compile C, C++, Rust, Go, or Assembly with auto-healing
+ax auto-compile <dir>            # Auto-detect and build Makefile, Cargo.toml, or go.mod projects
+```
+
+---
+
+## 12. 🌐 ASTERIX OS-Computing // Dual-Boot Collaboration & Host Bridge
+
+Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system or mounted dual-boot systems (e.g., Kali Linux, Parrot Security, BlackArch, Arch, Ubuntu, Termux):
+- **Cross-OS Discovery (`ax os-computing probe`)**:
+  - Detects host distribution, kernel, architecture, and compute cores.
+  - Scans `/mnt/*` and `/media/*` for co-installed Linux dual-boot partitions.
+- **Weaponized Arsenal Symbiosis (`ax os-computing collaborate`)**:
+  - Searches for 80+ elite security tools across both operating systems and bridges them into `~/.asterix_vault/host_arsenal/bin/`.
+  - Bridges wordlists (`rockyou.txt`, `seclists`) without duplicating disk space.
+  - Generates global environment hook (`~/.asterix_vault/host_arsenal/env.sh`).
+- **Compute & Hardware Synergy (`ax os-computing compute`)**:
+  - Fuses available CPU cores, RAM, and GPU accelerators (NVIDIA CUDA / AMD ROCm / OpenCL) for maximum throughput.
+- **OS Persona Mimicry (`ax os-computing imitate`)**:
+  - Adapts ASTERIX shell prompt, themes, and shortcuts to match host persona (Kali Dragon, BlackArch Total Warfare, Termux Mobile).
+
+### CLI Commands:
+```bash
+ax os-computing probe            # Scan host OS and mounted dual-boot partitions
+ax os-computing collaborate      # Bridge and fuse companion OS tools and wordlists into ASTERIX
+ax os-computing compute          # Maximize CPU, RAM, and GPU compute synergy
+ax os-computing imitate          # Adapt ASTERIX UI persona to host distribution
+ax os-computing status           # Display complete cross-OS collaboration telemetry
+```
+
+

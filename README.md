@@ -90,6 +90,17 @@ ASTERIX OS/
 │   ├── install-termux.sh     # 1-command installer for Termux (with auto-packages)
 │   ├── asterix-termux-init.sh# Cybernetic mobile session initializer
 │   └── setup-persistence.sh  # Android /sdcard/ storage bridge
+├── asterix-ai/               # Rule-Based Expert System & SOC Inference Engine
+│   ├── engine.py             # Pure Python 3 heuristic inference runner
+│   ├── engine.sh             # Zero-dependency native Bash fallback engine
+│   └── rules/                # Knowledge base rules (security, system, network, exploit JSON)
+├── auto-compiler/            # Autonomous Self-Healing Compilation Engine
+│   ├── autocompile.py        # Python 3 heuristic diagnostic and source repair loop
+│   ├── autocompile.sh        # Pure Bash fallback auto-compiler
+│   └── recipes/              # Missing header to package and linker flags mapping
+├── os-computing/             # Dual-Boot & Host OS Collaboration Bridge
+│   ├── os_bridge.py          # Host OS discovery, partition probe & tool assimilation
+│   └── os_bridge.sh          # Pure Bash fallback cross-OS bridge
 ├── setup.sh                  # 1-command bootstrap: clones packages & compiles engines
 ├── packages/                 # Auto-synchronized external security suites
 │   ├── README.md             # Package registry documentation
@@ -191,6 +202,11 @@ ax mac-guard                    # Kali AppArmor & SELinux: Mandatory Access Cont
 ax timeline [dir] [mins]        # Kali Sleuthkit: Digital forensics MACB timeline & timestomp anomaly detector
 ax trash [list|restore|empty]   # Secure recycle bin: Preserves deleted files and media with recovery manifest
 ax carve <target> [out_dir]     # Kali Forensics file carver: Recovers deleted photos, videos, PDFs & ZIPs
+
+# ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
+ax ai [audit]                    # Autonomous rule evaluation across live kernel, sysfs, and host state
+ax ai ask "<query>"              # Natural language technical triage, troubleshooting & remediation
+ax ai rules                      # Browse active knowledge base rules, severity ratings & metrics
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health

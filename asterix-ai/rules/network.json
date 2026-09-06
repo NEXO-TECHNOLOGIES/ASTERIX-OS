@@ -1,0 +1,28 @@
+[
+  {
+    "id": "NET-001",
+    "name": "DNS Privacy & Leak Armor",
+    "category": "network",
+    "target": "/etc/resolv.conf",
+    "safe_resolvers": ["1.1.1.1", "1.0.0.1", "9.9.9.9", "149.112.112.112", "8.8.8.8"],
+    "severity": "MEDIUM",
+    "keywords": ["dns", "leak", "privacy", "resolver", "isp", "tracking"],
+    "description": "Verifies that local DNS queries route through encrypted or zero-logging secure resolvers.",
+    "pass_msg": "DNS queries configured for privacy-respecting secure resolver.",
+    "fail_msg": "Unverified or ISP default DNS detected - Potential DNS logging and query leakage.",
+    "remediation": "ax tweaks dns"
+  },
+  {
+    "id": "NET-002",
+    "name": "Promiscuous Interface Sniffing Detection",
+    "category": "network",
+    "target": "metric:promisc_interfaces",
+    "expected": 0,
+    "severity": "CRITICAL",
+    "keywords": ["promiscuous", "sniff", "pcap", "wiretap", "capture", "eavesdrop"],
+    "description": "Audits network interfaces to ensure no silent promiscuous packet-sniffing tap is active.",
+    "pass_msg": "All network interfaces in standard non-promiscuous mode.",
+    "fail_msg": "Interface in PROMISC mode detected - Host may be eavesdropping or under packet capture.",
+    "remediation": "ip link set <iface> promisc off"
+  }
+]
