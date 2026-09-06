@@ -157,9 +157,12 @@ def cmd_audit():
     else:
         print(f"\n  {C_GREEN}{C_BOLD}[✔] ZERO DEFICIENCIES IDENTIFIED. ALL OPERATING SYSTEM MITIGATIONS ENFORCED.{C_RESET}\n")
 
-def cmd_ask(query):
-    print(f"\n{BANNER}\n")
-    print(f"  {C_CYAN}[*] Inquiring Knowledge Base:{C_RESET} \"{query}\"\n")
+def cmd_ask(query, in_chat=False):
+    if not in_chat:
+        print(f"\n{BANNER}\n")
+        print(f"  {C_CYAN}[*] Inquiring ASTERIX AI:{C_RESET} \"{query}\"\n")
+    else:
+        print()
 
     rules = load_rules()
     tokens = set(re.findall(r"\w+", query.lower()))
@@ -171,6 +174,8 @@ def cmd_ask(query):
         keywords.update(re.findall(r"\w+", rule.get("description", "").lower()))
         if "attack_vector" in rule:
             keywords.update(re.findall(r"\w+", rule.get("attack_vector", "").lower()))
+        if "response" in rule:
+            keywords.update(re.findall(r"\w+", rule.get("response", "").lower()))
 
         score = len(tokens.intersection(keywords))
         if score > 0:
@@ -179,55 +184,87 @@ def cmd_ask(query):
     matches.sort(key=lambda x: x[0], reverse=True)
 
     if not matches:
-        print(f"  {C_YELLOW}ASTERIX AI could not identify a direct rule match for your query.{C_RESET}")
-        print(f"  {C_WHITE}However, here is expert guidance on this topic:{C_RESET}\n")
-        print(f"  {C_CYAN}1. System Hardening & Mitigation Principles:{C_RESET}")
-        print("     In Linux systems, memory and process security are governed by sysctl kernel parameters,")
-        print("     LSM modules (AppArmor, SELinux, Yama), and compiler instrumentation (ASLR, NX, Stack Canaries).")
-        print("     To audit full kernel compliance immediately, execute: ax secpol audit or ax ai audit.\n")
-        print(f"  {C_CYAN}2. Suggested Specific Queries:{C_RESET}")
-        print("     • ax ai ask \"how does kernel aslr prevent memory buffer overflows?\"")
-        print("     • ax ai ask \"explain yama ptrace memory inspection risks and gdb injection\"")
-        print("     • ax ai ask \"how do I tune memory swappiness to eliminate system lag?\"")
-        print("     • ax ai ask \"mitigate tcp syn flood volumetric denial of service attacks\"\n")
+        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} I analyzed your inquiry, but did not find an exact matching knowledge module.")
+        print(f"  {C_WHITE}Here is general guidance from our cybersecurity core:{C_RESET}\n")
+        print(f"  • {C_CYAN}Kernel & Defense Baseline:{C_RESET} Run {C_GREEN}ax ai audit{C_RESET} or {C_GREEN}ax secpol audit{C_RESET} to evaluate live system hardening.")
+        print(f"  • {C_CYAN}Autonomous Healing:{C_RESET} If dealing with broken source code, run {C_GREEN}ax code-repair fix .{C_RESET}")
+        print(f"  • {C_CYAN}Privacy & Network Chains:{C_RESET} Run {C_GREEN}ax proxychains scan{C_RESET} to configure verified SOCKS4/SOCKS5 multi-hop routes.")
+        print(f"\n  {C_GRAY}Feel free to ask about specific topics like 'buffer overflow', 'SQL injection', 'swappiness', or 'how to learn hacking'.{C_RESET}\n")
         return
 
-    print(f"  {C_GREEN}{C_BOLD}[EXPERT AI SYNTHESIS — {len(matches)} RELEVANT KNOWLEDGE MODULES RETRIEVED]{C_RESET}\n")
+    top_rule = matches[0][1]
 
-    for score, rule in matches[:2]:
-        rid = rule.get("id")
-        name = rule.get("name")
-        cat = rule.get("category", "").upper()
-        sev = rule.get("severity", "INFO")
+    # Handle Conversational Intent Modules (greetings, identity, advice)
+    if "response" in top_rule:
+        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET}\n")
+        for line in top_rule["response"].split("\n"):
+            print(f"  {line}")
+        print()
+        return
 
-        print(f"{C_BLUE}═"*74 + f"{C_RESET}")
-        print(f" {C_MAGENTA}{C_BOLD}KNOWLEDGE MODULE [{rid}]: {name}{C_RESET}")
-        print(f" {C_GRAY}Category: {cat} | Severity Level: {sev} | Relevance Score: {score * 25}%{C_RESET}")
-        print(f"{C_BLUE}═"*74 + f"{C_RESET}\n")
+    # Technical Deep Cyber & Hardening Modules
+    score, rule = matches[0]
+    rid = rule.get("id")
+    name = rule.get("name")
+    cat = rule.get("category", "").upper()
+    sev = rule.get("severity", "INFO")
 
-        print(f" {C_CYAN}{C_BOLD}1. ARCHITECTURAL OVERVIEW & SUBSYSTEM CONTEXT:{C_RESET}")
-        print(f"    {rule.get('description')}\n")
+    print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} Here is a comprehensive technical breakdown on this subject:\n")
+    print(f"{C_BLUE}═"*74 + f"{C_RESET}")
+    print(f" {C_MAGENTA}{C_BOLD}KNOWLEDGE MODULE [{rid}]: {name}{C_RESET}")
+    print(f" {C_GRAY}Category: {cat} | Severity Level: {sev} | Confidence: {min(99, score * 30 + 35)}%{C_RESET}")
+    print(f"{C_BLUE}═"*74 + f"{C_RESET}\n")
 
-        if "attack_vector" in rule:
-            print(f" {C_RED}{C_BOLD}2. ADVERSARY EXPLOITATION & THREAT VECTOR MECHANICS:{C_RESET}")
-            print(f"    {rule['attack_vector']}\n")
+    print(f" {C_CYAN}{C_BOLD}1. ARCHITECTURAL OVERVIEW & CONTEXT:{C_RESET}")
+    print(f"    {rule.get('description')}\n")
 
+    if "attack_vector" in rule:
+        print(f" {C_RED}{C_BOLD}2. ADVERSARY EXPLOITATION & THREAT MECHANICS:{C_RESET}")
+        print(f"    {rule['attack_vector']}\n")
+
+    if "remediation_guidance" in rule:
+        print(f" {C_GREEN}{C_BOLD}3. ACTIONABLE REMEDIATION & BEST PRACTICES:{C_RESET}")
+        for rline in rule["remediation_guidance"].split("\n"):
+            print(f"    {rline}")
+        print()
+    elif "pass_msg" in rule:
         print(f" {C_GREEN}{C_BOLD}3. OPERATIONAL STATUS & RESOLUTION GUIDANCE:{C_RESET}")
         print(f"    {rule.get('pass_msg')}\n")
 
-        print(f" {C_YELLOW}{C_BOLD}4. IMMEDIATE TACTICAL REMEDIATION COMMAND:{C_RESET}")
-        print(f"    Execute in root/sudo terminal:")
+    if rule.get("remediation"):
+        print(f" {C_YELLOW}{C_BOLD}4. IMMEDIATE TACTICAL COMMAND:{C_RESET}")
         print(f"    {C_CYAN}{C_BOLD}# {rule.get('remediation')}{C_RESET}\n")
 
-        if "persistence" in rule:
-            print(f" {C_WHITE}{C_BOLD}5. REBOOT PERSISTENCE CONFIGURATION:{C_RESET}")
-            print(f"    To ensure this defensive configuration permanently survives system reboots:")
-            print(f"    {C_YELLOW}{C_BOLD}# {rule['persistence']}{C_RESET}\n")
+    if "persistence" in rule:
+        print(f" {C_WHITE}{C_BOLD}5. REBOOT PERSISTENCE CONFIGURATION:{C_RESET}")
+        print(f"    {C_YELLOW}{C_BOLD}# {rule['persistence']}{C_RESET}\n")
 
-        if "verification" in rule:
-            print(f" {C_WHITE}{C_BOLD}6. POST-REMEDIATION AUDIT & VERIFICATION:{C_RESET}")
-            print(f"    Run the following inspection command to verify the hardened state:")
-            print(f"    {C_GRAY}{C_BOLD}$ {rule['verification']}{C_RESET}\n")
+    if "verification" in rule:
+        print(f" {C_WHITE}{C_BOLD}6. POST-REMEDIATION AUDIT & VERIFICATION:{C_RESET}")
+        print(f"    {C_GRAY}{C_BOLD}$ {rule['verification']}{C_RESET}\n")
+
+    print(f"  {C_GRAY}[i] Let me know if you would like me to delve deeper into any specific aspect of this topic.{C_RESET}\n")
+
+def cmd_chat():
+    print(f"\n{BANNER}\n")
+    print(f"  {C_MAGENTA}{C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗{C_RESET}")
+    print(f"  {C_MAGENTA}║{C_WHITE}{C_BOLD}  ASTERIX AI // CONVERSATIONAL SOC & CYBER COPILOT SESSION [ONLINE]     {C_RESET}{C_MAGENTA}║{C_RESET}")
+    print(f"  {C_MAGENTA}╚══════════════════════════════════════════════════════════════════════════╝{C_RESET}\n")
+    print(f"  {C_CYAN}Ask me anything about cybersecurity, penetration testing, kernel hardening,{C_RESET}")
+    print(f"  {C_CYAN}code repairs, proxy chains, or operating systems. Type 'exit' to quit.{C_RESET}\n")
+
+    while True:
+        try:
+            prompt = input(f"{C_GREEN}{C_BOLD}user ❯{C_RESET} ").strip()
+            if not prompt:
+                continue
+            if prompt.lower() in ("exit", "quit", "bye", "q"):
+                print(f"\n  {C_MAGENTA}ASTERIX AI session terminated. Stay vigilant.{C_RESET}\n")
+                break
+            cmd_ask(prompt, in_chat=True)
+        except (KeyboardInterrupt, EOFError):
+            print(f"\n\n  {C_MAGENTA}ASTERIX AI session terminated.{C_RESET}\n")
+            break
 
 def cmd_list_rules():
     rules = load_rules()
@@ -538,7 +575,9 @@ def cmd_about(lang="en"):
 
 def main():
     args = sys.argv[1:]
-    if not args or args[0] in ("audit", "check", "scan"):
+    if not args or args[0] in ("chat", "interactive", "repl", "talk"):
+        cmd_chat()
+    elif args[0] in ("audit", "check", "scan"):
         cmd_audit()
     elif args[0] in ("ask", "query", "diagnose"):
         query = " ".join(args[1:]) if len(args) > 1 else "general security"

@@ -103,6 +103,9 @@ ASTERIX OS/
 ├── os-computing/             # Dual-Boot & Host OS Collaboration Bridge
 │   ├── os_bridge.py          # Host OS discovery, partition probe & tool assimilation
 │   └── os_bridge.sh          # Pure Bash fallback cross-OS bridge
+├── proxychains-creator/       # Proxy Discovery, SOCKS4/5 Validation & Chain Generator
+│   ├── proxy_manager.py      # Python 3 socket handshake, geo lookup & chain generator
+│   └── proxy_manager.sh      # Pure Bash fallback proxy tester
 ├── setup.sh                  # 1-command bootstrap: clones packages & compiles engines
 ├── packages/                 # Auto-synchronized external security suites
 │   ├── README.md             # Package registry documentation

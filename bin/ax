@@ -3384,6 +3384,35 @@ cmd_code_repair() {
     fi
 }
 
+cmd_proxychains() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    local pc_dir=""
+    if [ -n "$ax_root" ] && [ -d "${ax_root}/proxychains-creator" ]; then
+        pc_dir="${ax_root}/proxychains-creator"
+    elif [ -d "/etc/asterix/proxychains-creator" ]; then
+        pc_dir="/etc/asterix/proxychains-creator"
+    elif [ -d "proxychains-creator" ]; then
+        pc_dir="proxychains-creator"
+    elif [ -d "$HOME/asterix/proxychains-creator" ]; then
+        pc_dir="$HOME/asterix/proxychains-creator"
+    fi
+
+    if [ -z "$pc_dir" ]; then
+        echo -e "${C_RED}[!] Error: proxychains-creator directory not located.${C_RESET}"
+        return 1
+    fi
+
+    if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1 && [ -f "${pc_dir}/proxy_manager.py" ]; then
+        python3 "${pc_dir}/proxy_manager.py" "$@"
+    elif [ -f "${pc_dir}/proxy_manager.sh" ]; then
+        bash "${pc_dir}/proxy_manager.sh" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Neither proxy_manager.py nor proxy_manager.sh found in ${pc_dir}.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
     find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
@@ -5412,11 +5441,14 @@ cmd_help() {
     echo -e "${C_WHITE}${C_BOLD}AUTONOMOUS COMPILATION, CODE-REPAIR & HOST OS COLLABORATION:${C_RESET}"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax code-repair [fix] [dir]${C_RESET}  Native Rust/C engine: detect & auto-heal broken source files"
-    echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)\n"
+    echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
+    echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain\n"
 
-    echo -e "${C_WHITE}${C_BOLD}RULE-BASED EXPERT AI & SOC TRIAGE:${C_RESET}"
-    echo -e "  ${C_MAGENTA}ax ai [audit]${C_RESET}           Evaluate live host against knowledge base & score resilience"
-    echo -e "  ${C_MAGENTA}ax ai ask \"<query>\"${C_RESET}    Natural language query matching for mitigations & remediation"
+    echo -e "${C_WHITE}${C_BOLD}CONVERSATIONAL SOC AI & EXPERT COPILOT:${C_RESET}"
+    echo -e "  ${C_MAGENTA}ax ai chat${C_RESET}              Interactive ChatGPT-style conversational cybersecurity session"
+    echo -e "  ${C_MAGENTA}ax ai ask \"<query>\"${C_RESET}    Natural language threat model, attack vector & remediation"
+    echo -e "  ${C_MAGENTA}ax ai audit${C_RESET}             Evaluate live host against knowledge base & score resilience"
+    echo -e "  ${C_MAGENTA}ax ai about [lang]${C_RESET}      Multilingual system overview (en, es, fr, de, zh, ar, ru)"
     echo -e "  ${C_MAGENTA}ax ai rules${C_RESET}             List all active knowledge base rules, IDs and severity\n"
 
     echo -e "${C_WHITE}${C_BOLD}TACTICAL CYBER WARFARE, DECEPTION & ANTI-FORENSICS:${C_RESET}"
@@ -6281,6 +6313,10 @@ case "$SUBCOMMAND" in
     code-repair|code-fix|fix-code|os-fix|repair-code|heal-code)
         shift
         cmd_code_repair "$@"
+        ;;
+    proxychains|proxy-chains|proxychains-creator|proxy-creator|proxy)
+        shift
+        cmd_proxychains "$@"
         ;;
 
     # 8. Direct Cyber Subsystem Jumpers

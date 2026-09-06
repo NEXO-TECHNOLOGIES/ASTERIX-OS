@@ -24,9 +24,37 @@ action="${1:-audit}"
 shift || true
 
 case "$action" in
+    chat|interactive|repl|talk)
+        echo -e "  ${C_MAGENTA}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+        echo -e "  ${C_MAGENTA}║${C_WHITE}${C_BOLD}  ASTERIX AI // CONVERSATIONAL SOC & CYBER COPILOT SESSION [ONLINE]     ${C_RESET}${C_MAGENTA}║${C_RESET}"
+        echo -e "  ${C_MAGENTA}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+        echo -e "  ${C_CYAN}Ask me anything about cybersecurity, penetration testing, kernel hardening,${C_RESET}"
+        echo -e "  ${C_CYAN}code repairs, proxy chains, or operating systems. Type 'exit' to quit.${C_RESET}\n"
+        while true; do
+            read -r -p "$(echo -e "${C_GREEN}${C_BOLD}user ❯${C_RESET} ")" user_input || break
+            [ -z "$user_input" ] && continue
+            if [[ "$user_input" =~ ^(exit|quit|bye|q)$ ]]; then
+                echo -e "\n  ${C_MAGENTA}ASTERIX AI session terminated. Stay vigilant.${C_RESET}\n"
+                break
+            fi
+            bash "$0" ask "$user_input"
+        done
+        ;;
+
     ask|query|diagnose)
         query="$*"
-        echo -e "  ${C_CYAN}[*] Inquiring Knowledge Base:${C_RESET} \"${query}\"\n"
+        echo -e "  ${C_CYAN}[*] Inquiring ASTERIX AI:${C_RESET} \"${query}\"\n"
+
+        if [[ "$query" =~ ^([Hh]ello|[Hh]i|[Hh]ey|[Gg]reetings|[Hh]owdy|[Ss]up|[Yy]o)$ ]]; then
+            echo -e "  ${C_MAGENTA}${C_BOLD}ASTERIX AI ❯${C_RESET} Greetings! I am your resident tactical intelligence and cybersecurity copilot."
+            echo -e "  I am specialized in penetration testing, kernel hardening, reverse engineering, and code healing."
+            echo -e "  What cybersecurity domain or system objective are we tackling today?\n"
+            exit 0
+        elif [[ "$query" =~ [Ww]ho\ are\ you|[Ww]hat\ are\ you|[Ii]ntroduce\ yourself ]]; then
+            echo -e "  ${C_MAGENTA}${C_BOLD}ASTERIX AI ❯${C_RESET} I am ASTERIX AI (v3.0) — an autonomous, offline intelligence engine."
+            echo -e "  I run 100% locally on your machine with zero cloud dependencies and zero data harvesting.\n"
+            exit 0
+        fi
 
         if [[ "$query" =~ [Aa][Ss][Ll][Rr]|[Bb]uffer|[Ee]xploit|[Mm]emory|[Rr][Oo][Pp] ]]; then
             echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}"
@@ -89,6 +117,46 @@ case "$action" in
             echo -e "    ${C_CYAN}${C_BOLD}# sysctl -w net.ipv4.tcp_syncookies=1${C_RESET}\n"
             echo -e " ${C_WHITE}${C_BOLD}3. REBOOT PERSISTENCE CONFIGURATION:${C_RESET}"
             echo -e "    ${C_YELLOW}${C_BOLD}# echo 'net.ipv4.tcp_syncookies = 1' >> /etc/sysctl.d/99-asterix-hardening.conf${C_RESET}\n"
+        elif [[ "$query" =~ [Ss][Qq][Ll]|[Ii]njection ]]; then
+            echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}"
+            echo -e " ${C_MAGENTA}${C_BOLD}KNOWLEDGE MODULE [CYB-001]: SQL Injection (SQLi) Deep Technical Analysis${C_RESET}"
+            echo -e " ${C_GRAY}Category: WEB_SECURITY | Severity Level: CRITICAL | Relevance: 100%${C_RESET}"
+            echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}\n"
+            echo -e " ${C_CYAN}${C_BOLD}1. ARCHITECTURAL OVERVIEW & CONTEXT:${C_RESET}"
+            echo -e "    SQL Injection occurs when untrusted user input is directly concatenated into database"
+            echo -e "    SQL statements without parameterized prepared bindings or input sanitization.\n"
+            echo -e " ${C_RED}${C_BOLD}2. ADVERSARY EXPLOITATION & THREAT MECHANICS:${C_RESET}"
+            echo -e "    Adversaries inject SQL metacharacters (such as ' OR '1'='1, UNION SELECT, or --) to"
+            echo -e "    bypass authentication, exfiltrate sensitive data, dump schemas, write arbitrary webshells,"
+            echo -e "    or execute operating system commands via database extensions (xp_cmdshell / sys_eval).\n"
+            echo -e " ${C_GREEN}${C_BOLD}3. ACTIONABLE REMEDIATION & BEST PRACTICES:${C_RESET}"
+            echo -e "    • Always enforce Parameterized Prepared Statements (PDO, PreparedStatement, psycopg2)."
+            echo -e "    • Run ASTERIX WAF (packages/LIGHTNING-/) to inspect and block malicious SQL tokens."
+            echo -e "    • Audit web root for unparameterized SQL: grep -rn 'SELECT.*WHERE.*\$' /var/www/html/\n"
+
+        elif [[ "$query" =~ [Xx][Ss][Ss]|[Ss]cripting ]]; then
+            echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}"
+            echo -e " ${C_MAGENTA}${C_BOLD}KNOWLEDGE MODULE [CYB-002]: Cross-Site Scripting (XSS) & DOM Exploitation${C_RESET}"
+            echo -e " ${C_GRAY}Category: WEB_SECURITY | Severity Level: HIGH | Relevance: 100%${C_RESET}"
+            echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}\n"
+            echo -e " ${C_CYAN}${C_BOLD}1. ARCHITECTURAL OVERVIEW & CONTEXT:${C_RESET}"
+            echo -e "    XSS involves injecting malicious client-side JavaScript into trusted web applications"
+            echo -e "    viewed by victim users, executing arbitrary script in the context of the vulnerable origin.\n"
+            echo -e " ${C_GREEN}${C_BOLD}2. ACTIONABLE REMEDIATION & BEST PRACTICES:${C_RESET}"
+            echo -e "    • Enforce strict Content Security Policy (CSP): default-src 'self'"
+            echo -e "    • Mark all session cookies as HttpOnly and Secure to prevent document.cookie theft."
+            echo -e "    • Sanitize dynamic HTML using DOMPurify.\n"
+
+        elif [[ "$query" =~ [Pp]rivilege|[Pp]rivesc|[Ss][Uu][Ii][Dd] ]]; then
+            echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}"
+            echo -e " ${C_MAGENTA}${C_BOLD}KNOWLEDGE MODULE [CYB-004]: Linux Local Privilege Escalation via SUID Binaries${C_RESET}"
+            echo -e " ${C_GRAY}Category: PRIVILEGE_ESCALATION | Severity Level: CRITICAL | Relevance: 100%${C_RESET}"
+            echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}\n"
+            echo -e " ${C_CYAN}${C_BOLD}1. ARCHITECTURAL OVERVIEW & CONTEXT:${C_RESET}"
+            echo -e "    SUID permissions allow executables to run with root privileges. If utilities like"
+            echo -e "    find, vim, bash, or nmap have the SUID bit set, unprivileged local users can spawn root shells.\n"
+            echo -e " ${C_YELLOW}${C_BOLD}2. IMMEDIATE TACTICAL AUDIT COMMAND:${C_RESET}"
+            echo -e "    ${C_CYAN}${C_BOLD}# ax suid${C_RESET}  or  ${C_CYAN}${C_BOLD}find / -perm -4000 2>/dev/null${C_RESET}\n"
         else
             echo -e "  ${C_YELLOW}[!] Query indexed against rule base. General recommendations:${C_RESET}"
             echo -e "    • Run ${C_CYAN}ax ai audit${C_RESET} for a complete host baseline evaluation"

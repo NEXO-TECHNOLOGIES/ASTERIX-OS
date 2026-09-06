@@ -405,4 +405,57 @@ ax os-computing imitate          # Adapt ASTERIX UI persona to host distribution
 ax os-computing status           # Display complete cross-OS collaboration telemetry
 ```
 
+---
+
+## 13. 🔧 ASTERIX Code-Repair Engine (Native Rust & C Self-Healing)
+
+Located in `core-utils-rust/asterix-code-repair/` and `core-utils-c/src/asterix-code-repair.c`:
+- **Dual-Tier Native Performance**: Tier 1 in pure Rust with zero-cost abstractions; Tier 2 in POSIX C for minimal embedded footprints.
+- **Defect Detection & Auto-Healing**:
+  - Traverses directory trees recursively (skipping `.git`, `target`, `node_modules`).
+  - Balances `{}` braces, `()` parentheses, and `[]` brackets.
+  - Injects missing semicolons `;` in C/C++ statements.
+  - Injects missing colons `:` in Python control blocks.
+  - Normalizes Windows CRLF line endings to Linux LF.
+  - Creates `.bak` safety backups before applying any modification.
+
+```bash
+ax code-repair scan <dir>        # Inspect codebase for syntax and formatting defects
+ax code-repair fix <dir>         # Recursively heal all defects with safety backups
+```
+
+---
+
+## 14. 🧠 Conversational ASTERIX AI v3.0 (ChatGPT-Style Copilot)
+
+Located in `asterix-ai/`:
+- **Interactive Conversational Shell (`ax ai chat`)**: Provides an offline, zero-dependency natural language dialogue interface without sending queries to the cloud.
+- **Expansive Dialogue & Threat Matrix**:
+  - Conversational intents (`asterix-ai/rules/conversational_ai.json`): Greetings, identity, hacker philosophy, and career roadmaps.
+  - Cyber Encyclopedia (`asterix-ai/rules/cyber_encyclopedia.json`): Deep multi-paragraph explanations on Buffer Overflows, ROP, SQLi, XSS, SUID privilege escalation, ARP spoofing, and Zero Trust.
+- **Multilingual Support**: Real-time localized overviews in English, Spanish, French, German, Chinese, Arabic, and Russian (`ax ai about <lang>`).
+
+```bash
+ax ai chat                       # Launch interactive conversational AI session
+ax ai ask "<query>"              # Natural language threat breakdown and remediation
+ax ai audit                      # Evaluate system resilience against CIS benchmarks (0-100 score)
+ax ai about [es|fr|de|zh|ar|ru]  # Display multilingual ASTERIX overview
+```
+
+---
+
+## 15. 🌐 ProxyChains Creator & Dynamic Routing Engine
+
+Located in `proxychains-creator/`:
+- **Protocol Handshake Probing**: Probes SOCKS5 (RFC 1928) and SOCKS4 sockets to ensure genuine proxy availability, not just open ports.
+- **Detailed IP Telemetry**: Displays `STATUS`, `IP ADDRESS`, `PORT`, `TYPE (SOCKS4/5)`, `COUNTRY`, and `LATENCY (ms)`.
+- **Dynamic Configuration Synthesis**: Automatically generates verified `~/.asterix_vault/proxychains/proxychains.conf` using `dynamic_chain` and `proxy_dns` to prevent DNS leakage.
+
+```bash
+ax proxychains scan              # Test SOCKS proxies and generate dynamic chain
+ax proxychains add <ip> <port>   # Test and add a single proxy endpoint
+ax proxychains status            # Display current active proxy chains configuration
+```
+
+
 

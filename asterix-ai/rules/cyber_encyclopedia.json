@@ -1,0 +1,57 @@
+[
+  {
+    "id": "CYB-001",
+    "name": "SQL Injection (SQLi) Deep Technical Analysis",
+    "category": "web_security",
+    "keywords": ["sql injection", "sqli", "database injection", "union select", "blind sqli", "sqlmap"],
+    "description": "SQL Injection occurs when untrusted user input is directly concatenated into dynamic database SQL queries without parameterized binding or input sanitization.",
+    "attack_vector": "Adversaries manipulate query logic by injecting SQL metacharacters (such as ' OR '1'='1, --, /*, or UNION SELECT). This allows attackers to bypass authentication gates, dump entire database schemas (including password hashes and PII), write arbitrary files to the underlying operating system (INTO OUTFILE), or execute operating system commands via database extensions (e.g. xp_cmdshell in MSSQL or sys_eval in MySQL).",
+    "remediation_guidance": "1. Always use **Parameterized Prepared Statements** (e.g., PDO in PHP, PreparedStatement in Java, or parameterized queries in Python psycopg2/sqlite3).\n2. Apply the Principle of Least Privilege to database users (never connect your web service as 'root' or 'sa').\n3. Use an active Web Application Firewall (like ASTERIX LIGHTNING WAF) to inspect and block malicious SQL tokens.\n4. To test and audit your endpoints safely: run `ax web` or `sqlmap -u 'http://target/api?id=1' --batch --banner`.",
+    "pass_msg": "Application uses parameterized SQL queries - Database injection vectors neutralized.",
+    "remediation": "Audit codebases with: grep -rn 'SELECT.*WHERE.*\$' /var/www/html/"
+  },
+  {
+    "id": "CYB-002",
+    "name": "Cross-Site Scripting (XSS) & DOM Exploitation",
+    "category": "web_security",
+    "keywords": ["xss", "cross site scripting", "stored xss", "reflected xss", "dom xss", "csp"],
+    "description": "Cross-Site Scripting involves injecting malicious client-side JavaScript or HTML into trusted web applications viewed by victim users.",
+    "attack_vector": "When an application reflects unescaped user input (Reflected XSS) or stores untrusted payloads in databases (Stored XSS), victim browsers execute the injected JavaScript in the context of the vulnerable origin. Attackers can steal session tokens (document.cookie), hijack active user sessions, log keystrokes, capture clipboard data, or redirect users to credential harvesting phishing domains.",
+    "remediation_guidance": "1. Implement Context-Aware Output Encoding (HTML entity encoding, JavaScript variable escaping).\n2. Enforce a rigorous **Content Security Policy (CSP)** header:\n   `Content-Security-Policy: default-src 'self'; script-src 'self' https://trusted.cdn.com;`\n3. Mark all session cookies with the **HttpOnly** and **Secure** flags to prevent JavaScript access via `document.cookie`.\n4. Validate and sanitize inputs using trusted libraries such as DOMPurify.",
+    "pass_msg": "Strict CSP and HttpOnly cookie flags enforced - Client-side script execution mitigated.",
+    "remediation": "Add 'Header set Content-Security-Policy \"default-src 'self';\"' to web server configuration."
+  },
+  {
+    "id": "CYB-003",
+    "name": "Stack Buffer Overflow & Return-Oriented Programming (ROP)",
+    "category": "binary_exploitation",
+    "keywords": ["buffer overflow", "stack overflow", "rop", "gadgets", "memory corruption", "ret2libc", "shellcode"],
+    "description": "A classic low-level vulnerability in C/C++ where writing data beyond an allocated stack buffer overwrites adjacent memory, including the saved frame pointer (EBP/RBP) and return instruction pointer (EIP/RIP).",
+    "attack_vector": "In legacy systems, attackers overflow a buffer with shellcode and overwrite the return pointer to point directly into the stack. On modern operating systems where the stack is non-executable (NX/DEP), attackers employ **Return-Oriented Programming (ROP)**. By stringing together short instruction sequences ending in 'ret' (called ROP gadgets) borrowed from existing loaded libraries (libc), adversaries pivot registers and invoke `mprotect()` or `execve('/bin/sh', 0, 0)` without executing stack memory.",
+    "remediation_guidance": "1. Compile binaries with complete compiler-level mitigations:\n   `gcc -fstack-protector-all -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -fPIE -pie -z relro -z now`\n2. Lock kernel ASLR to Level 2 (`sysctl -w kernel.randomize_va_space=2`).\n3. Use memory-safe languages like **Rust** for critical system software.\n4. Replace unsafe C standard functions (`strcpy`, `gets`, `sprintf`) with bounded equivalents (`strncpy`, `fgets`, `snprintf`).",
+    "pass_msg": "NX/DEP, Stack Canaries, and Full RELRO active - Binary protected against control flow hijacking.",
+    "remediation": "sysctl -w kernel.randomize_va_space=2"
+  },
+  {
+    "id": "CYB-004",
+    "name": "Linux Local Privilege Escalation via SUID Binaries",
+    "category": "privilege_escalation",
+    "keywords": ["suid", "privilege escalation", "privesc", "gtfobins", "setuid", "root privesc"],
+    "description": "SUID (Set User ID) permissions allow executable files to run with the privileges of the file owner (often root) rather than the executing user.",
+    "attack_vector": "If standard system utilities (such as `vim`, `find`, `nmap`, `bash`, `awk`, `cp`, `base64`) or custom compiled binaries have the SUID bit set (`-rwsr-xr-x`), unprivileged local attackers can exploit their native command execution or file-reading flags to spawn a root shell or read `/etc/shadow`.\nExample GTFOBins vectors:\n• `find . -exec /bin/sh -p \\; -quit`\n• `vim -c ':!/bin/sh'`\n• `nmap --interactive`",
+    "remediation_guidance": "1. Audit your system regularly for rogue SUID files using ASTERIX OS:\n   `ax suid` or `find / -perm -4000 2>/dev/null`\n2. Strip the SUID bit from any binary that does not strictly require elevated privileges:\n   `chmod u-s /path/to/binary`\n3. Mount user-writable directories (`/tmp`, `/dev/shm`, `/home`) with the `nosuid` and `noexec` options.",
+    "pass_msg": "Zero unauthorized SUID binaries detected - SUID escalation surface minimized.",
+    "remediation": "chmod u-s <rogue_binary>"
+  },
+  {
+    "id": "CYB-005",
+    "name": "ARP Spoofing & Man-In-The-Middle (MITM) Architecture",
+    "category": "network_security",
+    "keywords": ["arp spoofing", "arp poison", "mitm", "man in the middle", "ettercap", "bettercap", "arp"],
+    "description": "The Address Resolution Protocol (ARP) lacks authentication. Any device on a shared LAN can send unsolicited ARP responses claiming to possess another host's IP address.",
+    "attack_vector": "An adversary broadcasts forged ARP replies associating their own MAC address with the default gateway's IP address. Consequently, target machines update their local ARP caches and route all outbound internet traffic through the attacker's machine. The attacker enables IP forwarding to inspect, modify, or hijack unencrypted traffic (HTTP, DNS, FTP) or perform SSL stripping attacks.",
+    "remediation_guidance": "1. Deploy **Dynamic ARP Inspection (DAI)** on network managed switches.\n2. Configure static ARP entries for critical infrastructure gateways:\n   `arp -s 192.168.1.1 00:11:22:33:44:55`\n3. Use ASTERIX OS Anti-Network-Attack Sentinel (`packages/Asterix-Anti-Network-Attack/`) to detect unsolicited ARP changes.\n4. Enforce end-to-end encrypted tunnels (VPNs with WireGuard/IPsec, or TLS everywhere).",
+    "pass_msg": "Static ARP mappings and DAI monitoring active - Layer 2 spoofing defended.",
+    "remediation": "ax arp-detect"
+  }
+]
