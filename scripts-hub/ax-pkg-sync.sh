@@ -4,7 +4,8 @@
 # Manages external cybersecurity tool repositories (Anti-Network, THUNDER)
 # =====================================================================
 
-set -e
+# Disable interactive git auth prompts so background/curl installs never hang
+export GIT_TERMINAL_PROMPT=0
 
 C_RESET='\033[0m'
 C_BOLD='\033[1m'
@@ -191,7 +192,10 @@ cmd_sync() {
             cd "$AX_ROOT"
         else
             echo -e "  ${C_CYAN}[*] Cloning from ${repo_url}...${C_RESET}"
-            git clone "$repo_url" "$pkg_base"
+            if ! GIT_TERMINAL_PROMPT=0 git clone --depth 1 "$repo_url" "$pkg_base" 2>/dev/null; then
+                echo -e "  ${C_YELLOW}[!] Warning: Repository ${pkg_name} is private or unreachable. Skipping without error.${C_RESET}"
+                continue
+            fi
         fi
 
         pkg_path=$(resolve_package_path "$pkg_name")

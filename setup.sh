@@ -5,7 +5,8 @@
 # multi-language native engines, and installs global ax CLI.
 # =====================================================================
 
-set -e
+# Disable interactive prompts so background/curl installation never halts
+export GIT_TERMINAL_PROMPT=0
 
 C_RESET='\033[0m'
 C_BOLD='\033[1m'
@@ -96,7 +97,7 @@ fi
 echo -e "\n${C_YELLOW}[2/4] Synchronizing External Security Packages from GitHub...${C_RESET}"
 if [ -f "${SCRIPT_DIR}/scripts-hub/ax-pkg-sync.sh" ]; then
     chmod +x "${SCRIPT_DIR}/scripts-hub/ax-pkg-sync.sh"
-    bash "${SCRIPT_DIR}/scripts-hub/ax-pkg-sync.sh" sync
+    bash "${SCRIPT_DIR}/scripts-hub/ax-pkg-sync.sh" sync || true
 else
     echo -e "${C_RED}[!] scripts-hub/ax-pkg-sync.sh not found!${C_RESET}"
 fi
@@ -105,7 +106,7 @@ fi
 echo -e "\n${C_YELLOW}[3/4] Compiling Native ASTERIX Multi-Language Engines...${C_RESET}"
 if [ -f "${SCRIPT_DIR}/build-all.sh" ]; then
     chmod +x "${SCRIPT_DIR}/build-all.sh"
-    bash "${SCRIPT_DIR}/build-all.sh" "$INSTALL_DIR"
+    bash "${SCRIPT_DIR}/build-all.sh" "$INSTALL_DIR" || true
 else
     echo -e "${C_YELLOW}[!] build-all.sh not found. Skipping native compilation.${C_RESET}"
 fi
