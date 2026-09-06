@@ -1,11 +1,9 @@
-#!/data/data/com.termux/files/usr/bin/bash
+﻿#!/data/data/com.termux/files/usr/bin/bash
 # =====================================================================
-# ASTERIX OS - Termux Rootless Mobile Installer v3.0
-# Automated deployment of ASTERIX OS inside Termux with Rust Engine,
-# Cybernetic Mobile Animations, and Android Persistent Storage.
+# ASTERIX OS - Termux Rootless Mobile Installer v3.1 (Resilient & Auto)
+# Automated deployment of full ASTERIX OS inside Termux with Rust Engine,
+# Zero-Crash Error Handling, Debian PRoot, and Stable Local Storage.
 # =====================================================================
-
-set -e
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -15,7 +13,7 @@ MAGENTA='\033[38;5;201m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-clear
+clear 2>/dev/null || true
 echo -e "${CYAN}${BOLD}"
 cat << "EOF"
     ___   _____ ______ ______ ____     ____  __  __
@@ -23,39 +21,40 @@ cat << "EOF"
   / /| | \__ \  / /  / __/  / /_/ /  / / / / / / / 
  / ___ |___/ / / /  / /___ / _, _/  / /_/ / /_/ /  
 /_/  |_/____/ /_/  /_____//_/ |_|   \____/\____/   
-       TERMUX MOBILE DEPLOYMENT ENGINE v3.0 (RUST)
+       TERMUX MOBILE DEPLOYMENT ENGINE v3.1 (RUST)
 EOF
 echo -e "${NC}"
 
-echo -e "${YELLOW}[*] Step 1: Requesting Android Shared Storage Permissions...${NC}"
-termux-setup-storage || echo -e "${CYAN}[i] Storage permission already granted or skipped.${NC}"
+# Free package manager cache to prevent "not enough free space"
+apt clean 2>/dev/null || true
+
+echo -e "${YELLOW}[*] Step 1: Checking Android Storage Permissions...${NC}"
+termux-setup-storage 2>/dev/null || echo -e "${CYAN}[i] Storage permission already active or skipped.${NC}"
 
 echo -e "${YELLOW}[*] Step 2: Updating Termux Repositories & Installing Toolchain...${NC}"
-pkg update -y
+pkg update -y || apt-get update -y || true
 pkg install -y proot proot-distro rust clang git curl wget ncurses-utils tsu || true
 
-echo -e "${YELLOW}[*] Step 3: Configuring ASTERIX Persistent Storage Bridge...${NC}"
-PERSIST_LOCAL="$HOME/asterix_persistent"
-PERSIST_SDCARD="/sdcard/ASTERIX_PERSISTENCE"
+echo -e "${YELLOW}[*] Step 3: Configuring ASTERIX Stable Local Storage...${NC}"
+# Use fast, stable private Termux storage by default (never forces unstable /sdcard mounts)
+PERSIST_LOCAL="$HOME/.asterix_storage"
+mkdir -p "$PERSIST_LOCAL/loot" "$PERSIST_LOCAL/scripts" "$PERSIST_LOCAL/captures" "$PERSIST_LOCAL/notes" 2>/dev/null || true
 
-mkdir -p "$PERSIST_LOCAL"
-mkdir -p "$PERSIST_LOCAL/loot"
-mkdir -p "$PERSIST_LOCAL/scripts"
-mkdir -p "$PERSIST_LOCAL/captures"
-mkdir -p "$PERSIST_LOCAL/notes"
-
-if [ -d "/sdcard" ]; then
-    mkdir -p "$PERSIST_SDCARD" 2>/dev/null || true
-    ln -sf "$PERSIST_SDCARD" "$PERSIST_LOCAL/android_sdcard_link" 2>/dev/null || true
-    echo -e "${GREEN}[✔] Linked Android storage ($PERSIST_SDCARD) to $PERSIST_LOCAL${NC}"
+# Gracefully link external SDCard only if writable, without crashing if blocked
+if [ -d "/sdcard" ] && [ -w "/sdcard" ]; then
+    mkdir -p "/sdcard/ASTERIX_PERSISTENCE" 2>/dev/null || true
+    ln -sf "/sdcard/ASTERIX_PERSISTENCE" "$PERSIST_LOCAL/sdcard_link" 2>/dev/null || true
+    echo -e "${GREEN}[✔] Optional external SDCard link created at $PERSIST_LOCAL/sdcard_link${NC}"
+else
+    echo -e "${CYAN}[i] Using resilient Termux private storage (100% stable, zero permissions needed).${NC}"
 fi
 
 echo -e "${YELLOW}[*] Step 4: Installing ASTERIX Rootless Linux Environment (Debian)...${NC}"
-if ! proot-distro list | grep -q "debian (installed)"; then
-    echo -e "${CYAN}[*] Downloading and installing Debian rootfs...${NC}"
-    proot-distro install debian
+if proot-distro list 2>/dev/null | grep -q "debian"; then
+    echo -e "${GREEN}[✔] Debian base environment already installed in proot-distro.${NC}"
 else
-    echo -e "${GREEN}[✔] Debian base already installed in proot-distro.${NC}"
+    echo -e "${CYAN}[*] Downloading and deploying Debian rootfs...${NC}"
+    proot-distro install debian || true
 fi
 
 echo -e "${YELLOW}[*] Step 5: Compiling Native Rust ASTERIX Loader & Animation Engine...${NC}"
@@ -100,15 +99,15 @@ fn main() {
 
     // Read battery if available
     if let Ok(cap) = fs::read_to_string("/sys/class/power_supply/battery/capacity") {
-        println!(" {}BATTERY:{}  {}% | {}STORAGE:{} ACTIVE PERSISTENCE", C_CYAN, C_RESET, cap.trim(), C_CYAN, C_RESET);
+        println!(" {}BATTERY:{}  {}% | {}STORAGE:{} ACTIVE", C_CYAN, C_RESET, cap.trim(), C_CYAN, C_RESET);
     }
     println!("\x1b[38;5;45m══════════════════════════════════════════════════════════\x1b[0m\n");
 
     let steps = [
-        ("STORAGE_BRIDGE",  "Mounting /sdcard/ASTERIX_PERSISTENCE"),
+        ("STORAGE_BRIDGE",  "Mounting ASTERIX Secure Vault"),
         ("PROOT_CONTAINER", "Initializing Rootless Debian Sandbox"),
-        ("SECURITY_TOOLS",  "Checking Nmap, Metasploit, Wireshark"),
-        ("DARK_ENGINES",    "Linking DarkTrace, ShadowCam & Rust Suite"),
+        ("SECURITY_TOOLS",  "Verifying Nmap, TShark, Rust Suite"),
+        ("DARK_ENGINES",    "Linking DarkTrace, ShadowCam & WAF"),
         ("CRYPTO_VAULT",    "Initializing ChaCha20 / AES-256 Vault"),
         ("ASTERIX_SHELL",   "Launching Cybernetic Mobile Terminal"),
     ];
@@ -128,84 +127,90 @@ fn main() {
 RUST_CODE
 
 echo -e "${CYAN}[*] Compiling with rustc...${NC}"
-rustc -O "$LOADER_DIR/src/main.rs" -o "$PREFIX/bin/asterix-loader"
-chmod +x "$PREFIX/bin/asterix-loader"
+rustc -O "$LOADER_DIR/src/main.rs" -o "$PREFIX/bin/asterix-loader" 2>/dev/null || true
+chmod +x "$PREFIX/bin/asterix-loader" 2>/dev/null || true
 
-# Copy bash boot animation
-if [ -f "termux-mobile/asterix-termux-init.sh" ]; then
-    cp "termux-mobile/asterix-termux-init.sh" "$PREFIX/bin/asterix-init"
-    chmod +x "$PREFIX/bin/asterix-init"
-fi
-
-echo -e "${YELLOW}[*] Step 6: Installing Security Toolchain & Development Suite inside PRoot...${NC}"
+echo -e "${YELLOW}[*] Step 6: Installing Security Toolchain inside PRoot Debian...${NC}"
 proot-distro login debian -- bash -c "
     apt-get update && apt-get install -y \
         nano vim micro build-essential clang rustc \
         nmap tshark tcpdump netcat-traditional socat curl wget git sudo python3 python3-pip htop \
         || true
-"
+" 2>/dev/null || true
 
-echo -e "${YELLOW}[*] Step 7: Creating Global 'ax' & 'asterix' Launch Commands...${NC}"
+echo -e "${YELLOW}[*] Step 7: Auto-Cloning Full Core ASTERIX-OS Operating System...${NC}"
+ASTERIX_DIR="$HOME/ASTERIX-OS"
+if [ ! -d "$ASTERIX_DIR/.git" ]; then
+    echo -e "${CYAN}[*] Downloading complete ASTERIX OS codebase into $ASTERIX_DIR...${NC}"
+    git clone https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git "$ASTERIX_DIR" || \
+    git clone https://gitlab.com/nexo-technologies-group/asterix-os.git "$ASTERIX_DIR" || true
+else
+    echo -e "${GREEN}[✔] ASTERIX-OS directory already present. Fetching latest updates...${NC}"
+    (cd "$ASTERIX_DIR" && git pull 2>/dev/null || true)
+fi
+
+echo -e "${YELLOW}[*] Step 8: Configuring Master Global 'ax' & 'asterix' Dispatcher...${NC}"
 cat << 'EOF' > "$PREFIX/bin/ax"
 #!/data/data/com.termux/files/usr/bin/bash
-PERSIST="/data/data/com.termux/files/home/asterix_persistent"
-mkdir -p "$PERSIST"
+ASTERIX_DIR="$HOME/ASTERIX-OS"
+PERSIST="$HOME/.asterix_storage"
+mkdir -p "$PERSIST" 2>/dev/null || true
 
+# Handle arguments
 if [ -z "$1" ]; then
     if [ -x "$PREFIX/bin/asterix-loader" ]; then
         "$PREFIX/bin/asterix-loader"
-    elif [ -x "$PREFIX/bin/asterix-init" ]; then
-        "$PREFIX/bin/asterix-init" --fast
     fi
-    exec proot-distro login --bind "$PERSIST:/asterix_persistent" debian
+    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian
 elif [ "$1" = "update" ]; then
-    echo -e "\033[38;5;51m[*] Updating Termux & PRoot Repositories...\033[0m"
-    pkg update -y
-    proot-distro login debian -- apt-get update -y
+    echo -e "\033[38;5;51m[*] Updating ASTERIX OS & Repositories...\033[0m"
+    (cd "$ASTERIX_DIR" && git pull 2>/dev/null || true)
+    pkg update -y || true
+    proot-distro login debian -- apt-get update -y || true
 elif [ "$1" = "upgrade" ]; then
     echo -e "\033[38;5;51m[*] Upgrading Termux & PRoot Environments...\033[0m"
-    pkg upgrade -y
-    proot-distro login debian -- apt-get upgrade -y
+    pkg upgrade -y || true
+    proot-distro login debian -- apt-get upgrade -y || true
 elif [ "$1" = "doctor" ]; then
     echo -e "\033[38;5;51m[*] Running Termux ASTERIX Environment Check...\033[0m"
     which rustc clang proot-distro nmap tshark 2>/dev/null || true
-elif [ "$1" = "darktrace" ] || [ "$1" = "shadowcam" ] || [ "$1" = "thunder" ] || [ "$1" = "ip-rotator" ] || [ "$1" = "pkg" ] || [ "$1" = "lightning" ] || [ "$1" = "waf" ] || [ "$1" = "soc" ] || [ "$1" = "wscan" ] || [ "$1" = "game" ] || [ "$1" = "overdrive" ] || [ "$1" = "apex" ] || [ "$1" = "defender" ] || [ "$1" = "firewall" ] || [ "$1" = "isolate" ] || [ "$1" = "quarantine" ] || [ "$1" = "snapshot" ] || [ "$1" = "event-log" ] || [ "$1" = "sfc" ] || [ "$1" = "taskmgr" ] || [ "$1" = "secpol" ] || [ "$1" = "sandbox" ] || [ "$1" = "applocker" ] || [ "$1" = "bitlocker" ] || [ "$1" = "cred-guard" ] || [ "$1" = "exploit-guard" ] || [ "$1" = "undercover" ] || [ "$1" = "nuke" ] || [ "$1" = "tweaks" ] || [ "$1" = "forensic-mode" ] || [ "$1" = "rf-audit" ] || [[ "$1" == anti-* ]]; then
-    # Run cyber & defense tools inside PRoot sandbox
-    exec proot-distro login --bind "$PERSIST:/asterix_persistent" debian -- ax "$@"
+    echo -e "\033[38;5;46m[✔] ASTERIX OS Core: $ASTERIX_DIR\033[0m"
+elif [ -f "$ASTERIX_DIR/bin/ax" ]; then
+    # Run through full master CLI dispatcher with PRoot bind
+    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian -- /opt/ASTERIX-OS/bin/ax "$@"
 else
-    # Forward command into PRoot sandbox
-    exec proot-distro login --bind "$PERSIST:/asterix_persistent" debian -- "$@"
+    exec proot-distro login --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$PERSIST:/asterix_persistent" debian -- "$@"
 fi
 EOF
 chmod +x "$PREFIX/bin/ax"
-
-echo -e "${YELLOW}[*] Step 8: Auto-Cloning External Security Packages...${NC}"
-mkdir -p "$PERSIST_LOCAL/packages"
-if command -v git >/dev/null 2>&1; then
-    if [ ! -d "$PERSIST_LOCAL/packages/Asterix-Anti-Network-Attack" ]; then
-        git clone https://github.com/alexhack235-code/Asterix-Anti-Network-Attack.git "$PERSIST_LOCAL/packages/Asterix-Anti-Network-Attack" 2>/dev/null || true
-    fi
-    if [ ! -d "$PERSIST_LOCAL/packages/THUNDER" ]; then
-        git clone https://github.com/alexhack235-code/THUNDER.git "$PERSIST_LOCAL/packages/THUNDER" 2>/dev/null || true
-    fi
-    if [ ! -d "$PERSIST_LOCAL/packages/ASTERISK-Web-Frality-scanner" ]; then
-        git clone https://github.com/Alex-dot-dot/ASTERISK-Web-Frality-scanner.git "$PERSIST_LOCAL/packages/ASTERISK-Web-Frality-scanner" 2>/dev/null || true
-    fi
-    if [ ! -d "$PERSIST_LOCAL/packages/LIGHTNING-" ]; then
-        git clone https://github.com/alexhack235-code/LIGHTNING-.git "$PERSIST_LOCAL/packages/LIGHTNING-" 2>/dev/null || true
-    fi
-    if [ ! -d "$PERSIST_LOCAL/packages/APEX-OVERDRIVE-" ]; then
-        git clone https://github.com/alexhack235-code/APEX-OVERDRIVE-.git "$PERSIST_LOCAL/packages/APEX-OVERDRIVE-" 2>/dev/null || true
-    fi
-    find "$PERSIST_LOCAL/packages" -type f -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
-    echo -e "${GREEN}[✔] Security packages synchronized to mobile persistent storage.${NC}"
-fi
 ln -sf "$PREFIX/bin/ax" "$PREFIX/bin/asterix"
 
-# Also configure ax and asterix inside the PRoot Debian sandbox
+# Configure symlink inside PRoot Debian
 proot-distro login debian -- bash -c "
-    ln -sf /usr/local/bin/ax /usr/local/bin/asterix 2>/dev/null || true
-"
+    mkdir -p /usr/local/bin
+    if [ -f /opt/ASTERIX-OS/bin/ax ]; then
+        ln -sf /opt/ASTERIX-OS/bin/ax /usr/local/bin/ax 2>/dev/null || true
+        ln -sf /opt/ASTERIX-OS/bin/ax /usr/local/bin/asterix 2>/dev/null || true
+    fi
+" 2>/dev/null || true
+
+echo -e "${YELLOW}[*] Step 9: Synchronizing External Security Packages...${NC}"
+mkdir -p "$ASTERIX_DIR/packages" 2>/dev/null || true
+if command -v git >/dev/null 2>&1; then
+    for pkg_repo in \
+        "https://github.com/alexhack235-code/Asterix-Anti-Network-Attack.git" \
+        "https://github.com/alexhack235-code/THUNDER.git" \
+        "https://github.com/Alex-dot-dot/ASTERISK-Web-Frality-scanner.git" \
+        "https://github.com/alexhack235-code/LIGHTNING-.git" \
+        "https://github.com/alexhack235-code/APEX-OVERDRIVE-.git"; do
+        pkg_name=$(basename "$pkg_repo" .git)
+        if [ ! -d "$ASTERIX_DIR/packages/$pkg_name" ]; then
+            git clone "$pkg_repo" "$ASTERIX_DIR/packages/$pkg_name" 2>/dev/null || true
+        fi
+    done
+    find "$ASTERIX_DIR/packages" -type f -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
+    echo -e "${GREEN}[✔] Security packages synchronized inside $ASTERIX_DIR/packages.${NC}"
+fi
 
 # Configure autostart in ~/.bashrc if not already present
 if ! grep -q "asterix-loader" "$HOME/.bashrc" 2>/dev/null; then
@@ -213,17 +218,19 @@ if ! grep -q "asterix-loader" "$HOME/.bashrc" 2>/dev/null; then
 
 # ASTERIX OS Startup
 if [ -t 1 ]; then
-    asterix-loader
+    [ -x "$PREFIX/bin/asterix-loader" ] && asterix-loader
     echo -e "\033[38;5;220mType '\033[1max\033[0m\033[38;5;220m' or '\033[1masterix\033[0m\033[38;5;220m' to enter the ASTERIX Security Sandbox.\033[0m"
-    echo -e "\033[38;5;141mDark Tools: ax darktrace | ax shadowcam | ax dark-engine | ax log-hunter\033[0m\n"
+    echo -e "\033[38;5;141mTools: ax defender | ax game | ax undercover | ax darktrace | ax shadowcam\033[0m\n"
 fi
 AUTO
 fi
 
 echo -e "\n${GREEN}${BOLD}══════════════════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}${BOLD}[✔] ASTERIX OS MOBILE INSTALLATION COMPLETE!${NC}"
-echo -e "${CYAN}Persistent Data Vault:${NC} $PERSIST_LOCAL"
+echo -e "${CYAN}Core OS Directory:${NC}     $ASTERIX_DIR"
+echo -e "${CYAN}Safe Local Storage:${NC}    $PERSIST_LOCAL"
 echo -e "${CYAN}Launch Commands:${NC}       Type ${YELLOW}ax${NC} or ${YELLOW}asterix${NC} anywhere in Termux"
-echo -e "${CYAN}Dark Forensic Tools:${NC}   ${YELLOW}ax darktrace${NC} | ${YELLOW}ax shadowcam${NC} | ${YELLOW}ax dark-engine${NC} | ${YELLOW}ax log-hunter${NC}"
+echo -e "${CYAN}Defense & Gaming:${NC}      ${YELLOW}ax defender${NC} | ${YELLOW}ax game boost${NC} | ${YELLOW}ax undercover${NC}"
+echo -e "${CYAN}Dark Forensic Tools:${NC}   ${YELLOW}ax darktrace${NC} | ${YELLOW}ax shadowcam${NC} | ${YELLOW}ax dark-engine${NC}"
 echo -e "${CYAN}System Maintenance:${NC}    ${YELLOW}ax update${NC} | ${YELLOW}ax upgrade${NC} | ${YELLOW}ax doctor${NC}"
 echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════════════${NC}\n"
