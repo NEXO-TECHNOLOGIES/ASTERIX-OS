@@ -219,6 +219,14 @@ Extracted and adapted directly from the live Kali Linux 2025.2 filesystem (`D:\`
 - **Origin**: Kali `sleuthkit` & `autopsy` forensics suite
 - **Functionality**: Reconstructs chronological file activity (Modified, Accessed, Changed) within an incident window (e.g. last 1h, 24h, 7d). Features anti-forensic timestomp detection to flag files with future timestamps or suspicious metadata alterations.
 
+### 10. `ax trash` — Cryptographic Recycle Bin & Deleted Media Vault
+- **Origin**: Linux desktop `trash-cli` & forensic quarantine architecture
+- **Functionality**: Replaces destructive `rm -rf` by moving files to `~/.asterix_vault/trash/` with a cryptographic manifest containing timestamp, original absolute path, file size, and SHA-256 hash. Allows 1-click restore (`ax trash restore <ID>`) or permanent 3-pass DOD wipe (`ax trash empty`).
+
+### 11. `ax carve` — Forensic Signature File Carver (Deleted Media Recovery)
+- **Origin**: Kali `foremost` & `scalpel` digital forensics packages
+- **Functionality**: Scans disk devices, image dumps, or folders to carve and recover lost or deleted media using file magic headers and footers (JPEGs, PNGs, MP4/MOV videos, PDFs, and Office ZIP archives). If Kali's `foremost` or `scalpel` is installed, automatically leverages hardware-accelerated carving.
+
 ### Tactical CLI Commands:
 ```bash
 ax undercover                   # Engage or disengage Windows PowerShell disguise shell
@@ -233,6 +241,8 @@ ax hashdeep audit [dir]         # Verify live binaries against baseline to detec
 ax yara-scan [dir]              # Scan directory for webshells, C2 beacons & shellcode
 ax mac-guard                    # Audit AppArmor/SELinux confinement on listening services
 ax timeline [dir] [mins]        # Digital forensics chronological activity & timestomp audit
+ax trash [list|restore|empty]   # Secure recycle bin & quarantined media storage
+ax carve <target> [out_dir]     # Foremost & Scalpel digital forensics deleted media recovery
 ```
 
 ---

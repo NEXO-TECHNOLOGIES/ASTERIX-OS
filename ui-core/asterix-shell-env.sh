@@ -217,6 +217,10 @@ alias ax-macguard='ax mac-guard'
 alias macguard='ax mac-guard'
 alias ax-timeline='ax timeline'
 alias timeline='ax timeline'
+alias ax-trash='ax trash'
+alias trash='ax trash'
+alias ax-carve='ax carve'
+alias carve='ax carve'
 
 # ax Crypto, Encoding & Passwords
 alias ax-encrypt='ax encrypt'

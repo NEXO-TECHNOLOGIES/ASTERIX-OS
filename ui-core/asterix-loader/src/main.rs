@@ -791,6 +791,8 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax yara-scan [dir]${C_RESET}          YARA rule-based webshell, C2 beacon & shellcode scanner");
     println!("  {C_MAGENTA}ax mac-guard${C_RESET}                AppArmor & SELinux Mandatory Access Control confinement");
     println!("  {C_MAGENTA}ax timeline [dir] [mins]${C_RESET}    Digital forensics MACB activity reconstructor & timestomp audit");
+    println!("  {C_MAGENTA}ax trash [list|restore|empty]${C_RESET} Secure recycle bin & quarantined media storage");
+    println!("  {C_MAGENTA}ax carve <target> [out]${C_RESET}     Foremost & Scalpel digital forensics deleted media recovery");
     println!("  {C_MAGENTA}ax logwatch${C_RESET}             Real-time security log and auth anomaly watcher\n");
 
     println!("{C_WHITE}{C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:{C_RESET}");
@@ -1062,6 +1064,8 @@ fn main() {
         "yara-scan" | "threat-audit" | "malware-audit" | "signature-scan" => { dispatch_ax_tool(&args[1..]); return; }
         "mac-guard" | "apparmor" | "confinement" | "mac-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "timeline" | "forensic-timeline" | "incident-triage" | "macb" => { dispatch_ax_tool(&args[1..]); return; }
+        "trash" | "recycle-bin" | "rm-safe" | "safe-rm" => { dispatch_ax_tool(&args[1..]); return; }
+        "carve" | "foremost" | "recover-media" | "scalpel" => { dispatch_ax_tool(&args[1..]); return; }
         "darktrace" => { dispatch_ax_tool(&args[1..]); return; }
         "shadowcam" | "cctv" | "cam-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "dark-engine" => { dispatch_ax_tool(&args[1..]); return; }

@@ -189,6 +189,8 @@ ax hashdeep [baseline|audit]    # Kali Hashdeep: Recursive cryptographic binary 
 ax yara-scan [dir]              # Kali YARA heuristics: Webshell, reverse shell & memory shellcode scanner
 ax mac-guard                    # Kali AppArmor & SELinux: Mandatory Access Control & process confinement audit
 ax timeline [dir] [mins]        # Kali Sleuthkit: Digital forensics MACB timeline & timestomp anomaly detector
+ax trash [list|restore|empty]   # Secure recycle bin: Preserves deleted files and media with recovery manifest
+ax carve <target> [out_dir]     # Kali Forensics file carver: Recovers deleted photos, videos, PDFs & ZIPs
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
