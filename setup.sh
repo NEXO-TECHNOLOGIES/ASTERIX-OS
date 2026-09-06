@@ -16,7 +16,27 @@ C_RED='\033[38;5;196m'
 C_MAGENTA='\033[38;5;201m'
 C_GRAY='\033[38;5;242m'
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+
+# Clean package manager cache on Termux to free memory
+if [ -n "$PREFIX" ]; then
+    apt clean 2>/dev/null || true
+fi
+
+# If executed via curl | bash or outside repo, auto-clone the entire ASTERIX OS repository
+if [ ! -f "${SCRIPT_DIR}/bin/ax" ]; then
+    TARGET_REPO_DIR="${HOME}/ASTERIX-OS"
+    echo -e "\033[38;5;51m[*] Full ASTERIX OS codebase not found in current directory.\033[0m"
+    echo -e "\033[38;5;220m[*] Cloning entire ASTERIX OS operating system into ${TARGET_REPO_DIR}...\033[0m"
+    if [ -d "$TARGET_REPO_DIR/.git" ]; then
+        cd "$TARGET_REPO_DIR" && git pull 2>/dev/null || true
+    else
+        git clone https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git "$TARGET_REPO_DIR" || \
+        git clone https://gitlab.com/nexo-technologies-group/asterix-os.git "$TARGET_REPO_DIR"
+    fi
+    SCRIPT_DIR="$TARGET_REPO_DIR"
+    cd "$SCRIPT_DIR"
+fi
 
 # Detect environment and permissions
 if [ -n "$PREFIX" ] && [ -d "$PREFIX/bin" ]; then
