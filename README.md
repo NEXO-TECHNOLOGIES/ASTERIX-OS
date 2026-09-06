@@ -328,9 +328,16 @@ sudo ./persistence-setup.sh /dev/sdX
 ### 3. Installing on Android via Termux (Rootless)
 Open Termux on Android and run:
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/<YOUR_USER>/asterix-termux-mobile/main/install-termux.sh)
+curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/termux-mobile/install-termux.sh | bash
 ```
+*(Alternative via GitLab: `curl -sSL https://gitlab.com/nexo-technologies-group/asterix-os/-/raw/main/termux-mobile/install-termux.sh | bash`)*
+
 Once installed, type `ax` or `asterix` anytime to launch the cybernetic OS environment.
+
+### 4. 1-Line Universal Bootstrap (Linux / Bare-Metal / Debian)
+```bash
+curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/setup.sh | bash
+```
 
 ---
 
