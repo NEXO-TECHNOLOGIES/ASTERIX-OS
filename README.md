@@ -1,6 +1,8 @@
 # 🌌 ASTERIX OS
 ### Next-Generation Cybernetic Security Operating System & Mobile Engine
 
+> **🌐 Language / Idioma / Langue / Sprache / 语言 / لغة / Язык**: [English](README.md) | [Español](docs/locales/README.es.md) | [Français](docs/locales/README.fr.md) | [Deutsch](docs/locales/README.de.md) | [中文](docs/locales/README.zh.md) | [العربية](docs/locales/README.ar.md) | [Русский](docs/locales/README.ru.md)
+
 ```
     █████╗ ███████╗████████╗███████╗██████╗ ██╗██╗  ██╗     ██████╗ ███████╗
    ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝    ██╔═══██╗██╔════╝

@@ -113,6 +113,114 @@ case "$action" in
         echo ""
         ;;
 
+    about|info|overview|features|what|whoami|what-is)
+        lang="${1:-${ASTERIX_LANG:-en}}"
+        lang=$(echo "$lang" | tr '[:upper:]' '[:lower:]')
+
+        echo -e "\n${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+        case "$lang" in
+            es) echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // RESUMEN GENERAL DEL SISTEMA Y COMPENDIO ]             ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+            fr) echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // APERÇU COMPLET DU SYSTÈME & FONCTIONNALITÉS ]          ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+            de) echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // SYSTEMÜBERSICHT & FUNKTIONSKOMPENDIUM ]                ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+            zh) echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // 完整系统概述与功能指南 ]                              ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+            ar) echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // نظرة عامة شاملة ودليل الميزات ]                        ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+            ru) echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // ПОЛНЫЙ ОБЗОР СИСТЕМЫ И ВОЗМОЖНОСТЕЙ ]                 ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+            *)  echo -e "${C_CYAN}║${C_WHITE}${C_BOLD}  [ ASTERIX OS // COMPLETE SYSTEM OVERVIEW & FEATURE COMPENDIUM ]        ${C_RESET}${C_CYAN}║${C_RESET}" ;;
+        esac
+        echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+        case "$lang" in
+            es)
+                echo -e "  ${C_MAGENTA}${C_BOLD}¿QUÉ ES ASTERIX OS?${C_RESET}\n"
+                echo -e "  ASTERIX OS es un entorno operativo cibernético y de inteligencia de sistemas"
+                echo -e "  multilingüe de vanguardia, diseñado para Linux bare-metal, arranque dual y Termux en Android."
+                echo -e "  Ingeniería nativa en 5 lenguajes: ${C_CYAN}Bash, Rust, C/C++, Ensamblador (NASM) y Go${C_RESET}."
+                echo -e "  Control unificado mediante la CLI ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET} con más de 200 comandos y 15 subsistemas.\n"
+                ;;
+            fr)
+                echo -e "  ${C_MAGENTA}${C_BOLD}QU'EST-CE QU'ASTERIX OS ?${C_RESET}\n"
+                echo -e "  ASTERIX OS est un environnement opérationnel cybernétique et d'intelligence système"
+                echo -e "  multilingue de pointe pour Linux, dual-boot et Termux sur Android."
+                echo -e "  Conçu nativement en 5 langages: ${C_CYAN}Bash, Rust, C/C++, Assembleur (NASM) et Go${C_RESET}."
+                echo -e "  Piloté par la CLI unifiée ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET} avec plus de 200 commandes et 15 sous-systèmes.\n"
+                ;;
+            de)
+                echo -e "  ${C_MAGENTA}${C_BOLD}WAS IST ASTERIX OS?${C_RESET}\n"
+                echo -e "  ASTERIX OS ist eine hochentwickelte, mehrsprachige Cybersicherheits- und Systemumgebung"
+                echo -e "  für Bare-Metal-Linux, Dual-Boot-Installationen und Termux auf Android."
+                echo -e "  Entwickelt in 5 nativen Sprachen: ${C_CYAN}Bash, Rust, C/C++, Assembler (NASM) und Go${C_RESET}."
+                echo -e "  Zentral gesteuert über das ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET} CLI mit über 200 Befehlen und 15 Teilsystemen.\n"
+                ;;
+            zh)
+                echo -e "  ${C_MAGENTA}${C_BOLD}什么是 ASTERIX OS？${C_RESET}\n"
+                echo -e "  ASTERIX OS 是一个先进的多语言网络安全与系统情报作战环境，"
+                echo -e "  专为裸机 Linux、双系统引导与 Android Termux 打造。"
+                echo -e "  采用五种原生语言编写：${C_CYAN}Bash、Rust、C/C++、汇编 (NASM) 与 Go${C_RESET}。"
+                echo -e "  通过 ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET} 统一命令行控制，涵盖 200+ 命令与 15 个子系统。\n"
+                ;;
+            ar)
+                echo -e "  ${C_MAGENTA}${C_BOLD}ما هو نظام ASTERIX OS؟${C_RESET}\n"
+                echo -e "  ASTERIX OS هو بيئة أمن سيبراني واستخبارات أنظمة متقدمة ومتعددة اللغات،"
+                echo -e "  مصممة لأجهزة Linux المباشرة، والإقلاع المزدوج، وTermux على Android."
+                echo -e "  مبني بخمس لغات أصلية: ${C_CYAN}Bash و Rust و C/C++ و Assembly (NASM) و Go${C_RESET}."
+                echo -e "  يتم التحكم به عبر واجهة ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET} بأكثر من 200 أمر و 15 نظاماً فرعياً.\n"
+                ;;
+            ru)
+                echo -e "  ${C_MAGENTA}${C_BOLD}ЧТО ТАКОЕ ASTERIX OS?${C_RESET}\n"
+                echo -e "  ASTERIX OS — это передовая многоязычная среда кибербезопасности и разведки систем,"
+                echo -e "  созданная для физических серверов Linux, двойной загрузки и Termux на Android."
+                echo -e "  Разработана на 5 языках: ${C_CYAN}Bash, Rust, C/C++, Ассемблер (NASM) и Go${C_RESET}."
+                echo -e "  Единое управление через CLI ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET}: 200+ команд и 15 подсистем.\n"
+                ;;
+            *)
+                echo -e "  ${C_MAGENTA}${C_BOLD}WHAT IS ASTERIX OS?${C_RESET}\n"
+                echo -e "  ASTERIX OS is an advanced, multi-language cybersecurity and systems intelligence"
+                echo -e "  operating environment built for bare-metal Linux, dual-boot deployments, and"
+                echo -e "  Termux on Android. It is not a traditional OS kernel — it is a complete tactical"
+                echo -e "  cyber shell layer that amplifies any Linux host into a professional-grade security"
+                echo -e "  and penetration testing platform.\n"
+                echo -e "  Engineered in five native languages: ${C_CYAN}Bash, Rust, C/C++, Assembly (NASM), and Go${C_RESET}."
+                echo -e "  Unified via the ${C_GREEN}ax${C_RESET} / ${C_GREEN}asterix${C_RESET} CLI — 200+ commands across 15 subsystems.\n"
+                ;;
+        esac
+
+        sections=(
+            "${C_YELLOW}1. MULTI-LANGUAGE NATIVE TOOLS${C_RESET}|Rust (8 engines), C (9 tools), NASM (bootloader+cipher), Go (webrecon), C++ suite"
+            "${C_GREEN}2. MASTER CLI — ax / asterix${C_RESET}|200+ commands, omni-dispatcher, cyberpunk HUD, live telemetry"
+            "${C_CYAN}3. SYSTEM & PACKAGE MANAGEMENT${C_RESET}|update/upgrade, install/remove, build all suites, doctor diagnostics, sysfetch"
+            "${C_CYAN}4. NETWORK, OSINT & RECON${C_RESET}|scan, netrecon, subdomains, dns/whois/ip-geo, webrecon, sniff-live, speedtest"
+            "${C_GREEN}5. DEFENSE & HARDENING${C_RESET}|secpol, cis-audit, firewall, rootkit, kernel-hardening, fim, malware-scan, git-secrets"
+            "${C_RED}6. DEEP CORE ROOT OPS${C_RESET}|kmod-audit, ebpf-audit, cap-audit, seccomp-audit, mem-protect, tty-snoop, ipc-audit"
+            "${C_RED}7. CYBER WARFARE & DECEPTION${C_RESET}|matrix, stealth (Ghost Mode), killswitch, decoy honeypot, payload generator, tor"
+            "${C_MAGENTA}8. FORENSICS & INVESTIGATION${C_RESET}|hexdump, syscall-trace, forensic-timeline, trash/recycle-bin, carve, exif, yara-scan"
+            "${C_YELLOW}9. CRYPTO & ENCODING${C_RESET}|encrypt/decrypt (AES-256), b64, hex, genpass, entropy, cert-create, tls-audit, qr"
+            "${C_MAGENTA}10. RULE-BASED EXPERT AI${C_RESET}|audit (0-100 score), ask (6-section threat model), rules browser, 10+ knowledge rules"
+            "${C_CYAN}11. AUTO-COMPILER${C_RESET}|Self-healing build engine: auto-inject headers, fix semicolons, inject linker flags"
+            "${C_GREEN}12. NATIVE CODE-REPAIR (Rust+C)${C_RESET}|scan/fix source trees: braces, parens, semicolons, shebangs, CRLF — all languages"
+            "${C_YELLOW}13. OS-COMPUTING BRIDGE${C_RESET}|Dual-boot probe, 80+ tool assimilation (Kali/Parrot/BlackArch), GPU compute synergy"
+            "${C_RED}14. CYBER SUBSYSTEM MODES${C_RESET}|recon, web, exploit, crack, sniff, wifi, forensics, rev — dedicated op modes"
+            "${C_GRAY}15. EXTERNAL PACKAGES${C_RESET}|Anti-Network-Attack, THUNDER, Web-Frality-Scanner, LIGHTNING, APEX-OVERDRIVE"
+        )
+
+        for entry in "${sections[@]}"; do
+            title="${entry%%|*}"
+            desc="${entry##*|}"
+            echo -e "  ${C_CYAN}═══════════════════════════════════════════════════════════════════════${C_RESET}"
+            echo -e "  ${C_BOLD}  ${title}${C_RESET}"
+            echo -e "     ${C_WHITE}${desc}${C_RESET}\n"
+        done
+
+        echo -e "  ${C_CYAN}═══════════════════════════════════════════════════════════════════════${C_RESET}"
+        echo -e "  ${C_GREEN}${C_BOLD}  QUICK START / DÉMARRAGE / INICIO RÁPIDO:${C_RESET}"
+        echo -e "     ${C_GREEN}ax list${C_RESET}              — Browse all 200+ available commands"
+        echo -e "     ${C_GREEN}ax ai about [lang]${C_RESET}   — Multilingual overview: en, es, fr, de, zh, ar, ru"
+        echo -e "     ${C_GREEN}ax ai audit${C_RESET}          — Run security baseline against live system"
+        echo -e "     ${C_GREEN}ax os-computing probe${C_RESET} — Detect host OS and fuse tool arsenals"
+        echo -e "     ${C_GREEN}ax code-repair fix .${C_RESET}  — Scan and heal all broken source files"
+        echo -e "     ${C_GREEN}ax build${C_RESET}             — Compile all native tool suites\n"
+        echo -e "  ${C_MAGENTA}${C_BOLD}  ASTERIX OS — Built by NEXO TECHNOLOGIES. Engineered for supremacy.${C_RESET}\n"
+        ;;
+
     audit|*)
         echo -e "  ${C_BOLD}EVALUATING ACTIVE KNOWLEDGE BASE RULES:${C_RESET}\n"
         passed=0
@@ -162,3 +270,4 @@ case "$action" in
         echo -e "\n  ${C_BOLD}CYBER RESILIENCE METRIC:${C_RESET} ${C_GREEN}${score} / 100${C_RESET} [${passed}/${total} Baseline Controls Compliant]\n"
         ;;
 esac
+

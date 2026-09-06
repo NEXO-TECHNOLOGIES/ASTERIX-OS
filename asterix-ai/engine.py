@@ -240,6 +240,302 @@ def cmd_list_rules():
         print(printf_fmt % (r.get("id"), r.get("name")[:38], r.get("severity"), r.get("category")))
     print()
 
+def cmd_about(lang="en"):
+    lang = lang.lower() if lang else "en"
+    headers = {
+        "es": "[ ASTERIX OS // RESUMEN GENERAL DEL SISTEMA Y COMPENDIO ]",
+        "fr": "[ ASTERIX OS // APERÇU COMPLET DU SYSTÈME & FONCTIONNALITÉS ]",
+        "de": "[ ASTERIX OS // SYSTEMÜBERSICHT & FUNKTIONSKOMPENDIUM ]",
+        "zh": "[ ASTERIX OS // 完整系统概述与功能指南 ]",
+        "ar": "[ ASTERIX OS // نظرة عامة شاملة ودليل الميزات ]",
+        "ru": "[ ASTERIX OS // ПОЛНЫЙ ОБЗОР СИСТЕМЫ И ВОЗМОЖНОСТЕЙ ]",
+        "en": "[ ASTERIX OS // COMPLETE SYSTEM OVERVIEW & FEATURE COMPENDIUM ]"
+    }
+    hdr_text = headers.get(lang, headers["en"])
+    print(f"\n{C_CYAN}{C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗{C_RESET}")
+    print(f"{C_CYAN}║{C_WHITE}{C_BOLD}  {hdr_text:<68}  {C_RESET}{C_CYAN}║{C_RESET}")
+    print(f"{C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝{C_RESET}\n")
+
+    if lang == "es":
+        print(f"  {C_MAGENTA}{C_BOLD}¿QUÉ ES ASTERIX OS?{C_RESET}")
+        print(f"""
+  ASTERIX OS es un entorno operativo cibernético y de inteligencia de sistemas
+  multilingüe de vanguardia, diseñado para Linux bare-metal, arranque dual y Termux en Android.
+  Ingeniería nativa en 5 lenguajes: {C_CYAN}Bash, Rust, C/C++, Ensamblador (NASM) y Go{C_RESET}.
+  Control unificado mediante la CLI {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET} con más de 200 comandos y 15 subsistemas.
+""")
+    elif lang == "fr":
+        print(f"  {C_MAGENTA}{C_BOLD}QU'EST-CE QU'ASTERIX OS ?{C_RESET}")
+        print(f"""
+  ASTERIX OS est un environnement opérationnel cybernétique et d'intelligence système
+  multilingue de pointe pour Linux, dual-boot et Termux sur Android.
+  Conçu nativement en 5 langages: {C_CYAN}Bash, Rust, C/C++, Assembleur (NASM) et Go{C_RESET}.
+  Piloté par la CLI unifiée {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET} avec plus de 200 commandes et 15 sous-systèmes.
+""")
+    elif lang == "de":
+        print(f"  {C_MAGENTA}{C_BOLD}WAS IST ASTERIX OS?{C_RESET}")
+        print(f"""
+  ASTERIX OS ist eine hochentwickelte, mehrsprachige Cybersicherheits- und Systemumgebung
+  für Bare-Metal-Linux, Dual-Boot-Installationen und Termux auf Android.
+  Entwickelt in 5 nativen Sprachen: {C_CYAN}Bash, Rust, C/C++, Assembler (NASM) und Go{C_RESET}.
+  Zentral gesteuert über das {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET} CLI mit über 200 Befehlen und 15 Teilsystemen.
+""")
+    elif lang == "zh":
+        print(f"  {C_MAGENTA}{C_BOLD}什么是 ASTERIX OS？{C_RESET}")
+        print(f"""
+  ASTERIX OS 是一个先进的多语言网络安全与系统情报作战环境，
+  专为裸机 Linux、双系统引导与 Android Termux 打造。
+  采用五种原生语言编写：{C_CYAN}Bash、Rust、C/C++、汇编 (NASM) 与 Go{C_RESET}。
+  通过 {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET} 统一命令行控制，涵盖 200+ 命令与 15 个子系统。
+""")
+    elif lang == "ar":
+        print(f"  {C_MAGENTA}{C_BOLD}ما هو نظام ASTERIX OS؟{C_RESET}")
+        print(f"""
+  ASTERIX OS هو بيئة أمن سيبراني واستخبارات أنظمة متقدمة ومتعددة اللغات،
+  مصممة لأجهزة Linux المباشرة، والإقلاع المزدوج، وTermux على Android.
+  مبني بخمس لغات أصلية: {C_CYAN}Bash و Rust و C/C++ و Assembly (NASM) و Go{C_RESET}.
+  يتم التحكم به عبر واجهة {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET} بأكثر من 200 أمر و 15 نظاماً فرعياً.
+""")
+    elif lang == "ru":
+        print(f"  {C_MAGENTA}{C_BOLD}ЧТО ТАКОЕ ASTERIX OS?{C_RESET}")
+        print(f"""
+  ASTERIX OS — это передовая многоязычная среда кибербезопасности и разведки систем,
+  созданная для физических серверов Linux, двойной загрузки и Termux на Android.
+  Разработана на 5 языках: {C_CYAN}Bash, Rust, C/C++, Ассемблер (NASM) и Go{C_RESET}.
+  Единое управление через CLI {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET}: 200+ команд и 15 подсистем.
+""")
+    else:
+        print(f"  {C_MAGENTA}{C_BOLD}WHAT IS ASTERIX OS?{C_RESET}")
+        print(f"""
+  ASTERIX OS is an advanced, multi-language cybersecurity and systems intelligence
+  operating environment built for bare-metal Linux, dual-boot deployments, and
+  Termux on Android. It is not a traditional OS kernel — it is a complete tactical
+  cyber shell layer that sits on top of any Linux host and amplifies its capabilities
+  to a professional-grade security and penetration testing platform.
+
+  ASTERIX is engineered in five native languages — {C_CYAN}Bash, Rust, C/C++, Assembly (NASM),
+  and Go{C_RESET} — and exposes a unified command interface via the {C_GREEN}ax{C_RESET} / {C_GREEN}asterix{C_RESET} CLI.
+  Its architecture is modular, self-healing, and adaptive — capable of detecting
+  the host OS it is running on and assimilating the surrounding toolchains of
+  co-installed security distributions like Kali Linux, Parrot Security, and BlackArch.
+""")
+
+    FEATURES = [
+        (
+            "1. MULTI-LANGUAGE NATIVE TOOL SUITES",
+            "C_YELLOW",
+            [
+                "core-utils-rust/  — 8 standalone Rust engines: binary inspector, net sentinel,",
+                "                    crypto core, system monitor, guard engine, dark engine,",
+                "                    log hunter, defender core, and the code-repair engine.",
+                "core-utils-c/     — 9 native C tools: sysinfo, memview, netprobe, hasher,",
+                "                    shredder, rootkit-detect, syscall-mon, env-dump, code-repair.",
+                "boot-asm/         — NASM x86-64 bootloader, MBR stage, cipher, raw info tools.",
+                "core-utils-go/    — High-speed Go web recon engine.",
+                "core-utils-cpp/   — C++ advanced analysis suite."
+            ]
+        ),
+        (
+            "2. MASTER CLI — ax / asterix",
+            "C_GREEN",
+            [
+                "Single unified command dispatches across all 12+ subsystems.",
+                "Supports 200+ native commands with auto-routing to correct engine.",
+                "Omni-dispatcher: 'ax nmap', 'ax hydra', 'ax git' etc. auto-wrap any tool.",
+                "Professional cyberpunk ASCII banner, coloured HUD, and live telemetry."
+            ]
+        ),
+        (
+            "3. SYSTEM & PACKAGE MANAGEMENT",
+            "C_CYAN",
+            [
+                "ax update / upgrade — Refresh package indexes and full OS upgrade.",
+                "ax install / remove / search — Cross-distro package management (apt/pkg/pacman).",
+                "ax build — Compile all native C/C++/Rust/Go/ASM tool suites in one shot.",
+                "ax doctor — Deep diagnostics across compilers, tools, and storage.",
+                "ax sysfetch — Cyberpunk-styled ASCII system info HUD (neofetch replacement).",
+                "ax status / uptime-stats / cpu / mem / disk — Live system telemetry."
+            ]
+        ),
+        (
+            "4. NETWORK, OSINT & RECONNAISSANCE",
+            "C_CYAN",
+            [
+                "ax scan — Full nmap-based host and port discovery.",
+                "ax netrecon — ARP sweep, MAC vendor lookup, service banner grabs.",
+                "ax subdomains — Subdomain enumeration via brute-force wordlists.",
+                "ax dns / whois / ip-geo / traceroute — Deep DNS and IP intelligence.",
+                "ax webrecon — Go-powered web technology fingerprinting engine.",
+                "ax traffic / sniff-live — Live TCP/UDP packet capture and analysis.",
+                "ax speedtest / net-route / net-neighbors — Network performance & topology."
+            ]
+        ),
+        (
+            "5. DEFENSE, HARDENING & AUDIT",
+            "C_GREEN",
+            [
+                "ax secpol / cis-audit — Full CIS Benchmark kernel hardening compliance.",
+                "ax firewall / nft-rules — iptables / nftables live rule management.",
+                "ax rootkit — chkrootkit + rkhunter parallel kernel anomaly scanner.",
+                "ax kernel-hardening — One-shot sysctl hardening (ASLR, kptr, SYN cookies).",
+                "ax ssh-audit / shadow-audit / usb-audit / cron-audit — System account sweeps.",
+                "ax docker-audit / container-escape — Container breakout detection.",
+                "ax malware-scan — Webshell, eval injector, and persistence backdoor scanner.",
+                "ax fim-init / fim-check — File Integrity Monitor with SHA-256 baseline.",
+                "ax git-secrets — Scans git history for leaked API keys and credentials."
+            ]
+        ),
+        (
+            "6. DEEP CORE ROOT & KERNEL OPERATIONS",
+            "C_RED",
+            [
+                "ax kmod-audit — Kernel module whitelist enforcement.",
+                "ax ebpf-audit — eBPF unprivileged bytecode injection lockdown.",
+                "ax cap-audit — Process Linux capability table sweep.",
+                "ax seccomp-audit — System call filter policy audit.",
+                "ax mem-protect / core-dump-audit — Memory and crash dump sanitization.",
+                "ax tty-snoop / deleted-procs — Active TTY session and phantom process detection.",
+                "ax ipc-audit / mount-hardening — IPC and filesystem mount hardening."
+            ]
+        ),
+        (
+            "7. CYBER WARFARE, DECEPTION & ANTI-FORENSICS",
+            "C_RED",
+            [
+                "ax matrix — Real-time cyberpunk digital rain visualizer (cinema-grade).",
+                "ax stealth — Ghost Mode: wipes history, temp files, caches, and RAM artefacts.",
+                "ax killswitch — Severs all RF/ethernet links and drops iptables instantly.",
+                "ax decoy — Deploys TCP honeypot listener to log adversary probes.",
+                "ax payload <ip> <port> — Multi-language reverse shell one-liner generator.",
+                "ax port-knock — Stealthy port-knock sequence sender.",
+                "ax tor-status — Tor circuit verification and onion routing status."
+            ]
+        ),
+        (
+            "8. FORENSICS, CARVING & DIGITAL INVESTIGATION",
+            "C_MAGENTA",
+            [
+                "ax hexdump / strings-scan — Binary inspection and printable string extraction.",
+                "ax syscall-trace — Live strace-based system call interception.",
+                "ax mem-regions / open-files — Process memory map and file descriptor audit.",
+                "ax forensic-timeline — MACB timestamp analysis and timestomping detection.",
+                "ax trash / recycle-bin — Secure recycle bin with recovery manifest.",
+                "ax carve — Foremost-based deleted file recovery (photos, PDFs, ZIPs, videos).",
+                "ax exif — EXIF metadata extraction and geolocation stripping.",
+                "ax yara-scan — YARA rule-based threat signature matching."
+            ]
+        ),
+        (
+            "9. CRYPTO, ENCODING & SECRETS",
+            "C_YELLOW",
+            [
+                "ax encrypt / decrypt — AES-256 file encryption/decryption via OpenSSL.",
+                "ax b64enc / b64dec — Base64 encode/decode pipelines.",
+                "ax hexenc / hexdec — Hex conversion utilities.",
+                "ax genpass — Cryptographically random password generator.",
+                "ax entropy — Shannon entropy analyser for detecting packed/encrypted files.",
+                "ax cert-create — Self-signed X.509 certificate generation.",
+                "ax tls-audit / ssl-audit — Deep TLS cipher suite and expiry inspector.",
+                "ax qr — QR code generator from terminal strings."
+            ]
+        ),
+        (
+            "10. RULE-BASED EXPERT AI — ASTERIX AI",
+            "C_MAGENTA",
+            [
+                "ax ai audit — Evaluates live kernel/sysfs state against 10+ knowledge rules.",
+                "ax ai ask '<query>' — Deep natural language technical triage.",
+                "                     Returns 6-section threat models: subsystem context,",
+                "                     adversary mechanics, status, remediation, persistence,",
+                "                     and post-fix verification commands.",
+                "ax ai rules — Browses full knowledge base (security, system, network, exploits).",
+                "Knowledge Base: ASLR, kptr, dmesg, SYN flood, ICMP redirects, ptrace,",
+                "                eBPF lockdown, SUID core dumps, swappiness, thermal throttle."
+            ]
+        ),
+        (
+            "11. AUTONOMOUS AUTO-COMPILER",
+            "C_CYAN",
+            [
+                "ax auto-compile <src> — Self-healing multi-language build engine.",
+                "Supports C, C++, Rust, Go, NASM, and project dirs (Makefile, Cargo.toml, go.mod).",
+                "Auto-injects missing #include headers, missing ';' terminators,",
+                "linker flags (-lpthread, -lm, -lssl, -lcrypto, -lpcap), and strips binaries.",
+                "Iterates up to 5 compiler passes until the binary is cleanly produced."
+            ]
+        ),
+        (
+            "12. NATIVE CODE-REPAIR ENGINE (Rust + C)",
+            "C_GREEN",
+            [
+                "ax code-repair scan [dir] — Recursively scans source trees for defects.",
+                "ax code-repair fix [dir]  — Auto-heals all detected defects with .bak backups.",
+                "Rust engine: unclosed braces/parens/brackets, missing semicolons (C/C++),",
+                "             Python missing colons, broken shebangs, CRLF line endings.",
+                "C engine:    brace balance, parenthesis balance, CRLF normalisation.",
+                "Supports: .c .h .cpp .hpp .rs .py .sh .go — all in one pass."
+            ]
+        ),
+        (
+            "13. OS-COMPUTING — DUAL-BOOT COLLABORATION BRIDGE",
+            "C_YELLOW",
+            [
+                "ax os-computing probe       — Detects host OS, kernel, CPU, RAM, GPU, dual-boot.",
+                "ax os-computing collaborate — Bridges 80+ security tools from Kali/Parrot/",
+                "                             BlackArch into ASTERIX without duplicating disk.",
+                "ax os-computing compute     — Fuses CPU threads, RAM, NVIDIA/AMD GPU compute.",
+                "ax os-computing imitate     — Adapts ASTERIX themes to host OS persona.",
+                "Symlinks tools into ~/.asterix_vault/host_arsenal/bin/ and maps wordlists."
+            ]
+        ),
+        (
+            "14. CYBER SUBSYSTEMS — DEDICATED OPERATIONAL MODES",
+            "C_RED",
+            [
+                "ax recon    — Full reconnaissance suite entry point.",
+                "ax web      — Web audit, directory fuzzing, SQLi, XSS, and CMS scan mode.",
+                "ax exploit  — Exploit discovery and payload generation mode.",
+                "ax crack    — Hash cracking, wordlist attack, and credential recovery mode.",
+                "ax sniff    — Live packet capture and protocol dissection mode.",
+                "ax wifi     — Wi-Fi deauth, handshake capture, and WPA cracking mode.",
+                "ax forensics— Full forensic investigation and media recovery mode.",
+                "ax rev      — Reverse engineering: binary analysis, disassembly, strings."
+            ]
+        ),
+        (
+            "15. EXTERNAL PACKAGES & GITHUB ECOSYSTEM",
+            "C_GRAY",
+            [
+                "packages/Asterix-Anti-Network-Attack/ — ARP, SYN, DNS flood defense, Email guard.",
+                "packages/THUNDER/                     — Wi-Fi deauth, IP rotator, ASR defender.",
+                "packages/ASTERISK-Web-Frality-scanner/— WSCAN web weakness and CVE scanner.",
+                "packages/LIGHTNING-/                  — WAF proxy, Web SOC dashboard, IDS.",
+                "packages/APEX-OVERDRIVE-/             — eSports gaming engine & 60 FPS optimizer.",
+                "ax pkg sync — Auto-clones all packages from GitHub and compiles binaries."
+            ]
+        ),
+    ]
+
+    for title, color_var, items in FEATURES:
+        color = globals().get(color_var, C_WHITE)
+        print(f"  {color}{C_BOLD}{'═'*70}{C_RESET}")
+        print(f"  {color}{C_BOLD}  {title}{C_RESET}")
+        print(f"  {color}{'─'*70}{C_RESET}")
+        for item in items:
+            print(f"   {C_WHITE}•{C_RESET} {item}")
+        print()
+
+    print(f"  {C_CYAN}{'═'*70}{C_RESET}")
+    print(f"  {C_GREEN}{C_BOLD}  QUICK START:{C_RESET}")
+    print(f"  {C_CYAN}{'─'*70}{C_RESET}")
+    print(f"   {C_WHITE}•{C_RESET} {C_GREEN}ax list{C_RESET}              — Browse all 200+ available commands")
+    print(f"   {C_WHITE}•{C_RESET} {C_GREEN}ax help{C_RESET}              — Detailed command reference with examples")
+    print(f"   {C_WHITE}•{C_RESET} {C_GREEN}ax ai audit{C_RESET}          — Run AI security baseline against live system")
+    print(f"   {C_WHITE}•{C_RESET} {C_GREEN}ax status{C_RESET}            — Live system telemetry HUD")
+    print(f"   {C_WHITE}•{C_RESET} {C_GREEN}ax os-computing probe{C_RESET} — Detect and fuse host OS tools")
+    print(f"   {C_WHITE}•{C_RESET} {C_GREEN}ax build{C_RESET}             — Compile all native tool suites\n")
+    print(f"  {C_MAGENTA}{C_BOLD}  ASTERIX OS — Built by NEXO TECHNOLOGIES. Engineered for supremacy.{C_RESET}\n")
+
 def main():
     args = sys.argv[1:]
     if not args or args[0] in ("audit", "check", "scan"):
@@ -249,8 +545,18 @@ def main():
         cmd_ask(query)
     elif args[0] in ("rules", "list"):
         cmd_list_rules()
+    elif args[0] in ("about", "what", "info", "overview", "features", "whoami", "what-is"):
+        lang = args[1] if len(args) > 1 else os.environ.get("ASTERIX_LANG", "en")
+        cmd_about(lang)
     else:
-        cmd_ask(" ".join(args))
+        # Also trigger about if query matches ASTERIX identity questions
+        query_full = " ".join(args).lower()
+        if any(kw in query_full for kw in ["what is asterix", "what does asterix", "asterix features", "about asterix", "tell me about asterix"]):
+            lang = os.environ.get("ASTERIX_LANG", "en")
+            cmd_about(lang)
+        else:
+            cmd_ask(" ".join(args))
 
 if __name__ == "__main__":
     main()
+
