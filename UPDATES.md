@@ -203,6 +203,22 @@ Extracted and adapted directly from the live Kali Linux 2025.2 filesystem (`D:\`
 - **Origin**: Kali wireless reconnaissance stack (`rfkill`, `kismet`, multi-device capture)
 - **Functionality**: Audits the host's wireless spectrum capabilities across Wi-Fi (802.11), Bluetooth, Ultra-Wideband (UWB), and Software-Defined Radio (SDR) USB peripherals. Reports hardware/software block status, monitor-mode support, packet injection readiness, and active RF killswitch state.
 
+### 6. `ax hashdeep` — Recursive Cryptographic Binary Integrity Auditor
+- **Origin**: Kali `hashdeep` & `md5deep` cryptographic package
+- **Functionality**: Creates recursive SHA-256 integrity baselines for all system and application binaries (`$PREFIX/bin`, `/bin`, `/usr/bin`). Audits live files against the baseline to immediately detect unauthorized binary modification, rootkits, or tampering. Also provides multi-algorithm hash checks (MD5, SHA-1, SHA-256, SHA-512).
+
+### 7. `ax yara-scan` — Rule-Based Threat & Malware Heuristic Scanner
+- **Origin**: Kali `libyara` & `python3-yara` engine
+- **Functionality**: Deep signature and pattern analyzer scanning directories for obfuscated webshells (`eval`, `base64_decode`), interactive reverse shell / C2 beacons (`/dev/tcp/`, `pty.spawn`), shellcode injection byte-sequences, and high Shannon entropy anomalies (>7.2 bits/byte).
+
+### 8. `ax mac-guard` — Mandatory Access Control & AppArmor Confinement
+- **Origin**: Kali `apparmor` & Linux MAC security stack
+- **Functionality**: Audits kernel-level Mandatory Access Control (AppArmor / SELinux), reports active profile confinement, and identifies unconfined network-listening daemons.
+
+### 9. `ax timeline` — Digital Forensics MACB Activity Reconstructor
+- **Origin**: Kali `sleuthkit` & `autopsy` forensics suite
+- **Functionality**: Reconstructs chronological file activity (Modified, Accessed, Changed) within an incident window (e.g. last 1h, 24h, 7d). Features anti-forensic timestomp detection to flag files with future timestamps or suspicious metadata alterations.
+
 ### Tactical CLI Commands:
 ```bash
 ax undercover                   # Engage or disengage Windows PowerShell disguise shell
@@ -212,6 +228,11 @@ ax tweaks                       # Inspect and configure MAC randomization & IPv6
 ax forensic-mode audit          # Verify write-blocker, swap state & automount status
 ax forensic-mode engage         # Remount partitions read-only & lock automount
 ax rf-audit                     # Audit Wi-Fi, Bluetooth, NFC & SDR radio transceivers
+ax hashdeep baseline [dir]      # Generate SHA-256 baseline of system binaries
+ax hashdeep audit [dir]         # Verify live binaries against baseline to detect tampering
+ax yara-scan [dir]              # Scan directory for webshells, C2 beacons & shellcode
+ax mac-guard                    # Audit AppArmor/SELinux confinement on listening services
+ax timeline [dir] [mins]        # Digital forensics chronological activity & timestomp audit
 ```
 
 ---

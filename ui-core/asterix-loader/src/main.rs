@@ -787,6 +787,10 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax clean-pro${C_RESET}               Zero-crash cache purge, temporary file cleanup & SSD TRIM");
     println!("  {C_MAGENTA}ax flow${C_RESET}                    Real-time socket states, DNS latency benchmark & flow monitor");
     println!("  {C_MAGENTA}ax ssl-audit <domain>${C_RESET}      Deep SSL/TLS cipher auditor, expiry tracker & SAN inspector");
+    println!("  {C_MAGENTA}ax hashdeep <baseline|audit>${C_RESET} Recursive cryptographic binary integrity & tampering auditor");
+    println!("  {C_MAGENTA}ax yara-scan [dir]${C_RESET}          YARA rule-based webshell, C2 beacon & shellcode scanner");
+    println!("  {C_MAGENTA}ax mac-guard${C_RESET}                AppArmor & SELinux Mandatory Access Control confinement");
+    println!("  {C_MAGENTA}ax timeline [dir] [mins]${C_RESET}    Digital forensics MACB activity reconstructor & timestomp audit");
     println!("  {C_MAGENTA}ax logwatch${C_RESET}             Real-time security log and auth anomaly watcher\n");
 
     println!("{C_WHITE}{C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:{C_RESET}");
@@ -1054,6 +1058,10 @@ fn main() {
         "clean-pro" | "disk-clean" | "purge-cache" | "trim" => { dispatch_ax_tool(&args[1..]); return; }
         "flow" | "net-flow" | "netstat-pro" | "socket-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "ssl-audit" | "cert-audit" | "tls-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "hashdeep" | "integrity-scan" | "baseline" | "hash-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "yara-scan" | "threat-audit" | "malware-audit" | "signature-scan" => { dispatch_ax_tool(&args[1..]); return; }
+        "mac-guard" | "apparmor" | "confinement" | "mac-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "timeline" | "forensic-timeline" | "incident-triage" | "macb" => { dispatch_ax_tool(&args[1..]); return; }
         "darktrace" => { dispatch_ax_tool(&args[1..]); return; }
         "shadowcam" | "cctv" | "cam-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "dark-engine" => { dispatch_ax_tool(&args[1..]); return; }

@@ -185,6 +185,10 @@ ax nuke [dry-run|shred]         # Cryptographic emergency nuke: Multi-pass DOD w
 ax tweaks                       # Kali Tweaks: MAC address randomization, IPv6 privacy, DNS resolver
 ax forensic-mode [audit|engage] # Kali Forensic Mode: Hardware write-blocker, no-swap, no automount
 ax rf-audit                     # Full wireless RF spectrum audit: Wi-Fi, Bluetooth, NFC, SDR hardware
+ax hashdeep [baseline|audit]    # Kali Hashdeep: Recursive cryptographic binary integrity & tampering auditor
+ax yara-scan [dir]              # Kali YARA heuristics: Webshell, reverse shell & memory shellcode scanner
+ax mac-guard                    # Kali AppArmor & SELinux: Mandatory Access Control & process confinement audit
+ax timeline [dir] [mins]        # Kali Sleuthkit: Digital forensics MACB timeline & timestomp anomaly detector
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health

@@ -1,4 +1,4 @@
-﻿#!/data/data/com.termux/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║   ASTERIX OS — Termux Cybernetic Boot Engine v3.0                  ║
 # ║   RGB Matrix Rain • Glitch Effects • Hardware HUD • Dark Mode       ║
@@ -75,28 +75,34 @@ _glitch_line() {
 
 _show_banner() {
     echo -e "${FG_CYAN}${BOLD}"
-    echo "  ╔═╗ ╔═╗ ╔╦╗ ╔═╗ ╦═╗ ╦ ╦     ╔═╗ ╔═╗"
-    echo "  ╠═╣ ╚═╗  ║  ║╣  ╠╦╝ ║ ╣     ║ ║ ╚═╗"
-    echo "  ╩ ╩ ╚═╝  ╩  ╚═╝ ╩╚═ ╩ ╚╝    ╚═╝ ╚═╝"
-    echo "     ░▒▓  CYBERNETIC MOBILE OS  ▓▒░   "
+    echo "  ░█████╗ ░██████╗████████╗███████╗██████╗ ░██╗██╗░░██╗"
+    echo "  ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝"
+    echo "  ███████║╚█████╗░░░░██║░░░█████╗░░██████╔╝██║░╚███╔╝░"
+    echo "  ██╔══██║░╚═══██╗░░░██║░░░██╔══╝░░██╔══██╗██║░██╔██╗░"
+    echo "  ██║░░██║██████╔╝░░░██║░░░███████╗██║░░██║██║██╔╝░██╗"
+    echo "  ╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═╝╚═╝░░╚═╝"
+    echo "    ─── [ C Y B E R N E T I C   M O B I L E   O S ] ───  "
     echo -e "${R}"
 }
 
 _glitch_banner() {
     [[ $FAST -eq 1 ]] && { _show_banner; return; }
     local colors=("$FG_RED" "$FG_MAGENTA" "$FG_CYAN" "$FG_GREEN")
-    local ints=(40 25 12 3)
-    local banner_text=("  ╔═╗ ╔═╗ ╔╦╗ ╔═╗ ╦═╗ ╦ ╦     ╔═╗ ╔═╗" \
-                       "  ╠═╣ ╚═╗  ║  ║╣  ╠╦╝ ║ ╣     ║ ║ ╚═╗" \
-                       "  ╩ ╩ ╚═╝  ╩  ╚═╝ ╩╚═ ╩ ╚╝    ╚═╝ ╚═╝" \
-                       "     ░▒▓  CYBERNETIC MOBILE OS  ▓▒░   ")
+    local ints=(30 20 10 0)
+    local banner_text=("  ░█████╗ ░██████╗████████╗███████╗██████╗ ░██╗██╗░░██╗" \
+                       "  ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝" \
+                       "  ███████║╚█████╗░░░░██║░░░█████╗░░██████╔╝██║░╚███╔╝░" \
+                       "  ██╔══██║░╚═══██╗░░░██║░░░██╔══╝░░██╔══██╗██║░██╔██╗░" \
+                       "  ██║░░██║██████╔╝░░░██║░░░███████╗██║░░██║██║██╔╝░██╗" \
+                       "  ╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═╝╚═╝░░╚═╝" \
+                       "    ─── [ C Y B E R N E T I C   M O B I L E   O S ] ───  ")
     for idx in 0 1 2 3; do
         clear; echo ""
         echo -e "${colors[$idx]}${BOLD}"
         for line in "${banner_text[@]}"; do
             echo "  $(_glitch_line "$line" "${ints[$idx]}")"
         done
-        echo -e "${R}"; sleep 0.07
+        echo -e "${R}"; sleep 0.05
     done
 }
 
@@ -267,15 +273,18 @@ main() {
     # Setup persistence dirs
     mkdir -p "$HOME/asterix_persistent"/{loot,captures,scripts,notes} 2>/dev/null
 
-    # Launch PRoot if proot-distro is installed
+    # Launch PRoot if debian is healthy, otherwise launch native ax shell
     local args=("$@")
     local passthrough=(); for a in "${args[@]}"; do [[ "$a" != "--fast" ]] && passthrough+=("$a"); done
-    if command -v proot-distro &>/dev/null; then
+    local deb_sh="$PREFIX/var/lib/proot-distro/installed-rootfs/debian/bin/sh"
+    if command -v proot-distro &>/dev/null && [ -f "$deb_sh" ]; then
         if [[ ${#passthrough[@]} -gt 0 ]]; then
             exec proot-distro login --bind "$HOME/asterix_persistent:/asterix_persistent" debian -- "${passthrough[@]}"
         else
             exec proot-distro login --bind "$HOME/asterix_persistent:/asterix_persistent" debian
         fi
+    elif [ -x "$PREFIX/bin/ax" ]; then
+        exec "$PREFIX/bin/ax" "${passthrough[@]}"
     fi
 }
 main "$@"

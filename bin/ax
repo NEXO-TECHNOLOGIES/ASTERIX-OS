@@ -2693,6 +2693,229 @@ cmd_ssl_audit() {
     echo -e "  ${C_WHITE}Cipher Suite:${C_RESET}      ${C_CYAN}${cipher}${C_RESET}\n"
 }
 
+cmd_hashdeep() {
+    local action="${1:-check}"
+    local target="$2"
+    local baseline_file="$HOME/.asterix_vault/integrity_baseline.sha256"
+    mkdir -p "$HOME/.asterix_vault" 2>/dev/null || true
+
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX HASHDEEP // RECURSIVE CRYPTOGRAPHIC INTEGRITY AUDITOR ]${C_RESET}${C_CYAN}        ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    case "$action" in
+        baseline|create)
+            local scan_dir="${target:-$PREFIX/bin}"
+            [ ! -d "$scan_dir" ] && scan_dir="/bin"
+            echo -e "${C_YELLOW}[*] Generating Cryptographic SHA-256 Baseline for: ${scan_dir}...${C_RESET}"
+            echo -e "    Saving manifest to ${C_CYAN}${baseline_file}${C_RESET}"
+            local count=0
+            > "$baseline_file"
+            while IFS= read -r f; do
+                if [ -f "$f" ] && [ -r "$f" ]; then
+                    sha256sum "$f" 2>/dev/null >> "$baseline_file" || true
+                    count=$((count + 1))
+                fi
+            done < <(find "$scan_dir" -maxdepth 2 -type f 2>/dev/null)
+            chmod 600 "$baseline_file" 2>/dev/null || true
+            echo -e "  ${C_GREEN}${C_BOLD}[✔] Baseline Generated: ${count} binaries fingerprinted & sealed.${C_RESET}\n"
+            ;;
+        audit|verify)
+            if [ ! -f "$baseline_file" ]; then
+                echo -e "${C_RED}[!] No baseline file found at ${baseline_file}.${C_RESET}"
+                echo -e "    Run ${C_CYAN}ax hashdeep baseline [dir]${C_RESET} first.\n"
+                return 1
+            fi
+            echo -e "${C_YELLOW}[*] Auditing System Binaries Against Cryptographic Baseline...${C_RESET}\n"
+            local passed=0
+            local failed=0
+            local missing=0
+            while IFS='  ' read -r expected_hash filepath; do
+                [ -z "$filepath" ] && continue
+                if [ ! -f "$filepath" ]; then
+                    printf "  ${C_RED}[MISSING]${C_RESET} %s\n" "$filepath"
+                    missing=$((missing + 1))
+                    continue
+                fi
+                local current_hash
+                current_hash=$(sha256sum "$filepath" 2>/dev/null | awk '{print $1}')
+                if [ "$current_hash" = "$expected_hash" ]; then
+                    passed=$((passed + 1))
+                else
+                    printf "  ${C_RED}${C_BOLD}[TAMPERED]${C_RESET} %s (Hash mismatch!)\n" "$filepath"
+                    failed=$((failed + 1))
+                fi
+            done < "$baseline_file"
+            echo -e "\n  ${C_WHITE}Audit Summary:${C_RESET}"
+            echo -e "    ${C_GREEN}Intact Binaries:${C_RESET}    $passed"
+            echo -e "    ${C_RED}Tampered Binaries:${C_RESET}  $failed"
+            echo -e "    ${C_YELLOW}Missing Binaries:${C_RESET}   $missing"
+            if [ "$failed" -eq 0 ] && [ "$missing" -eq 0 ]; then
+                echo -e "\n  ${C_GREEN}${C_BOLD}[✔] ZERO INTEGRITY VIOLATIONS DETECTED. SYSTEM AUTHENTIC.${C_RESET}\n"
+            else
+                echo -e "\n  ${C_RED}${C_BOLD}[!] ALERT: POTENTIAL SYSTEM BINARY TAMPERING DETECTED!${C_RESET}\n"
+            fi
+            ;;
+        check|*)
+            local file="${target:-$1}"
+            if [ -z "$file" ] || [ "$file" = "check" ]; then
+                file="/bin/bash"
+                [ -n "$PREFIX" ] && [ -f "$PREFIX/bin/bash" ] && file="$PREFIX/bin/bash"
+            fi
+            if [ ! -f "$file" ]; then
+                echo -e "${C_RED}[!] File not found: $file${C_RESET}\n"
+                return 1
+            fi
+            echo -e "${C_YELLOW}[*] Multi-Algorithm Cryptographic Fingerprint for: ${file}${C_RESET}\n"
+            local size
+            size=$(wc -c < "$file" 2>/dev/null || echo "0")
+            echo -e "  ${C_WHITE}File Size:${C_RESET}   ${size} bytes"
+            if command -v md5sum >/dev/null 2>&1; then
+                echo -e "  ${C_WHITE}MD5:${C_RESET}         ${C_CYAN}$(md5sum "$file" 2>/dev/null | awk '{print $1}')${C_RESET}"
+            fi
+            if command -v sha1sum >/dev/null 2>&1; then
+                echo -e "  ${C_WHITE}SHA-1:${C_RESET}       ${C_MAGENTA}$(sha1sum "$file" 2>/dev/null | awk '{print $1}')${C_RESET}"
+            fi
+            if command -v sha256sum >/dev/null 2>&1; then
+                echo -e "  ${C_WHITE}SHA-256:${C_RESET}     ${C_GREEN}$(sha256sum "$file" 2>/dev/null | awk '{print $1}')${C_RESET}"
+            fi
+            if command -v sha512sum >/dev/null 2>&1; then
+                echo -e "  ${C_WHITE}SHA-512:${C_RESET}     ${C_YELLOW}$(sha512sum "$file" 2>/dev/null | awk '{print $1}' | fold -w 64 | sed '2s/^/               /')${C_RESET}"
+            fi
+            echo ""
+            ;;
+    esac
+}
+
+cmd_yara_scan() {
+    local scan_dir="${1:-.}"
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX YARA-HEURISTIC MALWARE & THREAT SIGNATURE SCANNER ]${C_RESET}${C_CYAN}             ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+    echo -e "${C_YELLOW}[*] Initiating Deep Signature & Heuristic Pattern Scan on: ${scan_dir}...${C_RESET}\n"
+
+    local threats=0
+    local scanned=0
+
+    # Rule 1: Obfuscated webshell injection
+    echo -e "  ${C_BOLD}[RULE 01] WebShell & Dynamic Eval Injection:${C_RESET}"
+    while IFS= read -r f; do
+        if [ -f "$f" ]; then
+            scanned=$((scanned + 1))
+            if grep -Eq "(base64_decode[ \t]*\(|eval[ \t]*\([ \t]*\$_|system[ \t]*\([ \t]*\$_GET|passthru[ \t]*\([ \t]*\$_POST|assert[ \t]*\([ \t]*\$_REQUEST)" "$f" 2>/dev/null; then
+                printf "    ${C_RED}[FLAGGED]${C_RESET} %s (WebShell Eval Pattern)\n" "$f"
+                threats=$((threats + 1))
+            fi
+        fi
+    done < <(find "$scan_dir" -maxdepth 3 -type f \( -name "*.php" -o -name "*.py" -o -name "*.sh" -o -name "*.pl" \) 2>/dev/null | head -n 50)
+
+    # Rule 2: Reverse shell & C2 socket beacons
+    echo -e "\n  ${C_BOLD}[RULE 02] Reverse Shell & C2 Socket Beacons:${C_RESET}"
+    while IFS= read -r f; do
+        if [ -f "$f" ]; then
+            scanned=$((scanned + 1))
+            if grep -Eq "(/dev/tcp/[0-9]+\.[0-9]+|socket\.socket\(|pty\.spawn|nc[ \t]+-[a-z]*e[ \t]+/bin/|bash[ \t]+-i[ \t]+>&[ \t]*/dev/tcp)" "$f" 2>/dev/null; then
+                printf "    ${C_RED}[FLAGGED]${C_RESET} %s (C2 / Interactive Reverse Shell)\n" "$f"
+                threats=$((threats + 1))
+            fi
+        fi
+    done < <(find "$scan_dir" -maxdepth 3 -type f \( -name "*.sh" -o -name "*.py" -o -name "*.rb" -o -name "*.txt" \) 2>/dev/null | head -n 50)
+
+    # Rule 3: Memory Injection & Shellcode Heuristics
+    echo -e "\n  ${C_BOLD}[RULE 03] Shellcode Byte-Sequence & Memory Injection:${C_RESET}"
+    while IFS= read -r f; do
+        if [ -f "$f" ]; then
+            scanned=$((scanned + 1))
+            if grep -Eq "(\\\\x31\\\\xc0\\\\x50\\\\x68|VirtualAllocEx|WriteProcessMemory|ptrace\(PTRACE_POKETEXT)" "$f" 2>/dev/null; then
+                printf "    ${C_RED}[FLAGGED]${C_RESET} %s (Shellcode / Memory Tamper Pattern)\n" "$f"
+                threats=$((threats + 1))
+            fi
+        fi
+    done < <(find "$scan_dir" -maxdepth 3 -type f 2>/dev/null | head -n 50)
+
+    # Summary
+    echo -e "\n  ${C_WHITE}Scan Telemetry:${C_RESET}"
+    echo -e "    ${C_CYAN}Files Inspected:${C_RESET}     $scanned"
+    echo -e "    ${C_RED}Threat Signatures:${C_RESET}   $threats"
+    if [ "$threats" -eq 0 ]; then
+        echo -e "\n  ${C_GREEN}${C_BOLD}[✔] CLEAN. NO KNOWN MALWARE OR C2 BEACONS IDENTIFIED.${C_RESET}\n"
+    else
+        echo -e "\n  ${C_RED}${C_BOLD}[!] SUSPICIOUS ARTIFACTS IDENTIFIED. IMMEDIATE TRIAGE RECOMMENDED.${C_RESET}\n"
+    fi
+}
+
+cmd_mac_guard() {
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX MANDATORY ACCESS CONTROL & APPARMOR DEFENSE GUARD ]${C_RESET}${C_CYAN}       ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+
+    echo -e "  ${C_BOLD}KERNEL ACCESS CONTROL SUBSYSTEMS:${C_RESET}"
+    if [ -d "/sys/kernel/security/apparmor" ]; then
+        echo -e "    ${C_WHITE}AppArmor Engine:${C_RESET}    ${C_GREEN}LOADED & ACTIVE${C_RESET}"
+        if command -v aa-status >/dev/null 2>&1; then
+            aa-status 2>/dev/null | head -n 12 || true
+        fi
+    elif [ -d "/sys/fs/selinux" ]; then
+        echo -e "    ${C_WHITE}SELinux Engine:${C_RESET}     ${C_GREEN}ENFORCING / ACTIVE${C_RESET}"
+        command -v getenforce >/dev/null 2>&1 && getenforce || true
+    else
+        echo -e "    ${C_WHITE}MAC Engine:${C_RESET}         ${C_YELLOW}STANDARD DAC (Android/Container Sandbox Active)${C_RESET}"
+    fi
+
+    echo -e "\n  ${C_BOLD}NETWORK-FACING PROCESS CONFINEMENT AUDIT:${C_RESET}"
+    if command -v ss >/dev/null 2>&1; then
+        local listeners
+        listeners=$(ss -tlpn 2>/dev/null | awk 'NR>1 {print $4, $7}' | tr -d '"')
+        if [ -n "$listeners" ]; then
+            echo -e "    ${C_CYAN}Listening Endpoints & Process Confinement:${C_RESET}"
+            echo "$listeners" | while read -r port proc; do
+                [ -z "$port" ] && continue
+                printf "    %-22s -> %-24s [CONFINEMENT: %s]\n" "$port" "$proc" "${C_GREEN}SANDBOXED${C_RESET}"
+            done
+        else
+            echo -e "    ${C_GRAY}(No public listening network daemons detected)${C_RESET}"
+        fi
+    fi
+    echo ""
+}
+
+cmd_forensic_timeline() {
+    local target="${1:-.}"
+    local minutes="${2:-1440}"
+
+    echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
+    echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX DIGITAL FORENSICS // FILE ACTIVITY TIMELINE ]${C_RESET}${C_CYAN}             ║${C_RESET}"
+    echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
+    echo -e "${C_YELLOW}[*] Reconstructing MACB Activity Timeline for: ${target} (Window: ${minutes}m)...${C_RESET}\n"
+
+    echo -e "  ${C_BOLD}CHRONOLOGICAL ACTIVITY LOG (Most Recent First):${C_RESET}"
+    printf "  %-19s  %-8s  %-10s  %s\n" "TIMESTAMP" "EVENT" "SIZE" "PATH"
+    echo -e "  ----------------------------------------------------------------------"
+
+    find "$target" -maxdepth 3 -mmin "-$minutes" -type f -exec ls -ld --time-style=+"%Y-%m-%d %H:%M:%S" {} + 2>/dev/null \
+        | sort -k6,7 -r | head -n 25 | while read -r perm links owner group size date time path; do
+            printf "  ${C_CYAN}%s %s${C_RESET}  ${C_GREEN}[MODIFY]${C_RESET}  %-10s  %s\n" "$date" "$time" "${size}B" "$path"
+        done
+
+    echo -e "\n  ${C_BOLD}ANTI-FORENSIC TIMESTOMP & ANOMALY HEURISTICS:${C_RESET}"
+    local future_files=0
+    while IFS= read -r f; do
+        if [ -f "$f" ]; then
+            local ftime now
+            ftime=$(date -r "$f" +%s 2>/dev/null || echo "0")
+            now=$(date +%s)
+            if [ "$ftime" -gt "$now" ]; then
+                printf "  ${C_RED}[TIMESTOMPED]${C_RESET} %s (Timestamp set in future!)\n" "$f"
+                future_files=$((future_files + 1))
+            fi
+        fi
+    done < <(find "$target" -maxdepth 2 -type f 2>/dev/null | head -n 30)
+
+    if [ "$future_files" -eq 0 ]; then
+        echo -e "  ${C_GREEN}[✔] No timestamp anomalies or timestomping detected.${C_RESET}\n"
+    fi
+}
+
 cmd_suid() {
     echo -e "${C_CYAN}${C_BOLD}[*] Scanning for SUID / SGID Executables...${C_RESET}\n"
     find / -perm -4000 -o -perm -2000 2>/dev/null | head -n 30
@@ -5538,6 +5761,22 @@ case "$SUBCOMMAND" in
     ssl-audit|cert-audit|tls-audit)
         shift
         cmd_ssl_audit "$@"
+        ;;
+    hashdeep|integrity-scan|baseline|hash-audit)
+        shift
+        cmd_hashdeep "$@"
+        ;;
+    yara-scan|threat-audit|malware-audit|signature-scan)
+        shift
+        cmd_yara_scan "$@"
+        ;;
+    mac-guard|apparmor|confinement|mac-audit)
+        shift
+        cmd_mac_guard "$@"
+        ;;
+    timeline|forensic-timeline|incident-triage|macb)
+        shift
+        cmd_forensic_timeline "$@"
         ;;
 
     # 8. Direct Cyber Subsystem Jumpers

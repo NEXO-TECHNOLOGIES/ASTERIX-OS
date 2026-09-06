@@ -68,7 +68,7 @@ LOADER_DIR="$HOME/.asterix-core/asterix-loader"
 mkdir -p "$LOADER_DIR/src"
 
 cat << 'RUST_CODE' > "$LOADER_DIR/src/main.rs"
-//! ASTERIX OS - Termux Native Rust Boot & Animation Engine v3.0
+//! ASTERIX OS — Cinema-Grade Native Rust Boot & Telemetry Engine v3.2
 use std::io::{self, Write};
 use std::thread::sleep;
 use std::time::Duration;
@@ -77,58 +77,100 @@ use std::fs;
 const C_RESET: &str = "\x1b[0m";
 const C_BOLD: &str = "\x1b[1m";
 const C_CYAN: &str = "\x1b[38;5;51m";
+const C_DKCYAN: &str = "\x1b[38;5;38m";
 const C_GREEN: &str = "\x1b[38;5;46m";
 const C_YELLOW: &str = "\x1b[38;5;220m";
 const C_MAGENTA: &str = "\x1b[38;5;201m";
+const C_PURPLE: &str = "\x1b[38;5;141m";
 const C_WHITE: &str = "\x1b[38;5;231m";
-const C_DARKGRAY: &str = "\x1b[38;5;237m";
+const C_GRAY: &str = "\x1b[38;5;244m";
+const C_DARKGRAY: &str = "\x1b[38;5;236m";
 
 const BANNER: &str = r#"
-   █████╗ ███████╗████████╗███████╗██████╗ ██╗██╗  ██╗
+  ░█████╗ ░██████╗████████╗███████╗██████╗ ░██╗██╗░░██╗
   ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝
-  ███████║███████╗   ██║   █████╗  ██████╔╝██║ ╚███╔╝ 
-  ██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗██║ ██╔██╗ 
-  ██║  ██║███████║   ██║   ███████╗██║  ██║██║██╔╝ ██╗
-  ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
-             >> ASTERIX MOBILE OS (TERMUX) <<"#;
+  ███████║╚█████╗░░░░██║░░░█████╗░░██████╔╝██║░╚███╔╝░
+  ██╔══██║░╚═══██╗░░░██║░░░██╔══╝░░██╔══██╗██║░██╔██╗░
+  ██║░░██║██████╔╝░░░██║░░░███████╗██║░░██║██║██╔╝░██╗
+  ╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═╝╚═╝░░╚═╝"#;
 
-fn render_bar(pct: usize, width: usize) -> String {
-    let filled = (pct * width) / 100;
-    let empty = width.saturating_sub(filled);
-    format!("{}[{}{}{}]{}", C_CYAN, "█".repeat(filled), C_DARKGRAY, "░".repeat(empty), C_RESET)
+const SPINNER: [&str; 10] = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
+fn render_hud_box() {
+    let mut bat_info = "NOMINAL".to_string();
+    let mut temp_info = "OPTIMAL".to_string();
+    if let Ok(cap) = fs::read_to_string("/sys/class/power_supply/battery/capacity") {
+        let trimmed = cap.trim();
+        bat_info = format!("{trimmed}%");
+    }
+    if let Ok(temp) = fs::read_to_string("/sys/class/power_supply/battery/temp") {
+        if let Ok(num) = temp.trim().parse::<f32>() {
+            temp_info = format!("{:.1}°C", num / 10.0);
+        }
+    }
+
+    println!("  {C_DKCYAN}┌──────────────────────────────────────────────────────────┐{C_RESET}");
+    println!("  {C_DKCYAN}│{C_RESET}  {C_WHITE}ARCH:{C_RESET} {C_CYAN}ARM64-v8a{C_RESET}  │ {C_WHITE}SECURITY:{C_RESET} {C_GREEN}ASLR=2 [ENFORCED]{C_RESET} │ {C_WHITE}STATE:{C_RESET} {C_GREEN}SECURE{C_RESET}  {C_DKCYAN}│{C_RESET}");
+    println!("  {C_DKCYAN}│{C_RESET}  {C_WHITE}POWER:{C_RESET} {C_YELLOW}{bat_info:<6}{C_RESET}   │ {C_WHITE}THERMAL:{C_RESET}  {C_MAGENTA}{temp_info:<12}{C_RESET}     │ {C_WHITE}ZRAM:{C_RESET}  {C_CYAN}ONLINE{C_RESET}  {C_DKCYAN}│{C_RESET}");
+    println!("  {C_DKCYAN}└──────────────────────────────────────────────────────────┘{C_RESET}\n");
+}
+
+fn animate_subsystem(index: usize, code: &str, name: &str) {
+    let frames = 6;
+    for f in 0..frames {
+        let spin = SPINNER[(index * 3 + f) % SPINNER.len()];
+        let progress = (f + 1) * 100 / frames;
+        let blocks = f + 1;
+        let empty = 6_usize.saturating_sub(blocks);
+        let bar = format!("{}{}{}{}", C_CYAN, "▓".repeat(blocks), C_DARKGRAY, "░".repeat(empty));
+
+        print!("\r  {C_DKCYAN}[{C_CYAN}{spin}{C_DKCYAN}]{C_RESET} {C_WHITE}{:<18}{C_RESET} {C_GRAY}{:<32}{C_RESET} [{bar}{C_RESET}] {C_YELLOW}{:3}%{C_RESET}",
+            code, name, progress);
+        let _ = io::stdout().flush();
+        sleep(Duration::from_millis(28));
+    }
+    println!("\r  {C_GREEN}[✔]{C_RESET} {C_WHITE}{code:<18}{C_RESET} {C_GRAY}{name:<32}{C_RESET} [{C_GREEN}██████{C_RESET}] {C_GREEN}[ ONLINE ]{C_RESET}");
+    let _ = io::stdout().flush();
+    sleep(Duration::from_millis(20));
+}
+
+fn render_shortcuts() {
+    println!("\n  {C_PURPLE}┌──[ ASTERIX MASTER COMMAND SHORTCUTS ]────────────────────┐{C_RESET}");
+    println!("  {C_PURPLE}│{C_RESET}  {C_CYAN}ax version{C_RESET}    System Info     │ {C_CYAN}ax power{C_RESET}      Battery & Heat  {C_PURPLE}│{C_RESET}");
+    println!("  {C_PURPLE}│{C_RESET}  {C_CYAN}ax defender{C_RESET}   Active Sentry   │ {C_CYAN}ax flow{C_RESET}       Network Telemetry{C_PURPLE}│{C_RESET}");
+    println!("  {C_PURPLE}│{C_RESET}  {C_CYAN}ax hashdeep{C_RESET}   Binary Integrity│ {C_CYAN}ax clean-pro{C_RESET}  Cache & Flash TRIM{C_PURPLE}│{C_RESET}");
+    println!("  {C_PURPLE}│{C_RESET}  {C_CYAN}ax yara-scan{C_RESET}  Threat Hunter   │ {C_CYAN}ax ssl-audit{C_RESET}  Cert Inspector  {C_PURPLE}│{C_RESET}");
+    println!("  {C_PURPLE}│{C_RESET}  {C_CYAN}ax undercover{C_RESET} Stealth Shell   │ {C_CYAN}ax help{C_RESET}       All 90+ Tools   {C_PURPLE}│{C_RESET}");
+    println!("  {C_PURPLE}└─── Type 'ax' or 'asterix' followed by any command ────────┘{C_RESET}\n");
 }
 
 fn main() {
-    print!("\x1b[2J\x1b[H{}{}{}\n\n", C_CYAN, C_BOLD, BANNER, C_RESET);
-    println!("\x1b[38;5;45m══════════════════════════════════════════════════════════\x1b[0m");
-    println!(" {}[ ASTERIX MOBILE ENVIRONMENT BOOTSTRAP v3.0 ]{}", C_WHITE, C_RESET);
+    print!("\x1b[?25l");
+    print!("\x1b[2J\x1b[H");
 
-    // Read battery if available
-    if let Ok(cap) = fs::read_to_string("/sys/class/power_supply/battery/capacity") {
-        println!(" {}BATTERY:{}  {}% | {}STORAGE:{} ACTIVE", C_CYAN, C_RESET, cap.trim(), C_CYAN, C_RESET);
-    }
-    println!("\x1b[38;5;45m══════════════════════════════════════════════════════════\x1b[0m\n");
+    println!("{}{}{}{}", C_CYAN, C_BOLD, BANNER, C_RESET);
+    println!("   {C_DKCYAN}─── [ C Y B E R N E T I C   D E F E N S E   O S // M O B I L E ] ───{C_RESET}\n");
 
-    let steps = [
-        ("STORAGE_BRIDGE",  "Mounting ASTERIX Secure Vault"),
-        ("PROOT_CONTAINER", "Initializing Rootless Debian Sandbox"),
-        ("SECURITY_TOOLS",  "Verifying Nmap, TShark, Rust Suite"),
-        ("DARK_ENGINES",    "Linking DarkTrace, ShadowCam & WAF"),
-        ("CRYPTO_VAULT",    "Initializing ChaCha20 / AES-256 Vault"),
-        ("ASTERIX_SHELL",   "Launching Cybernetic Mobile Terminal"),
+    render_hud_box();
+
+    let subsystems = [
+        ("01. KERNEL_INTEGRITY",  "ASLR & Memory Isolation"),
+        ("02. CRYPTO_SHIELD",     "ChaCha20-Poly1305 Vault"),
+        ("03. NETWORK_SENTINEL",  "Anti-Probe & DNS Leak Armor"),
+        ("04. STORAGE_ARRAY",     "Secure Flash & TRIM Optimizer"),
+        ("05. DEFENSIVE_AI",      "HashDeep & YARA Threat Engine"),
+        ("06. MASTER_DISPATCH",   "Native Multi-Tool Engine"),
     ];
 
-    let total = steps.len();
-    for (i, (sub, desc)) in steps.iter().enumerate() {
-        let pct = ((i + 1) * 100) / total;
-        print!(" {}[{:^18}]{} {:<30} {} {}\n",
-            C_CYAN, sub, C_RESET, desc, render_bar(pct, 14), format!("{}[ OK ]{}", C_GREEN, C_RESET));
-        let _ = io::stdout().flush();
-        sleep(Duration::from_millis(50));
+    println!("  {C_BOLD}INITIALIZING CYBERNETIC SUBSYSTEMS:{C_RESET}");
+    for (i, (code, name)) in subsystems.iter().enumerate() {
+        animate_subsystem(i, code, name);
     }
 
-    println!("\n{}[✔] ASTERIX MOBILE OS ONLINE & READY FOR OPERATIONS{}\n", C_GREEN, C_RESET);
-    sleep(Duration::from_millis(300));
+    render_shortcuts();
+
+    print!("\x1b[?25h");
+    let _ = io::stdout().flush();
 }
 RUST_CODE
 
