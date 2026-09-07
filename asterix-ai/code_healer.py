@@ -187,36 +187,171 @@ def heal_c_cpp(code, lang="c"):
     new_lines = []
     open_braces = 0
 
-    # Header discovery matrix
+    # 1. Banned / Vulnerable function modernization & Dangling pointer defense
+    modernized_lines = []
+    for i, line in enumerate(lines):
+        # gets(x) -> fgets(x, sizeof(x), stdin)
+        gets_match = re.search(r"\bgets\s*\(\s*([a-zA-Z0-9_]+)\s*\)", line)
+        if gets_match:
+            buf_name = gets_match.group(1)
+            line = re.sub(r"\bgets\s*\(\s*" + buf_name + r"\s*\)", f"fgets({buf_name}, sizeof({buf_name}), stdin)", line)
+            modifications.append(f"Line {i+1}: Replaced banned/unsafe 'gets({buf_name})' with bounds-checked 'fgets({buf_name}, sizeof({buf_name}), stdin)'")
+
+        # sprintf(buf, ...) -> snprintf(buf, sizeof(buf), ...)
+        sprintf_match = re.search(r"\bsprintf\s*\(\s*([a-zA-Z0-9_]+)\s*,", line)
+        if sprintf_match and "snprintf" not in line:
+            buf_name = sprintf_match.group(1)
+            line = re.sub(r"\bsprintf\s*\(\s*" + buf_name + r"\s*,", f"snprintf({buf_name}, sizeof({buf_name}),", line)
+            modifications.append(f"Line {i+1}: Upgraded unbounded 'sprintf({buf_name}, ...)' to safe 'snprintf({buf_name}, sizeof({buf_name}), ...)'")
+
+        # Dangling pointer defense: free(ptr); -> free(ptr); ptr = NULL;
+        free_match = re.search(r"\bfree\s*\(\s*([a-zA-Z0-9_]+)\s*\)\s*;", line)
+        if free_match:
+            ptr_name = free_match.group(1)
+            if f"{ptr_name} = NULL" not in line and f"{ptr_name} = 0" not in line:
+                next_has_null = False
+                if i + 1 < len(lines) and (f"{ptr_name} = NULL" in lines[i+1] or f"{ptr_name} = 0" in lines[i+1]):
+                    next_has_null = True
+                if not next_has_null:
+                    line = line.replace(f"free({ptr_name});", f"free({ptr_name}); {ptr_name} = NULL;")
+                    modifications.append(f"Line {i+1}: Dangling pointer hardened: set '{ptr_name} = NULL' after 'free({ptr_name})' (neutralizes double-free & UAF)")
+
+        modernized_lines.append(line)
+    lines = modernized_lines
+
+    # 2. Scope-Bound Memory Leak & File Descriptor Leak Remediation
+    processed_lines = []
+    func_allocs = {}
+    func_files = {}
+    freed_in_func = set()
+    closed_in_func = set()
+    returned_in_func = set()
+    in_func = False
+    func_brace_depth = 0
+
+    for i, line in enumerate(lines):
+        trimmed = line.strip()
+
+        # Track function entry: return_type name(args) {
+        if not in_func and re.search(r"^[a-zA-Z0-9_:\*]+\s+[a-zA-Z0-9_]+\s*\([^;]*\)\s*\{?", trimmed):
+            if not trimmed.endswith(";") and not trimmed.startswith(("#", "//", "/*")):
+                in_func = True
+                func_brace_depth = 0
+                func_allocs.clear()
+                func_files.clear()
+                freed_in_func.clear()
+                closed_in_func.clear()
+                returned_in_func.clear()
+
+        if in_func:
+            func_brace_depth += line.count("{") - line.count("}")
+
+            # Detect malloc/calloc: [type*] name = [cast]malloc(...)
+            m_alloc = re.search(r"(?:[a-zA-Z0-9_]+\s*\*|\*)\s*([a-zA-Z0-9_]+)\s*=\s*(?:\([^\)]+\)\s*)?(?:malloc|calloc|realloc)\s*\(", line)
+            if m_alloc:
+                p_name = m_alloc.group(1)
+                indent = re.match(r"^\s*", line).group(0) or "    "
+                func_allocs[p_name] = indent
+
+            # Detect fopen: FILE *name = fopen(...) or name = fopen(...)
+            m_fopen = re.search(r"(?:FILE\s*\*|\s)\s*([a-zA-Z0-9_]+)\s*=\s*fopen\s*\(", line)
+            if m_fopen:
+                f_name = m_fopen.group(1)
+                indent = re.match(r"^\s*", line).group(0) or "    "
+                func_files[f_name] = indent
+
+            # Detect free(p)
+            for m_free in re.finditer(r"\bfree\s*\(\s*([a-zA-Z0-9_]+)\s*\)", line):
+                freed_in_func.add(m_free.group(1))
+
+            # Detect fclose(f)
+            for m_close in re.finditer(r"\bfclose\s*\(\s*([a-zA-Z0-9_]+)\s*\)", line):
+                closed_in_func.add(m_close.group(1))
+
+            # Detect return x;
+            m_ret = re.search(r"\breturn\s+([a-zA-Z0-9_]+)\s*;", line)
+            if m_ret:
+                returned_in_func.add(m_ret.group(1))
+
+            # Detect returning stack address (undefined behavior)
+            m_ret_stack = re.search(r"\breturn\s+&([a-zA-Z0-9_]+)\s*;", line)
+            if m_ret_stack:
+                bad_var = m_ret_stack.group(1)
+                modifications.append(f"Line {i+1}: [WARNING/UB] Returning address of local stack variable '&{bad_var}' leads to dangling pointer crash.")
+
+            # If returning before end of function, inject cleanups for unfreed pointers not returned
+            if re.search(r"\breturn\b", line) and not line.strip().startswith("//"):
+                indent = re.match(r"^\s*", line).group(0) or "    "
+                unfreed = [p for p in func_allocs if p not in freed_in_func and p not in returned_in_func]
+                unclosed = [f for f in func_files if f not in closed_in_func and f not in returned_in_func]
+                
+                injected = []
+                for p in unfreed:
+                    injected.append(f"{indent}if ({p} != NULL) {{ free({p}); {p} = NULL; }}")
+                    freed_in_func.add(p)
+                    modifications.append(f"Line {i+1}: Patched memory leak: injected 'free({p}); {p} = NULL;' before return")
+                for f in unclosed:
+                    injected.append(f"{indent}if ({f} != NULL) {{ fclose({f}); {f} = NULL; }}")
+                    closed_in_func.add(f)
+                    modifications.append(f"Line {i+1}: Patched file resource leak: injected 'fclose({f}); {f} = NULL;' before return")
+                
+                if injected:
+                    processed_lines.extend(injected)
+
+            # Check if function ended (func_brace_depth reaches 0)
+            if func_brace_depth <= 0 and "}" in line:
+                unfreed = [p for p in func_allocs if p not in freed_in_func and p not in returned_in_func]
+                unclosed = [f for f in func_files if f not in closed_in_func and f not in returned_in_func]
+                indent = "    "
+                injected = []
+                for p in unfreed:
+                    injected.append(f"{indent}if ({p} != NULL) {{ free({p}); {p} = NULL; }}")
+                    modifications.append(f"Patched scope memory leak: injected 'free({p}); {p} = NULL;' before function exit")
+                for f in unclosed:
+                    injected.append(f"{indent}if ({f} != NULL) {{ fclose({f}); {f} = NULL; }}")
+                    modifications.append(f"Patched resource leak: injected 'fclose({f}); {f} = NULL;' before function exit")
+                
+                if injected:
+                    processed_lines.extend(injected)
+                
+                in_func = False
+                func_allocs.clear()
+                func_files.clear()
+
+        processed_lines.append(line)
+    lines = processed_lines
+
+    # 3. Header discovery matrix
     needed_headers = set()
-    if re.search(r"\b(printf|scanf|fopen|fclose|fprintf|sprintf|snprintf|FILE|NULL|stdin|stdout|stderr|puts|getchar)\b", code):
+    code_text = "\n".join(lines)
+    if re.search(r"\b(printf|scanf|fopen|fclose|fprintf|sprintf|snprintf|FILE|NULL|stdin|stdout|stderr|puts|getchar|fgets)\b", code_text):
         needed_headers.add("<stdio.h>")
-    if re.search(r"\b(malloc|free|calloc|realloc|exit|atoi|atof|rand|srand|system)\b", code):
+    if re.search(r"\b(malloc|free|calloc|realloc|exit|atoi|atof|rand|srand|system)\b", code_text):
         needed_headers.add("<stdlib.h>")
-    if re.search(r"\b(strlen|strcpy|strncpy|strcmp|strncmp|strcat|memset|memcpy|memmove|strstr)\b", code):
+    if re.search(r"\b(strlen|strcpy|strncpy|strcmp|strncmp|strcat|memset|memcpy|memmove|strstr)\b", code_text):
         needed_headers.add("<string.h>")
-    if lang == "c" and re.search(r"\b(bool|true|false)\b", code):
+    if lang == "c" and re.search(r"\b(bool|true|false)\b", code_text):
         needed_headers.add("<stdbool.h>")
-    if re.search(r"\b(sqrt|pow|sin|cos|tan|floor|ceil|abs|fabs)\b", code):
+    if re.search(r"\b(sqrt|pow|sin|cos|tan|floor|ceil|abs|fabs)\b", code_text):
         needed_headers.add("<math.h>")
-    if re.search(r"\b(uint8_t|uint16_t|uint32_t|uint64_t|int8_t|int16_t|int32_t|int64_t)\b", code):
+    if re.search(r"\b(uint8_t|uint16_t|uint32_t|uint64_t|int8_t|int16_t|int32_t|int64_t)\b", code_text):
         needed_headers.add("<stdint.h>")
     if lang == "cpp":
-        if re.search(r"\b(cout|cin|endl|cerr)\b", code):
+        if re.search(r"\b(cout|cin|endl|cerr)\b", code_text):
             needed_headers.add("<iostream>")
-        if re.search(r"\bvector<", code):
+        if re.search(r"\bvector<", code_text):
             needed_headers.add("<vector>")
-        if re.search(r"\bstring\b", code) and "char" not in code:
+        if re.search(r"\bstring\b", code_text) and "char" not in code_text:
             needed_headers.add("<string>")
 
-    existing_headers = set(re.findall(r"#include\s*([<\"].*?[>\"])", code))
+    existing_headers = set(re.findall(r"#include\s*([<\"].*?[>\"])", code_text))
     headers_to_add = [h for h in needed_headers if h not in existing_headers]
 
     for h in sorted(headers_to_add):
         new_lines.append(f"#include {h}")
         modifications.append(f"Prepended missing standard header '#include {h}'")
 
-    if lang == "cpp" and re.search(r"\b(cout|cin|endl)\b", code) and "using namespace std;" not in code and "std::" not in code:
+    if lang == "cpp" and re.search(r"\b(cout|cin|endl)\b", code_text) and "using namespace std;" not in code_text and "std::" not in code_text:
         new_lines.append("using namespace std;")
         modifications.append("Added 'using namespace std;' for C++ stream I/O")
 
@@ -249,7 +384,6 @@ def heal_c_cpp(code, lang="c"):
 
     # If int main() present without return 0;
     if has_main and not has_return_main and open_braces == 0:
-        # Insert before last brace
         for idx in range(len(new_lines) - 1, -1, -1):
             if new_lines[idx].strip() == "}":
                 new_lines.insert(idx, "    return 0;")

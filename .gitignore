@@ -22,4 +22,6 @@ packages/*
 !packages/.gitkeep
 project_map.html
 telemetry_routes.py
+test_memory_vuln.c
+
 
