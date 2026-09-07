@@ -453,15 +453,16 @@ curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/se
 
 ### Option 1: Official GitHub Releases (Up to 2.0 GB per file)
 Download the full pre-packaged release archive directly from our GitHub Releases page:
-- 📦 **GitHub Releases Download**: `https://github.com/alexhack235-code/ASTERIX-OS-Restructure/releases` (or your fork's `/releases/latest`)
+- 📦 **GitHub Releases Download**: `https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases` (or your fork's `/releases/latest`)
 
 ### Option 2: Full Package via Google Drive
 - ☁️ **Google Drive Direct Download**: `[Download ASTERIX-OS-FULL-PACKAGE.zip from Google Drive]` *(Paste your shared Google Drive link here after uploading)*
 
 ### Option 3: Package the Entire OS Locally (1-Click PowerShell)
-To bundle the complete uncompressed repository into a distribution ZIP on your machine:
+To bundle the complete repository into a distribution ZIP on your machine:
 ```powershell
-powershell -ExecutionPolicy Bypass -File "scripts-hub\package-full-os.ps1"
+# Standard distribution package (pass -ExcludeMedia for lean code-only package)
+powershell -ExecutionPolicy Bypass -File "scripts-hub\package-full-os.ps1" -ExcludeMedia
 ```
 *This generates `ASTERIX-OS-FULL-PACKAGE.zip` directly on your Desktop with an automatic SHA-256 integrity checksum ready for Google Drive or GitHub Releases.*
 
