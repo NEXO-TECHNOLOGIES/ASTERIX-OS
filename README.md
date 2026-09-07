@@ -388,6 +388,79 @@ ax shell                # Launch enhanced cyber shell
 
 ---
 
+## 🛡️ Enterprise Cyber Threat & Supply Chain Defense (Verified Proof)
+
+ASTERIX OS features enterprise-grade autonomous threat defense mechanisms engineered to counter the top attack vectors identified by leading cybersecurity frameworks (Ransomware, Supply Chain Poisoning, Brand Phishing/Homoglyphs, and Memory Corruption):
+
+### 1. Autonomous Anti-Ransomware Tripwire Engine (`ax canary`)
+Deploys decoy cryptographic tripwires across storage partitions, monitors baseline SHA-256 hashes, and calculates real-time **Shannon entropy ($H \ge 7.80$)** to intercept unauthorized bulk encryption or extension-swapping before host data can be locked.
+
+```text
+$ ax canary deploy /var/asterix/secure_vault
+  ✓ Planted Tripwire Decoy: !_00_ASTERIX_FINANCIAL_CANARY.docx (SHA-256: 0f1d4c434a0f1089...)
+  ✓ Planted Tripwire Decoy: !_00_ASTERIX_VAULT_BACKUP.xlsx     (SHA-256: ec78c38944e817e9...)
+  ✓ Planted Tripwire Decoy: !_00_ASTERIX_CONFIDENTIAL_KEY.pdf  (SHA-256: 24f24aa7e44fff24...)
+  ✓ Planted Tripwire Decoy: !_00_ASTERIX_DATABASE_DUMP.sql     (SHA-256: 671ab26e14090d70...)
+  ✓ SUCCESS: 4 tripwires deployed and armed.
+
+# Active Ransomware Attack Simulation (Encrypted payload injected into canary):
+$ ax canary check
+  [RANSOMWARE TRIPWIRE INTEGRITY AUDIT]
+  • Total Monitored Tripwires: 4
+  • Intact & Secure:           2
+
+  🚨 SECURITY ALERT: 2 CANARY TRIPWIRE(S) TRIGGERED!
+  Potential malicious ransomware process activity detected!
+    • !_00_ASTERIX_FINANCIAL_CANARY.docx
+      ↳ ACTIVE ENCRYPTION DETECTED (High Shannon Entropy: 7.92)
+    • !_00_ASTERIX_VAULT_BACKUP.xlsx
+      ↳ FILE MISSING / RENAMED (Classic Ransomware Extension Swapping)
+  [ACTION] Review active running processes and isolate affected directory.
+```
+
+### 2. Third-Party Supply Chain Security Sentinel (`ax supply-chain`)
+Scans package manifests (`requirements.txt`, `package.json`, Cargo, Go) for Levenshtein typosquatting against popular packages, dangerous lifecycle execution hooks (`preinstall` / `postinstall` command injection), quarantined files, and unpinned dependencies vulnerable to upstream supply-chain poisoning.
+
+```text
+$ ax supply-chain .
+  [SUPPLY CHAIN AUDITOR] Scanning dependencies in: /workspace/project
+
+  ⚠ DETECTED SUPPLY-CHAIN RISKS / VULNERABILITIES:
+  Severity   Manifest              Line     Finding Details                              
+  -----------------------------------------------------------------------------------------------
+  HIGH       package.json          deps     Potential Typosquatting: 'expresss' closely resembles 'express'
+  LOW        requirements.txt      6        Unpinned dependency 'colorama' (susceptible to upstream takeover)
+  LOW        requirements.txt      7        Unpinned dependency 'requests' (susceptible to upstream takeover)
+  LOW        requirements.txt      8        Unpinned dependency 'urllib3' (susceptible to upstream takeover)
+```
+
+### 3. Phishing, Punycode & Homoglyph Deception Shield (`ax phish-shield`)
+Unmasks internationalized domain name (IDN) spoofing, Cyrillic/Greek homoglyph substitutions, brand typosquatting, and subdomain trapping used in targeted spear-phishing campaigns.
+
+```text
+# Homoglyph / Punycode Deception Analysis
+$ ax phish-shield "xn--pple-43d.com"
+  [PHISHING & HOMOGLYPH SHIELD] Analyzing domain: xn--pple-43d.com
+  🚨 DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!
+  Target Domain:  xn--pple-43d.com
+  Punycode View:  аpple.com
+  Risk Level:     CRITICAL (Phishing / Brand Spoofing)
+  Identified Deception Mechanisms:
+    • Punycode Internationalized Domain: decodes to 'аpple.com'
+    • Contains 1 non-Latin/Cyrillic homoglyphs: 'а' (U+0430)
+    • Brand Typosquatting Deception: 'аpple' is visually spoofing 'apple'
+
+# Brand Typosquatting Analysis
+$ ax phish-shield "paypa1.com"
+  🚨 DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!
+  • Brand Typosquatting Deception: 'paypa1' is visually spoofing 'paypal'
+```
+
+### 4. Deterministic Memory Safety & Exploit Healer (`ax -fix`)
+AST-driven code hardening that neutralizes memory safety CVEs in C/C++ source code: replaces banned functions (`gets` $\rightarrow$ `fgets`, `sprintf` $\rightarrow$ `snprintf`), patches scope-bound heap leaks (`malloc` without `free`), closes dangling file descriptors (`fopen` without `fclose`), and zeroes pointers after deallocation (`free(p); p = NULL;`) to neutralize Use-After-Free (UAF) and Double-Free exploit primitives.
+
+---
+
 ## 🚀 Quick Start Guide
 
 ### 1. Launching the Cyber Command Center
