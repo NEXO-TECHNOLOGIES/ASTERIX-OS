@@ -16,10 +16,41 @@
 **ASTERIX OS** is a modular security environment and operating system designed for both **x86_64/ARM64 Live Bootable ISO systems (with Persistent USB storage)** and **Android Mobile devices via Termux PRoot**.
 
 > [!NOTE]
-> 🚀 **Latest Release & New Updates Documentation**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE (eSports Gaming & 60 FPS HUD)**, **LIGHTNING WAF & Web SOC**, and **Upgraded Windows Enterprise Features** (`ax snapshot`, `ax event-log`, `ax sfc`, `ax taskmgr`, `ax secpol`).
+> 🎯 **ASTERIX OS v2.0 "Phantom" Restructure**: Strategic architecture upgrade establishing **3 Product Tiers**, elevating the **8 Pure-Rust Security Engines** to center stage, adding formal [Threat Models](docs/THREAT_MODELS/), [Attack Playbooks](docs/ATTACK_PLAYBOOKS/), and [Performance Benchmarks](BENCHMARK_RESULTS.md). See [ASTERIX_OS_RESTRUCTURE_GUIDE.md](ASTERIX_OS_RESTRUCTURE_GUIDE.md) and [VERSION.toml](VERSION.toml).
+> 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
 > 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
 ---
+
+## 🎯 The 3 Product Tiers of ASTERIX OS v2.0
+
+```
+TIER 1: CORE OFFENSIVE & TELEMETRY ENGINES (Pure Rust, Ultra-Fast)
+├── asterix-net-sentinel      → Parallel TCP/UDP scanner & port enumeration (3.75x faster than Nmap)
+├── asterix-bin-inspector     → ELF/PE binary analysis, section entropy & obfuscation detector (6.7x faster)
+├── asterix-log-hunter        → Real-time multi-pattern threat log forensics & brute-force detector (3.79x faster)
+├── asterix-crypto-core       → Hash identification & cracking engine (182x faster than hashid)
+├── asterix-dark-engine       → W^X violation scanner, memory page inspector & stealth radar HUD
+├── asterix-defender-core     → Target hardening assessment, endpoint antivirus & host firewall
+├── asterix-sys-mon           → Microsecond kernel & process telemetry surveillance HUD
+├── asterix-code-repair       → Autonomous AST syntax defect repair & exploit payload healer
+└── asterix-guard-engine      → Automated security compliance scoring & hardening benchmark
+
+TIER 2: PLATFORM & DEPLOYMENT INFRASTRUCTURE
+├── Live Bootable ISO         → Debian-based pentesting OS with persistent USB overlay
+├── Termux Mobile             → Native Android offensive platform via PRoot Debian container
+├── Quad-Grid Workspace       → 4-pane balanced terminal multiplexer (ax quad)
+├── Cybernetic Desktop        → Minimal, fast desktop environment with live Conky HUD
+├── AI Threat Hunter & SOC    → Conversational inference, threat modeling & hardware sensor bridge
+├── Auto-Compiler Engine      → Autonomous self-healing compilation with automatic header resolution
+└── Host Collaboration Bridge → Assimilates native Windows/Linux tools, telemetry & benchmark synergy
+
+TIER 3: INTEGRATED SECURITY SUITES
+├── THUNDER                   → Wireless reconnaissance, IP rotator (105 nodes) & MAC spoofer
+├── LIGHTNING                 → Web SOC dashboard, WAF proxy & live threat interceptor
+├── APEX OVERDRIVE            → Low-latency system optimization & real-time telemetry HUD
+└── ANTI-NETWORK ATTACK       → ARP poisoning defense, TCP SYN shield & DNS lock
+```
 
 ## ⚡ Core Features
 
@@ -225,6 +256,12 @@ ax ai [audit]                    # Autonomous rule evaluation across live kernel
 ax ai ask "<query>"              # Natural language technical triage, troubleshooting & remediation
 ax ai rules                      # Browse active knowledge base rules, severity ratings & metrics
 
+# Autonomous Code Repair, Debugging & Developer Accelerators
+ax -fix <file|snippet>           # Universal Autonomous Code Healer (Python, C, C++, Rust, Go, JS, TS, Bash, JSON, SQL, HTML/CSS)
+ax debug <command>               # Runtime Crash Interceptor: captures tracebacks & shows AI fix hints
+ax bounty <domain>               # Automated Bug Bounty Recon: CT logs, port sweep, WAF & secrets dossier
+ax scratch <lang> [--watch]      # Developer Scratchpad Studio with sub-millisecond hot-reload execution
+
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
 ax clean-pro                    # Zero-crash package archive purge, cache evictor & SSD/UFS TRIM
@@ -404,7 +441,36 @@ curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/se
 
 ---
 
-## 📚 Detailed Documentation
+## 💾 Full OS Distribution & Downloads (Resolving the 33 MB GitHub Issue)
+
+> [!TIP]
+> **Why does GitHub's "Download ZIP" only give ~33 MB when the repo is 188+ MB?**
+> GitHub automatically applies maximum zip compression (which shrinks text, code, and scripts by 75–85%) and excludes untracked build caches (such as `core-utils-rust/target/`, which is ~71 MB). **All source files and media are intact.**
+>
+> To download or distribute the complete, unstripped ASTERIX OS workspace with pre-compiled artifacts and full media:
+
+### Option 1: Official GitHub Releases (Up to 2.0 GB per file)
+Download the full pre-packaged release archive directly from our GitHub Releases page:
+- 📦 **GitHub Releases Download**: `https://github.com/alexhack235-code/ASTERIX-OS-Restructure/releases` (or your fork's `/releases/latest`)
+
+### Option 2: Full Package via Google Drive
+- ☁️ **Google Drive Direct Download**: `[Download ASTERIX-OS-FULL-PACKAGE.zip from Google Drive]` *(Paste your shared Google Drive link here after uploading)*
+
+### Option 3: Package the Entire OS Locally (1-Click PowerShell)
+To bundle the complete uncompressed repository into a distribution ZIP on your machine:
+```powershell
+powershell -ExecutionPolicy Bypass -File "scripts-hub\package-full-os.ps1"
+```
+*This generates `ASTERIX-OS-FULL-PACKAGE.zip` directly on your Desktop with an automatic SHA-256 integrity checksum ready for Google Drive or GitHub Releases.*
+
+---
+
+## 📚 Detailed Documentation & Restructure Roadmap
+* 🎯 [ASTERIX OS v2.0 Restructure Guide](ASTERIX_OS_RESTRUCTURE_GUIDE.md) — Architectural roadmap & toolchain optimization
+* 📋 [Single Source of Truth Versioning](VERSION.toml) — Official semantic version matrix (Phantom)
+* ⚡ [Official Performance Benchmarks](BENCHMARK_RESULTS.md) — Rust vs Nmap, readelf & GNU tools (3-7x speedup)
+* 🛡️ [Threat Models & Detection Analysis](docs/THREAT_MODELS/) — Detection limits, stealth & operational security
+* 🏹 [Offensive Security Playbooks](docs/ATTACK_PLAYBOOKS/) — Reconnaissance, web, binary & mobile workflows
 * 🚀 [New Updates & Releases Guide (Defender, APEX, Windows Features)](UPDATES.md)
 * 🗺️ [Master Visual Architecture Diagram](ASTERIX_OS_DIAGRAM.png)
 * 🌌 [Master Toolchain & Command Encyclopedia](docs/MASTER_TOOLCHAIN_MANUAL.md)

@@ -381,27 +381,31 @@ ax auto-compile <dir>            # Auto-detect and build Makefile, Cargo.toml, o
 
 ---
 
-## 12. 🌐 ASTERIX OS-Computing // Dual-Boot Collaboration & Host Bridge
+## 12. 🌐 ASTERIX OS-Computing // Universal Host Collaboration & Bridge v3.0
 
-Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system or mounted dual-boot systems (e.g., Kali Linux, Parrot Security, BlackArch, Arch, Ubuntu, Termux):
+Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system (Windows 10/11, Linux, macOS, Termux) and mounted dual-boot systems (Kali Linux, Parrot Security, BlackArch, Ubuntu):
 - **Cross-OS Discovery (`ax os-computing probe`)**:
-  - Detects host distribution, kernel, architecture, and compute cores.
-  - Scans `/mnt/*` and `/media/*` for co-installed Linux dual-boot partitions.
+  - Detects host distribution, NT build/Linux release, kernel, architecture, and compute cores.
+  - Probes CPU microarchitecture, RAM pools, GPU hardware accelerators (Intel HD/Arc, NVIDIA CUDA, AMD ROCm, Direct3D 12, Vulkan).
+  - Inspects storage partitions, Windows Defender real-time protection, and Windows Subsystem for Linux (WSL1/WSL2).
 - **Weaponized Arsenal Symbiosis (`ax os-computing collaborate`)**:
-  - Searches for 80+ elite security tools across both operating systems and bridges them into `~/.asterix_vault/host_arsenal/bin/`.
+  - Searches for 120+ elite security tools across both operating systems and bridges them into `~/.asterix_vault/host_arsenal/bin/`.
+  - Generates cross-platform environment hooks (`env.ps1`, `env.bat`, and `env.sh`).
   - Bridges wordlists (`rockyou.txt`, `seclists`) without duplicating disk space.
-  - Generates global environment hook (`~/.asterix_vault/host_arsenal/env.sh`).
 - **Compute & Hardware Synergy (`ax os-computing compute`)**:
-  - Fuses available CPU cores, RAM, and GPU accelerators (NVIDIA CUDA / AMD ROCm / OpenCL) for maximum throughput.
+  - Fuses available CPU cores, RAM, and GPU accelerators with live multi-core benchmark measuring throughput in MegaOps/Sec.
 - **OS Persona Mimicry (`ax os-computing imitate`)**:
-  - Adapts ASTERIX shell prompt, themes, and shortcuts to match host persona (Kali Dragon, BlackArch Total Warfare, Termux Mobile).
+  - Adapts ASTERIX shell prompt, themes, and shortcuts to match host persona (Cybernetic Windows Sentinel, Kali Dragon, BlackArch Total Warfare, Termux Mobile).
+- **Telemetry Export (`ax os-computing features`)**:
+  - Dumps complete machine telemetry to `~/.asterix_vault/host_arsenal/host_features.json`.
 
 ### CLI Commands:
 ```bash
-ax os-computing probe            # Scan host OS and mounted dual-boot partitions
+ax os-computing probe            # Scan host OS, hardware topology, and dual-boot partitions
 ax os-computing collaborate      # Bridge and fuse companion OS tools and wordlists into ASTERIX
-ax os-computing compute          # Maximize CPU, RAM, and GPU compute synergy
+ax os-computing compute          # Maximize CPU, RAM, and GPU compute synergy with live benchmark
 ax os-computing imitate          # Adapt ASTERIX UI persona to host distribution
+ax os-computing features         # Export complete telemetry to host_features.json
 ax os-computing status           # Display complete cross-OS collaboration telemetry
 ```
 

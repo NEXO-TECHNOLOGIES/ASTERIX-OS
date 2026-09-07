@@ -13,6 +13,8 @@ Thumbs.db
 desktop.ini
 *.tmp
 *.bak
+__pycache__/
+*.pyc
 
 # Auto-cloned external security packages
 packages/*

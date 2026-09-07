@@ -1,0 +1,44 @@
+# ==============================================================================
+# ASTERIX OS v2.0 - Master Semantic Versioning Specification (Single Source of Truth)
+# Codename: Phantom | Release Date: 2026-09-07
+# ==============================================================================
+
+[version]
+major = 2
+minor = 0
+patch = 0
+release_stage = "production"
+codename = "Phantom"
+release_date = "2026-09-07"
+architecture = ["x86_64", "aarch64"]
+license = "MIT"
+maintainer = "NEXO-TECHNOLOGIES"
+
+[engines]
+# Tier 1: High-Performance Pure-Rust Engines
+net-sentinel    = "1.0.2"   # Thread-pooled TCP/UDP network scanner & port enumeration
+bin-inspector   = "1.0.1"   # Binary format inspector, ELF/PE parsing & entropy analyzer
+log-hunter      = "1.0.0"   # Forensic log parser, threat signature & event analyzer
+crypto-core     = "0.9.5"   # Cryptographic identifier, hash auditing & cracking core
+dark-engine     = "0.8.3"   # Memory analysis, W^X inspector & stealth telemetry
+defender-core   = "0.7.2"   # Target hardening assessment & active endpoint defense
+sys-mon         = "0.7.1"   # Microsecond real-time system & kernel telemetry HUD
+code-repair     = "0.6.0"   # AST-level autonomous code defect healing engine
+guard-engine    = "0.7.0"   # Security compliance scoring & hardening benchmark
+
+[platform]
+# Tier 2: Deployment & Orchestration Infrastructure
+live-iso        = "2.0.0"   # Debian-based hybrid UEFI+BIOS bootable image with persistence
+termux-mobile   = "2.0.0"   # Android mobile security platform via PRoot environment
+quad-grid       = "2.0.0"   # 4-pane balanced multiplexer workspace with telemetry
+desktop-env     = "2.0.0"   # Lightweight high-performance cybernetic desktop & HUD
+ai-engine       = "3.0.0"   # Rule-based threat inference & hardware sensor bridge
+auto-compiler   = "2.0.0"   # Heuristic self-healing compiler & header resolver
+os-collab       = "3.0.0"   # Universal host OS collaboration & feature assimilation bridge
+
+[suites]
+# Tier 3: Integrated Security Suites
+thunder         = "2.0.0"   # Wireless auditing, IP rotation & defense evasion suite
+lightning       = "2.0.0"   # WAF proxy, Web SOC dashboard & threat inspection
+apex            = "2.0.0"   # Low-latency system optimization & real-time telemetry HUD
+anti-attack     = "2.0.0"   # Network threat mitigation (ARP, SYN, DNS flood mitigation)

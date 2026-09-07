@@ -12,6 +12,29 @@ import os
 import json
 import re
 
+# Enforce UTF-8 stdout/stderr stream handling across Windows and POSIX terminals
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+if hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+if sys.platform == "win32":
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        hOut = kernel32.GetStdHandle(-11)
+        mode = ctypes.c_ulong()
+        kernel32.GetConsoleMode(hOut, ctypes.byref(mode))
+        kernel32.SetConsoleMode(hOut, mode.value | 0x0004)
+    except Exception:
+        pass
+
 try:
     from . import user_input_learner
 except ImportError:
@@ -20,9 +43,18 @@ except ImportError:
     except ImportError:
         user_input_learner = None
 
+try:
+    from . import hardware_sensor
+except ImportError:
+    try:
+        import hardware_sensor
+    except ImportError:
+        hardware_sensor = None
+
 C_RESET = "\033[0m"
 C_BOLD = "\033[1m"
 C_CYAN = "\033[38;5;51m"
+C_BLUE = "\033[38;5;45m"
 C_GREEN = "\033[38;5;46m"
 C_YELLOW = "\033[38;5;220m"
 C_RED = "\033[38;5;196m"
@@ -186,20 +218,44 @@ def cmd_ask(query, in_chat=False):
             print(f"   {C_CYAN}•{C_RESET} {C_WHITE}{fact}{C_RESET}")
         print()
 
-    rules = load_rules()
     tokens = set(re.findall(r"\w+", query.lower()))
+
+    # Real-Time 3-Tier Hardware & OS Telemetry Integration
+    hw_triggers = {"hardware", "telemetry", "specs", "cpu", "processor", "ram", "memory", "cycles", "sensors", "diagnostics"}
+    if tokens.intersection(hw_triggers) and hardware_sensor:
+        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} Live 3-tier Assembly/C hardware telemetry bridge engaged:\n")
+        report = hardware_sensor.format_telemetry_narrative()
+        for rline in report.split("\n"):
+            print(f"  {rline}")
+        print()
+        if not ("who" in tokens or ("what" in tokens and "you" in tokens)):
+            return
+
+    rules = load_rules()
+
+    STOP_WORDS = {"what", "are", "the", "of", "is", "a", "an", "in", "on", "to", "for", "and", "or", "how", "do", "does", "can", "you", "me", "my", "your", "it", "this", "that"}
+    q_clean = query.lower()
+    content_tokens = tokens - STOP_WORDS
+    if not content_tokens:
+        content_tokens = tokens
 
     matches = []
     for rule in rules:
-        keywords = set(k.lower() for k in rule.get("keywords", []))
-        keywords.update(re.findall(r"\w+", rule.get("name", "").lower()))
-        keywords.update(re.findall(r"\w+", rule.get("description", "").lower()))
-        if "attack_vector" in rule:
-            keywords.update(re.findall(r"\w+", rule.get("attack_vector", "").lower()))
-        if "response" in rule:
-            keywords.update(re.findall(r"\w+", rule.get("response", "").lower()))
+        score = 0
+        rule_kw = [k.lower() for k in rule.get("keywords", [])]
+        for kw in rule_kw:
+            if kw in q_clean:
+                score += 20
+            else:
+                kw_tokens = set(re.findall(r"\w+", kw)) - STOP_WORDS
+                score += len(content_tokens.intersection(kw_tokens)) * 5
 
-        score = len(tokens.intersection(keywords))
+        name_tokens = set(re.findall(r"\w+", rule.get("name", "").lower())) - STOP_WORDS
+        score += len(content_tokens.intersection(name_tokens)) * 3
+
+        desc_tokens = set(re.findall(r"\w+", rule.get("description", "").lower())) - STOP_WORDS
+        score += len(content_tokens.intersection(desc_tokens)) * 1
+
         if score > 0:
             matches.append((score, rule))
 
@@ -221,6 +277,9 @@ def cmd_ask(query, in_chat=False):
         print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET}\n")
         for line in top_rule["response"].split("\n"):
             print(f"  {line}")
+        if any(w in query.lower() for w in ("who are you", "what are you", "identity")) and hardware_sensor:
+            hw = hardware_sensor.get_live_hardware_state()
+            print(f"\n  • **Active Hardware Host**: `{hw['cpu_brand']}` | {hw['ram_total_mb']} MB RAM ({hw['ram_load_pct']}% Load)")
         print()
         return
 
