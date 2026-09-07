@@ -226,6 +226,24 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("map", "cartographer", "arch", "topology") } {
+        $cartographerScript = Join-Path $AsterixRoot "scripts-hub\ax-cartographer.py"
+        if ($RealPython -and (Test-Path $cartographerScript)) {
+            & $RealPython $cartographerScript "map" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-cartographer.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("scaffold", "synth") } {
+        $cartographerScript = Join-Path $AsterixRoot "scripts-hub\ax-cartographer.py"
+        if ($RealPython -and (Test-Path $cartographerScript)) {
+            & $RealPython $cartographerScript "scaffold" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-cartographer.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -247,6 +265,8 @@ switch ($Command.ToLower()) {
             Write-Host "    ax debug <command>           Intercept runtime crashes & get AI root-cause hints"
             Write-Host "    ax bounty <domain>           Autonomous bug bounty recon & attack surface probe"
             Write-Host "    ax scratch <lang> [--watch]  Instant scratchpad studio with live hot-reload"
+            Write-Host "    ax map [path] [--tree|audit] Autonomous codebase cartographer & architecture map"
+            Write-Host "    ax scaffold <type> <name>    Auto-generate architecture boilerplate (route/service/model)"
         }
     }
 }

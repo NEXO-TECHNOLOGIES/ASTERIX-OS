@@ -3494,6 +3494,32 @@ cmd_scratch() {
     fi
 }
 
+cmd_cartographer() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-cartographer.py"
+    [ -f "$script" ] || script="scripts-hub/ax-cartographer.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "map" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-cartographer.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_scaffold() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-cartographer.py"
+    [ -f "$script" ] || script="scripts-hub/ax-cartographer.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "scaffold" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-cartographer.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5642,6 +5668,8 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax debug <cmd>${C_RESET}          Runtime debugger: intercepts crashes & AI root-cause patch"
     echo -e "  ${C_CYAN}ax bounty <domain>${C_RESET}      Automated bug bounty recon pipeline & attack surface dossier"
     echo -e "  ${C_CYAN}ax scratch <lang> [-w]${C_RESET}  Developer scratchpad studio with live hot-reload loop"
+    echo -e "  ${C_CYAN}ax map [path] [--tree]${C_RESET}  Codebase cartographer: AST topology, dependency cycles & context"
+    echo -e "  ${C_CYAN}ax scaffold <type> <n>${C_RESET}  Synthesizer: auto-generate architecture boilerplate (route/model)"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6538,6 +6566,14 @@ case "$SUBCOMMAND" in
     scratch|playground)
         shift
         cmd_scratch "$@"
+        ;;
+    map|cartographer|arch|topology)
+        shift
+        cmd_cartographer "$@"
+        ;;
+    scaffold|synth)
+        shift
+        cmd_scaffold "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

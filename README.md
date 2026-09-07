@@ -261,6 +261,8 @@ ax -fix <file|snippet>           # Universal Autonomous Code Healer (Python, C, 
 ax debug <command>               # Runtime Crash Interceptor: captures tracebacks & shows AI fix hints
 ax bounty <domain>               # Automated Bug Bounty Recon: CT logs, port sweep, WAF & secrets dossier
 ax scratch <lang> [--watch]      # Developer Scratchpad Studio with sub-millisecond hot-reload execution
+ax map [path] [--tree|audit]     # Autonomous Codebase Cartographer: AST topology, cycles, bottlenecks & AI context
+ax scaffold <type> <name>        # Architecture Synthesizer: auto-generate boilerplate (route, service, model)
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health

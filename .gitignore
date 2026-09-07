@@ -20,3 +20,6 @@ __pycache__/
 packages/*
 !packages/README.md
 !packages/.gitkeep
+project_map.html
+telemetry_routes.py
+
