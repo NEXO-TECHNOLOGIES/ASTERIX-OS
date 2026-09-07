@@ -309,8 +309,13 @@ class SupplyChainAuditor:
                                 "severity": "HIGH",
                                 "issue": f"Potential Typosquatting: '{dep}' closely resembles '{pop}'",
                             })
-            except Exception:
-                pass
+            except Exception as e:
+                findings.append({
+                    "manifest": str(pj.relative_to(root)),
+                    "line": "manifest",
+                    "severity": "CRITICAL",
+                    "issue": f"Manifest quarantined by security engine or unreadable: {e}",
+                })
 
         print(f"  • Dependency Manifests Audited: {C_BOLD}{manifests_found}{C_RESET}")
 
