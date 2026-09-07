@@ -271,6 +271,33 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("canary", "ransomware-guard", "anti-ransomware") } {
+        $shieldScript = Join-Path $AsterixRoot "scripts-hub\ax-shield.py"
+        if ($RealPython -and (Test-Path $shieldScript)) {
+            & $RealPython $shieldScript "canary" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-shield.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("supply-chain", "dep-audit", "audit-deps") } {
+        $shieldScript = Join-Path $AsterixRoot "scripts-hub\ax-shield.py"
+        if ($RealPython -and (Test-Path $shieldScript)) {
+            & $RealPython $shieldScript "supply-chain" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-shield.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("phish-shield", "phish-check", "homoglyph") } {
+        $shieldScript = Join-Path $AsterixRoot "scripts-hub\ax-shield.py"
+        if ($RealPython -and (Test-Path $shieldScript)) {
+            & $RealPython $shieldScript "phish-shield" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-shield.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -297,6 +324,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax unblock <port>            Instantly free blocked port & terminate zombie process"
             Write-Host "    ax secrets [path]            Audit codebase for leaked API keys, tokens & credentials"
             Write-Host "    ax doctor [--fix]            Diagnose online connectivity & developer environment"
+            Write-Host "    ax canary [deploy|check]     Deploy & monitor anti-ransomware canary tripwires"
+            Write-Host "    ax supply-chain [path]       Audit dependencies for typosquatting & malicious hooks"
+            Write-Host "    ax phish-shield <domain>     Detect homoglyphs, Punycode tricks & phishing spoofing"
         }
     }
 }

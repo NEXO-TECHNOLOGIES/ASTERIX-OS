@@ -266,6 +266,9 @@ ax scaffold <type> <name>        # Architecture Synthesizer: auto-generate boile
 ax unblock <port>                # Socket Unblocker: free occupied ports & kill zombie background processes
 ax secrets [path]                # Credential Sentinel: audit codebase for leaked API keys, tokens & certs
 ax doctor [--fix]                # System Doctor: diagnose online connectivity, DNS health & dev toolchains
+ax canary [deploy|check]         # Anti-Ransomware Canary Tripwires: SHA-256 integrity & Shannon entropy engine
+ax supply-chain [path]           # Supply Chain Defense: typosquatting, malicious npm hooks & unpinned dep audit
+ax phish-shield <domain|url>     # PhishShield: detects homoglyph substitution, Punycode spoofing & deceptive hosts
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health

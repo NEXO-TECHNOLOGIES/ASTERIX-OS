@@ -3559,6 +3559,45 @@ cmd_doctor() {
     fi
 }
 
+cmd_canary() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-shield.py"
+    [ -f "$script" ] || script="scripts-hub/ax-shield.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "canary" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-shield.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_supply_chain() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-shield.py"
+    [ -f "$script" ] || script="scripts-hub/ax-shield.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "supply-chain" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-shield.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_phish_shield() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-shield.py"
+    [ -f "$script" ] || script="scripts-hub/ax-shield.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "phish-shield" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-shield.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5712,6 +5751,9 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax unblock <port>${C_RESET}       Socket unblocker: eliminate EADDRINUSE & kill zombie processes"
     echo -e "  ${C_CYAN}ax secrets [path]${C_RESET}       Credential sentinel: scan for leaked API keys, tokens & certs"
     echo -e "  ${C_CYAN}ax doctor [--fix]${C_RESET}       System doctor: diagnose online network health & dev environment"
+    echo -e "  ${C_CYAN}ax canary [deploy|chk]${C_RESET}  Anti-ransomware canary tripwires: SHA-256 integrity & entropy"
+    echo -e "  ${C_CYAN}ax supply-chain [path]${C_RESET}  Supply chain defense: typosquatting & malicious package hooks"
+    echo -e "  ${C_CYAN}ax phish-shield <tgt>${C_RESET}   PhishShield: homoglyph substitution & Punycode brand spoofing"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6628,6 +6670,18 @@ case "$SUBCOMMAND" in
     doctor|net-doctor|sys-doctor|diagnose)
         shift
         cmd_doctor "$@"
+        ;;
+    canary|ransomware-guard|anti-ransomware)
+        shift
+        cmd_canary "$@"
+        ;;
+    supply-chain|dep-audit|audit-deps)
+        shift
+        cmd_supply_chain "$@"
+        ;;
+    phish-shield|phish-check|homoglyph)
+        shift
+        cmd_phish_shield "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift
