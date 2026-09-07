@@ -3520,6 +3520,45 @@ cmd_scaffold() {
     fi
 }
 
+cmd_unblock() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-doctor.py"
+    [ -f "$script" ] || script="scripts-hub/ax-doctor.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "unblock" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-doctor.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_secrets() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-doctor.py"
+    [ -f "$script" ] || script="scripts-hub/ax-doctor.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "secrets" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-doctor.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_doctor() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-doctor.py"
+    [ -f "$script" ] || script="scripts-hub/ax-doctor.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "doctor" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-doctor.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5670,6 +5709,9 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax scratch <lang> [-w]${C_RESET}  Developer scratchpad studio with live hot-reload loop"
     echo -e "  ${C_CYAN}ax map [path] [--tree]${C_RESET}  Codebase cartographer: AST topology, dependency cycles & context"
     echo -e "  ${C_CYAN}ax scaffold <type> <n>${C_RESET}  Synthesizer: auto-generate architecture boilerplate (route/model)"
+    echo -e "  ${C_CYAN}ax unblock <port>${C_RESET}       Socket unblocker: eliminate EADDRINUSE & kill zombie processes"
+    echo -e "  ${C_CYAN}ax secrets [path]${C_RESET}       Credential sentinel: scan for leaked API keys, tokens & certs"
+    echo -e "  ${C_CYAN}ax doctor [--fix]${C_RESET}       System doctor: diagnose online network health & dev environment"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6574,6 +6616,18 @@ case "$SUBCOMMAND" in
     scaffold|synth)
         shift
         cmd_scaffold "$@"
+        ;;
+    unblock|port-kill|kill-port)
+        shift
+        cmd_unblock "$@"
+        ;;
+    secrets|secret-scan|vault-scan)
+        shift
+        cmd_secrets "$@"
+        ;;
+    doctor|net-doctor|sys-doctor|diagnose)
+        shift
+        cmd_doctor "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

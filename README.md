@@ -263,6 +263,9 @@ ax bounty <domain>               # Automated Bug Bounty Recon: CT logs, port swe
 ax scratch <lang> [--watch]      # Developer Scratchpad Studio with sub-millisecond hot-reload execution
 ax map [path] [--tree|audit]     # Autonomous Codebase Cartographer: AST topology, cycles, bottlenecks & AI context
 ax scaffold <type> <name>        # Architecture Synthesizer: auto-generate boilerplate (route, service, model)
+ax unblock <port>                # Socket Unblocker: free occupied ports & kill zombie background processes
+ax secrets [path]                # Credential Sentinel: audit codebase for leaked API keys, tokens & certs
+ax doctor [--fix]                # System Doctor: diagnose online connectivity, DNS health & dev toolchains
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -482,3 +485,32 @@ powershell -ExecutionPolicy Bypass -File "scripts-hub\package-full-os.ps1" -Excl
 * 🖥️ [ASTERIX Terminal, Splitting & Scrolling Guide](docs/ASTERIX_TERMINAL_AND_WORKFLOW_GUIDE.md)
 * 📱 [Android Rooting & Architecture Guide](docs/ROOTING_AND_DEVICE_GUIDE.md)
 * 🖼️ [Media & Asset Drop Instructions](assets/README.md)
+
+---
+
+## ⚖️ License & Software Freedom
+
+ASTERIX OS is developed by **NEXO TECHNOLOGIES GROUP** and dual-licensed under:
+
+- **[Apache License, Version 2.0](LICENSE)**
+- **[MIT License](LICENSE)**
+
+at your option.
+
+This dual-licensing structure follows the standard convention of the **Rust ecosystem** (used by the Rust Foundation, Tokio, Serde, and Axum), ensuring explicit patent grants and corporate indemnification under Apache-2.0 alongside total permissive freedom under MIT.
+
+### Multi-Language SPDX Identifier Conventions
+
+Source files across the codebase adhere to standardized SPDX header conventions:
+
+| Language | SPDX License Header |
+|---|---|
+| **Rust** | `// SPDX-License-Identifier: MIT OR Apache-2.0` |
+| **Python** | `# SPDX-License-Identifier: MIT OR Apache-2.0` |
+| **C / C++** | `/* SPDX-License-Identifier: MIT OR Apache-2.0 */` |
+| **Go** | `// SPDX-License-Identifier: MIT OR Apache-2.0` |
+| **JavaScript / TypeScript** | `// SPDX-License-Identifier: MIT OR Apache-2.0` |
+| **Shell / Bash** | `# SPDX-License-Identifier: MIT OR Apache-2.0` |
+| **Assembly** | `; SPDX-License-Identifier: MIT OR Apache-2.0` |
+
+Copyright (c) 2026 NEXO TECHNOLOGIES GROUP. All rights reserved.

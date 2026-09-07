@@ -244,6 +244,33 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("unblock", "port-kill", "kill-port") } {
+        $doctorScript = Join-Path $AsterixRoot "scripts-hub\ax-doctor.py"
+        if ($RealPython -and (Test-Path $doctorScript)) {
+            & $RealPython $doctorScript "unblock" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-doctor.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("secrets", "secret-scan", "vault-scan") } {
+        $doctorScript = Join-Path $AsterixRoot "scripts-hub\ax-doctor.py"
+        if ($RealPython -and (Test-Path $doctorScript)) {
+            & $RealPython $doctorScript "secrets" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-doctor.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("doctor", "net-doctor", "sys-doctor", "diagnose") } {
+        $doctorScript = Join-Path $AsterixRoot "scripts-hub\ax-doctor.py"
+        if ($RealPython -and (Test-Path $doctorScript)) {
+            & $RealPython $doctorScript "doctor" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-doctor.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -267,6 +294,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax scratch <lang> [--watch]  Instant scratchpad studio with live hot-reload"
             Write-Host "    ax map [path] [--tree|audit] Autonomous codebase cartographer & architecture map"
             Write-Host "    ax scaffold <type> <name>    Auto-generate architecture boilerplate (route/service/model)"
+            Write-Host "    ax unblock <port>            Instantly free blocked port & terminate zombie process"
+            Write-Host "    ax secrets [path]            Audit codebase for leaked API keys, tokens & credentials"
+            Write-Host "    ax doctor [--fix]            Diagnose online connectivity & developer environment"
         }
     }
 }
