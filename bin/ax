@@ -3598,6 +3598,45 @@ cmd_phish_shield() {
     fi
 }
 
+cmd_takeover() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-cloud-defense.py"
+    [ -f "$script" ] || script="scripts-hub/ax-cloud-defense.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "takeover" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-cloud-defense.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_ssrf_guard() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-cloud-defense.py"
+    [ -f "$script" ] || script="scripts-hub/ax-cloud-defense.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "ssrf-guard" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-cloud-defense.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_api_sentinel() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-cloud-defense.py"
+    [ -f "$script" ] || script="scripts-hub/ax-cloud-defense.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "api-sentinel" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-cloud-defense.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5754,6 +5793,9 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax canary [deploy|chk]${C_RESET}  Anti-ransomware canary tripwires: SHA-256 integrity & entropy"
     echo -e "  ${C_CYAN}ax supply-chain [path]${C_RESET}  Supply chain defense: typosquatting & malicious package hooks"
     echo -e "  ${C_CYAN}ax phish-shield <tgt>${C_RESET}   PhishShield: homoglyph substitution & Punycode brand spoofing"
+    echo -e "  ${C_CYAN}ax takeover <domain>${C_RESET}    Cloud takeover sentinel: audit dangling CNAMEs & cloud assets"
+    echo -e "  ${C_CYAN}ax ssrf-guard <url>${C_RESET}     SSRF & cloud metadata shield (blocks 169.254.169.254 & rebinding)"
+    echo -e "  ${C_CYAN}ax api-sentinel <url>${C_RESET}   API defense sentinel: audit missing headers, CORS & shadow APIs"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6682,6 +6724,18 @@ case "$SUBCOMMAND" in
     phish-shield|phish-check|homoglyph)
         shift
         cmd_phish_shield "$@"
+        ;;
+    takeover|subdomain-takeover|cname-audit)
+        shift
+        cmd_takeover "$@"
+        ;;
+    ssrf-guard|ssrf|metadata-guard)
+        shift
+        cmd_ssrf_guard "$@"
+        ;;
+    api-sentinel|api-audit|api-guard)
+        shift
+        cmd_api_sentinel "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

@@ -298,6 +298,33 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("takeover", "subdomain-takeover", "cname-audit") } {
+        $cloudScript = Join-Path $AsterixRoot "scripts-hub\ax-cloud-defense.py"
+        if ($RealPython -and (Test-Path $cloudScript)) {
+            & $RealPython $cloudScript "takeover" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-cloud-defense.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("ssrf-guard", "ssrf", "metadata-guard") } {
+        $cloudScript = Join-Path $AsterixRoot "scripts-hub\ax-cloud-defense.py"
+        if ($RealPython -and (Test-Path $cloudScript)) {
+            & $RealPython $cloudScript "ssrf-guard" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-cloud-defense.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("api-sentinel", "api-audit", "api-guard") } {
+        $cloudScript = Join-Path $AsterixRoot "scripts-hub\ax-cloud-defense.py"
+        if ($RealPython -and (Test-Path $cloudScript)) {
+            & $RealPython $cloudScript "api-sentinel" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-cloud-defense.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -327,6 +354,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax canary [deploy|check]     Deploy & monitor anti-ransomware canary tripwires"
             Write-Host "    ax supply-chain [path]       Audit dependencies for typosquatting & malicious hooks"
             Write-Host "    ax phish-shield <domain>     Detect homoglyphs, Punycode tricks & phishing spoofing"
+            Write-Host "    ax takeover <domain>         Audit dangling CNAMEs & cloud service subdomain takeovers"
+            Write-Host "    ax ssrf-guard <url>          Block SSRF, cloud metadata (169.254.169.254) & rebinding"
+            Write-Host "    ax api-sentinel <url>        Audit API defense headers, CORS, shadow OpenAPI schemas"
         }
     }
 }

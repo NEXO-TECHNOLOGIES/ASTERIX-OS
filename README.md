@@ -269,6 +269,9 @@ ax doctor [--fix]                # System Doctor: diagnose online connectivity, 
 ax canary [deploy|check]         # Anti-Ransomware Canary Tripwires: SHA-256 integrity & Shannon entropy engine
 ax supply-chain [path]           # Supply Chain Defense: typosquatting, malicious npm hooks & unpinned dep audit
 ax phish-shield <domain|url>     # PhishShield: detects homoglyph substitution, Punycode spoofing & deceptive hosts
+ax takeover <domain>             # Cloud Takeover Sentinel: audits dangling CNAME pointers & cloud assets
+ax ssrf-guard <url>              # SSRF & Metadata Shield: intercepts cloud IMDSv1/v2, private IPs & rebinding
+ax api-sentinel <url>            # API Defense Sentinel: audits missing security headers, CORS & shadow schemas
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -458,6 +461,46 @@ $ ax phish-shield "paypa1.com"
 
 ### 4. Deterministic Memory Safety & Exploit Healer (`ax -fix`)
 AST-driven code hardening that neutralizes memory safety CVEs in C/C++ source code: replaces banned functions (`gets` $\rightarrow$ `fgets`, `sprintf` $\rightarrow$ `snprintf`), patches scope-bound heap leaks (`malloc` without `free`), closes dangling file descriptors (`fopen` without `fclose`), and zeroes pointers after deallocation (`free(p); p = NULL;`) to neutralize Use-After-Free (UAF) and Double-Free exploit primitives.
+
+### 5. Autonomous Cloud Subdomain Takeover Sentinel (`ax takeover`)
+Scans DNS CNAME records across 25+ cloud providers (AWS S3/CloudFront, GitHub Pages, Heroku, Azure, Cloudflare, Vercel, Netlify) and matches unclaimed HTTP fingerprints to intercept hijacking of official enterprise subdomains.
+
+```text
+$ ax takeover "api.enterprise-domain.com"
+  [SUBDOMAIN TAKEOVER SENTINEL] Auditing Target: api.enterprise-domain.com
+  • Discovered CNAME Pointer: target-bucket.s3.amazonaws.com
+  ✓ SECURE: No dangling cloud takeover signatures detected.
+```
+
+### 6. SSRF & Cloud Metadata Credential Shield (`ax ssrf-guard`)
+Intercepts Server-Side Request Forgery (SSRF) and prevents exfiltration of AWS/GCP/Azure temporary IAM credentials (`169.254.169.254`), unmasks hex/octal/decimal obfuscated IPs, detects DNS rebinding, and synthesizes drop-in validation wrappers.
+
+```text
+$ ax ssrf-guard "http://169.254.169.254/latest/meta-data/"
+  [SSRF & CLOUD METADATA SHIELD] Analyzing Outbound Target: http://169.254.169.254/latest/meta-data/
+  🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
+  Identified Threat Violations:
+    • CRITICAL CLOUD METADATA ENDPOINT: '169.254.169.254' (AWS EC2 / Azure / GCP IMDS)
+    • CLOUD METADATA THEFT (IMDSv1/v2): Targets AWS/GCP/Azure credential service
+  [DEFENSIVE REMEDIATION CODE]
+  Synthesized drop-in safe outbound URL egress filter for application backends.
+```
+
+### 7. API Security Hardener & Exposure Scanner (`ax api-sentinel`)
+Audits endpoints for missing security headers (HSTS, CSP, X-Frame-Options), checks for permissive CORS origin reflection, probes for exposed Swagger/OpenAPI/GraphQL schemas, and automatically outputs hardened Nginx/Caddy configurations.
+
+```text
+$ ax api-sentinel "https://api.internal-service.com"
+  [API DEFENSE SENTINEL] Auditing API Endpoint: https://api.internal-service.com
+  1. SHADOW API & DOCUMENTATION PROBE:
+    ✓ No unauthenticated Swagger, OpenAPI, or actuator routes exposed.
+  2. CORS CROSS-ORIGIN POLICY AUDIT:
+    ✓ Secure CORS: External attacker origin was not reflected.
+  3. DEFENSIVE SECURITY HEADERS POSTURE:
+    ✗ Missing: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options
+  [AUTOMATED HARDENING REMEDIATION]
+  Generated drop-in Nginx / Caddy security policy configuration blocks.
+```
 
 ---
 
