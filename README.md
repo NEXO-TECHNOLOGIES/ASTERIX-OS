@@ -24,6 +24,24 @@
 
 ---
 
+## 💾 Bootable Image Sizes & Hardware Requirements
+
+| Edition | Image File Size | Min. USB Flash Drive | Rec. USB Drive | RAM Requirements | Architecture | Included Subsystems & Capabilities |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **ASTERIX OS Full Cyber Suite ISO** | **4.2 GB** | **8 GB** | **16 GB – 32 GB** | 4 GB+ (2 GB min) | `x86_64` (AMD64) | Full 12-subsystem cyber arsenal, 8 Rust engines, Metasploit, Wireshark, Plymouth UI, Rufus Live Persistence |
+| **ASTERIX OS Stealth & Undercover ISO** | **1.8 GB** | **4 GB** | **8 GB – 16 GB** | 2 GB+ (1 GB min) | `x86_64` (AMD64) | Kali Undercover camouflage, forensic cold-boot RAM wiper, 8 Rust engines, fast covert boot |
+| **ASTERIX OS Minimal Netinstall ISO** | **650 MB** | **2 GB** | **4 GB+** | 1 GB+ (512 MB min) | `x86_64` (AMD64) | Minimal headless core, Debian netinstall base, on-demand network package builder |
+| **ASTERIX OS ARM64 Mobile PRoot** | **380 MB** | N/A | **MicroSD / Internal** | 1.5 GB+ | `aarch64` (ARM64) | Android Termux PRoot container, NetHunter mobile pentesting shell, persistent `/sdcard` storage bridge |
+
+### ⚡ Rufus USB Drive & Persistence Capacity Calculator:
+* **8 GB USB Drive**: Fits the **Stealth Undercover ISO** (1.8 GB) + **5 GB** Ext4 persistence partition.
+* **16 GB USB Drive**: Fits the **Full Cyber Suite ISO** (4.2 GB) + **10 GB** Ext4 persistence partition *(Recommended)*.
+* **32 GB USB Drive**: Fits the **Full Cyber Suite ISO** (4.2 GB) + **26 GB** Ext4 persistence partition *(Ideal for large wordlists, PCAP logs, and project vaults)*.
+
+> 📥 **Full ISO Release Matrix & Checksums**: See [DOWNLOADS.md](DOWNLOADS.md) for direct HTTPS links, P2P Torrents, and SHA-256 verification.
+
+---
+
 ## 🎯 The 3 Product Tiers of ASTERIX OS v2.0
 
 ```

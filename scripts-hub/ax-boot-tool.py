@@ -269,6 +269,17 @@ class LiveBootTool:
         print(f"\n{BOLD}[DEFAULT CREDENTIALS]{RESET}")
         print(f"  • Live User: {GREEN}asterix:asterix{RESET} | Root: {RED}root:asterix{RESET} (or sudo -i)")
 
+        print(f"\n{BOLD}[HARDWARE & USB DRIVE SIZING REQUIREMENTS]{RESET}")
+        print(f"  • {BOLD}Full Cyber Suite (4.2 GB):{RESET}      Min: 8 GB USB | {GREEN}Rec: 16 GB - 32 GB USB{RESET} (RAM: 4 GB+)")
+        print(f"  • {BOLD}Stealth Undercover (1.8 GB):{RESET}    Min: 4 GB USB | {GREEN}Rec: 8 GB - 16 GB USB{RESET}  (RAM: 2 GB+)")
+        print(f"  • {BOLD}Minimal Netinstall (650 MB):{RESET}    Min: 2 GB USB | {GREEN}Rec: 4 GB+ USB{RESET}        (RAM: 1 GB+)")
+        print(f"  • {BOLD}ARM64 Mobile PRoot (380 MB):{RESET}    Android Internal Storage / MicroSD  (RAM: 1.5 GB+)")
+
+        print(f"\n{BOLD}[RUFUS PERSISTENCE CAPACITY CALCULATOR]{RESET}")
+        print(f"  • {CYAN}8 GB USB:{RESET}  Stealth ISO (1.8 GB) + {YELLOW}5 GB Ext4 Persistence{RESET}")
+        print(f"  • {CYAN}16 GB USB:{RESET} Full Suite (4.2 GB)  + {GREEN}10 GB Ext4 Persistence{RESET} (Recommended)")
+        print(f"  • {CYAN}32 GB USB:{RESET} Full Suite (4.2 GB)  + {GREEN}26 GB Ext4 Persistence{RESET} (Optimal for wordlists/PCAPs)")
+
         print(f"\n{BOLD}[HOW TO FLASH WITH RUFUS (WINDOWS)]{RESET}")
         print(f"  1. Download Rufus from https://rufus.ie")
         print(f"  2. Select target USB drive (>= 8 GB)")
@@ -289,13 +300,13 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("action", nargs="?", default="downloads",
-                        choices=["downloads", "iso", "guide", "list", "rufus", "ventoy", "audit"],
-                        help="Action: downloads (release matrix), guide (compare tools), list (scan USBs), rufus, ventoy, audit")
+                        choices=["downloads", "iso", "sizes", "guide", "list", "rufus", "ventoy", "audit"],
+                        help="Action: downloads/sizes (release matrix), guide (compare tools), list (scan USBs), rufus, ventoy, audit")
     parser.add_argument("target", nargs="?", default="", help="Optional ISO file path for audit")
 
     args = parser.parse_args()
 
-    if args.action in ["downloads", "iso"]:
+    if args.action in ["downloads", "iso", "sizes"]:
         LiveBootTool.show_downloads()
     elif args.action == "list":
         LiveBootTool.list_usb_drives()

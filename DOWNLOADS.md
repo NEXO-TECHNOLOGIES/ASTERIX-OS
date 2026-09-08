@@ -17,6 +17,12 @@ For most security engineers and red teams, we recommend downloading the **Full C
 | **ASTERIX OS 64-bit Minimal Netinstall ISO** | `2026.09.07` | `x86_64` | [Torrent](releases/asterix-os-v2.0-amd64-netinstall.iso.torrent) | [Direct](https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases/download/v2.0.0/asterix-os-v2.0-amd64-netinstall.iso) | **650 MB** | [`f5c2d11902fc...`](releases/SHA256SUMS) |
 | **ASTERIX OS ARM64 Mobile PRoot Archive** | `2026.09.07` | `aarch64` | — | [Direct](https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases/download/v2.0.0/asterix-termux-v2.0.0.tar.gz) | **380 MB** | [`9c21b44218fc...`](releases/SHA256SUMS) |
 
+### 💾 USB Flash Drive & Persistence Capacity Calculator
+
+* **8 GB USB Drive**: Suitable for **Stealth & Undercover ISO** (1.8 GB) + **5 GB** Ext4 persistence partition.
+* **16 GB USB Drive**: Suitable for **Full Cyber Suite ISO** (4.2 GB) + **10 GB** Ext4 persistence partition *(Recommended for general red team operations)*.
+* **32 GB USB Drive**: Suitable for **Full Cyber Suite ISO** (4.2 GB) + **26 GB** Ext4 persistence partition *(Optimal for wordlists, captures, and heavy tools)*.
+
 ---
 
 ## 🔑 Default Credentials
