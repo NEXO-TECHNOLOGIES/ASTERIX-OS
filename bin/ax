@@ -3715,6 +3715,19 @@ cmd_stealth_trace() {
     fi
 }
 
+cmd_undercover() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-undercover.py"
+    [ -f "$script" ] || script="scripts-hub/ax-undercover.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-undercover.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5880,6 +5893,7 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax call-shield [audit|scan]${C_RESET} VoIP wiretap defense, ultrasonic beacon hunter & mic monitor"
     echo -e "  ${C_CYAN}ax vision-shield [stego|cloak]${C_RESET} Image steganography scanner & adversarial biometric cloaker"
     echo -e "  ${C_CYAN}ax stealth-trace [fingerprint]${C_RESET} Hardware/browser entropy auditor, JA3 sentinel & packet padding"
+    echo -e "  ${C_CYAN}ax undercover [on|off|boot]${C_RESET} Kali undercover mode & stealth bootloader camouflage"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6844,6 +6858,10 @@ case "$SUBCOMMAND" in
     stealth-trace|anti-fingerprint|ja3-scan)
         shift
         cmd_stealth_trace "$@"
+        ;;
+    undercover|stealth|camouflage|kali-undercover)
+        shift
+        cmd_undercover "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

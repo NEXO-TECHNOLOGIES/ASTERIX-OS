@@ -279,6 +279,7 @@ ax ip-shield [audit]             # IP & WebRTC Leak Sentinel: audits STUN UDP le
 ax call-shield [audit|scan]      # VoIP Wiretap & Acoustic Defense: audits SRTP/SIP & catches ultrasonic beacons
 ax vision-shield [stego|cloak]   # Visual Surveillance Sentinel: LSB steganography scanner & AI biometric face cloaker
 ax stealth-trace [fingerprint]   # Hardware Anti-Fingerprinting: audits Canvas/WebGL entropy, JA3/JA4 & packet padding
+ax undercover [on|off|boot]     # Kali Undercover Mode: stealth camouflage, anti-shoulder surfing & NetHunter boot
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -715,6 +716,40 @@ $ ax stealth-trace all
     • Unpadded Packet Entropy: 2.948 bits (Vulnerable to website traffic fingerprinting)
     • Padded Packet Burst (RFC 8446 MTU): 0.000 bits (Zero variance / Flat profile)
     ✓ PROTECTED: Side-channel packet size correlation completely neutralized.
+```
+
+### 14. Kali-Grade Stealth Bootloader & Undercover Camouflage (`ax undercover`)
+Integrates the stealth camouflage architecture from Kali Undercover and NetHunter. Reconfigures GRUB bootloader kernel profiles with silent logging (`loglevel=0`, `mitigations=off`, `asterix.stealth=1`), provides Anti-Forensic Cold Boot memory poisoning (`page_poison=1`, `slub_debug=P`, `init_on_free=1`), and enables a discreet non-obvious bootloader and Termux mobile launcher to eliminate visual suspicion in hostile environments.
+
+```text
+$ ax undercover bootloader
+  [PROFILE 1: Windows Boot Manager (UEFI Stealth Camouflage)]
+    • Security Profile: Kali Undercover Boot
+    • Kernel Flags:     boot=live components quiet splash loglevel=0 vt.global_cursor_default=0 udev.log_priority=3 mitigations=off asterix.stealth=1
+    • Tactical Role:    Completely discreet boot; disguises bootloader to pass physical inspection without alerting observers.
+
+  [PROFILE 2: ASTERIX Forensic & Incident Response (Zero Host Writes)]
+    • Security Profile: Kali Forensic Mode
+    • Kernel Flags:     boot=live components quiet splash noeject noswap noautomount findiso=${iso_path}
+    • Tactical Role:    Guarantees zero writes to local drives; disables automounting and swap to preserve forensic integrity.
+
+  [PROFILE 3: ASTERIX Anti-Forensic Cold Boot Memory Shred]
+    • Security Profile: Cold-Boot Attack Defense
+    • Kernel Flags:     boot=live components page_poison=1 slub_debug=P init_on_free=1 init_on_alloc=1 noswap noautomount
+    • Tactical Role:    Shreds and poisons freed memory pages instantly; neutralizes cold-boot cryogenic DRAM attacks.
+
+  [PROFILE 4: Termux Mobile Rootless NetHunter Subsystem]
+    • Security Profile: Mobile NetHunter PRoot
+    • Kernel Flags:     proot --link2symlink -b /dev -b /proc -b /sys --kernel-release=6.6.0-kali-arm64
+    • Tactical Role:    Emulates full Linux 6.6 kernel inside Termux PRoot with masked Android telemetry.
+
+# Enabling Stealth Camouflage (Anti-Shoulder Surfing):
+$ ax undercover on
+  ✓ Stealth Camouflage Enabled:
+    • Terminal Splash Banners:   SUPPRESSED (Silent minimal prompt)
+    • Matrix Rain & Glitch HUD:  DISABLED on startup
+    • Shell Identifier:          Masquerading as standard system shell
+    • Termux Mobile Bootloader:  Auto-routes to silent Debian prompt
 ```
 
 ---

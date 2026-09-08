@@ -379,6 +379,15 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("undercover", "stealth", "camouflage", "kali-undercover") } {
+        $underScript = Join-Path $AsterixRoot "scripts-hub\ax-undercover.py"
+        if ($RealPython -and (Test-Path $underScript)) {
+            & $RealPython $underScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-undercover.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -417,6 +426,7 @@ switch ($Command.ToLower()) {
             Write-Host "    ax call-shield [audit|scan]  VoIP wiretap defense, ultrasonic beacon hunter & mic monitor"
             Write-Host "    ax vision-shield [stego|cloak] Image steganography scanner & adversarial biometric cloaker"
             Write-Host "    ax stealth-trace [fingerprint] Hardware/browser entropy auditor, JA3 sentinel & packet padding"
+            Write-Host "    ax undercover [on|off|boot]  Kali undercover mode & stealth bootloader camouflage"
         }
     }
 }

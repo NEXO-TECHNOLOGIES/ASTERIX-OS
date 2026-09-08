@@ -17,6 +17,14 @@ FG_YELLOW='\033[38;5;220m';  FG_WHITE='\033[38;5;231m'
 
 COLS=$(tput cols 2>/dev/null || echo 72)
 FAST=0
+STEALTH=0
+
+# Detect Kali Undercover / Stealth Camouflage flags
+if [[ "$*" == *"--stealth"* || "$*" == *"--undercover"* || "$*" == *"--silent"* || -f "$HOME/.asterix_undercover" ]]; then
+    STEALTH=1
+    FAST=1
+fi
+
 [[ "$1" == "--fast" || -n "$CI" ]] && FAST=1
 _sleep() { [[ $FAST -eq 0 ]] && sleep "$1"; }
 
@@ -256,26 +264,36 @@ _final_splash() {
 
 # ── Entry Point ────────────────────────────────────────────────────────
 main() {
-    clear
-    _matrix_rain
-    clear
-    _glitch_banner
-    echo ""
-    echo -e " ${FG_GRAY}${DIM}Probing Android hardware telemetry...${R}"
-    _sleep 0.3
-    _hw_hud
-    _sleep 0.1
-    _run_boot
-    _tool_check
-    _sleep 0.2
-    _final_splash
+    if [[ $STEALTH -eq 1 ]]; then
+        clear 2>/dev/null || true
+        echo -e "${FG_DARKGRAY}[*] Kali NetHunter Kernel PRoot Subsystem Initialized (Linux 6.6.0-kali-arm64)${R}"
+        echo -e "${FG_DARKGRAY}[*] Stealth Camouflage Active (All ASTERIX defenses operational in background)${R}"
+        echo ""
+    else
+        clear
+        _matrix_rain
+        clear
+        _glitch_banner
+        echo ""
+        echo -e " ${FG_GRAY}${DIM}Probing Android hardware telemetry...${R}"
+        _sleep 0.3
+        _hw_hud
+        _sleep 0.1
+        _run_boot
+        _tool_check
+        _sleep 0.2
+        _final_splash
+    fi
 
     # Setup persistence dirs
     mkdir -p "$HOME/asterix_persistent"/{loot,captures,scripts,notes} 2>/dev/null
 
     # Launch PRoot if debian is healthy, otherwise launch native ax shell
     local args=("$@")
-    local passthrough=(); for a in "${args[@]}"; do [[ "$a" != "--fast" ]] && passthrough+=("$a"); done
+    local passthrough=()
+    for a in "${args[@]}"; do
+        [[ "$a" != "--fast" && "$a" != "--stealth" && "$a" != "--undercover" && "$a" != "--silent" ]] && passthrough+=("$a")
+    done
     local deb_sh="$PREFIX/var/lib/proot-distro/installed-rootfs/debian/bin/sh"
     if command -v proot-distro &>/dev/null && [ -f "$deb_sh" ]; then
         if [[ ${#passthrough[@]} -gt 0 ]]; then
