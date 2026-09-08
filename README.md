@@ -17,6 +17,7 @@
 
 > [!NOTE]
 > 🎯 **ASTERIX OS v2.0 "Phantom" Restructure**: Strategic architecture upgrade establishing **3 Product Tiers**, elevating the **8 Pure-Rust Security Engines** to center stage, adding formal [Threat Models](docs/THREAT_MODELS/), [Attack Playbooks](docs/ATTACK_PLAYBOOKS/), and [Performance Benchmarks](BENCHMARK_RESULTS.md). See [ASTERIX_OS_RESTRUCTURE_GUIDE.md](ASTERIX_OS_RESTRUCTURE_GUIDE.md) and [VERSION.toml](VERSION.toml).
+> 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across Anti-Ransomware Canaries, Supply Chain Typosquatting, Phishing Homoglyphs, SSRF/Cloud Metadata Theft, and API Hardening.
 > 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
 > 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
@@ -462,6 +463,34 @@ $ ax phish-shield "paypa1.com"
 ### 4. Deterministic Memory Safety & Exploit Healer (`ax -fix`)
 AST-driven code hardening that neutralizes memory safety CVEs in C/C++ source code: replaces banned functions (`gets` $\rightarrow$ `fgets`, `sprintf` $\rightarrow$ `snprintf`), patches scope-bound heap leaks (`malloc` without `free`), closes dangling file descriptors (`fopen` without `fclose`), and zeroes pointers after deallocation (`free(p); p = NULL;`) to neutralize Use-After-Free (UAF) and Double-Free exploit primitives.
 
+```c
+// [BEFORE - 7 Critical Vulnerabilities]:
+int process_data() {
+    char *buffer = malloc(256);
+    char *leaked_buf = malloc(512);
+    char user_input[64];
+    FILE *log_file = fopen("log.txt", "w");
+    gets(user_input);                       // Buffer Overflow CVE
+    sprintf(buffer, "User: %s", user_input); // Unbounded Format String
+    free(buffer);                           // Dangling Pointer (UAF risk)
+    return 0;                               // Memory & File Descriptor Leaks
+}
+
+// [AFTER - Autonomous AST Healing via 'ax -fix']:
+int process_data() {
+    char *buffer = malloc(256);
+    char *leaked_buf = malloc(512);
+    char user_input[64];
+    FILE *log_file = fopen("log.txt", "w");
+    fgets(user_input, sizeof(user_input), stdin);             // BOUNDS-CHECKED
+    snprintf(buffer, sizeof(buffer), "User: %s", user_input);  // HARDENED
+    free(buffer); buffer = NULL;                              // NEUTRALIZED UAF
+    if (leaked_buf != NULL) { free(leaked_buf); leaked_buf = NULL; } // LEAK FIXED
+    if (log_file != NULL) { fclose(log_file); log_file = NULL; }     // FD CLOSED
+    return 0;
+}
+```
+
 ### 5. Autonomous Cloud Subdomain Takeover Sentinel (`ax takeover`)
 Scans DNS CNAME records across 25+ cloud providers (AWS S3/CloudFront, GitHub Pages, Heroku, Azure, Cloudflare, Vercel, Netlify) and matches unclaimed HTTP fingerprints to intercept hijacking of official enterprise subdomains.
 
@@ -476,30 +505,54 @@ $ ax takeover "api.enterprise-domain.com"
 Intercepts Server-Side Request Forgery (SSRF) and prevents exfiltration of AWS/GCP/Azure temporary IAM credentials (`169.254.169.254`), unmasks hex/octal/decimal obfuscated IPs, detects DNS rebinding, and synthesizes drop-in validation wrappers.
 
 ```text
+# Intercepting AWS EC2 / Azure IMDS Metadata Theft:
 $ ax ssrf-guard "http://169.254.169.254/latest/meta-data/"
-  [SSRF & CLOUD METADATA SHIELD] Analyzing Outbound Target: http://169.254.169.254/latest/meta-data/
   🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
-  Identified Threat Violations:
-    • CRITICAL CLOUD METADATA ENDPOINT: '169.254.169.254' (AWS EC2 / Azure / GCP IMDS)
-    • CLOUD METADATA THEFT (IMDSv1/v2): Targets AWS/GCP/Azure credential service
-  [DEFENSIVE REMEDIATION CODE]
-  Synthesized drop-in safe outbound URL egress filter for application backends.
+  • CRITICAL CLOUD METADATA ENDPOINT: '169.254.169.254' (AWS EC2 / Azure / GCP IMDS)
+  • CLOUD METADATA THEFT (IMDSv1/v2): Targets AWS/GCP/Azure credential service
+
+# Unmasking Obfuscated Hexadecimal IP Evasion:
+$ ax ssrf-guard "http://0x7f000001/"
+  🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
+  • LOOPBACK / LOCALHOST FORGERY: Direct host exploitation attempt via Hexadecimal IP (0x7f000001) [127.0.0.1]
+
+# Intercepting GCP Internal Cloud Metadata Hostname:
+$ ax ssrf-guard "http://metadata.google.internal/computeMetadata/v1/"
+  🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
+  • CRITICAL CLOUD METADATA ENDPOINT: 'metadata.google.internal' (Google Cloud Platform Metadata)
 ```
 
 ### 7. API Security Hardener & Exposure Scanner (`ax api-sentinel`)
 Audits endpoints for missing security headers (HSTS, CSP, X-Frame-Options), checks for permissive CORS origin reflection, probes for exposed Swagger/OpenAPI/GraphQL schemas, and automatically outputs hardened Nginx/Caddy configurations.
 
 ```text
-$ ax api-sentinel "https://api.internal-service.com"
-  [API DEFENSE SENTINEL] Auditing API Endpoint: https://api.internal-service.com
+$ ax api-sentinel "https://target-service.internal"
+  [API DEFENSE SENTINEL] Auditing API Endpoint: https://target-service.internal
+
   1. SHADOW API & DOCUMENTATION PROBE:
     ✓ No unauthenticated Swagger, OpenAPI, or actuator routes exposed.
+
   2. CORS CROSS-ORIGIN POLICY AUDIT:
-    ✓ Secure CORS: External attacker origin was not reflected.
+    🚨 CRITICAL VULNERABILITY: Arbitrary Origin Reflection with Credentials!
+    ↳ Access-Control-Allow-Origin: https://evil-attacker.com
+    ↳ Access-Control-Allow-Credentials: true (Permits cross-site session theft!)
+
   3. DEFENSIVE SECURITY HEADERS POSTURE:
-    ✗ Missing: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options
-  [AUTOMATED HARDENING REMEDIATION]
-  Generated drop-in Nginx / Caddy security policy configuration blocks.
+    ✗ Missing: Strict-Transport-Security — Enforces HTTPS, prevents MITM
+    ✗ Missing: Content-Security-Policy — Restricts scripts, prevents XSS
+    ✗ Missing: X-Content-Type-Options — Prevents MIME-sniffing
+    ✗ Missing: X-Frame-Options — Prevents Clickjacking UI redressing
+
+  =========================================================================
+  AUTOMATED NGINX / CADDY HARDENING REMEDIATION CONFIGURATION
+  =========================================================================
+  # Generated drop-in security policy configuration:
+  add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Frame-Options "DENY" always;
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+  add_header Content-Security-Policy "default-src 'self'; frame-ancestors 'none';" always;
+  server_tokens off;
 ```
 
 ---
