@@ -17,7 +17,7 @@
 
 > [!NOTE]
 > 🎯 **ASTERIX OS v2.0 "Phantom" Restructure**: Strategic architecture upgrade establishing **3 Product Tiers**, elevating the **8 Pure-Rust Security Engines** to center stage, adding formal [Threat Models](docs/THREAT_MODELS/), [Attack Playbooks](docs/ATTACK_PLAYBOOKS/), and [Performance Benchmarks](BENCHMARK_RESULTS.md). See [ASTERIX_OS_RESTRUCTURE_GUIDE.md](ASTERIX_OS_RESTRUCTURE_GUIDE.md) and [VERSION.toml](VERSION.toml).
-> 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across Anti-Ransomware Canaries, Supply Chain Typosquatting, Phishing Homoglyphs, SSRF/Cloud Metadata Theft, and API Hardening.
+> 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across 13 enterprise defense suites (Anti-Ransomware, Supply Chain, SSRF, Cloud Takeover, Lossless Media Scrubbing, DoH, WebRTC Leaks, VoIP Wiretap/Ultrasonic, Steganography & AI Biometric Cloaking, and Anti-Fingerprinting).
 > 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
 > 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
@@ -276,6 +276,9 @@ ax api-sentinel <url>            # API Defense Sentinel: audits missing security
 ax scrub <file|folder>           # Media Anonymizer: losslessly strips EXIF, GPS coordinates & camera serials
 ax dns-shield [audit]            # Encrypted DNS (DoH) Enforcer: benchmarks zero-log resolvers & stops ISP snooping
 ax ip-shield [audit]             # IP & WebRTC Leak Sentinel: audits STUN UDP leaks, IPv6 bypasses & public IP risk
+ax call-shield [audit|scan]      # VoIP Wiretap & Acoustic Defense: audits SRTP/SIP & catches ultrasonic beacons
+ax vision-shield [stego|cloak]   # Visual Surveillance Sentinel: LSB steganography scanner & AI biometric face cloaker
+ax stealth-trace [fingerprint]   # Hardware Anti-Fingerprinting: audits Canvas/WebGL entropy, JA3/JA4 & packet padding
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -612,6 +615,106 @@ $ ax ip-shield audit
   =========================================================================
   DIGITAL PRIVACY SCORECARD: 65/100 (Hardening: Block WebRTC STUN queries)
   =========================================================================
+```
+
+### 11. VoIP Wiretap & Ultrasonic Acoustic Beacon Defense (`ax call-shield`)
+Neutralizes inaudible ultrasonic cross-device tracking beacons (18 kHz – 22 kHz) embedded in media, audits SIP signaling and RTP media streams for unencrypted voice transmission (SRTP RFC 3711 vs cleartext RTP), and monitors active microphone hardware locks against Pegasus/FinFisher-style silent audio taps.
+
+```text
+# Ultrasonic Acoustic Surveillance Hunter:
+$ ax call-shield scan /var/asterix/audio/confidential_briefing.wav
+  Auditing audio container: /var/asterix/audio/confidential_briefing.wav
+  • Channels: 1 | Sample Rate: 44100 Hz | Bit Depth: 16-bit PCM
+
+[FREQUENCY SPECTRUM ENERGY SCAN]
+  • 18000 Hz: ✓ Normal background floor (6.89e-14)
+  • 18500 Hz: ✓ Normal background floor (9.17e-14)
+  • 19000 Hz: ✓ Normal background floor (6.48e-14)
+  • 19500 Hz: 🚨 CRITICAL SPIKE detected (Power: 5.24e-02)
+  • 20000 Hz: ✓ Normal background floor (1.19e-12)
+  • 20500 Hz: ✓ Normal background floor (1.36e-14)
+  • 21000 Hz: ✓ Normal background floor (2.27e-12)
+
+[SURVEILLANCE BEACON EVALUATION]
+🚨 THREAT IDENTIFIED: Active Ultrasonic Tracking Beacon Detected!
+  ↳ Emitting frequencies: 19500 Hz
+  ↳ Vector: Cross-device ultrasonic beaconing (e.g. SilverPush / Lisnr / Ad-tracking).
+  ↳ Impact: Unpaired devices sharing this room can correlate identities via microphone!
+  ↳ Mitigation: Apply a 16 kHz low-pass audio filter to neutralize covert tracking.
+
+# VoIP SIP/RTP Eavesdropping Sentinel:
+$ ax call-shield voip sip.telecom.internal
+  [1. VOIP SIGNALING SECURITY (SIP LAYER)]
+    • Protocol:    🚨 VULNERABLE: Cleartext SIP (UDP/TCP Port 5060)
+    • Risk:        ISPs and network taps can extract Caller ID, Dialed Numbers, and Call Duration.
+  [2. AUDIO MEDIA ENCRYPTION (RTP vs SRTP)]
+    • Media Type:  🚨 CRITICAL: Unencrypted RTP/AVP Stream (High Wiretap Risk!)
+  [3. NETWORK LEAKAGE & PRIVATE IP RECONNAISSANCE]
+    • Internal IP: 🚨 LEAKED: Private LAN IPs exposed in SIP/SDP headers (192.168.1.105)
+  =========================================================================
+  VOIP WIRETAP DEFENSE SCORE: 0/100 (Hardening: Enforce SIPS + RFC 3711 SRTP)
+  =========================================================================
+```
+
+### 12. Steganography, Tracking Watermarks & AI Facial Biometric Cloaker (`ax vision-shield`)
+Audits image bitplanes using Chi-Square (χ²) sample pair distribution tests to detect covert LSB payloads, Machine Identification Codes (MIC printer tracking yellow dots), and applies imperceptible adversarial noise perturbations (ε = ±3) to disrupt AI facial recognition feature vectors (FaceNet, InsightFace) while preserving human visual fidelity.
+
+```text
+# Steganographic Payload & Surveillance Watermark Detection:
+$ ax vision-shield stego /var/asterix/vault/suspect_image.bmp
+  Forensic analysis target: /var/asterix/vault/suspect_image.bmp
+  • File Size: 30,054 bytes
+
+[STATISTICAL BITPLANE METRICS]
+  • LSB Bitplane Shannon Entropy:  1.00000 / 1.00000
+  • 0/1 Bit Frequency Balance:     Zeros: 50.12% | Ones: 49.88%
+  • Chi-Square Pair Discrepancy:   χ² = 109.55 (Deg of Freedom: 100)
+
+[SURVEILLANCE WATERMARK & STEGO VERDICT]
+🚨 CRITICAL: High Probability of Hidden Steganographic Payload / Tracking Watermark!
+  ↳ The LSB distribution exhibits maximum artificial randomization (Entropy: 1.00000).
+  ↳ Vector: Covert payload injection, encrypted watermark, or Machine Identification Code.
+  ↳ Remediation: Re-encode or sanitize through ASTERIX Vision Cloaker.
+
+# Adversarial Biometric Facial Cloaking (Anti-Facial Recognition):
+$ ax vision-shield cloak /var/asterix/vault/id_badge.bmp --output /var/asterix/vault/cloaked_badge.bmp
+  • Perturbation:     Targeted adversarial frequency shift (ε = ±3)
+  • Altered Pixels:   15,765
+  • Visual Degradation: 0.00% (Indistinguishable to human eye)
+  • AI Facial Feature Vectors: 🚨 DISRUPTED
+    ↳ Feature map embeddings (FaceNet / InsightFace / ResNet-50) shifted off-manifold.
+    ↳ Mass surveillance crawlers fail to correlate this image with your biometric database identity.
+  ✓ SUCCESS: Biometrically cloaked image saved to: /var/asterix/vault/cloaked_badge.bmp
+```
+
+### 13. Hardware/Browser Anti-Fingerprinting & TLS JA3 Sentinel (`ax stealth-trace`)
+Measures system-level identifying entropy across Canvas 2D subpixel rendering, WebGL hardware strings, AudioContext DAC jitter, and system font subsets that uniquely profile users across IP changes without cookies. Audits TLS ClientHello signatures against DPI JA3/JA4 fingerprint databases and demonstrates RFC 8446 constant-rate packet padding against side-channel traffic analysis.
+
+```text
+$ ax stealth-trace all
+  [FINGERPRINT VECTOR ENTROPY BREAKDOWN]
+    1. Canvas 2D Subpixel Hash:        11.2 bits (GPU rasterization divergence)
+    2. WebGL Hardware Renderer:         9.8 bits (Exact graphics driver & chip)
+    3. AudioContext Oscillator Clock:   7.4 bits (DAC jitter & audio buffer hash)
+    4. System Font Enumeration:        13.5 bits (Local installed font subset)
+    5. Display Geometry & Depth:        4.6 bits (Resolution, scaling & bits)
+    6. Hardware Concurrency:            3.1 bits (CPU core count & memory)
+  =========================================================================
+  TOTAL SYSTEM IDENTIFYING ENTROPY: 49.6 BITS
+  GLOBAL UNIQUENESS RATIO:          1 in 853,272,570,516,940 devices
+  =========================================================================
+  🚨 SURVEILLANCE RISK: Websites calculating these 6 hashes track your machine across all IPs!
+  ✓ ASTERIX Defense: Inject subpixel noise, spoof WebGL to Mesa Offscreen & quantize audio DAC.
+
+  [TLS CLIENT SIGNATURE & DPI PROFILING]
+    • JA3 Fingerprint Hash: 61daa2d6570100343096039f7b3bd763
+    • JA4 Fingerprint ID:   t13i22h2_61daa2d65701
+    ↳ Alert: State DPI and cloud firewalls match this signature against automated client vectors.
+
+  [TRAFFIC CORRELATION & PACKET PADDING DEFENSE]
+    • Unpadded Packet Entropy: 2.948 bits (Vulnerable to website traffic fingerprinting)
+    • Padded Packet Burst (RFC 8446 MTU): 0.000 bits (Zero variance / Flat profile)
+    ✓ PROTECTED: Side-channel packet size correlation completely neutralized.
 ```
 
 ---

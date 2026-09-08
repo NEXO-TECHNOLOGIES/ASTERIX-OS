@@ -3676,6 +3676,45 @@ cmd_ip_shield() {
     fi
 }
 
+cmd_call_shield() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-intel-defense.py"
+    [ -f "$script" ] || script="scripts-hub/ax-intel-defense.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "call-shield" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-intel-defense.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_vision_shield() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-intel-defense.py"
+    [ -f "$script" ] || script="scripts-hub/ax-intel-defense.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "vision-shield" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-intel-defense.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_stealth_trace() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-intel-defense.py"
+    [ -f "$script" ] || script="scripts-hub/ax-intel-defense.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "stealth-trace" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-intel-defense.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5838,6 +5877,9 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax scrub <path>${C_RESET}         Media anonymizer: losslessly strip EXIF, GPS & device tags"
     echo -e "  ${C_CYAN}ax dns-shield [audit]${C_RESET}   Encrypted DNS (DoH) enforcer: benchmark & block ISP logging"
     echo -e "  ${C_CYAN}ax ip-shield [audit]${C_RESET}    IP & WebRTC leak sentinel: detect STUN leaks & IPv6 bypasses"
+    echo -e "  ${C_CYAN}ax call-shield [audit|scan]${C_RESET} VoIP wiretap defense, ultrasonic beacon hunter & mic monitor"
+    echo -e "  ${C_CYAN}ax vision-shield [stego|cloak]${C_RESET} Image steganography scanner & adversarial biometric cloaker"
+    echo -e "  ${C_CYAN}ax stealth-trace [fingerprint]${C_RESET} Hardware/browser entropy auditor, JA3 sentinel & packet padding"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6790,6 +6832,18 @@ case "$SUBCOMMAND" in
     ip-shield|webrtc-leak|privacy-audit)
         shift
         cmd_ip_shield "$@"
+        ;;
+    call-shield|voip-guard|acoustic-scan)
+        shift
+        cmd_call_shield "$@"
+        ;;
+    vision-shield|stego-guard|face-cloak)
+        shift
+        cmd_vision_shield "$@"
+        ;;
+    stealth-trace|anti-fingerprint|ja3-scan)
+        shift
+        cmd_stealth_trace "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

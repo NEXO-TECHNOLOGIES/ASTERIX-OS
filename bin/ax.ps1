@@ -352,6 +352,33 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("call-shield", "voip-guard", "acoustic-scan") } {
+        $intelScript = Join-Path $AsterixRoot "scripts-hub\ax-intel-defense.py"
+        if ($RealPython -and (Test-Path $intelScript)) {
+            & $RealPython $intelScript "call-shield" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-intel-defense.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("vision-shield", "stego-guard", "face-cloak") } {
+        $intelScript = Join-Path $AsterixRoot "scripts-hub\ax-intel-defense.py"
+        if ($RealPython -and (Test-Path $intelScript)) {
+            & $RealPython $intelScript "vision-shield" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-intel-defense.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("stealth-trace", "anti-fingerprint", "ja3-scan") } {
+        $intelScript = Join-Path $AsterixRoot "scripts-hub\ax-intel-defense.py"
+        if ($RealPython -and (Test-Path $intelScript)) {
+            & $RealPython $intelScript "stealth-trace" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-intel-defense.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -387,6 +414,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax scrub <file|folder>       Lossless metadata anonymizer: strip GPS & EXIF from media"
             Write-Host "    ax dns-shield                Encrypted DNS (DoH) auditor: block ISP cleartext snooping"
             Write-Host "    ax ip-shield                 Audit WebRTC STUN leaks, IPv6 bypasses & public IP risk"
+            Write-Host "    ax call-shield [audit|scan]  VoIP wiretap defense, ultrasonic beacon hunter & mic monitor"
+            Write-Host "    ax vision-shield [stego|cloak] Image steganography scanner & adversarial biometric cloaker"
+            Write-Host "    ax stealth-trace [fingerprint] Hardware/browser entropy auditor, JA3 sentinel & packet padding"
         }
     }
 }
