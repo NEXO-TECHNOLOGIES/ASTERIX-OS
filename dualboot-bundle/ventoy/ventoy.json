@@ -1,0 +1,23 @@
+{
+    "persistence": [
+        {
+            "image": "/asterix-os-v2.0-amd64-full.iso",
+            "backend": "/ventoy/persistence_asterix.dat"
+        },
+        {
+            "image": "/asterix-os-v2.0-amd64-stealth.iso",
+            "backend": "/ventoy/persistence_asterix.dat"
+        }
+    ],
+    "control": [
+        {
+            "VTOY_DEFAULT_SEARCH_ROOT": "/ISO"
+        },
+        {
+            "VTOY_MENU_TIMEOUT": "10"
+        }
+    ],
+    "theme": {
+        "file": "/ventoy/theme/asterix/theme.txt"
+    }
+}

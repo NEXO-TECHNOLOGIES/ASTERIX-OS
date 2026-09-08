@@ -4,6 +4,8 @@ target/
 *.img
 *.qcow2
 *.log
+*.dat
+dualboot-bundle/*.dat
 asterix-live-build/
 desktop-env/plymouth/frames/*.png
 
