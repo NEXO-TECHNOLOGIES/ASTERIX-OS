@@ -132,6 +132,26 @@ kismet
 bluez
 wireless-tools
 iw
+wpasupplicant
+wireless-regdb
+crda
+
+# Networking, Wi-Fi Drivers & Hardware Firmwares (Instant Out-of-the-Box Connectivity)
+network-manager
+network-manager-gnome
+iproute2
+net-tools
+ethtool
+resolvconf
+firmware-linux
+firmware-linux-free
+firmware-linux-nonfree
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-misc-nonfree
+firmware-libertas
+firmware-brcm80211
 
 # 7. Forensics, Steganography & File Analysis
 binwalk

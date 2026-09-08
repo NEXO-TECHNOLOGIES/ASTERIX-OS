@@ -57,7 +57,7 @@ lb config \
     --linux-packages "linux-image" \
     --memtest none \
     --system live \
-    --bootappend-live "boot=live components quiet splash persistence findiso=\${iso_path}"
+    --bootappend-live "boot=live components username=asterix user-fullname=\"ASTERIX Cyber Operator\" hostname=asterix quiet splash persistence findiso=\${iso_path}"
 
 echo -e "${YELLOW}[*] Step 4: Injecting ASTERIX Package Manifest...${NC}"
 mkdir -p config/package-lists
@@ -69,6 +69,8 @@ bash zsh tmux screen htop btop curl wget git sudo ca-certificates
 wireshark tshark tcpdump netcat-traditional socat nmap
 python3 python3-pip python3-rich dialog whiptail
 fdisk parted e2fsprogs dosfstools cryptsetup rsync
+network-manager network-manager-gnome wpasupplicant wireless-tools iw
+firmware-linux firmware-linux-free firmware-linux-nonfree firmware-iwlwifi firmware-realtek firmware-atheros
 plymouth plymouth-themes live-boot live-config live-config-systemd
 EOF
 fi
@@ -77,6 +79,49 @@ echo -e "${YELLOW}[*] Step 5: Injecting ASTERIX Custom Hooks, Rust Engine & UI A
 mkdir -p config/includes.chroot/usr/local/bin
 mkdir -p config/includes.chroot/etc/skel/.config
 mkdir -p config/includes.chroot/etc/asterix
+
+# Inject Live User Account & NetworkManager Auto-provisioning Hook
+mkdir -p config/hooks/normal
+cat << 'ACCOUNT_HOOK' > config/hooks/normal/0050-setup-accounts.hook.chroot
+#!/bin/sh
+set -e
+echo ">>> [ASTERIX HOOK] Provisioning default user (asterix:asterix) and network services..."
+
+# 1. Ensure 'asterix' user exists with bash shell
+if ! id -u asterix >/dev/null 2>&1; then
+    useradd -m -s /bin/bash -c "ASTERIX Cyber Operator" asterix || true
+fi
+
+# 2. Hardcode default credentials matching documentation (asterix:asterix, root:asterix)
+echo "asterix:asterix" | chpasswd
+echo "root:asterix" | chpasswd
+
+# 3. Add asterix to essential hardware, network, audio, and capture groups
+usermod -aG sudo,netdev,audio,video,dialout,plugdev,input,wireshark asterix 2>/dev/null || true
+
+# 4. Sudoers configuration for live session
+mkdir -p /etc/sudoers.d
+echo "asterix ALL=(ALL:ALL) ALL" > /etc/sudoers.d/asterix
+chmod 440 /etc/sudoers.d/asterix
+
+# 5. Enable NetworkManager & DHCP for instant Wi-Fi/Ethernet connectivity
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl enable NetworkManager 2>/dev/null || true
+    systemctl enable systemd-resolved 2>/dev/null || true
+fi
+
+# 6. Default DNS Fallback (Cloudflare 1.1.1.1 & Quad9 9.9.9.9)
+if [ ! -f /etc/resolv.conf ] || [ ! -s /etc/resolv.conf ]; then
+    cat << 'DNS_EOF' > /etc/resolv.conf
+nameserver 1.1.1.1
+nameserver 9.9.9.9
+nameserver 8.8.8.8
+DNS_EOF
+fi
+
+echo "[✔] Accounts and networking hooks installed successfully."
+ACCOUNT_HOOK
+chmod +x config/hooks/normal/0050-setup-accounts.hook.chroot
 
 # Compile Rust loader if source exists
 if [ -d "../../ui-core/asterix-loader" ]; then

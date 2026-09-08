@@ -288,6 +288,14 @@ main() {
     # Setup persistence dirs
     mkdir -p "$HOME/asterix_persistent"/{loot,captures,scripts,notes} 2>/dev/null
 
+    # Ensure DNS resolver is valid in PRoot Debian container so internet works out of the box
+    local deb_resolv="$PREFIX/var/lib/proot-distro/installed-rootfs/debian/etc/resolv.conf"
+    if [ -f "$deb_resolv" ]; then
+        if ! grep -q "nameserver" "$deb_resolv" 2>/dev/null; then
+            printf "nameserver 1.1.1.1\nnameserver 8.8.8.8\nnameserver 9.9.9.9\n" > "$deb_resolv" 2>/dev/null || true
+        fi
+    fi
+
     # Launch PRoot if debian is healthy, otherwise launch native ax shell
     local args=("$@")
     local passthrough=()

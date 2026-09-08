@@ -25,3 +25,8 @@ if [ -f "$HUD_CONF" ] && command -v conky >/dev/null 2>&1; then
     killall conky 2>/dev/null || true
     conky -c "$HUD_CONF" -d 2>/dev/null || true
 fi
+
+# 4. Start NetworkManager System Tray Applet (Wi-Fi, Ethernet & VPN Applet)
+if command -v nm-applet >/dev/null 2>&1; then
+    pgrep -x nm-applet >/dev/null || nm-applet --indicator &
+fi
