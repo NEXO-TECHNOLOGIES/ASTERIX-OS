@@ -3728,6 +3728,19 @@ cmd_undercover() {
     fi
 }
 
+cmd_boot_tool() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-boot-tool.py"
+    [ -f "$script" ] || script="scripts-hub/ax-boot-tool.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-boot-tool.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5894,6 +5907,7 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax vision-shield [stego|cloak]${C_RESET} Image steganography scanner & adversarial biometric cloaker"
     echo -e "  ${C_CYAN}ax stealth-trace [fingerprint]${C_RESET} Hardware/browser entropy auditor, JA3 sentinel & packet padding"
     echo -e "  ${C_CYAN}ax undercover [on|off|boot]${C_RESET} Kali undercover mode & stealth bootloader camouflage"
+    echo -e "  ${C_CYAN}ax boot-tool [guide|rufus]${C_RESET}  Live USB creator, Rufus/Ventoy profiles & drive scanner"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6862,6 +6876,10 @@ case "$SUBCOMMAND" in
     undercover|stealth|camouflage|kali-undercover)
         shift
         cmd_undercover "$@"
+        ;;
+    boot-tool|live-boot|usb-boot|rufus-prep|downloads|iso)
+        shift
+        cmd_boot_tool "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

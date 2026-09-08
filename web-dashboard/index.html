@@ -23,6 +23,7 @@
         </div>
         <nav class="header-nav">
             <a href="#telemetry" class="nav-link active">Telemetry</a>
+            <a href="#downloads" class="nav-link">Downloads &amp; Rufus</a>
             <a href="#gallery" class="nav-link">ISO Wallpapers</a>
             <a href="#subsystems" class="nav-link">12 Subsystems</a>
             <a href="#discord" class="nav-link">Discord Bridge</a>
@@ -204,6 +205,73 @@ as-discord backup</code></pre>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- Downloads & Live Boot Section -->
+        <section id="downloads" class="panel downloads-panel">
+            <h2 class="panel-title">OFFICIAL ASTERIX OS DOWNLOADS &amp; LIVE BOOT</h2>
+            <p class="panel-subtitle">Download ISO images, P2P Torrents, and configure Rufus Live Persistence</p>
+            
+            <div class="downloads-table-wrapper" style="overflow-x: auto; margin-top: 15px;">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Image Edition</th>
+                            <th>Version</th>
+                            <th>Arch</th>
+                            <th>Download / Torrent</th>
+                            <th>Size</th>
+                            <th>SHA-256 Checksum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ASTERIX OS Full Cyber Suite ISO</strong></td>
+                            <td>v2.0.0</td>
+                            <td><code>x86_64</code></td>
+                            <td><a href="../releases/asterix-os-v2.0-amd64-full.iso.torrent" style="color:#00ffea; margin-right:8px;">Torrent</a> <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#ff00ea;">Direct</a></td>
+                            <td><span class="badge" style="background:#ffaa00; color:#000;">4.2 GB</span></td>
+                            <td><code>e3b0c442...</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ASTERIX OS Stealth &amp; Undercover ISO</strong></td>
+                            <td>v2.0.0</td>
+                            <td><code>x86_64</code></td>
+                            <td><a href="../releases/asterix-os-v2.0-amd64-stealth.iso.torrent" style="color:#00ffea; margin-right:8px;">Torrent</a> <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#ff00ea;">Direct</a></td>
+                            <td><span class="badge" style="background:#ffaa00; color:#000;">1.8 GB</span></td>
+                            <td><code>a7b3c298...</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ASTERIX OS Minimal Netinstall ISO</strong></td>
+                            <td>v2.0.0</td>
+                            <td><code>x86_64</code></td>
+                            <td><a href="../releases/asterix-os-v2.0-amd64-netinstall.iso.torrent" style="color:#00ffea; margin-right:8px;">Torrent</a> <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#ff00ea;">Direct</a></td>
+                            <td><span class="badge" style="background:#ffaa00; color:#000;">650 MB</span></td>
+                            <td><code>f5c2d119...</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ASTERIX OS ARM64 Mobile PRoot</strong></td>
+                            <td>v2.0.0</td>
+                            <td><code>aarch64</code></td>
+                            <td><a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#00ffea;">Termux Script</a></td>
+                            <td><span class="badge" style="background:#ffaa00; color:#000;">380 MB</span></td>
+                            <td><code>9c21b442...</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="rufus-card" style="margin-top: 25px; padding: 20px; background: rgba(0, 255, 234, 0.05); border: 1px solid rgba(0, 255, 234, 0.3); border-radius: 6px;">
+                <h3 style="color: #00ffea; margin-bottom: 10px;">⚡ How to Flash with Rufus (Windows with Persistence):</h3>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #ccc;">
+                    <li>Download and open <strong>Rufus</strong> (<a href="https://rufus.ie" target="_blank" style="color:#00ffea;">rufus.ie</a>).</li>
+                    <li>Select your USB Flash Drive (8 GB or larger).</li>
+                    <li>Select the ASTERIX ISO and set the <strong>Persistent partition size</strong> slider (4 GB - 16 GB).</li>
+                    <li>Ensure Partition Scheme is <strong>MBR</strong> and Target is <strong>BIOS or UEFI</strong>.</li>
+                    <li>Click <strong>START</strong> and choose <em>"Write in ISO Image mode (Recommended)"</em>.</li>
+                </ol>
+                <p style="margin-top: 10px; color: #ff3366;"><strong>⚠ Note:</strong> Do NOT use UNetBootin; it modifies and breaks the master bootloader.</p>
             </div>
         </section>
     </main>

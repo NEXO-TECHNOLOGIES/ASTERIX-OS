@@ -19,6 +19,7 @@
 > 🎯 **ASTERIX OS v2.0 "Phantom" Restructure**: Strategic architecture upgrade establishing **3 Product Tiers**, elevating the **8 Pure-Rust Security Engines** to center stage, adding formal [Threat Models](docs/THREAT_MODELS/), [Attack Playbooks](docs/ATTACK_PLAYBOOKS/), and [Performance Benchmarks](BENCHMARK_RESULTS.md). See [ASTERIX_OS_RESTRUCTURE_GUIDE.md](ASTERIX_OS_RESTRUCTURE_GUIDE.md) and [VERSION.toml](VERSION.toml).
 > 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across 13 enterprise defense suites (Anti-Ransomware, Supply Chain, SSRF, Cloud Takeover, Lossless Media Scrubbing, DoH, WebRTC Leaks, VoIP Wiretap/Ultrasonic, Steganography & AI Biometric Cloaking, and Anti-Fingerprinting).
 > 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
+> 📥 **Official Downloads & Rufus Setup**: See [DOWNLOADS.md](DOWNLOADS.md) for ISO releases (Full Cyber Suite, Stealth Undercover, Netinstall), P2P Torrents, SHA-256 checksums, and Rufus persistent USB setup guide.
 > 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
 ---
@@ -280,6 +281,8 @@ ax call-shield [audit|scan]      # VoIP Wiretap & Acoustic Defense: audits SRTP/
 ax vision-shield [stego|cloak]   # Visual Surveillance Sentinel: LSB steganography scanner & AI biometric face cloaker
 ax stealth-trace [fingerprint]   # Hardware Anti-Fingerprinting: audits Canvas/WebGL entropy, JA3/JA4 & packet padding
 ax undercover [on|off|boot]     # Kali Undercover Mode: stealth camouflage, anti-shoulder surfing & NetHunter boot
+ax boot-tool [guide|rufus|list]  # Live USB Creator: Rufus/Ventoy profiles, USB drive scanner & ISO auditor
+ax downloads [iso]               # Official Releases: download matrix, P2P torrents, SHA-256 sums & Rufus guide
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -750,6 +753,33 @@ $ ax undercover on
     • Matrix Rain & Glitch HUD:  DISABLED on startup
     • Shell Identifier:          Masquerading as standard system shell
     • Termux Mobile Bootloader:  Auto-routes to silent Debian prompt
+```
+
+### 15. Live Boot Provisioning, Rufus Setup & Release Catalog (`ax boot-tool` / `ax downloads`)
+Automates the creation of persistent Live USBs via Rufus and Ventoy. Audits ISO hybrid partition tables, warns against bootloader-damaging tools (UNetBootin), and provides instant terminal access to official P2P torrents, SHA-256 verification, and Rufus automation profiles.
+
+```text
+$ ax downloads
+
+=========================================================================
+  ASTERIX OS :: OFFICIAL ASTERIX OS RELEASES & LIVE BOOT DOWNLOADS
+  v2.0.0 'Phantom' ISO Images & Rufus Live Boot Provisioning
+=========================================================================
+
+Image Name                                 | Version    | Arch     | Size     | Type
+-------------------------------------------+------------+----------+----------+-------------------
+ASTERIX OS Full Cyber Suite ISO            | 2026.09.07 | x86_64   | 4.2 GB   | Hybrid Live+Persist
+ASTERIX OS Stealth & Undercover ISO        | 2026.09.07 | x86_64   | 1.8 GB   | Camouflage/Forensic
+ASTERIX OS Minimal Netinstall ISO          | 2026.09.07 | x86_64   | 650 MB   | Network Installer
+ASTERIX OS ARM64 Mobile PRoot              | 2026.09.07 | aarch64  | 380 MB   | Termux Mobile NetHunter
+
+[DEFAULT CREDENTIALS]
+  • Live User: asterix:asterix | Root: root:asterix (or sudo -i)
+
+# Generating Rufus 1-Click Automation Profile:
+$ ax boot-tool rufus
+  ✓ Created Rufus configuration file: rufus.ini
+  ↳ Pre-configures MBR/UEFI dual target, 4GB-16GB Ext4 persistence slider, and volume label.
 ```
 
 ---

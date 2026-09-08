@@ -388,6 +388,15 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("boot-tool", "live-boot", "usb-boot", "rufus-prep", "downloads", "iso") } {
+        $bootScript = Join-Path $AsterixRoot "scripts-hub\ax-boot-tool.py"
+        if ($RealPython -and (Test-Path $bootScript)) {
+            & $RealPython $bootScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-boot-tool.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -427,6 +436,7 @@ switch ($Command.ToLower()) {
             Write-Host "    ax vision-shield [stego|cloak] Image steganography scanner & adversarial biometric cloaker"
             Write-Host "    ax stealth-trace [fingerprint] Hardware/browser entropy auditor, JA3 sentinel & packet padding"
             Write-Host "    ax undercover [on|off|boot]  Kali undercover mode & stealth bootloader camouflage"
+            Write-Host "    ax boot-tool [guide|rufus|list] Live USB creator, Rufus/Ventoy profiles & drive scanner"
         }
     }
 }

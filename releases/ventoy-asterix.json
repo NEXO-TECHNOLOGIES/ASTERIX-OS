@@ -1,0 +1,20 @@
+{
+    "control": [
+        {
+            "VTOY_DEFAULT_SEARCH_ROOT": "/ISOs"
+        }
+    ],
+    "persistence": [
+        {
+            "image": "/asterix-os-v2.0-amd64-full.iso",
+            "backend": "/ventoy/persistence_asterix.dat"
+        },
+        {
+            "image": "/asterix-os-v2.0-amd64-stealth.iso",
+            "backend": "/ventoy/persistence_asterix.dat"
+        }
+    ],
+    "theme": {
+        "file": "/ventoy/theme/asterix/theme.txt"
+    }
+}
