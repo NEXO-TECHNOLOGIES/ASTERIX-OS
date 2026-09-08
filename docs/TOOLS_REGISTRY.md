@@ -1,6 +1,6 @@
 # 🛠️ ASTERIX OS Master Cybersecurity Arsenal & Tool Registry
 
-> **Offline Registry of 180+ Industry-Standard Kali, Red Team, Exploit, and Forensic Tools**  
+> **Offline Registry of 180+ Industry-Standard Cybersecurity, Red Team, Exploit, and Forensic Tools**  
 > **Repository Disk Bloat**: `0.0 MB` (Metadata indexed offline; zero-bloat architecture)  
 > **Persistent Storage**: Installs on-demand directly into the Live USB Ext4 persistence partition (`/persistence`).
 

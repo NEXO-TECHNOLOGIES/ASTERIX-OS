@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-ASTERIX OS - Kali-Grade Stealth & Undercover Bootloader Subsystem
+ASTERIX OS - Tactical Stealth & Undercover Camouflage Subsystem
 Author: NEXO TECHNOLOGIES GROUP
 Zero-dependency Python 3 standard library implementation.
 
 Features:
-  - Stealth Camouflage (Kali Undercover mode: hides cyber banners and disguises shell)
-  - Kali-Grade Kernel Boot Profiles (Forensic, Stealth Egress, Cold-Boot RAM Shred)
-  - NetHunter Kernel Emulation for Termux (masked /proc/version & silent rootless boot)
+  - Stealth Camouflage (ASTERIX Undercover mode: hides cyber banners and disguises shell)
+  - Hardened Kernel Boot Profiles (Forensic, Stealth Egress, Cold-Boot RAM Shred)
+  - Mobile Kernel Emulation for Termux (masked /proc/version & silent rootless boot)
 """
 
 import os
@@ -39,7 +39,7 @@ def get_undercover_flag_path() -> Path:
 
 
 class UndercoverEngine:
-    """Manages stealth camouflage and Kali-grade bootloader modes."""
+    """Manages stealth camouflage and hardened tactical bootloader modes."""
 
     @classmethod
     def get_status(cls) -> bool:
@@ -50,7 +50,7 @@ class UndercoverEngine:
         flag = get_undercover_flag_path()
         flag.touch()
         print(f"\n{BOLD}{CYAN}========================================================================={RESET}")
-        print(f"{BOLD}{CYAN}  ASTERIX OS :: KALI UNDERCOVER & STEALTH CAMOUFLAGE ACTIVE{RESET}")
+        print(f"{BOLD}{CYAN}  ASTERIX OS :: STEALTH UNDERCOVER & CAMOUFLAGE ACTIVE{RESET}")
         print(f"{DIM}  Discreet Operational Mode (Minimal Visibility / Anti-Shoulder Surfing){RESET}")
         print(f"{BOLD}{CYAN}========================================================================={RESET}\n")
         print(f"{GREEN}✓ Stealth Camouflage Enabled:{RESET}")
@@ -78,22 +78,22 @@ class UndercoverEngine:
     @classmethod
     def audit_bootloader(cls):
         print(f"\n{BOLD}{CYAN}========================================================================={RESET}")
-        print(f"{BOLD}{CYAN}  ASTERIX OS :: KALI-GRADE KERNEL BOOTLOADER PROFILES{RESET}")
-        print(f"{DIM}  Hybrid UEFI/BIOS & Termux NetHunter Bootloader Matrix{RESET}")
+        print(f"{BOLD}{CYAN}  ASTERIX OS :: HARDENED KERNEL BOOTLOADER PROFILES{RESET}")
+        print(f"{DIM}  Hybrid UEFI/BIOS & Termux Mobile Security Bootloader Matrix{RESET}")
         print(f"{BOLD}{CYAN}========================================================================={RESET}\n")
 
         profiles = [
             {
                 "id": "STEALTH_UNDERCOVER",
                 "label": "Windows Boot Manager (UEFI Stealth Loader)",
-                "alias": "Kali Undercover Boot",
+                "alias": "Stealth Undercover Boot",
                 "params": "boot=live components quiet splash loglevel=0 vt.global_cursor_default=0 udev.log_priority=3 mitigations=off asterix.stealth=1",
                 "purpose": "Completely discreet boot; disguises bootloader to pass physical inspection without alerting observers."
             },
             {
                 "id": "FORENSIC_ZERO_TRACE",
                 "label": "ASTERIX Forensic & Incident Response (Zero Host Writes)",
-                "alias": "Kali Forensic Mode",
+                "alias": "Forensic Zero-Trace Mode",
                 "params": "boot=live components quiet splash noeject noswap noautomount findiso=${iso_path}",
                 "purpose": "Guarantees zero writes to local drives; disables automounting and swap to preserve forensic integrity."
             },
@@ -112,10 +112,10 @@ class UndercoverEngine:
                 "purpose": "Military-grade AES-XTS full persistence encryption with hidden volume and decoy support."
             },
             {
-                "id": "TERMUX_NETHUNTER_PROOT",
-                "label": "Termux Mobile Rootless NetHunter Subsystem",
-                "alias": "Mobile NetHunter PRoot",
-                "params": "proot --link2symlink -b /dev -b /proc -b /sys --kernel-release=6.6.0-kali-arm64",
+                "id": "TERMUX_MOBILE_PROOT",
+                "label": "Termux Mobile Rootless Cybernetic Subsystem",
+                "alias": "Mobile Security PRoot",
+                "params": "proot --link2symlink -b /dev -b /proc -b /sys --kernel-release=6.6.0-asterix-arm64",
                 "purpose": "Emulates full Linux 6.6 kernel inside Termux PRoot with masked Android telemetry."
             }
         ]
@@ -133,7 +133,7 @@ class UndercoverEngine:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="ASTERIX OS - Kali Stealth & Bootloader Subsystem",
+        description="ASTERIX OS - Tactical Stealth & Bootloader Subsystem",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("action", nargs="?", default="status",

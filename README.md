@@ -20,7 +20,7 @@
 > 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across 13 enterprise defense suites (Anti-Ransomware, Supply Chain, SSRF, Cloud Takeover, Lossless Media Scrubbing, DoH, WebRTC Leaks, VoIP Wiretap/Ultrasonic, Steganography & AI Biometric Cloaking, and Anti-Fingerprinting).
 > 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
 > 📥 **Official Downloads & Rufus Setup**: See [DOWNLOADS.md](DOWNLOADS.md) for ISO releases (Full Cyber Suite, Stealth Undercover, Netinstall), P2P Torrents, SHA-256 checksums, and Rufus persistent USB setup guide.
-> 🛠️ **180+ Kali & Pentest Arsenal Registry**: See [TOOLS_REGISTRY.md](docs/TOOLS_REGISTRY.md) for offline metadata, categories, official GitHub links, and on-demand installation recipes onto persistent storage.
+> 🛠️ **180+ Cybersecurity & Pentest Arsenal Registry**: See [TOOLS_REGISTRY.md](docs/TOOLS_REGISTRY.md) for offline metadata, categories, official GitHub links, and on-demand installation recipes onto persistent storage.
 > 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
 ---
@@ -30,9 +30,9 @@
 | Edition | Image File Size | Min. USB Flash Drive | Rec. USB Drive | RAM Requirements | Architecture | Included Subsystems & Capabilities |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **ASTERIX OS Full Cyber Suite ISO** | **4.2 GB** | **8 GB** | **16 GB – 32 GB** | 4 GB+ (2 GB min) | `x86_64` (AMD64) | Full 12-subsystem cyber arsenal, 8 Rust engines, Metasploit, Wireshark, Plymouth UI, Rufus Live Persistence |
-| **ASTERIX OS Stealth & Undercover ISO** | **1.8 GB** | **4 GB** | **8 GB – 16 GB** | 2 GB+ (1 GB min) | `x86_64` (AMD64) | Kali Undercover camouflage, forensic cold-boot RAM wiper, 8 Rust engines, fast covert boot |
+| **ASTERIX OS Stealth & Undercover ISO** | **1.8 GB** | **4 GB** | **8 GB – 16 GB** | 2 GB+ (1 GB min) | `x86_64` (AMD64) | Tactical Undercover camouflage, forensic cold-boot RAM wiper, 8 Rust engines, fast covert boot |
 | **ASTERIX OS Minimal Netinstall ISO** | **650 MB** | **2 GB** | **4 GB+** | 1 GB+ (512 MB min) | `x86_64` (AMD64) | Minimal headless core, Debian netinstall base, on-demand network package builder |
-| **ASTERIX OS ARM64 Mobile PRoot** | **380 MB** | N/A | **MicroSD / Internal** | 1.5 GB+ | `aarch64` (ARM64) | Android Termux PRoot container, NetHunter mobile pentesting shell, persistent `/sdcard` storage bridge |
+| **ASTERIX OS ARM64 Mobile PRoot** | **380 MB** | N/A | **MicroSD / Internal** | 1.5 GB+ | `aarch64` (ARM64) | Android Termux PRoot container, mobile cybernetic pentesting shell, persistent `/sdcard` storage bridge |
 
 ### ⚡ Rufus USB Drive & Persistence Capacity Calculator:
 * **8 GB USB Drive**: Fits the **Stealth Undercover ISO** (1.8 GB) + **5 GB** Ext4 persistence partition.
@@ -84,7 +84,7 @@ TIER 3: INTEGRATED SECURITY SUITES
   - High-tech dynamic prompt for Bash & Zsh with Git branch, root badge, execution timer, and IP badge.
   - **FZF Fuzzy Search Suite:** <kbd>Ctrl+R</kbd> (history), <kbd>Ctrl+T</kbd> (files), <kbd>Alt+C</kbd> (directory jumping).
   - Fast domain shortcuts (`ax-*` & `asterix-*`): `ax-recon`, `ax-web`, `ax-sniff`, `ax-crack`, `ax-wifi`, `ax-rev`, `ax-forensic`, `ax-dev`, `ax-quad`, `ax-cipher`, `ax-crypto`, `ax-sysmon`, `ax-guard`, `ax-bininspect`.
-* 🦈 **BlackArch & Kali Grade Master Security Toolchain:**
+* 🛡️ **Enterprise Sovereign Master Security Toolchain:**
   - **Recon & OSINT:** Nmap, Masscan, Amass, TheHarvester, DnsRecon, Whois, Netdiscover.
   - **Web Application Auditing:** SQLMap, Gobuster, Nikto, FFUF, WPScan, Commix, WhatWeb, Wafw00f.
   - **Exploitation & Payloads:** Metasploit Framework (`msfconsole`), SearchSploit, Socat, Netcat.
@@ -259,18 +259,19 @@ ax bitlocker [status|audit]       # LUKS2 AES-256-XTS volume & swap encryption (
 ax cred-guard [audit|lockdown]    # Process memory anti-dumping & credential shield (Credential Guard)
 ax exploit-guard [audit|asr]      # Hardware DEP/NX & Attack Surface Reduction (Exploit Guard / ASR)
 
-# Kali Linux Live Tactical Features & Anti-Forensics
-ax undercover                   # Kali Undercover mode: Disguise shell as Windows PowerShell
+# Tactical Stealth, Anti-Forensics & Hardening Subsystems
+ax undercover                   # Tactical Undercover mode: Disguise shell as Windows PowerShell
 ax nuke [dry-run|shred]         # Cryptographic emergency nuke: Multi-pass DOD wipe of keys, vaults & logs
-ax tweaks                       # Kali Tweaks: MAC address randomization, IPv6 privacy, DNS resolver
-ax forensic-mode [audit|engage] # Kali Forensic Mode: Hardware write-blocker, no-swap, no automount
+ax tweaks                       # Tactical Tweaks: MAC address randomization, IPv6 privacy, DNS resolver
+ax forensic-mode [audit|engage] # Forensic Zero-Trace: Hardware write-blocker, no-swap, no automount
 ax rf-audit                     # Full wireless RF spectrum audit: Wi-Fi, Bluetooth, NFC, SDR hardware
-ax hashdeep [baseline|audit]    # Kali Hashdeep: Recursive cryptographic binary integrity & tampering auditor
-ax yara-scan [dir]              # Kali YARA heuristics: Webshell, reverse shell & memory shellcode scanner
-ax mac-guard                    # Kali AppArmor & SELinux: Mandatory Access Control & process confinement audit
-ax timeline [dir] [mins]        # Kali Sleuthkit: Digital forensics MACB timeline & timestomp anomaly detector
+ax cam-hunter [hotel|scan|rf]   # Hotel Privacy Counter-Surveillance: Hidden camera, IoT video & IR lens detector
+ax hashdeep [baseline|audit]    # Cryptographic Hashdeep: Recursive binary integrity & tampering auditor
+ax yara-scan [dir]              # YARA Heuristic Scanner: Webshell, reverse shell & memory shellcode scanner
+ax mac-guard                    # Kernel MAC & AppArmor: Mandatory Access Control & process confinement audit
+ax timeline [dir] [mins]        # Forensic Timeline Engine: MACB activity reconstruction & timestomp anomaly detector
 ax trash [list|restore|empty]   # Secure recycle bin: Preserves deleted files and media with recovery manifest
-ax carve <target> [out_dir]     # Kali Forensics file carver: Recovers deleted photos, videos, PDFs & ZIPs
+ax carve <target> [out_dir]     # Signature File Carver: Recovers deleted photos, videos, PDFs & ZIPs
 
 # ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
 ax ai [audit]                    # Autonomous rule evaluation across live kernel, sysfs, and host state
@@ -299,10 +300,10 @@ ax ip-shield [audit]             # IP & WebRTC Leak Sentinel: audits STUN UDP le
 ax call-shield [audit|scan]      # VoIP Wiretap & Acoustic Defense: audits SRTP/SIP & catches ultrasonic beacons
 ax vision-shield [stego|cloak]   # Visual Surveillance Sentinel: LSB steganography scanner & AI biometric face cloaker
 ax stealth-trace [fingerprint]   # Hardware Anti-Fingerprinting: audits Canvas/WebGL entropy, JA3/JA4 & packet padding
-ax undercover [on|off|boot]     # Kali Undercover Mode: stealth camouflage, anti-shoulder surfing & NetHunter boot
+ax undercover [on|off|boot]     # Tactical Undercover Mode: stealth camouflage, anti-shoulder surfing & covert boot
 ax boot-tool [guide|rufus|list]  # Live USB Creator: Rufus/Ventoy profiles, USB drive scanner & ISO auditor
 ax downloads [iso]               # Official Releases: download matrix, P2P torrents, SHA-256 sums & Rufus guide
-ax arsenal [search|info|list]    # 180+ Kali & Red Team Arsenal: offline metadata, GitHub links & on-demand recipes
+ax arsenal [search|info|list]    # 180+ Cyber & Red Team Arsenal: offline metadata, GitHub links & on-demand recipes
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -741,18 +742,18 @@ $ ax stealth-trace all
     ✓ PROTECTED: Side-channel packet size correlation completely neutralized.
 ```
 
-### 14. Kali-Grade Stealth Bootloader & Undercover Camouflage (`ax undercover`)
-Integrates the stealth camouflage architecture from Kali Undercover and NetHunter. Reconfigures GRUB bootloader kernel profiles with silent logging (`loglevel=0`, `mitigations=off`, `asterix.stealth=1`), provides Anti-Forensic Cold Boot memory poisoning (`page_poison=1`, `slub_debug=P`, `init_on_free=1`), and enables a discreet non-obvious bootloader and Termux mobile launcher to eliminate visual suspicion in hostile environments.
+### 14. Tactical Stealth Bootloader & Undercover Camouflage (`ax undercover`)
+Integrates native stealth camouflage architecture and mobile covert runtime. Reconfigures GRUB bootloader kernel profiles with silent logging (`loglevel=0`, `mitigations=off`, `asterix.stealth=1`), provides Anti-Forensic Cold Boot memory poisoning (`page_poison=1`, `slub_debug=P`, `init_on_free=1`), and enables a discreet non-obvious bootloader and Termux mobile launcher to eliminate visual suspicion in hostile environments.
 
 ```text
 $ ax undercover bootloader
   [PROFILE 1: Windows Boot Manager (UEFI Stealth Camouflage)]
-    • Security Profile: Kali Undercover Boot
+    • Security Profile: Stealth Undercover Boot
     • Kernel Flags:     boot=live components quiet splash loglevel=0 vt.global_cursor_default=0 udev.log_priority=3 mitigations=off asterix.stealth=1
     • Tactical Role:    Completely discreet boot; disguises bootloader to pass physical inspection without alerting observers.
 
   [PROFILE 2: ASTERIX Forensic & Incident Response (Zero Host Writes)]
-    • Security Profile: Kali Forensic Mode
+    • Security Profile: Forensic Zero-Trace Mode
     • Kernel Flags:     boot=live components quiet splash noeject noswap noautomount findiso=${iso_path}
     • Tactical Role:    Guarantees zero writes to local drives; disables automounting and swap to preserve forensic integrity.
 
@@ -761,9 +762,9 @@ $ ax undercover bootloader
     • Kernel Flags:     boot=live components page_poison=1 slub_debug=P init_on_free=1 init_on_alloc=1 noswap noautomount
     • Tactical Role:    Shreds and poisons freed memory pages instantly; neutralizes cold-boot cryogenic DRAM attacks.
 
-  [PROFILE 4: Termux Mobile Rootless NetHunter Subsystem]
-    • Security Profile: Mobile NetHunter PRoot
-    • Kernel Flags:     proot --link2symlink -b /dev -b /proc -b /sys --kernel-release=6.6.0-kali-arm64
+  [PROFILE 4: Termux Mobile Rootless Subsystem]
+    • Security Profile: Mobile Security PRoot
+    • Kernel Flags:     proot --link2symlink -b /dev -b /proc -b /sys --kernel-release=6.6.0-asterix-arm64
     • Tactical Role:    Emulates full Linux 6.6 kernel inside Termux PRoot with masked Android telemetry.
 
 # Enabling Stealth Camouflage (Anti-Shoulder Surfing):

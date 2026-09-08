@@ -9,7 +9,7 @@ Features:
   - ISO Hybrid Header & UEFI Boot Readiness Auditor
   - Rufus Automated Profile Generator (rufus.ini with Ext4 persistence)
   - Ventoy Persistence Plugin Provisioner (ventoy.json + persistence.dat)
-  - Kali-style Live Persistence & Dual-Boot Architect Guide
+  - ASTERIX Live Persistence & Dual-Boot Architect Guide
 """
 
 import os
@@ -137,7 +137,7 @@ class LiveBootTool:
         except Exception as e:
             print(f"{RED}✗ Error writing {out_file}: {e}{RESET}")
 
-        print(f"\n{BOLD}[HOW TO FLASH ASTERIX OS USING RUFUS (KALI-STYLE)]{RESET}")
+        print(f"\n{BOLD}[HOW TO FLASH ASTERIX OS USING RUFUS (PERSISTENT LIVE USB)]{RESET}")
         print(f"  1. Download and launch {BOLD}Rufus{RESET} (https://rufus.ie).")
         print(f"  2. Select your USB Flash Drive (8 GB or larger).")
         print(f"  3. Click {BOLD}'SELECT'{RESET} and choose the {CYAN}asterix-os-v1.0-amd64.iso{RESET}.")
@@ -244,13 +244,13 @@ class LiveBootTool:
         print(f"{BOLD}{'Tool':<12} | {'OS':<10} | {'Persistence':<12} | {'Stealth Mode':<12} | {'Recommendation'}{RESET}")
         print(f"{DIM}{'-'*12}-+-{'-'*10}-+-{'-'*12}-+-{'-'*12}-+-{'-'*25}{RESET}")
         print(f"{BOLD}{CYAN}{'Rufus':<12}{RESET} | {'Windows':<10} | {GREEN}{'Native Ext4':<12}{RESET} | {GREEN}{'Full Support':<12}{RESET} | {BOLD}Best for single dedicated USB with Persistence{RESET}")
-        print(f"{BOLD}{GREEN}{'Ventoy':<12}{RESET} | {'Win/Linux':<10} | {GREEN}{'Plugin .dat':<12}{RESET} | {GREEN}{'Full Support':<12}{RESET} | {BOLD}Best for Multi-Boot (ASTERIX + Kali + Win11){RESET}")
+        print(f"{BOLD}{GREEN}{'Ventoy':<12}{RESET} | {'Win/Linux':<10} | {GREEN}{'Plugin .dat':<12}{RESET} | {GREEN}{'Full Support':<12}{RESET} | {BOLD}Best for Multi-Boot (ASTERIX + Secondary OS + Win11){RESET}")
         print(f"{BOLD}{YELLOW}{'Etcher':<12}{RESET} | {'Win/Mac/Lin':<10}| {RED}{'Read-Only':<12}{RESET}   | {YELLOW}{'Standard':<12}{RESET}     | Good for quick RAM-only testing (No persistence)")
         print(f"{BOLD}{'Linux dd':<12}{RESET} | {'Linux/Mac':<10}| {CYAN}{'Manual Ext4':<12}{RESET} | {GREEN}{'Full Support':<12}{RESET} | Advanced power-user CLI method")
 
         print(f"\n{BOLD}[ASTERIX TEAM RECOMMENDATION]{RESET}")
         print(f"  1. {BOLD}On Windows:{RESET} Use {CYAN}Rufus{RESET}. It automatically detects the ASTERIX hybrid ISO and gives you a slider to create the {YELLOW}'persistence'{RESET} partition without needing any Linux partitioning commands.")
-        print(f"  2. {BOLD}For Multi-distro Power Users:{RESET} Use {GREEN}Ventoy{RESET}. You can boot ASTERIX OS alongside Kali Linux, Parrot Security, and Windows from one drive.")
+        print(f"  2. {BOLD}For Multi-Boot Power Users:{RESET} Use {GREEN}Ventoy{RESET}. You can boot ASTERIX OS alongside any secondary operating system and Windows from one drive.")
         print(f"  3. Run {BOLD}ax boot-tool rufus{RESET} to generate pre-configured Rufus settings instantly.\n")
 
 
@@ -340,7 +340,7 @@ class LiveBootTool:
 
     @classmethod
     def show_downloads(cls):
-        """Renders the official BlackArch/Kali-style downloads table and Rufus setup in terminal."""
+        """Renders the official sovereign downloads table and Rufus setup in terminal."""
         banner("OFFICIAL ASTERIX OS RELEASES & LIVE BOOT DOWNLOADS", "v2.0.0 'Phantom' ISO Images & Rufus Live Boot Provisioning")
 
         print(f"{BOLD}{'Image Name':<42} | {'Version':<10} | {'Arch':<8} | {'Size':<8} | {'Type'}{RESET}")
@@ -348,7 +348,7 @@ class LiveBootTool:
         print(f"{BOLD}{CYAN}{'ASTERIX OS Full Cyber Suite ISO':<42}{RESET} | 2026.09.07 | x86_64   | {YELLOW}4.2 GB{RESET}   | Hybrid Live+Persist")
         print(f"{BOLD}{GREEN}{'ASTERIX OS Stealth & Undercover ISO':<42}{RESET} | 2026.09.07 | x86_64   | {YELLOW}1.8 GB{RESET}   | Camouflage/Forensic")
         print(f"{BOLD}{'ASTERIX OS Minimal Netinstall ISO':<42}{RESET} | 2026.09.07 | x86_64   | {YELLOW}650 MB{RESET}   | Network Installer")
-        print(f"{BOLD}{MAGENTA}{'ASTERIX OS ARM64 Mobile PRoot':<42}{RESET} | 2026.09.07 | aarch64  | {YELLOW}380 MB{RESET}   | Termux Mobile NetHunter")
+        print(f"{BOLD}{MAGENTA}{'ASTERIX OS ARM64 Mobile PRoot':<42}{RESET} | 2026.09.07 | aarch64  | {YELLOW}380 MB{RESET}   | Termux Mobile Subsystem")
 
         print(f"\n{BOLD}[DEFAULT CREDENTIALS]{RESET}")
         print(f"  • Live User: {GREEN}asterix:asterix{RESET} | Root: {RED}root:asterix{RESET} (or sudo -i)")

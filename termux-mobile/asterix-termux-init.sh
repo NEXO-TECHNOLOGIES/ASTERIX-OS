@@ -19,7 +19,7 @@ COLS=$(tput cols 2>/dev/null || echo 72)
 FAST=0
 STEALTH=0
 
-# Detect Kali Undercover / Stealth Camouflage flags
+# Detect Undercover / Stealth Camouflage flags
 if [[ "$*" == *"--stealth"* || "$*" == *"--undercover"* || "$*" == *"--silent"* || -f "$HOME/.asterix_undercover" ]]; then
     STEALTH=1
     FAST=1
@@ -266,7 +266,7 @@ _final_splash() {
 main() {
     if [[ $STEALTH -eq 1 ]]; then
         clear 2>/dev/null || true
-        echo -e "${FG_DARKGRAY}[*] Kali NetHunter Kernel PRoot Subsystem Initialized (Linux 6.6.0-kali-arm64)${R}"
+        echo -e "${FG_DARKGRAY}[*] ASTERIX Mobile Cybernetic PRoot Subsystem Initialized (Linux 6.6.0-asterix-arm64)${R}"
         echo -e "${FG_DARKGRAY}[*] Stealth Camouflage Active (All ASTERIX defenses operational in background)${R}"
         echo ""
     else

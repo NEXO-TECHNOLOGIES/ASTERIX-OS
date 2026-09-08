@@ -93,7 +93,7 @@ $ sudo ./engine/persistence-setup.sh /dev/sdX
 
 ### Option 3: Ventoy (Best for Multi-Boot Drives)
 
-If you use [Ventoy](https://www.ventoy.net) to run multiple distros (ASTERIX OS, Kali Linux, Windows 11) from a single USB drive:
+If you use [Ventoy](https://www.ventoy.net) to run multiple systems (ASTERIX OS, secondary operating systems, Windows 11) from a single USB drive:
 
 1. Install Ventoy onto your USB drive.
 2. Copy `asterix-os-v2.0-amd64-full.iso` directly into the USB root or `/ISOs` folder.
@@ -114,7 +114,7 @@ curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/te
 # Launching in Cyber Mode:
 ax
 
-# Launching in Kali Undercover Stealth Mode:
+# Launching in Tactical Undercover Stealth Mode:
 ax undercover on
 ```
 

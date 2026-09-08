@@ -379,7 +379,7 @@ switch ($Command.ToLower()) {
         }
     }
 
-    { $_ -in @("undercover", "stealth", "camouflage", "kali-undercover") } {
+    { $_ -in @("undercover", "stealth", "camouflage", "stealth-shell") } {
         $underScript = Join-Path $AsterixRoot "scripts-hub\ax-undercover.py"
         if ($RealPython -and (Test-Path $underScript)) {
             & $RealPython $underScript @RemainingArgs
@@ -403,6 +403,15 @@ switch ($Command.ToLower()) {
             & $RealPython $arsenalScript @RemainingArgs
         } else {
             Write-Host "  [ERROR] Python runtime or ax-arsenal.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("cam-hunter", "hotel-guard", "tscm", "spycam-scan", "privacy-sweep") } {
+        $camScript = Join-Path $AsterixRoot "scripts-hub\ax-cam-hunter.py"
+        if ($RealPython -and (Test-Path $camScript)) {
+            & $RealPython $camScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-cam-hunter.py not found." -ForegroundColor Red
         }
     }
 
@@ -444,8 +453,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax call-shield [audit|scan]  VoIP wiretap defense, ultrasonic beacon hunter & mic monitor"
             Write-Host "    ax vision-shield [stego|cloak] Image steganography scanner & adversarial biometric cloaker"
             Write-Host "    ax stealth-trace [fingerprint] Hardware/browser entropy auditor, JA3 sentinel & packet padding"
-            Write-Host "    ax undercover [on|off|boot]  Kali undercover mode & stealth bootloader camouflage"
+            Write-Host "    ax undercover [on|off|boot]  Terminal disguise mode & stealth bootloader camouflage"
             Write-Host "    ax boot-tool [guide|rufus|list] Live USB creator, Rufus/Ventoy profiles & drive scanner"
+            Write-Host "    ax cam-hunter [hotel|scan|rf|guide] Hotel privacy counter-surveillance & hidden camera detector"
         }
     }
 }

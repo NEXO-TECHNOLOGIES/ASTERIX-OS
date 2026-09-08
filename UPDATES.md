@@ -11,7 +11,7 @@ This update cycle significantly elevates **ASTERIX OS** into a high-performance 
 2. **⚡ LIGHTNING Autonomous WAF & Web SOC** — 16-module reverse proxy, real-time threat intelligence & SOC HUD.
 3. **🎮 APEX OVERDRIVE & eSports Kernel Gaming Suite** — Windows Game Mode & DirectX HAGS parity with sub-0.5ms timers and 60 FPS HUD.
 4. **🏢 Upgraded Windows Enterprise Feature Suite** — Native cryptographic ports of System Restore (VSS), Event Viewer, System File Checker (SFC), Task Manager EcoQoS, Local Security Policy (secpol), Sandbox, AppLocker, BitLocker, Credential Guard, and Exploit Guard.
-5. **🐉 Kali Linux Live Tactical Features & Anti-Forensics** — Disguise engine (Undercover), cryptographic wipe (Nuke), system tweaks, forensic write-blocking, and RF spectrum audit.
+5. **🛡️ ASTERIX OS Tactical Stealth & Anti-Forensics Suite** — Disguise engine (Undercover), cryptographic wipe (Nuke), system tweaks, forensic write-blocking, and RF spectrum audit.
 6. **📦 Modular External Package Registry** — Unified GitHub auto-cloning and synchronization system.
 7. **🔒 Zero-Vulnerability Security Hardening** — Kernel ASLR preservation, localhost loopback binding, and cryptographic file integrity seals.
 8. **🗺️ Updated Visual Architecture Diagram** — High-resolution diagrammatic layout saved at the repository root.
@@ -177,55 +177,59 @@ ax exploit-guard asr         # Apply Attack Surface Reduction rules (disable unp
 
 ---
 
-## 5. 🐉 Kali Linux Live Tactical Features & Anti-Forensics Suite
+## 5. 🛡️ ASTERIX OS Tactical Stealth, Anti-Forensics & System Hardening Suite
 
-Extracted and adapted directly from the live Kali Linux 2025.2 filesystem (`D:\` Live USB), these 5 tactical tools integrate stealth, evasion, forensic integrity, and radio frequency reconnaissance into ASTERIX OS:
+Engineered natively for tactical field operations, cyber defense, and live incident response, these native subsystems integrate operational stealth, anti-forensics, forensic data preservation, and radio frequency reconnaissance directly into the ASTERIX OS platform:
 
-### 1. `ax undercover` — Kali Undercover Disguise Engine
-- **Origin**: `kali-undercover`
-- **Functionality**: Instantly disguises the active terminal session as Windows 10 PowerShell / Command Prompt (`PS C:\Users\Administrator>`).
+### 1. `ax undercover` — Tactical Terminal Camouflage Engine
+- **Architecture**: Native Python/Shell Disguise Engine
+- **Functionality**: Instantly disguises the active terminal session as Windows 10/11 PowerShell / Command Prompt (`PS C:\Users\Administrator>`).
 - **Tactical Utility**: Provides instant operational security when operating in public or monitored environments, wiping tactical terminal banners and spoofing Windows prompt semantics.
 
 ### 2. `ax nuke` — Cryptographic Emergency Wipe & Anti-Forensics
-- **Origin**: `cryptsetup-nuke-password`
+- **Architecture**: Native DOD-Standard Secure Storage Eradication
 - **Functionality**: Performs emergency DOD-standard cryptographic sanitization (`shred -u -z -n 3`) of temporary caches, command history (`.bash_history`), session tokens, swap buffers, and sensitive workspace logs.
 - **Safety**: Includes dry-run verification mode (`ax nuke dry-run`) and mandatory confirmation prompts to prevent accidental execution.
 
 ### 3. `ax tweaks` — Tactical Privacy & Network Obfuscation
-- **Origin**: `kali-tweaks`
+- **Architecture**: Kernel & Network Layer Hardening Interface
 - **Functionality**: Hardens network privacy by managing MAC address randomization (`macchanger` / `ip link`), enabling IPv6 temporary privacy addresses (`net.ipv6.conf.*.use_tempaddr=2`), and enforcing encrypted zero-log DNS resolvers (Quad9 / Cloudflare).
 
 ### 4. `ax forensic-mode` — Cryptographic Forensic Write-Blocker
-- **Origin**: Kali Live Forensics boot option (`noswap noautomount`)
+- **Architecture**: Non-Invasive Digital Evidence Integrity Subsystem
 - **Functionality**: Enforces digital evidence preservation rules: remounts all external drives and partitions strictly read-only (`mount -o remount,ro`), audits and disables active swap spaces to prevent evidence spilling, and suppresses background auto-mounting daemons.
 
 ### 5. `ax rf-audit` — Wireless RF Spectrum & Hardware Reconnaissance
-- **Origin**: Kali wireless reconnaissance stack (`rfkill`, `kismet`, multi-device capture)
+- **Architecture**: Native Subsystem Radio Transceiver Monitor
 - **Functionality**: Audits the host's wireless spectrum capabilities across Wi-Fi (802.11), Bluetooth, Ultra-Wideband (UWB), and Software-Defined Radio (SDR) USB peripherals. Reports hardware/software block status, monitor-mode support, packet injection readiness, and active RF killswitch state.
 
 ### 6. `ax hashdeep` — Recursive Cryptographic Binary Integrity Auditor
-- **Origin**: Kali `hashdeep` & `md5deep` cryptographic package
+- **Architecture**: Multi-Algorithm File Hash Engine (MD5/SHA-1/SHA-256/SHA-512)
 - **Functionality**: Creates recursive SHA-256 integrity baselines for all system and application binaries (`$PREFIX/bin`, `/bin`, `/usr/bin`). Audits live files against the baseline to immediately detect unauthorized binary modification, rootkits, or tampering. Also provides multi-algorithm hash checks (MD5, SHA-1, SHA-256, SHA-512).
 
 ### 7. `ax yara-scan` — Rule-Based Threat & Malware Heuristic Scanner
-- **Origin**: Kali `libyara` & `python3-yara` engine
+- **Architecture**: Deep Heuristic & Shannon Entropy Analyzer
 - **Functionality**: Deep signature and pattern analyzer scanning directories for obfuscated webshells (`eval`, `base64_decode`), interactive reverse shell / C2 beacons (`/dev/tcp/`, `pty.spawn`), shellcode injection byte-sequences, and high Shannon entropy anomalies (>7.2 bits/byte).
 
-### 8. `ax mac-guard` — Mandatory Access Control & AppArmor Confinement
-- **Origin**: Kali `apparmor` & Linux MAC security stack
+### 8. `ax mac-guard` — Mandatory Access Control & Security Confinement
+- **Architecture**: Kernel Mandatory Access Control Interface (AppArmor / SELinux)
 - **Functionality**: Audits kernel-level Mandatory Access Control (AppArmor / SELinux), reports active profile confinement, and identifies unconfined network-listening daemons.
 
 ### 9. `ax timeline` — Digital Forensics MACB Activity Reconstructor
-- **Origin**: Kali `sleuthkit` & `autopsy` forensics suite
+- **Architecture**: Chronological Filesystem Artifact Reconstruction Engine
 - **Functionality**: Reconstructs chronological file activity (Modified, Accessed, Changed) within an incident window (e.g. last 1h, 24h, 7d). Features anti-forensic timestomp detection to flag files with future timestamps or suspicious metadata alterations.
 
 ### 10. `ax trash` — Cryptographic Recycle Bin & Deleted Media Vault
-- **Origin**: Linux desktop `trash-cli` & forensic quarantine architecture
+- **Architecture**: Cryptographically Audited Quarantine & Staging Store
 - **Functionality**: Replaces destructive `rm -rf` by moving files to `~/.asterix_vault/trash/` with a cryptographic manifest containing timestamp, original absolute path, file size, and SHA-256 hash. Allows 1-click restore (`ax trash restore <ID>`) or permanent 3-pass DOD wipe (`ax trash empty`).
 
 ### 11. `ax carve` — Forensic Signature File Carver (Deleted Media Recovery)
-- **Origin**: Kali `foremost` & `scalpel` digital forensics packages
-- **Functionality**: Scans disk devices, image dumps, or folders to carve and recover lost or deleted media using file magic headers and footers (JPEGs, PNGs, MP4/MOV videos, PDFs, and Office ZIP archives). If Kali's `foremost` or `scalpel` is installed, automatically leverages hardware-accelerated carving.
+- **Architecture**: Native Magic-Byte Header/Footer Pattern Carver
+- **Functionality**: Scans disk devices, image dumps, or folders to carve and recover lost or deleted media using file magic headers and footers (JPEGs, PNGs, MP4/MOV videos, PDFs, and Office ZIP archives). Automatically leverages accelerated binary carving if helper libraries are installed.
+
+### 12. `ax cam-hunter` — Hotel & Privacy Counter-Surveillance Subsystem (TSCM)
+- **Architecture**: Pure Python Safe Surveillance Detector & Passive RF Sweeper
+- **Functionality**: Protects user privacy when staying in hotels, Airbnbs, or sensitive meeting rooms. Replaces illegal and ineffective RF jamming with true Technical Surveillance Counter-Measures (TSCM): sweeps local Wi-Fi for hidden streaming cameras (RTSP 554, ONVIF 8000/8899, HTTP/MJPEG 8081), flags known spy-camera hardware MAC OUIs (Espressif ESP32-CAM, Tuya, Xiongmai, Dahua), detects covert ad-hoc wireless SSIDs (`CAM_*`, `IPCAM_*`), and provides an optical retro-reflection & infrared night-vision inspection field guide.
 
 ### Tactical CLI Commands:
 ```bash
@@ -236,6 +240,9 @@ ax tweaks                       # Inspect and configure MAC randomization & IPv6
 ax forensic-mode audit          # Verify write-blocker, swap state & automount status
 ax forensic-mode engage         # Remount partitions read-only & lock automount
 ax rf-audit                     # Audit Wi-Fi, Bluetooth, NFC & SDR radio transceivers
+ax cam-hunter hotel             # Full hotel room privacy sweep: IoT cameras, ad-hoc APs & optical guide
+ax cam-hunter scan              # Scan local Wi-Fi for hidden video streams (RTSP/ONVIF)
+ax cam-hunter guide             # Optical pinhole reflection & infrared camera detection field guide
 ax hashdeep baseline [dir]      # Generate SHA-256 baseline of system binaries
 ax hashdeep audit [dir]         # Verify live binaries against baseline to detect tampering
 ax yara-scan [dir]              # Scan directory for webshells, C2 beacons & shellcode
@@ -383,7 +390,7 @@ ax auto-compile <dir>            # Auto-detect and build Makefile, Cargo.toml, o
 
 ## 12. 🌐 ASTERIX OS-Computing // Universal Host Collaboration & Bridge v3.0
 
-Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system (Windows 10/11, Linux, macOS, Termux) and mounted dual-boot systems (Kali Linux, Parrot Security, BlackArch, Ubuntu):
+Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system (Windows 10/11, Linux, macOS, Termux) and mounted dual-boot systems (Debian, Ubuntu, Arch, Fedora, and companion security partitions):
 - **Cross-OS Discovery (`ax os-computing probe`)**:
   - Detects host distribution, NT build/Linux release, kernel, architecture, and compute cores.
   - Probes CPU microarchitecture, RAM pools, GPU hardware accelerators (Intel HD/Arc, NVIDIA CUDA, AMD ROCm, Direct3D 12, Vulkan).
@@ -395,7 +402,7 @@ Located in `os-computing/`, this framework fuses ASTERIX OS with the host operat
 - **Compute & Hardware Synergy (`ax os-computing compute`)**:
   - Fuses available CPU cores, RAM, and GPU accelerators with live multi-core benchmark measuring throughput in MegaOps/Sec.
 - **OS Persona Mimicry (`ax os-computing imitate`)**:
-  - Adapts ASTERIX shell prompt, themes, and shortcuts to match host persona (Cybernetic Windows Sentinel, Kali Dragon, BlackArch Total Warfare, Termux Mobile).
+  - Adapts ASTERIX shell prompt, themes, and shortcuts to match host persona (Cybernetic Windows Sentinel, Sovereign Dragon, Crimson Warfare, Termux Mobile).
 - **Telemetry Export (`ax os-computing features`)**:
   - Dumps complete machine telemetry to `~/.asterix_vault/host_arsenal/host_features.json`.
 

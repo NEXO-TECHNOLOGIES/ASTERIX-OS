@@ -778,11 +778,12 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax bitlocker [status|audit]${C_RESET}  LUKS2 AES-256-XTS volume & swap encryption (BitLocker)");
     println!("  {C_MAGENTA}ax cred-guard [audit|lockdown]${C_RESET}Process memory anti-dumping & credential vault shield");
     println!("  {C_MAGENTA}ax exploit-guard [audit|asr]${C_RESET} Hardware DEP/NX & Attack Surface Reduction (ASR) rules");
-    println!("  {C_MAGENTA}ax undercover [on|off]${C_RESET}     Kali Undercover instant Windows PowerShell disguise");
+    println!("  {C_MAGENTA}ax undercover [on|off]${C_RESET}     Tactical Undercover instant Windows PowerShell disguise");
     println!("  {C_MAGENTA}ax nuke [wipe|test]${C_RESET}          Emergency anti-forensic duress wipe & history shredder");
-    println!("  {C_MAGENTA}ax tweaks [mac|ipv6|dns]${C_RESET}   Kali Tweaks MAC randomizer, DNS & IPv6 leak armor");
-    println!("  {C_MAGENTA}ax forensic-mode <enable>${C_RESET}  Kali Live forensic write-blocker (noswap noautomount)");
+    println!("  {C_MAGENTA}ax tweaks [mac|ipv6|dns]${C_RESET}   Tactical Tweaks MAC randomizer, DNS & IPv6 leak armor");
+    println!("  {C_MAGENTA}ax forensic-mode <enable>${C_RESET}  Hardened Live forensic write-blocker (noswap noautomount)");
     println!("  {C_MAGENTA}ax rf-audit${C_RESET}                Multi-radio wireless, monitor mode & Bluetooth audit");
+    println!("  {C_MAGENTA}ax cam-hunter [hotel|scan|rf]${C_RESET}Hotel privacy counter-surveillance & hidden camera detector");
     println!("  {C_MAGENTA}ax power [status|boost|save]${C_RESET} Mobile/Linux CPU governor, thermal & battery controller");
     println!("  {C_MAGENTA}ax clean-pro${C_RESET}               Zero-crash cache purge, temporary file cleanup & SSD TRIM");
     println!("  {C_MAGENTA}ax flow${C_RESET}                    Real-time socket states, DNS latency benchmark & flow monitor");
@@ -792,7 +793,7 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax mac-guard${C_RESET}                AppArmor & SELinux Mandatory Access Control confinement");
     println!("  {C_MAGENTA}ax timeline [dir] [mins]${C_RESET}    Digital forensics MACB activity reconstructor & timestomp audit");
     println!("  {C_MAGENTA}ax trash [list|restore|empty]${C_RESET} Secure recycle bin & quarantined media storage");
-    println!("  {C_MAGENTA}ax carve <target> [out]${C_RESET}     Foremost & Scalpel digital forensics deleted media recovery");
+    println!("  {C_MAGENTA}ax carve <target> [out]${C_RESET}     High-speed signature digital forensics deleted media recovery");
     println!("  {C_MAGENTA}ax logwatch${C_RESET}             Real-time security log and auth anomaly watcher\n");
 
     println!("{C_WHITE}{C_BOLD}VAULT, WORKSPACE & DESKTOP HUD:{C_RESET}");
@@ -1053,9 +1054,10 @@ fn main() {
         "exploit-guard" | "exploitguard" | "asr" => { dispatch_ax_tool(&args[1..]); return; }
         "undercover" | "stealth-desktop" | "disguise" => { dispatch_ax_tool(&args[1..]); return; }
         "nuke" | "duress" | "emergency-wipe" => { dispatch_ax_tool(&args[1..]); return; }
-        "tweaks" | "kali-tweaks" | "sys-tune" => { dispatch_ax_tool(&args[1..]); return; }
+        "tweaks" | "privacy-tune" | "sys-tune" => { dispatch_ax_tool(&args[1..]); return; }
         "forensic-mode" | "forensics-mode" | "write-block" => { dispatch_ax_tool(&args[1..]); return; }
         "rf-audit" | "air-audit" | "kismet-audit" => { dispatch_ax_tool(&args[1..]); return; }
+        "cam-hunter" | "hotel-guard" | "tscm" | "spycam-scan" | "privacy-sweep" => { dispatch_ax_tool(&args[1..]); return; }
         "power" | "governor" | "cpu-power" | "battery-health" => { dispatch_ax_tool(&args[1..]); return; }
         "clean-pro" | "disk-clean" | "purge-cache" | "trim" => { dispatch_ax_tool(&args[1..]); return; }
         "flow" | "net-flow" | "netstat-pro" | "socket-audit" => { dispatch_ax_tool(&args[1..]); return; }

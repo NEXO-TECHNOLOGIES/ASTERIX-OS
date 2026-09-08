@@ -2342,7 +2342,7 @@ cmd_exploit_guard() {
 }
 
 # ---------------------------------------------------------------------
-# ASTERIX KALI LINUX SPECIALIZED CAPABILITIES (LIVE USB PARITY & UPGRADE)
+# ASTERIX TACTICAL LIVE PERSISTENCE & HARDENED CAPABILITIES
 # ---------------------------------------------------------------------
 
 cmd_undercover() {
@@ -2448,7 +2448,7 @@ cmd_tweaks() {
 
     case "$action" in
         mac)
-            echo -e "${C_CYAN}${C_BOLD}[*] Kali Tweaks: Hardware MAC Address Randomization...${C_RESET}\n"
+            echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX Tweaks: Hardware MAC Address Randomization...${C_RESET}\n"
             local iface
             iface=$(ip route show default 2>/dev/null | awk '/default/ {print $5}' | head -n 1)
             [ -z "$iface" ] && iface="eth0"
@@ -2497,7 +2497,7 @@ EOF
 
         status|*)
             echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
-            echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX TWEAKS // KALI TWEAKS SYSTEM & NETWORK PRIVACY ]${C_RESET}${C_CYAN}               ║${C_RESET}"
+            echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX TWEAKS // SYSTEM & NETWORK PRIVACY HARDENING ]${C_RESET}${C_CYAN}                  ║${C_RESET}"
             echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
 
             local ipv6_dis="0"
@@ -2538,7 +2538,7 @@ cmd_forensic_mode() {
 
     case "$action" in
         enable|lock)
-            echo -e "${C_CYAN}${C_BOLD}[*] Engaging Kali Forensic Protection Mode (Read-Only Host Guard)...${C_RESET}\n"
+            echo -e "${C_CYAN}${C_BOLD}[*] Engaging ASTERIX Forensic Protection Mode (Read-Only Host Guard)...${C_RESET}\n"
             if command -v swapoff >/dev/null 2>&1; then
                 $SUDO swapoff -a 2>/dev/null || true
                 echo -e "  ${C_GREEN}[✔] Swap disabled (systemd.swap=no equivalent).${C_RESET}"
@@ -2572,7 +2572,7 @@ cmd_forensic_mode() {
 
         status|*)
             echo -e "${C_CYAN}${C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗${C_RESET}"
-            echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX FORENSIC MODE // KALI LIVE FORENSIC WRITE-BLOCKER ]${C_RESET}${C_CYAN}            ║${C_RESET}"
+            echo -e "${C_CYAN}║${C_WHITE} ${C_BOLD}[ ASTERIX FORENSIC MODE // LIVE HARDENED WRITE-BLOCKER ]${C_RESET}${C_CYAN}                 ║${C_RESET}"
             echo -e "${C_CYAN}╚══════════════════════════════════════════════════════════════════════════╝${C_RESET}\n"
 
             local swap_status="Active"
@@ -3229,7 +3229,7 @@ cmd_carve() {
     echo -e "${C_CYAN}[*] Target Source:${C_RESET}  ${target}"
     echo -e "${C_CYAN}[*] Recovery Vault:${C_RESET} ${output_dir}\n"
 
-    # 1. If Kali foremost is available, invoke professional carver
+    # 1. If foremost is available, invoke professional carver
     if command -v foremost >/dev/null 2>&1; then
         echo -e "${C_GREEN}[✔] Hardware-accelerated Foremost carving engine detected!${C_RESET}"
         echo -e "${C_YELLOW}[*] Carving deleted media streams...${C_RESET}"
@@ -3750,6 +3750,19 @@ cmd_arsenal() {
         $py "$script" "$@"
     else
         echo -e "${C_RED}[!] Error: Python runtime or ax-arsenal.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_cam_hunter() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-cam-hunter.py"
+    [ -f "$script" ] || script="scripts-hub/ax-cam-hunter.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-cam-hunter.py not found.${C_RESET}"
         return 1
     fi
 }
@@ -5919,9 +5932,10 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax call-shield [audit|scan]${C_RESET} VoIP wiretap defense, ultrasonic beacon hunter & mic monitor"
     echo -e "  ${C_CYAN}ax vision-shield [stego|cloak]${C_RESET} Image steganography scanner & adversarial biometric cloaker"
     echo -e "  ${C_CYAN}ax stealth-trace [fingerprint]${C_RESET} Hardware/browser entropy auditor, JA3 sentinel & packet padding"
-    echo -e "  ${C_CYAN}ax undercover [on|off|boot]${C_RESET} Kali undercover mode & stealth bootloader camouflage"
+    echo -e "  ${C_CYAN}ax undercover [on|off|boot]${C_RESET} Terminal disguise mode & stealth bootloader camouflage"
     echo -e "  ${C_CYAN}ax boot-tool [guide|rufus]${C_RESET}  Live USB creator, Rufus/Ventoy profiles & drive scanner"
-    echo -e "  ${C_CYAN}ax arsenal [search|info|list]${C_RESET} 180+ Kali & Red Team tools catalog (offline metadata)"
+    echo -e "  ${C_CYAN}ax arsenal [search|info|list]${C_RESET} 180+ Cyber & Red Team tools catalog (offline metadata)"
+    echo -e "  ${C_CYAN}ax cam-hunter [hotel|scan|rf|guide]${C_RESET} Hotel privacy counter-surveillance & hidden camera detector"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6735,7 +6749,7 @@ case "$SUBCOMMAND" in
         shift
         cmd_nuke "$@"
         ;;
-    tweaks|kali-tweaks|sys-tune)
+    tweaks|sys-tune|privacy-tune)
         shift
         cmd_tweaks "$@"
         ;;
@@ -6887,7 +6901,7 @@ case "$SUBCOMMAND" in
         shift
         cmd_stealth_trace "$@"
         ;;
-    undercover|stealth|camouflage|kali-undercover)
+    undercover|stealth|camouflage|stealth-shell)
         shift
         cmd_undercover "$@"
         ;;
@@ -6898,6 +6912,10 @@ case "$SUBCOMMAND" in
     arsenal|tools|tool-registry|packages-all)
         shift
         cmd_arsenal "$@"
+        ;;
+    cam-hunter|hotel-guard|tscm|spycam-scan|privacy-sweep)
+        shift
+        cmd_cam_hunter "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

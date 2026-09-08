@@ -37,7 +37,7 @@ C_GRAY = "\033[38;5;242m"
 C_WHITE = "\033[38;5;231m"
 
 
-# Complete Master Tool Registry (180+ Tools from Kali & Pentesting Ecosystem)
+# Complete Master Tool Registry (180+ Tools from Global Cybersecurity Ecosystem)
 ARSENAL_REGISTRY = [
     # ── 1. Reconnaissance, OSINT & Asset Discovery ───────────────────────
     {"name": "nmap", "category": "OSINT & Recon", "github": "https://github.com/nmap/nmap", "desc": "Network exploration tool and security / port scanner", "install_type": "apt", "cmd": "sudo apt install -y nmap", "preinstalled": True},
@@ -207,7 +207,7 @@ ARSENAL_REGISTRY = [
     {"name": "gitrob", "category": "OSINT & Recon", "github": "https://github.com/michenriksen/gitrob", "desc": "Reconnaissance tool for GitHub organizations finding sensitive files", "install_type": "go", "cmd": "go install github.com/michenriksen/gitrob@latest", "preinstalled": False},
     {"name": "smbexec", "category": "Active Directory & Windows", "github": "https://github.com/pentestgeek/smbexec", "desc": "A rapid psexec style attack tool designed for penetration testers", "install_type": "git", "cmd": "git clone https://github.com/pentestgeek/smbexec.git", "preinstalled": False},
     {"name": "discover", "category": "OSINT & Recon", "github": "https://github.com/leebaird/discover", "desc": "Custom bash scripts used to automate information gathering and penetration tests", "install_type": "git", "cmd": "git clone https://github.com/leebaird/discover.git", "preinstalled": False},
-    {"name": "vajrakali", "category": "Exploitation & C2", "github": "https://github.com/", "desc": "Offensive and defensive security tool aggregator and custom payload wrapper", "install_type": "reference", "cmd": "echo 'Available via ASTERIX OS scripts-hub'", "preinstalled": True},
+    {"name": "vajra", "category": "Exploitation & C2", "github": "https://github.com/", "desc": "Offensive and defensive security tool aggregator and custom payload wrapper", "install_type": "reference", "cmd": "echo 'Available via ASTERIX OS scripts-hub'", "preinstalled": True},
     {"name": "chaos", "category": "OSINT & Recon", "github": "https://github.com/projectdiscovery/chaos-client", "desc": "Go client to communicate with ProjectDiscovery Chaos DNS dataset API", "install_type": "go", "cmd": "go install -v github.com/projectdiscovery/chaos-client/cmd/chaos@latest", "preinstalled": False},
     {"name": "notify", "category": "OSINT & Recon", "github": "https://github.com/projectdiscovery/notify", "desc": "Stream the output of several tools (subfinder, nuclei) directly to Discord/Slack", "install_type": "go", "cmd": "go install -v github.com/projectdiscovery/notify/cmd/notify@latest", "preinstalled": False},
     {"name": "dnsgen", "category": "OSINT & Recon", "github": "https://github.com/ProjectAnte/dnsgen", "desc": "Generates combination of domain names from the provided input list", "install_type": "pipx", "cmd": "pipx install dnsgen", "preinstalled": False},
@@ -228,7 +228,7 @@ ARSENAL_REGISTRY = [
 def print_banner():
     print(f"\n{C_BOLD}{C_CYAN}========================================================================={C_RESET}")
     print(f"{C_BOLD}{C_CYAN}  ASTERIX OS :: MASTER CYBERSECURITY ARSENAL & TOOL REGISTRY{C_RESET}")
-    print(f"{C_DIM}  Offline Catalog of 180+ Kali, Red Team & Forensic Tools (On-Demand Ready){C_RESET}")
+    print(f"{C_DIM}  Offline Catalog of 180+ Industry-Standard Red Team & Forensic Tools (On-Demand Ready){C_RESET}")
     print(f"{C_BOLD}{C_CYAN}========================================================================={C_RESET}\n")
 
 
