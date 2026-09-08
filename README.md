@@ -20,6 +20,7 @@
 > 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across 13 enterprise defense suites (Anti-Ransomware, Supply Chain, SSRF, Cloud Takeover, Lossless Media Scrubbing, DoH, WebRTC Leaks, VoIP Wiretap/Ultrasonic, Steganography & AI Biometric Cloaking, and Anti-Fingerprinting).
 > 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
 > 📥 **Official Downloads & Rufus Setup**: See [DOWNLOADS.md](DOWNLOADS.md) for ISO releases (Full Cyber Suite, Stealth Undercover, Netinstall), P2P Torrents, SHA-256 checksums, and Rufus persistent USB setup guide.
+> 🛠️ **180+ Kali & Pentest Arsenal Registry**: See [TOOLS_REGISTRY.md](docs/TOOLS_REGISTRY.md) for offline metadata, categories, official GitHub links, and on-demand installation recipes onto persistent storage.
 > 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
 ---
@@ -301,6 +302,7 @@ ax stealth-trace [fingerprint]   # Hardware Anti-Fingerprinting: audits Canvas/W
 ax undercover [on|off|boot]     # Kali Undercover Mode: stealth camouflage, anti-shoulder surfing & NetHunter boot
 ax boot-tool [guide|rufus|list]  # Live USB Creator: Rufus/Ventoy profiles, USB drive scanner & ISO auditor
 ax downloads [iso]               # Official Releases: download matrix, P2P torrents, SHA-256 sums & Rufus guide
+ax arsenal [search|info|list]    # 180+ Kali & Red Team Arsenal: offline metadata, GitHub links & on-demand recipes
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health

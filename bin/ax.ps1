@@ -397,6 +397,15 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("arsenal", "tools", "tool-registry", "packages-all") } {
+        $arsenalScript = Join-Path $AsterixRoot "scripts-hub\ax-arsenal.py"
+        if ($RealPython -and (Test-Path $arsenalScript)) {
+            & $RealPython $arsenalScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-arsenal.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"

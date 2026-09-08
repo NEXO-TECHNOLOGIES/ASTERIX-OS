@@ -3741,6 +3741,19 @@ cmd_boot_tool() {
     fi
 }
 
+cmd_arsenal() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-arsenal.py"
+    [ -f "$script" ] || script="scripts-hub/ax-arsenal.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-arsenal.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5908,6 +5921,7 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax stealth-trace [fingerprint]${C_RESET} Hardware/browser entropy auditor, JA3 sentinel & packet padding"
     echo -e "  ${C_CYAN}ax undercover [on|off|boot]${C_RESET} Kali undercover mode & stealth bootloader camouflage"
     echo -e "  ${C_CYAN}ax boot-tool [guide|rufus]${C_RESET}  Live USB creator, Rufus/Ventoy profiles & drive scanner"
+    echo -e "  ${C_CYAN}ax arsenal [search|info|list]${C_RESET} 180+ Kali & Red Team tools catalog (offline metadata)"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6880,6 +6894,10 @@ case "$SUBCOMMAND" in
     boot-tool|live-boot|usb-boot|rufus-prep|downloads|iso)
         shift
         cmd_boot_tool "$@"
+        ;;
+    arsenal|tools|tool-registry|packages-all)
+        shift
+        cmd_arsenal "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift
