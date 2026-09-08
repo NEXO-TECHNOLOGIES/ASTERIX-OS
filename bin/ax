@@ -3637,6 +3637,45 @@ cmd_api_sentinel() {
     fi
 }
 
+cmd_scrub() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-privacy.py"
+    [ -f "$script" ] || script="scripts-hub/ax-privacy.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "scrub" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-privacy.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_dns_shield() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-privacy.py"
+    [ -f "$script" ] || script="scripts-hub/ax-privacy.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "dns-shield" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-privacy.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_ip_shield() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-privacy.py"
+    [ -f "$script" ] || script="scripts-hub/ax-privacy.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "ip-shield" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-privacy.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5796,6 +5835,9 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax takeover <domain>${C_RESET}    Cloud takeover sentinel: audit dangling CNAMEs & cloud assets"
     echo -e "  ${C_CYAN}ax ssrf-guard <url>${C_RESET}     SSRF & cloud metadata shield (blocks 169.254.169.254 & rebinding)"
     echo -e "  ${C_CYAN}ax api-sentinel <url>${C_RESET}   API defense sentinel: audit missing headers, CORS & shadow APIs"
+    echo -e "  ${C_CYAN}ax scrub <path>${C_RESET}         Media anonymizer: losslessly strip EXIF, GPS & device tags"
+    echo -e "  ${C_CYAN}ax dns-shield [audit]${C_RESET}   Encrypted DNS (DoH) enforcer: benchmark & block ISP logging"
+    echo -e "  ${C_CYAN}ax ip-shield [audit]${C_RESET}    IP & WebRTC leak sentinel: detect STUN leaks & IPv6 bypasses"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6736,6 +6778,18 @@ case "$SUBCOMMAND" in
     api-sentinel|api-audit|api-guard)
         shift
         cmd_api_sentinel "$@"
+        ;;
+    scrub|exif-strip|anon-media)
+        shift
+        cmd_scrub "$@"
+        ;;
+    dns-shield|doh|dns-crypt)
+        shift
+        cmd_dns_shield "$@"
+        ;;
+    ip-shield|webrtc-leak|privacy-audit)
+        shift
+        cmd_ip_shield "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

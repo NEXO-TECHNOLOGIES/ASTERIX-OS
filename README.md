@@ -273,6 +273,9 @@ ax phish-shield <domain|url>     # PhishShield: detects homoglyph substitution, 
 ax takeover <domain>             # Cloud Takeover Sentinel: audits dangling CNAME pointers & cloud assets
 ax ssrf-guard <url>              # SSRF & Metadata Shield: intercepts cloud IMDSv1/v2, private IPs & rebinding
 ax api-sentinel <url>            # API Defense Sentinel: audits missing security headers, CORS & shadow schemas
+ax scrub <file|folder>           # Media Anonymizer: losslessly strips EXIF, GPS coordinates & camera serials
+ax dns-shield [audit]            # Encrypted DNS (DoH) Enforcer: benchmarks zero-log resolvers & stops ISP snooping
+ax ip-shield [audit]             # IP & WebRTC Leak Sentinel: audits STUN UDP leaks, IPv6 bypasses & public IP risk
 
 # Performance, Power & Network Health Subsystem
 ax power [status|boost|save]    # Mobile/Linux CPU scaling governor, thermal sensors & battery health
@@ -553,6 +556,62 @@ $ ax api-sentinel "https://target-service.internal"
   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
   add_header Content-Security-Policy "default-src 'self'; frame-ancestors 'none';" always;
   server_tokens off;
+```
+
+### 8. Autonomous Media Metadata & Geolocation Anonymizer (`ax scrub`)
+Losslessly excises EXIF binary segments (`APP1`), embedded GPS coordinates, camera hardware serials, and Adobe XMP tracking tags from JPEG, PNG, and PDF files without degrading image resolution or recompressing pixels.
+
+```text
+# Pre-Sanitization Forensic Audit:
+$ ax scrub /media/field_evidence.jpg --audit
+  • field_evidence.jpg:
+    ↳ ⚠ EXIF Metadata Block (Camera model, software, timestamps)
+    ↳ 🚨 CRITICAL: Embedded GPS Geolocation Coordinates
+
+# Lossless Binary Metadata Stripping:
+$ ax scrub /media/field_evidence.jpg
+  • field_evidence.jpg:
+    ✓ Stripped 77 bytes of tracking metadata (Lossless).
+  ✓ SUCCESS: All media assets have been anonymized for zero-trace sharing.
+
+# Post-Sanitization Verification Audit:
+$ ax scrub /media/field_evidence.jpg --audit
+  • field_evidence.jpg: ✓ No tracking metadata present (Clean).
+  • Contained Metadata: 0
+```
+
+### 9. Encrypted DNS & Anti-Snooping Enforcer (`ax dns-shield`)
+Benchmarks zero-log Encrypted DNS-over-HTTPS (DoH) resolvers (Quad9, Cloudflare, Mullvad) to neutralize ISP query logging, man-in-the-middle DNS redirection, and cleartext Port 53 snooping.
+
+```text
+$ ax dns-shield audit
+  [ENCRYPTED DNS & SNOOPING AUDITOR]
+  1. SYSTEM DEFAULT RESOLVER (Cleartext UDP Port 53):
+    ↳ Security: VULNERABLE to ISP Deep Packet Inspection & Logging
+  2. ENCRYPTED DNS-OVER-HTTPS (DoH) BENCHMARK:
+    • Cloudflare (Ultra-Fast 1.1.1.1):  Latency: 629.5 ms (HTTPS TLS 1.3)
+    • Quad9 (Zero-Logs & Threat Block): Encrypted TLS 1.3 Stream
+  ✓ Hardening: Enforce DoH in browser & drop outbound cleartext UDP 53 traffic.
+```
+
+### 10. Real-Time WebRTC & IPv6 Leak Sentinel (`ax ip-shield`)
+Executes direct RFC 5389 STUN protocol binding requests (`UDP 19302`) to intercept browser WebRTC IP harvesting that bypasses standard VPN tunnels, evaluates IPv6 dual-stack leaks, and generates a Digital Privacy Scorecard.
+
+```text
+$ ax ip-shield audit
+  [REAL-TIME IP, IPV6 & WEBRTC LEAK SENTINEL]
+  1. EXTERNAL ROUTABLE IP ADDRESS:
+    ↳ Visible IP:  198.51.100.25
+  2. WEBRTC STUN LEAK SIMULATION (UDP 19302):
+    ↳ Tested STUN Server: stun.l.google.com:19302
+    ↳ Mapped Public IP:   198.51.100.25
+    🚨 VULNERABLE: Direct STUN queries expose your exact public IP!
+    Any website using WebRTC JavaScript can reveal this IP without VPN protection.
+  3. IPV6 DUAL-STACK LEAK AUDIT:
+    ✓ SECURE: Zero unencapsulated global IPv6 egress detected.
+  =========================================================================
+  DIGITAL PRIVACY SCORECARD: 65/100 (Hardening: Block WebRTC STUN queries)
+  =========================================================================
 ```
 
 ---

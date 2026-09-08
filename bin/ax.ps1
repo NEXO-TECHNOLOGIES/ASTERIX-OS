@@ -325,6 +325,33 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("scrub", "exif-strip", "anon-media") } {
+        $privScript = Join-Path $AsterixRoot "scripts-hub\ax-privacy.py"
+        if ($RealPython -and (Test-Path $privScript)) {
+            & $RealPython $privScript "scrub" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-privacy.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("dns-shield", "doh", "dns-crypt") } {
+        $privScript = Join-Path $AsterixRoot "scripts-hub\ax-privacy.py"
+        if ($RealPython -and (Test-Path $privScript)) {
+            & $RealPython $privScript "dns-shield" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-privacy.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("ip-shield", "webrtc-leak", "privacy-audit") } {
+        $privScript = Join-Path $AsterixRoot "scripts-hub\ax-privacy.py"
+        if ($RealPython -and (Test-Path $privScript)) {
+            & $RealPython $privScript "ip-shield" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-privacy.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -357,6 +384,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax takeover <domain>         Audit dangling CNAMEs & cloud service subdomain takeovers"
             Write-Host "    ax ssrf-guard <url>          Block SSRF, cloud metadata (169.254.169.254) & rebinding"
             Write-Host "    ax api-sentinel <url>        Audit API defense headers, CORS, shadow OpenAPI schemas"
+            Write-Host "    ax scrub <file|folder>       Lossless metadata anonymizer: strip GPS & EXIF from media"
+            Write-Host "    ax dns-shield                Encrypted DNS (DoH) auditor: block ISP cleartext snooping"
+            Write-Host "    ax ip-shield                 Audit WebRTC STUN leaks, IPv6 bypasses & public IP risk"
         }
     }
 }
