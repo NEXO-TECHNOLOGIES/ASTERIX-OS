@@ -415,6 +415,25 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("self-evolve", "evolve", "ai-learn", "ai-update", "threat-feed", "auto-learn") } {
+        $evolveScript = Join-Path $AsterixRoot "asterix-ai\ax-self-evolve.py"
+        if ($RealPython -and (Test-Path $evolveScript)) {
+            & $RealPython $evolveScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-self-evolve.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("termux-bundle", "package-termux", "build-termux", "mobile-bundle") } {
+        $bundleScript = Join-Path $AsterixRoot "scripts-hub\ax-termux-bundle.sh"
+        $gitBash = "C:\Program Files\Git\bin\bash.exe"
+        if ((Test-Path $gitBash) -and (Test-Path $bundleScript)) {
+            & $gitBash $bundleScript @RemainingArgs
+        } else {
+            Write-Host "  [INFO] Run 'bash scripts-hub/ax-termux-bundle.sh' inside a Linux/Termux environment." -ForegroundColor Cyan
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -456,6 +475,8 @@ switch ($Command.ToLower()) {
             Write-Host "    ax undercover [on|off|boot]  Terminal disguise mode & stealth bootloader camouflage"
             Write-Host "    ax boot-tool [guide|rufus|list] Live USB creator, Rufus/Ventoy profiles & drive scanner"
             Write-Host "    ax cam-hunter [hotel|scan|rf|guide] Hotel privacy counter-surveillance & hidden camera detector"
+            Write-Host "    ax self-evolve [evolve|status|daemon Nh|wipe] Autonomous AI continuous learning from CVE/threat feeds"
+            Write-Host "    ax termux-bundle                Package full ASTERIX OS ARM64 Termux stable bundle (~312 MB)"
         }
     }
 }

@@ -1,0 +1,18 @@
+{
+  "mood": "calm",
+  "response_style": "balanced",
+  "training_completed": 45,
+  "learning_quota": 100,
+  "training_mode": "project_self_evolving",
+  "confidence": 0.75,
+  "mood_summary": {
+    "primary_mood": "calm",
+    "frustration": 0,
+    "stress": 0,
+    "urgency": 0,
+    "confidence": 0,
+    "curiosity": 0,
+    "excitement": 0,
+    "calm": 0
+  }
+}

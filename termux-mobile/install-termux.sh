@@ -38,7 +38,31 @@ pkg install -y proot proot-distro rust clang git curl wget ncurses-utils tsu || 
 echo -e "${YELLOW}[*] Step 3: Configuring ASTERIX Stable Local Storage...${NC}"
 # Use fast, stable private Termux storage by default (never forces unstable /sdcard mounts)
 PERSIST_LOCAL="$HOME/.asterix_storage"
+ASTERIX_DIR="$HOME/ASTERIX-OS"
 mkdir -p "$PERSIST_LOCAL/loot" "$PERSIST_LOCAL/scripts" "$PERSIST_LOCAL/captures" "$PERSIST_LOCAL/notes" 2>/dev/null || true
+
+ensure_asterix_shell_bootstrap() {
+    local shell_env="$ASTERIX_DIR/ui-core/asterix-shell-env.sh"
+    local shell_snippet='\n# ASTERIX OS shell bridge\nexport PATH="$PREFIX/bin:$HOME/.local/bin:$HOME/ASTERIX-OS/bin:$HOME/ASTERIX-OS/scripts-hub:$PATH"\nfor d in "$HOME/ASTERIX-OS"/core-utils-*; do [ -d "$d/bin" ] && export PATH="$d/bin:$PATH"; done\n[ -f "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh" ] && . "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh"\n'
+
+    for rc in "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+        [ -n "$rc" ] || continue
+        touch "$rc" 2>/dev/null || continue
+        if ! grep -q "ASTERIX OS shell bridge" "$rc" 2>/dev/null; then
+            printf '%b\n' "$shell_snippet" >> "$rc"
+        fi
+    done
+
+    if [ -f "$shell_env" ]; then
+        . "$shell_env"
+    fi
+    export PATH="$PREFIX/bin:$HOME/.local/bin:$HOME/ASTERIX-OS/bin:$HOME/ASTERIX-OS/scripts-hub:$PATH"
+    for d in "$HOME/ASTERIX-OS"/core-utils-*; do
+        [ -d "$d/bin" ] && export PATH="$d/bin:$PATH"
+    done
+}
+
+ensure_asterix_shell_bootstrap
 
 # Gracefully link external SDCard only if writable, without crashing if blocked
 if [ -d "/sdcard" ] && [ -w "/sdcard" ]; then
@@ -197,6 +221,8 @@ else
     (cd "$ASTERIX_DIR" && git pull 2>/dev/null || true)
 fi
 
+ensure_asterix_shell_bootstrap
+
 echo -e "${YELLOW}[*] Step 8: Configuring Master Global 'ax' & 'asterix' Dispatcher...${NC}"
 cat << 'EOF' > "$PREFIX/bin/ax"
 #!/data/data/com.termux/files/usr/bin/bash
@@ -265,10 +291,13 @@ if command -v git >/dev/null 2>&1; then
 fi
 
 # Configure autostart in ~/.bashrc if not already present
-if ! grep -q "asterix-loader" "$HOME/.bashrc" 2>/dev/null; then
+if ! grep -q "ASTERIX OS Startup" "$HOME/.bashrc" 2>/dev/null; then
     cat << 'AUTO' >> "$HOME/.bashrc"
 
 # ASTERIX OS Startup
+export PATH="$PREFIX/bin:$HOME/.local/bin:$HOME/ASTERIX-OS/bin:$HOME/ASTERIX-OS/scripts-hub:$PATH"
+for d in "$HOME/ASTERIX-OS"/core-utils-*; do [ -d "$d/bin" ] && export PATH="$d/bin:$PATH"; done
+if [ -f "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh" ]; then . "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh"; fi
 if [ -t 1 ]; then
     [ -x "$PREFIX/bin/asterix-loader" ] && asterix-loader
     echo -e "\033[38;5;220mType '\033[1max\033[0m\033[38;5;220m' or '\033[1masterix\033[0m\033[38;5;220m' to enter the ASTERIX Security Sandbox.\033[0m"

@@ -288,6 +288,16 @@ main() {
     # Setup persistence dirs
     mkdir -p "$HOME/asterix_persistent"/{loot,captures,scripts,notes} 2>/dev/null
 
+    # Ensure the ASTERIX command bridge is always loaded in this session and the
+    # default shell PATH can resolve the repository-installed dispatchers.
+    export PATH="$PREFIX/bin:$HOME/.local/bin:$HOME/ASTERIX-OS/bin:$HOME/ASTERIX-OS/scripts-hub:$PATH"
+    for d in "$HOME/ASTERIX-OS"/core-utils-*; do
+        [ -d "$d/bin" ] && export PATH="$d/bin:$PATH"
+    done
+    if [ -f "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh" ]; then
+        . "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh"
+    fi
+
     # Ensure DNS resolver is valid in PRoot Debian container so internet works out of the box
     local deb_resolv="$PREFIX/var/lib/proot-distro/installed-rootfs/debian/etc/resolv.conf"
     if [ -f "$deb_resolv" ]; then

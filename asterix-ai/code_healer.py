@@ -810,6 +810,129 @@ def heal_code(snippet_or_path, forced_lang=None):
 
     return healed, mods, lang
 
+
+class ProjectRepairPlanner:
+    """Rank likely fix targets inside a project using file names, imports, and issue text."""
+
+    def __init__(self, project_root):
+        self.project_root = os.path.abspath(project_root or ".")
+
+    def _iter_project_files(self):
+        if not os.path.isdir(self.project_root):
+            return []
+
+        files = []
+        for root, _, filenames in os.walk(self.project_root):
+            for filename in filenames:
+                if filename.startswith("."):
+                    continue
+                full_path = os.path.join(root, filename)
+                if os.path.isfile(full_path):
+                    files.append(full_path)
+        return sorted(files)
+
+    def _extract_issue_terms(self, issue_text):
+        text = re.sub(r"[^a-zA-Z0-9_\s]", " ", str(issue_text).lower())
+        terms = {t for t in re.split(r"\s+", text) if len(t) > 2}
+        return {t for t in terms if t not in {"the", "with", "from", "into", "this", "that", "have", "been", "will", "your", "user", "issue", "error", "bug"}}
+
+    def _score_file(self, file_path, issue_terms, target_files=None):
+        name = os.path.basename(file_path).lower()
+        score = 0.0
+        if target_files:
+            for tf in target_files:
+                if os.path.basename(file_path) == os.path.basename(tf):
+                    score += 2.0
+                if tf.lower() in file_path.lower():
+                    score += 1.5
+
+        for term in issue_terms:
+            if term in name:
+                score += 1.5
+            if term in file_path.lower():
+                score += 0.8
+
+        try:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as handle:
+                content = handle.read().lower()
+            for term in issue_terms:
+                if term in content:
+                    score += 1.2
+        except Exception:
+            pass
+
+        kind = os.path.splitext(file_path)[1].lower()
+        if kind in {".py", ".js", ".ts", ".c", ".cpp", ".rs", ".go"}:
+            score += 0.5
+
+        return score
+
+    def plan_repair(self, issue_text, target_files=None, max_files=10):
+        issue_terms = self._extract_issue_terms(issue_text)
+        files = self._iter_project_files()
+
+        if target_files:
+            target_files = [os.path.abspath(os.path.join(self.project_root, tf)) if not os.path.isabs(tf) else os.path.abspath(tf) for tf in target_files]
+            ranked = sorted(files, key=lambda p: self._score_file(p, issue_terms, target_files), reverse=True)
+            shortlisted = [p for p in ranked if self._score_file(p, issue_terms, target_files) > 0][:max_files]
+        else:
+            ranked = sorted(files, key=lambda p: self._score_file(p, issue_terms), reverse=True)
+            shortlisted = [p for p in ranked if self._score_file(p, issue_terms) > 0][:max_files]
+
+        if not shortlisted:
+            shortlisted = files[:max_files]
+
+        root_cause = "".join(sorted(issue_terms)[:3])
+        if not root_cause:
+            root_cause = "likely project-level defect in the active code path"
+
+        confidence = min(0.98, 0.35 + (len(shortlisted) / max(1, len(files) or 1)) + (0.15 if issue_terms else 0.0))
+        return {
+            "issue": str(issue_text),
+            "root_cause": root_cause,
+            "target_files": [os.path.relpath(p, self.project_root) for p in shortlisted],
+            "confidence": round(confidence, 2),
+            "summary": f"Planned repair around {', '.join(os.path.basename(p) for p in shortlisted[:3])}",
+        }
+
+
+class RepairVerifier:
+    """Run minimal validation checks on a set of project files before accepting a fix."""
+
+    def __init__(self, project_root):
+        self.project_root = os.path.abspath(project_root or ".")
+
+    def verify_files(self, file_paths):
+        results = []
+        behaviour_ok = True
+
+        for raw_path in file_paths:
+            file_path = os.path.abspath(raw_path)
+            result = {"file": file_path, "check": "py_compile", "status": "failed", "details": ""}
+            if not os.path.exists(file_path):
+                result["details"] = "file missing"
+                results.append(result)
+                behaviour_ok = False
+                continue
+
+            try:
+                if file_path.endswith(".py"):
+                    import py_compile
+                    py_compile.compile(file_path, doraise=True)
+                    result["status"] = "passed"
+                    result["details"] = "Python syntax compiled successfully"
+                else:
+                    result["status"] = "passed"
+                    result["details"] = "Non-Python files are not validated by the lightweight repair verifier"
+            except Exception as exc:
+                result["details"] = str(exc)
+                behaviour_ok = False
+
+            results.append(result)
+
+        return {"passed": behaviour_ok and all(r["status"] == "passed" for r in results), "results": results, "project_root": self.project_root}
+
+
 def print_diff(original, healed, filename="snippet"):
     orig_lines = original.splitlines(keepends=True)
     healed_lines = healed.splitlines(keepends=True)

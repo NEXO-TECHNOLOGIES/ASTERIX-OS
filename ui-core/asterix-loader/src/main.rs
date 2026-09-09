@@ -123,24 +123,218 @@ const BOOT_STEPS: &[BootStep] = &[
     BootStep { subsystem: "INTERFACE_MATRIX",       desc: "Starting Asterix Master Command Hub",     duration_ms: 70 },
 ];
 
-fn run_boot_animation(fast: bool) {
+fn available_boot_themes() -> [&'static str; 6] {
+    ["matrix", "neon", "pulse", "scan", "orbit", "glitch"]
+}
+
+fn random_boot_theme() -> &'static str {
+    let themes = available_boot_themes();
+    let mut rng = Rng::new();
+    let idx = (rng.next_u32() as usize) % themes.len();
+    themes[idx]
+}
+
+fn theme_config_path() -> String {
+    let home = env::var("HOME").or_else(|_| env::var("USERPROFILE")).unwrap_or_default();
+    if home.is_empty() {
+        return ".asterix-boot-theme".to_string();
+    }
+    format!("{}/.asterix-boot-theme", home)
+}
+
+fn read_saved_boot_theme() -> Option<String> {
+    let path = theme_config_path();
+    fs::read_to_string(path).ok().map(|s| s.trim().to_string()).filter(|s| !s.is_empty())
+}
+
+fn save_boot_theme(theme: &str) -> bool {
+    let path = theme_config_path();
+    if let Some(parent) = Path::new(&path).parent() {
+        let _ = fs::create_dir_all(parent);
+    }
+    fs::write(path, theme).is_ok()
+}
+
+fn ai_profile_theme_path() -> String {
+    let home = env::var("HOME").or_else(|_| env::var("USERPROFILE")).unwrap_or_default();
+    if home.is_empty() {
+        return ".asterix-ai-profile.json".to_string();
+    }
+    format!("{}/.asterix_vault/ai_memory/user_profile.json", home)
+}
+
+fn infer_theme_from_ai_profile() -> Option<String> {
+    let profile_path = ai_profile_theme_path();
+    let content = fs::read_to_string(profile_path).ok()?;
+
+    let needle = "\"current_theme\"";
+    let start = content.find(needle)?;
+    let rest = &content[start + needle.len()..];
+    let mut cursor = 0;
+    let mut in_string = false;
+    let mut value = String::new();
+    let mut seen_colon = false;
+
+    for ch in rest.chars() {
+        if ch == ':' {
+            seen_colon = true;
+            continue;
+        }
+        if seen_colon && !in_string && ch == '"' {
+            in_string = true;
+            continue;
+        }
+        if in_string {
+            if ch == '"' {
+                break;
+            }
+            value.push(ch);
+        }
+        cursor += 1;
+    }
+
+    let theme = value.trim().to_ascii_lowercase();
+    if available_boot_themes().iter().any(|t| *t == theme.as_str()) {
+        Some(theme)
+    } else {
+        None
+    }
+}
+
+fn resolve_boot_theme(args: &[String]) -> String {
+    let env_style = env::var("ASTERIX_BOOT_STYLE").unwrap_or_default();
+    let saved_theme = read_saved_boot_theme();
+
+    for arg in args {
+        let lower = arg.to_ascii_lowercase();
+        if lower == "random" {
+            return random_boot_theme().to_string();
+        }
+        if lower == "auto" || lower == "smart" {
+            if let Some(ai_theme) = infer_theme_from_ai_profile() {
+                return ai_theme;
+            }
+            if let Some(saved) = saved_theme.clone() {
+                return saved;
+            }
+            return random_boot_theme().to_string();
+        }
+        if lower == "list" {
+            return "list".to_string();
+        }
+        if lower == "set" {
+            let next = args.iter().position(|a| a == arg).map(|idx| idx + 1).unwrap_or(0);
+            if let Some(value) = args.get(next) {
+                let theme = value.to_ascii_lowercase();
+                if available_boot_themes().iter().any(|t| *t == theme.as_str()) {
+                    let _ = save_boot_theme(&theme);
+                    return theme;
+                }
+            }
+        }
+        if available_boot_themes().iter().any(|t| *t == lower.as_str()) {
+            return lower;
+        }
+    }
+
+    if !env_style.trim().is_empty() {
+        let env_theme = env_style.trim().to_ascii_lowercase();
+        if env_theme == "auto" || env_theme == "smart" {
+            if let Some(ai_theme) = infer_theme_from_ai_profile() {
+                return ai_theme;
+            }
+        }
+        if available_boot_themes().iter().any(|t| *t == env_theme.as_str()) {
+            return env_theme;
+        }
+    }
+
+    if let Some(saved) = saved_theme {
+        if available_boot_themes().iter().any(|t| *t == saved.as_str()) {
+            return saved;
+        }
+    }
+
+    if let Some(ai_theme) = infer_theme_from_ai_profile() {
+        return ai_theme;
+    }
+
+    random_boot_theme().to_string()
+}
+
+fn render_theme_banner(theme: &str, rng: &mut Rng) {
+    match theme {
+        "matrix" => {
+            let colors = [C_CYAN, C_MAGENTA, C_GREEN, C_RED];
+            for (i, color) in colors.iter().enumerate() {
+                clear_screen();
+                let glitched = glitch_banner(BANNER_ART, rng, 0.25 - (i as f32 * 0.05));
+                println!("{color}{C_BOLD}{glitched}{C_RESET}");
+                let _ = io::stdout().flush();
+                sleep(Duration::from_millis(50));
+            }
+        }
+        "neon" => {
+            clear_screen();
+            println!("{C_MAGENTA}{C_BOLD}{BANNER_ART}{C_RESET}");
+            println!("{C_CYAN}╔══════════════════════════════════════════════════════════════════════╗{C_RESET}");
+            println!("{C_CYAN}║{C_RESET} {C_BOLD}ASTERIX NEON BOOTLINE // SIGNAL STABILIZATION ACTIVE{C_RESET} {C_CYAN}║{C_RESET}");
+            println!("{C_CYAN}╚══════════════════════════════════════════════════════════════════════╝{C_RESET}");
+            sleep(Duration::from_millis(100));
+        }
+        "pulse" => {
+            clear_screen();
+            for i in 0..8 {
+                let bar = "█".repeat(12 + i * 2);
+                println!("{C_GREEN}{C_BOLD}[{bar:>28}]{C_RESET} {C_YELLOW}ASTERIX PULSE RAMP{C_RESET}");
+                let _ = io::stdout().flush();
+                sleep(Duration::from_millis(35));
+            }
+        }
+        "scan" => {
+            clear_screen();
+            println!("{C_CYAN}{C_BOLD}SCANNING MEMORY GRID // SIGNAL INTEGRITY CHECK{C_RESET}");
+            for i in 0..16 {
+                let a = " ".repeat(i * 2);
+                println!("{C_YELLOW}{a}▐{C_GREEN}███████████{C_RESET}");
+                let _ = io::stdout().flush();
+                sleep(Duration::from_millis(25));
+            }
+        }
+        "orbit" => {
+            clear_screen();
+            println!("{C_PURPLE}{C_BOLD}ORBITAL BOOT SEQUENCE // ASTERIX VECTOR LOCK{C_RESET}");
+            for i in 0..10 {
+                let dots = ".".repeat(i + 1);
+                println!("{C_CYAN}◉{dots}◌{C_RESET}");
+                let _ = io::stdout().flush();
+                sleep(Duration::from_millis(40));
+            }
+        }
+        _ => {
+            let colors = [C_CYAN, C_MAGENTA, C_GREEN, C_RED];
+            for (i, color) in colors.iter().enumerate() {
+                clear_screen();
+                let glitched = glitch_banner(BANNER_ART, rng, 0.25 - (i as f32 * 0.05));
+                println!("{color}{C_BOLD}{glitched}{C_RESET}");
+                let _ = io::stdout().flush();
+                sleep(Duration::from_millis(50));
+            }
+        }
+    }
+}
+
+fn run_boot_animation(fast: bool, theme: &str) {
     let mut rng = Rng::new();
 
     if !fast {
-        let colors = [C_CYAN, C_MAGENTA, C_GREEN, C_RED];
-        for (i, color) in colors.iter().enumerate() {
-            clear_screen();
-            let glitched = glitch_banner(BANNER_ART, &mut rng, 0.25 - (i as f32 * 0.05));
-            println!("{color}{C_BOLD}{glitched}{C_RESET}");
-            let _ = io::stdout().flush();
-            sleep(Duration::from_millis(60));
-        }
+        render_theme_banner(theme, &mut rng);
     }
 
     clear_screen();
     println!("{C_CYAN}{C_BOLD}{BANNER_ART}{C_RESET}");
     println!("\n{C_BLUE}{}{C_RESET}", "═".repeat(76));
-    println!("{C_WHITE}{C_BOLD}{:>58}{C_RESET}", "[ SYSTEM BOOT SEQUENCE // ASTERIX KERNEL INITIALIZATION ]");
+    println!("{C_WHITE}{C_BOLD}{:>58}{C_RESET}", format!("[ SYSTEM BOOT SEQUENCE // ASTERIX KERNEL INITIALIZATION // {} ]", theme.to_ascii_uppercase()));
     println!("{C_BLUE}{}{C_RESET}\n", "═".repeat(76));
 
     let _total = BOOT_STEPS.len();
@@ -867,6 +1061,7 @@ fn sub_menu_maintenance() {
 fn main() {
     let args: Vec<String> = env::args().collect();
     let first_arg = args.get(1).map(|s| s.as_str()).unwrap_or("");
+    let boot_theme = resolve_boot_theme(&args);
 
     // Fast-path subcommand router for `ax` and `asterix`
     match first_arg {
@@ -972,6 +1167,47 @@ fn main() {
             return;
         }
         "maintenance" => { sub_menu_maintenance(); return; }
+        "spawn" | "boot" | "loader" => {
+            let requested = args.get(2).map(|s| s.as_str()).unwrap_or(boot_theme.as_str());
+            if requested.eq_ignore_ascii_case("random") {
+                let picked = random_boot_theme();
+                println!("{C_CYAN}Boot theme selected: {picked}{C_RESET}");
+                run_boot_animation(args.iter().any(|a| a == "--fast"), picked);
+            } else if requested.eq_ignore_ascii_case("list") {
+                println!("{C_CYAN}Available boot themes: {}{C_RESET}", available_boot_themes().join(", "));
+            } else {
+                let normalized = requested.to_ascii_lowercase();
+                if available_boot_themes().iter().any(|t| *t == normalized.as_str()) {
+                    let _ = save_boot_theme(&normalized);
+                }
+                run_boot_animation(args.iter().any(|a| a == "--fast"), normalized.as_str());
+            }
+            return;
+        }
+        "theme" => {
+            let requested = args.get(2).map(|s| s.as_str()).unwrap_or(boot_theme.as_str());
+            if requested.eq_ignore_ascii_case("list") {
+                println!("{C_CYAN}Available boot themes: {}{C_RESET}", available_boot_themes().join(", "));
+                return;
+            }
+            if requested.eq_ignore_ascii_case("random") {
+                let picked = random_boot_theme();
+                let _ = save_boot_theme(picked);
+                println!("{C_CYAN}Current boot theme: {picked}{C_RESET}");
+                run_boot_animation(args.iter().any(|a| a == "--fast"), picked);
+                return;
+            }
+            let normalized = requested.to_ascii_lowercase();
+            if available_boot_themes().iter().any(|t| *t == normalized.as_str()) {
+                let _ = save_boot_theme(&normalized);
+                println!("{C_CYAN}Current boot theme: {normalized}{C_RESET}");
+                run_boot_animation(args.iter().any(|a| a == "--fast"), normalized.as_str());
+                return;
+            }
+            println!("{C_CYAN}Current boot theme: {boot_theme}{C_RESET}");
+            run_boot_animation(args.iter().any(|a| a == "--fast"), boot_theme.as_str());
+            return;
+        }
 
         // Network & Diagnostic Commands
         "ip" | "myip" => { dispatch_ax_tool(&args[1..]); return; }
@@ -1176,7 +1412,7 @@ fn main() {
     let boot_only = args.iter().any(|a| a == "--boot-only");
 
     if !skip && !menu_only {
-        run_boot_animation(fast);
+        run_boot_animation(fast, boot_theme);
     }
 
     if boot_only {

@@ -32,12 +32,394 @@ const SUBSYSTEMS = [
     { num: "12", icon: "⚡", name: "Subsystem Telemetry HUD", tools: "Btop, Htop, Sensor Gauges, Network Monitor", alias: "as-hub" }
 ];
 
+const HOME_TABS = {
+    overview: [
+        { title: "System Mode", value: "Dual-Boot Ready", sub: "ASTERIX + Kali / Linux Boot Targets", liveKey: "systemMode" },
+        { title: "AI Runtime", value: "Ollama Local", sub: "qwen2.5:3b-instruct", liveKey: "aiRuntime" },
+        { title: "Security Tier", value: "Maximum", sub: "Autonomous threat triage enabled", liveKey: "securityTier" },
+        { title: "Boot Disk", value: "Persist + Secure Vault", sub: "Fast live persistence", liveKey: "bootDisk" },
+        { title: "Last Action", value: "AI Safe Suggestion", sub: "No dangerous command was executed", liveKey: "lastAction" },
+        { title: "OS Status", value: "Stable", sub: "Kernel and telemetry online", liveKey: "osStatus" }
+    ],
+    dualboot: [
+        { title: "Primary Boot", value: "ASTERIX OS", sub: "Main engineering and AI mode" },
+        { title: "Secondary Boot", value: "Kali Linux", sub: "Security tools and pentest lab" },
+        { title: "Boot Tooling", value: "GRUB / Ventoy", sub: "Persistent multi-boot menu" },
+        { title: "Mode Switch", value: "Safe Toggle", sub: "Reboot to desired OS profile" },
+        { title: "Boot Policy", value: "Secure by Default", sub: "User confirmation on risky actions" },
+        { title: "Recovery", value: "Live USB / Rescue", sub: "Recovery and repair mode" }
+    ],
+    tools: [
+        { title: "Recon", value: "Nmap / Masscan", sub: "Network mapping and host discovery" },
+        { title: "Web", value: "SQLMap / Nikto", sub: "Web app exploitation test suite" },
+        { title: "Wireless", value: "Aircrack / WiFite", sub: "Wireless field tooling" },
+        { title: "Forensics", value: "Binwalk / Foremost", sub: "Artifact analysis and carving" },
+        { title: "Reverse", value: "Radare2 / GDB", sub: "Binary analysis and debugging" },
+        { title: "Ops", value: "Proxychains / Tmux", sub: "Remote and split-workflow operations" }
+    ],
+    ai: [
+        { title: "Local Model", value: "qwen2.5:3b-instruct", sub: "Offline and private AI core", liveKey: "localModel" },
+        { title: "Risk Scan", value: "Security Posture", sub: "CPU, RAM, battery, and network checks", liveKey: "riskScan" },
+        { title: "Command Guard", value: "Danger Filter", sub: "Blocks destructive commands", liveKey: "commandGuard" },
+        { title: "Code Repair", value: "ASTRIX Healer", sub: "Autonomous fix suggestions", liveKey: "codeRepair" },
+        { title: "Memory", value: "Event Log", sub: "Persistent event memory capture", liveKey: "memoryState" },
+        { title: "Learning", value: "Self Update", sub: "Nightly rules generation", liveKey: "learningState" }
+    ],
+    recovery: [
+        { title: "Self Heal", value: "Auto Repair", sub: "Recover broken scripts and config" },
+        { title: "Boot Rescue", value: "GRUB Recovery", sub: "Live boot fallback" },
+        { title: "Disk Safety", value: "Write Guard", sub: "No destructive system override" },
+        { title: "Rollback", value: "Backup Restore", sub: "Use last clean copy" },
+        { title: "Logs", value: "Telemetry Vault", sub: "Audit trail and memory review" },
+        { title: "Mode", value: "Safe / Read Only", sub: "Minimal risk operational mode" }
+    ]
+};
+
 document.addEventListener("DOMContentLoaded", () => {
+    renderHomeTabs();
     renderWallpapers("all");
     renderSubsystems();
     setupFilters();
     setupSearch();
+    setupTabButtons();
+    setupDualBootLoader();
+    refreshLiveProfile();
+    updateMoodDashboard();
+    setInterval(refreshLiveProfile, 5000);
+    setInterval(updateMoodDashboard, 3000);
 });
+
+function moodThemeForState(mood) {
+    const normalized = String(mood || "balanced").toLowerCase();
+    const themes = {
+        balanced: { accent: "#00f0ff", glow: "rgba(0, 240, 255, 0.5)", bodyClass: "mood-balanced" },
+        frustrated: { accent: "#ff4d6d", glow: "rgba(255, 77, 109, 0.55)", bodyClass: "mood-frustrated" },
+        stressed: { accent: "#ffb703", glow: "rgba(255, 183, 3, 0.55)", bodyClass: "mood-stressed" },
+        urgent: { accent: "#facc15", glow: "rgba(250, 204, 21, 0.55)", bodyClass: "mood-urgent" },
+        curious: { accent: "#8b5cf6", glow: "rgba(139, 92, 246, 0.55)", bodyClass: "mood-curious" },
+        excited: { accent: "#00ff88", glow: "rgba(0, 255, 136, 0.55)", bodyClass: "mood-excited" },
+        "empathetic-direct": { accent: "#ff4d6d", glow: "rgba(255, 77, 109, 0.55)", bodyClass: "mood-frustrated" },
+        "urgent-priority": { accent: "#facc15", glow: "rgba(250, 204, 21, 0.55)", bodyClass: "mood-urgent" },
+        "teach-and-explain": { accent: "#8b5cf6", glow: "rgba(139, 92, 246, 0.55)", bodyClass: "mood-curious" },
+        motivating: { accent: "#00ff88", glow: "rgba(0, 255, 136, 0.55)", bodyClass: "mood-excited" },
+    };
+    return themes[normalized] || themes.balanced;
+}
+
+function getSelectedBootTarget() {
+    const selected = document.querySelector(".os-entry.selected .os-name");
+    return selected ? selected.textContent.trim() : "ASTERIX OS";
+}
+
+function applyMoodTheme(snapshot) {
+    const mood = (snapshot && (snapshot.mood || snapshot.response_style)) || "balanced";
+    const theme = moodThemeForState(mood);
+    const moodIntensity = {
+        balanced: 16,
+        frustrated: 28,
+        stressed: 30,
+        urgent: 32,
+        curious: 22,
+        excited: 26,
+        "empathetic-direct": 30,
+        "urgent-priority": 34,
+        "teach-and-explain": 24,
+        motivating: 28,
+    };
+    const moodBoost = moodIntensity[mood] || moodIntensity.balanced;
+    const bootTarget = getSelectedBootTarget();
+    const bootBoost = {
+        "ASTERIX OS": 0,
+        "Kali Linux": 4,
+        "Windows 11": 2,
+        "Live Rescue": 6,
+    }[bootTarget] || 0;
+
+    document.body.classList.remove(
+        "mood-balanced", "mood-frustrated", "mood-stressed", "mood-urgent", "mood-curious", "mood-excited"
+    );
+    document.body.classList.add(theme.bodyClass);
+    document.documentElement.style.setProperty("--theme-accent", theme.accent);
+    document.documentElement.style.setProperty("--theme-glow", theme.glow);
+    document.documentElement.style.setProperty("--pulse-size", `${moodBoost + bootBoost + 14}px`);
+    document.documentElement.style.setProperty("--pulse-speed", `${Math.max(1.2, 3.4 - (moodBoost / 18))}s`);
+}
+
+function updateEmotionMeter(snapshot) {
+    const moodSummary = snapshot.mood_summary || {};
+    const stress = Number(moodSummary.stress || 0);
+    const frustration = Number(moodSummary.frustration || 0);
+    const urgency = Number(moodSummary.urgency || 0);
+    const curiosity = Number(moodSummary.curiosity || 0);
+    const calm = Number(moodSummary.calm || 1);
+    const intensity = Math.min(100, Math.round(((stress * 20) + (frustration * 18) + (urgency * 24) + (curiosity * 16) + (Math.max(0, 5 - calm) * 10))));
+    const meter = document.getElementById("emotionMeterFill");
+    const text = document.getElementById("emotionMeterText");
+    if (meter) meter.style.width = `${intensity}%`;
+    if (text) text.textContent = snapshot.mood || snapshot.response_style || "balanced";
+    const accent = moodThemeForState(snapshot.mood || snapshot.response_style || "balanced").accent;
+    if (meter) meter.style.background = `linear-gradient(90deg, ${accent}, rgba(255,255,255,0.8))`;
+}
+
+function applyLiveProfileToHomeCards(snapshot) {
+    const mood = snapshot.mood || "balanced";
+    const style = snapshot.response_style || "balanced";
+    const trainingCompleted = snapshot.training_completed || 0;
+    const learningQuota = snapshot.learning_quota || 100;
+    const trainingPercent = Math.min(100, Math.round((trainingCompleted / learningQuota) * 100));
+
+    applyMoodTheme(snapshot);
+
+    const overviewCards = document.querySelectorAll("#overviewGrid .home-card");
+    const aiCards = document.querySelectorAll("#aiGrid .home-card");
+
+    if (overviewCards.length >= 6) {
+        overviewCards[1].querySelector(".home-card-value").textContent = mood.toUpperCase();
+        overviewCards[1].querySelector(".home-card-sub").textContent = `${style} response mode`; 
+        overviewCards[4].querySelector(".home-card-value").textContent = style.toUpperCase();
+        overviewCards[4].querySelector(".home-card-sub").textContent = `${trainingCompleted}/${learningQuota} training cycles`;
+        overviewCards[5].querySelector(".home-card-value").textContent = trainStateLabel(mood, style);
+        overviewCards[5].querySelector(".home-card-sub").textContent = `${trainingPercent}% learning complete`;
+    }
+
+    if (aiCards.length >= 6) {
+        aiCards[0].querySelector(".home-card-value").textContent = "qwen2.5:3b-instruct";
+        aiCards[0].querySelector(".home-card-sub").textContent = `Mood: ${mood}`;
+        aiCards[1].querySelector(".home-card-value").textContent = `${trainingPercent}%`;
+        aiCards[1].querySelector(".home-card-sub").textContent = `${trainingCompleted} / ${learningQuota} cycles`;
+        aiCards[2].querySelector(".home-card-value").textContent = style.toUpperCase();
+        aiCards[2].querySelector(".home-card-sub").textContent = `Blocks risky actions`;
+        aiCards[3].querySelector(".home-card-value").textContent = "ACTIVE";
+        aiCards[3].querySelector(".home-card-sub").textContent = `Fix loop tuned for ${mood}`;
+        aiCards[4].querySelector(".home-card-value").textContent = "LIVE";
+        aiCards[4].querySelector(".home-card-sub").textContent = `Last mood: ${mood}`;
+        aiCards[5].querySelector(".home-card-value").textContent = "RUNNING";
+        aiCards[5].querySelector(".home-card-sub").textContent = `${trainingPercent}% complete`;
+    }
+
+    const bootTrainingNote = document.getElementById("bootTrainingNote");
+    if (bootTrainingNote) {
+        const bootLabel = document.querySelector(".os-entry.selected .os-name")?.textContent || "ASTERIX OS";
+        bootTrainingNote.textContent = `AI training: ${mood} mood • ${style} mode • preferred boot: ${bootLabel}`;
+    }
+}
+
+function trainStateLabel(mood, style) {
+    if (mood === "stressed" || mood === "frustrated") return "Urgent";
+    if (style === "teach-and-explain") return "Explaining";
+    if (style === "motivating") return "Boosted";
+    return "Stable";
+}
+
+function updateMoodDashboard() {
+    const responseText = {
+        balanced: "I will keep this steady and efficient while we work through it.",
+        frustrated: "I hear the pressure. I will fix this fast and keep the steps simple.",
+        stressed: "I hear the pressure. I will fix this fast and keep the steps simple.",
+        urgent: "I will prioritize this now and keep the fix focused on the fastest path.",
+        curious: "Let me explain what is happening and show the exact next step in plain language.",
+        excited: "Awesome. Let’s move fast and keep this momentum high.",
+        "empathetic-direct": "I hear the pressure. I will fix this fast and keep the steps simple.",
+        "urgent-priority": "I will prioritize this now and keep the fix focused on the fastest path.",
+        "teach-and-explain": "Let me explain what is happening and show the exact next step in plain language.",
+        motivating: "Awesome. Let’s move fast and keep this momentum high.",
+    };
+
+    const moodFallback = {
+        mood: "balanced",
+        response_style: "balanced",
+        training_completed: 0,
+        learning_quota: 100,
+        confidence: 0.75,
+        mood_summary: {
+            frustration: 0,
+            stress: 0,
+            urgency: 0,
+            curiosity: 0,
+            excitement: 0,
+            calm: 1,
+        }
+    };
+
+    const snapshot = window.__ASTERIX_LIVE_PROFILE__ || moodFallback;
+    const moodName = snapshot.mood || "balanced";
+    const currentMood = snapshot.response_style || moodName || "balanced";
+    const moodStatus = document.getElementById("aiMoodStatus");
+    const moodScore = document.getElementById("aiMoodScore");
+    const responseMessage = document.getElementById("aiResponseMessage");
+    const moodSummary = snapshot.mood_summary || {};
+    applyLiveProfileToHomeCards(snapshot);
+    updateEmotionMeter(snapshot);
+
+    const frustration = Number(moodSummary.frustration || 0);
+    const stress = Number(moodSummary.stress || 0);
+    const urgency = Number(moodSummary.urgency || 0);
+    const curiosity = Number(moodSummary.curiosity || 0);
+
+    if (moodStatus) moodStatus.textContent = currentMood;
+    if (moodScore) moodScore.textContent = `confidence ${(snapshot.confidence || 0.75).toFixed(2)}`;
+    if (responseMessage) responseMessage.textContent = responseText[currentMood] || responseText[moodName] || responseText.balanced;
+
+    const moodValues = {
+        frustration: document.getElementById("moodFrustration"),
+        stress: document.getElementById("moodStress"),
+        urgency: document.getElementById("moodUrgency"),
+        curiosity: document.getElementById("moodCuriosity"),
+    };
+
+    const bars = {
+        frustration: document.getElementById("barFrustration"),
+        stress: document.getElementById("barStress"),
+        urgency: document.getElementById("barUrgency"),
+        curiosity: document.getElementById("barCuriosity"),
+    };
+
+    Object.entries({ frustration, stress, urgency, curiosity }).forEach(([key, value]) => {
+        if (moodValues[key]) moodValues[key].textContent = String(value);
+        if (bars[key]) bars[key].style.width = `${Math.min(100, value * 20)}%`;
+    });
+}
+
+async function refreshLiveProfile() {
+    try {
+        const response = await fetch("../asterix-ai/profile_status.json");
+        if (!response.ok) return;
+        const data = await response.json();
+        window.__ASTERIX_LIVE_PROFILE__ = data;
+        updateMoodDashboard();
+    } catch (error) {
+        window.__ASTERIX_LIVE_PROFILE__ = window.__ASTERIX_LIVE_PROFILE__ || {
+            mood: "balanced",
+            response_style: "balanced",
+            confidence: 0.75,
+            mood_summary: { frustration: 0, stress: 0, urgency: 0, curiosity: 0 },
+        };
+        updateMoodDashboard();
+    }
+}
+
+function setupDualBootLoader() {
+    const entries = document.querySelectorAll(".os-entry");
+    const progressBar = document.getElementById("bootProgressBar");
+    const bootModeText = document.getElementById("bootModeText");
+    const bootStatusText = document.getElementById("bootStatusText");
+    const logLines = document.getElementById("bootLogLines");
+    const countdownValue = document.getElementById("countdownValue");
+
+    if (!entries.length || !progressBar || !bootModeText || !bootStatusText) return;
+
+    const bootMessages = {
+        "ASTERIX OS": [
+            "Initializing ASTERIX kernel",
+            "Loading secure AI runtime",
+            "Mounting persistent vault",
+            "Launching command matrix"
+        ],
+        "Kali Linux": [
+            "Loading Kali kernel",
+            "Activating toolchain modules",
+            "Mounting penetration workspace",
+            "Starting security environment"
+        ],
+        "Windows 11": [
+            "Booting Windows boot manager",
+            "Loading Win32 subsystem",
+            "Starting user session",
+            "Preparing desktop"
+        ],
+        "Live Rescue": [
+            "Booting rescue shell",
+            "Scanning recovery partitions",
+            "Preparing minimal repair environment",
+            "Launching diagnostics"
+        ]
+    };
+
+    const runBootSequence = (label) => {
+        let progress = 0;
+        const messages = bootMessages[label] || bootMessages["ASTERIX OS"];
+        if (logLines) {
+            logLines.innerHTML = messages.map(msg => `<div>[boot] ${msg}</div>`).join("");
+        }
+        bootStatusText.textContent = "LOADING BOOT SEQUENCE";
+        bootModeText.textContent = `Loading ${label}...`;
+        progressBar.style.width = "0%";
+
+        const timer = setInterval(() => {
+            progress += 10;
+            progressBar.style.width = `${progress}%`;
+            if (countdownValue) countdownValue.textContent = `${Math.max(0, 7 - Math.floor(progress / 14))}s`;
+
+            if (logLines && messages[progress / 10 - 1]) {
+                const item = document.createElement("div");
+                item.textContent = `[boot] ${messages[Math.max(0, Math.floor((progress - 10) / 25))]}`;
+                logLines.appendChild(item);
+            }
+
+            if (progress >= 100) {
+                clearInterval(timer);
+                bootStatusText.textContent = "BOOT COMPLETE";
+                bootModeText.textContent = `${label} ready`;
+                if (countdownValue) countdownValue.textContent = "0s";
+            }
+        }, 150);
+    };
+
+    const bootThemeByLabel = {
+        "ASTERIX OS": { color: "#00f0ff", glow: "rgba(0, 240, 255, 0.7)" },
+        "Kali Linux": { color: "#00ff88", glow: "rgba(0, 255, 136, 0.85)" },
+        "Windows 11": { color: "#6ea8fe", glow: "rgba(110, 168, 254, 0.75)" },
+        "Live Rescue": { color: "#ffb703", glow: "rgba(255, 183, 3, 0.8)" },
+    };
+
+    const applyBootGlow = (label) => {
+        const theme = bootThemeByLabel[label] || bootThemeByLabel["ASTERIX OS"];
+        document.documentElement.style.setProperty("--boot-accent", theme.color);
+        document.documentElement.style.setProperty("--boot-glow", theme.glow);
+    };
+
+    entries.forEach(entry => {
+        entry.addEventListener("click", () => {
+            entries.forEach(item => item.classList.toggle("selected", item === entry));
+            const label = entry.querySelector(".os-name")?.textContent || "ASTERIX OS";
+            applyBootGlow(label);
+            runBootSequence(label);
+            const trainingNote = document.getElementById("bootTrainingNote");
+            if (trainingNote) {
+                trainingNote.textContent = `AI training: learned boot preference for ${label}`;
+            }
+        });
+    });
+}
+
+function renderHomeTabs() {
+    Object.entries(HOME_TABS).forEach(([tabName, cards]) => {
+        const host = document.getElementById(`${tabName}Grid`);
+        if (!host) return;
+        host.innerHTML = cards.map(card => `
+            <div class="home-card">
+                <div class="home-card-title">${card.title}</div>
+                <div class="home-card-value">${card.value}</div>
+                <div class="home-card-sub">${card.sub}</div>
+            </div>
+        `).join("");
+    });
+}
+
+function setupTabButtons() {
+    const buttons = document.querySelectorAll(".tab-button");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            buttons.forEach(b => b.classList.toggle("active", b === btn));
+            panels.forEach(panel => {
+                const isActive = panel.id === `tab-${btn.dataset.tab}`;
+                panel.classList.toggle("active", isActive);
+            });
+        });
+    });
+}
 
 // Render Wallpapers
 function renderWallpapers(filter) {

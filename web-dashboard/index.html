@@ -22,12 +22,14 @@
             <span class="badge online-badge">● LIVE NODE</span>
         </div>
         <nav class="header-nav">
-            <a href="#telemetry" class="nav-link active">Telemetry</a>
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#telemetry" class="nav-link">Telemetry</a>
             <a href="#downloads" class="nav-link">Downloads &amp; Rufus</a>
             <a href="#gallery" class="nav-link">ISO Wallpapers</a>
             <a href="#subsystems" class="nav-link">12 Subsystems</a>
             <a href="#discord" class="nav-link">Discord Bridge</a>
             <a href="#terminal" class="nav-link">Terminal Matrix</a>
+            <a href="ai-landing-page.html" class="nav-link">AI Studio</a>
         </nav>
         <div class="header-right">
             <div class="persistence-indicator">
@@ -37,6 +39,156 @@
     </header>
 
     <main class="dashboard-container">
+        <section id="home" class="panel tab-shell">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <span class="section-icon">🏠</span>
+                    <h2>ASTERIX / KALI DUAL-BOOT DESKTOP</h2>
+                </div>
+            </div>
+
+            <div class="tab-buttons" role="tablist" aria-label="ASTERIX home tabs">
+                <button class="tab-button active" data-tab="overview">Overview</button>
+                <button class="tab-button" data-tab="dualboot">Dual Boot</button>
+                <button class="tab-button" data-tab="tools">Kali Tools</button>
+                <button class="tab-button" data-tab="ai">AI / Security</button>
+                <button class="tab-button" data-tab="recovery">Recovery</button>
+            </div>
+
+            <div class="emotion-meter-wrap" aria-live="polite">
+                <div class="emotion-meter-label">Emotion Meter</div>
+                <div class="emotion-meter"><span id="emotionMeterFill"></span></div>
+                <div id="emotionMeterText" class="emotion-meter-text">balanced</div>
+            </div>
+
+            <div id="tab-overview" class="tab-panel active">
+                <div class="home-grid" id="overviewGrid"></div>
+            </div>
+            <div id="tab-dualboot" class="tab-panel">
+                <div class="desktop-shell">
+                    <div class="boot-window">
+                        <div class="boot-header">
+                            <div class="boot-title">ASTERIX / KALI Boot Manager</div>
+                            <div class="boot-actions">
+                                <span class="tiny-dot"></span>
+                                <span class="tiny-dot"></span>
+                                <span class="tiny-dot"></span>
+                            </div>
+                        </div>
+
+                        <div class="boot-body">
+                            <div class="boot-left">
+                                <div class="os-list">
+                                    <div class="os-entry selected">
+                                        <span class="os-rank">01</span>
+                                        <span class="os-name">ASTERIX OS</span>
+                                        <span class="os-tag">Default</span>
+                                    </div>
+                                    <div class="os-entry">
+                                        <span class="os-rank">02</span>
+                                        <span class="os-name">Kali Linux</span>
+                                        <span class="os-tag">Tools</span>
+                                    </div>
+                                    <div class="os-entry">
+                                        <span class="os-rank">03</span>
+                                        <span class="os-name">Windows 11</span>
+                                        <span class="os-tag">Optional</span>
+                                    </div>
+                                    <div class="os-entry">
+                                        <span class="os-rank">04</span>
+                                        <span class="os-name">Live Rescue</span>
+                                        <span class="os-tag">Recovery</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="boot-right">
+                                <div class="boot-logo-full">ASTERIX</div>
+                                <div class="boot-status" id="bootStatusText">BOOT SEQUENCE READY</div>
+                                <div class="loading-bar"><span id="bootProgressBar"></span></div>
+                                <div class="boot-mode-row">
+                                    <div class="boot-mode" id="bootModeText">Loading ASTERIX OS...</div>
+                                    <div class="countdown" id="countdownValue">7s</div>
+                                </div>
+                                <div class="boot-log" id="bootLogLines">
+                                    <div>[boot] Secure boot chain initialized</div>
+                                    <div>[boot] Boot menu loaded</div>
+                                    <div>[boot] Awaiting OS selection</div>
+                                </div>
+                                <div class="boot-training-note" id="bootTrainingNote">AI training: default boot preference is ASTERIX OS</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="desktop-preview">
+                        <div class="desktop-bar">
+                            <div class="start-pill">Start</div>
+                            <div class="desktop-title">Kali / ASTERIX Workspace</div>
+                            <div class="system-tray">🟢 12:00</div>
+                        </div>
+
+                        <div class="desktop-icons">
+                            <div class="desktop-icon">
+                                <span>💻</span>
+                                <label>Terminal</label>
+                            </div>
+                            <div class="desktop-icon">
+                                <span>🛡️</span>
+                                <label>ASTERIX</label>
+                            </div>
+                            <div class="desktop-icon">
+                                <span>🐉</span>
+                                <label>Kali Tools</label>
+                            </div>
+                            <div class="desktop-icon">
+                                <span>⚙️</span>
+                                <label>Settings</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="home-grid" id="dualbootGrid"></div>
+            </div>
+            <div id="tab-tools" class="tab-panel">
+                <div class="home-grid" id="toolsGrid"></div>
+            </div>
+            <div id="tab-ai" class="tab-panel">
+                <div class="mood-dashboard">
+                    <div class="mood-card mood-status">
+                        <div class="panel-title-group compact">
+                            <span class="section-icon">🧠</span>
+                            <h3>AI MOOD ENGINE</h3>
+                        </div>
+                        <div class="mood-pill" id="aiMoodStatus">balanced</div>
+                        <div class="mood-score" id="aiMoodScore">confidence 0.75</div>
+                    </div>
+                    <div class="mood-card mood-breakdown">
+                        <div class="mood-bars">
+                            <div class="mood-label-row"><span>Frustration</span><span id="moodFrustration">0</span></div>
+                            <div class="mood-bar"><span id="barFrustration" style="width:0%"></span></div>
+                            <div class="mood-label-row"><span>Stress</span><span id="moodStress">0</span></div>
+                            <div class="mood-bar"><span id="barStress" style="width:0%"></span></div>
+                            <div class="mood-label-row"><span>Urgency</span><span id="moodUrgency">0</span></div>
+                            <div class="mood-bar"><span id="barUrgency" style="width:0%"></span></div>
+                            <div class="mood-label-row"><span>Curiosity</span><span id="moodCuriosity">0</span></div>
+                            <div class="mood-bar"><span id="barCuriosity" style="width:0%"></span></div>
+                        </div>
+                    </div>
+                    <div class="mood-card response-card">
+                        <div class="panel-title-group compact">
+                            <span class="section-icon">💬</span>
+                            <h3>ADAPTIVE RESPONSE</h3>
+                        </div>
+                        <p id="aiResponseMessage">I will keep this steady and efficient while we work through it.</p>
+                    </div>
+                </div>
+                <div class="home-grid" id="aiGrid"></div>
+            </div>
+            <div id="tab-recovery" class="tab-panel">
+                <div class="home-grid" id="recoveryGrid"></div>
+            </div>
+        </section>
+
         <!-- Hero Telemetry Section -->
         <section id="telemetry" class="panel hero-panel">
             <div class="hero-content">
