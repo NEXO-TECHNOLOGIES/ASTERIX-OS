@@ -283,7 +283,26 @@ chmod +x "$ASTERIX_DIR/termux-mobile/asterix-ai-startup.sh" 2>/dev/null || true
 echo -e "${GREEN}[✔] IP and target tracking helper installed: ${YELLOW}target-tracker${NC}"
 echo -e "${GREEN}[✔] Local AI startup helper installed: ${YELLOW}asterix-ai-startup${NC}"
 
-echo -e "${YELLOW}[*] Step 10: Synchronizing External Security Packages...${NC}"
+echo -e "${YELLOW}[*] Step 10: Triggering ASTERIX auto-heal and AI detection immediately after install...${NC}"
+if [ -x "$PREFIX/bin/asterix-ai-startup" ]; then
+    "$PREFIX/bin/asterix-ai-startup" >/tmp/asterix_post_install_ai.log 2>&1 || true
+fi
+if command -v ax >/dev/null 2>&1; then
+    ax doctor --fix >/tmp/asterix_post_install_heal.log 2>&1 || true
+else
+    if [ -f "$ASTERIX_DIR/bin/ax" ]; then
+        bash "$ASTERIX_DIR/bin/ax" doctor --fix >/tmp/asterix_post_install_heal.log 2>&1 || true
+    fi
+fi
+if command -v pkg >/dev/null 2>&1; then
+    termux-change-repo >/dev/null 2>&1 || true
+    pkg update -y >/dev/null 2>&1 || true
+    pkg upgrade -y >/dev/null 2>&1 || true
+    pkg reinstall -y curl libcurl >/dev/null 2>&1 || true
+    pkg install -y git wget openssl >/dev/null 2>&1 || true
+fi
+
+echo -e "${YELLOW}[*] Step 11: Synchronizing External Security Packages...${NC}"
 mkdir -p "$ASTERIX_DIR/packages" 2>/dev/null || true
 if command -v git >/dev/null 2>&1; then
     for pkg_repo in \
