@@ -1,0 +1,53 @@
+{
+  "tools": [
+    {
+      "name": "dashboard",
+      "type": "dashboard",
+      "description": "mood dashboard panel",
+      "status": "pending",
+      "project_scope": "project",
+      "approval": "manual"
+    },
+    {
+      "name": "dashboard",
+      "type": "dashboard",
+      "description": "mood dashboard panel",
+      "status": "pending",
+      "project_scope": "project",
+      "approval": "manual"
+    },
+    {
+      "name": "dashboard",
+      "type": "dashboard",
+      "description": "mood dashboard panel",
+      "status": "pending",
+      "project_scope": "project",
+      "approval": "manual"
+    },
+    {
+      "name": "dashboard",
+      "type": "dashboard",
+      "description": "mood dashboard panel",
+      "status": "pending",
+      "project_scope": "project",
+      "approval": "manual"
+    },
+    {
+      "name": "dashboard",
+      "type": "dashboard",
+      "description": "mood dashboard panel",
+      "status": "pending",
+      "project_scope": "project",
+      "approval": "manual",
+      "path": "C:\\Users\\Baha\\Desktop\\ASTERIX OS\\asterix-ai\\dashboard.py"
+    }
+  ],
+  "pending": [
+    "dashboard",
+    "dashboard",
+    "dashboard",
+    "dashboard",
+    "dashboard"
+  ],
+  "approved": []
+}

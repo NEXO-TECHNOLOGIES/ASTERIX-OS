@@ -272,7 +272,18 @@ proot-distro login debian -- bash -c "
     fi
 " 2>/dev/null || true
 
-echo -e "${YELLOW}[*] Step 9: Synchronizing External Security Packages...${NC}"
+echo -e "${YELLOW}[*] Step 9: Installing Target Tracker & Advanced Mobile Utilities...${NC}"
+cp "$ASTERIX_DIR/termux-mobile/target-tracker.sh" "$PREFIX/bin/target-tracker" 2>/dev/null || true
+cp "$ASTERIX_DIR/termux-mobile/asterix-ai-startup.sh" "$PREFIX/bin/asterix-ai-startup" 2>/dev/null || true
+chmod +x "$PREFIX/bin/target-tracker" 2>/dev/null || true
+chmod +x "$PREFIX/bin/asterix-ai-startup" 2>/dev/null || true
+chmod +x "$ASTERIX_DIR/termux-mobile/target-tracker.sh" 2>/dev/null || true
+chmod +x "$ASTERIX_DIR/termux-mobile/asterix-ai-startup.sh" 2>/dev/null || true
+
+echo -e "${GREEN}[✔] IP and target tracking helper installed: ${YELLOW}target-tracker${NC}"
+echo -e "${GREEN}[✔] Local AI startup helper installed: ${YELLOW}asterix-ai-startup${NC}"
+
+echo -e "${YELLOW}[*] Step 10: Synchronizing External Security Packages...${NC}"
 mkdir -p "$ASTERIX_DIR/packages" 2>/dev/null || true
 if command -v git >/dev/null 2>&1; then
     for pkg_repo in \
@@ -300,8 +311,9 @@ for d in "$HOME/ASTERIX-OS"/core-utils-*; do [ -d "$d/bin" ] && export PATH="$d/
 if [ -f "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh" ]; then . "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh"; fi
 if [ -t 1 ]; then
     [ -x "$PREFIX/bin/asterix-loader" ] && asterix-loader
+    [ -x "$PREFIX/bin/asterix-ai-startup" ] && "$PREFIX/bin/asterix-ai-startup"
     echo -e "\033[38;5;220mType '\033[1max\033[0m\033[38;5;220m' or '\033[1masterix\033[0m\033[38;5;220m' to enter the ASTERIX Security Sandbox.\033[0m"
-    echo -e "\033[38;5;141mTools: ax defender | ax game | ax undercover | ax darktrace | ax shadowcam\033[0m\n"
+    echo -e "\033[38;5;141mTools: ax defender | ax game | ax undercover | ax darktrace | ax shadowcam | target-tracker\033[0m\n"
 fi
 AUTO
 fi
@@ -313,5 +325,6 @@ echo -e "${CYAN}Safe Local Storage:${NC}    $PERSIST_LOCAL"
 echo -e "${CYAN}Launch Commands:${NC}       Type ${YELLOW}ax${NC} or ${YELLOW}asterix${NC} anywhere in Termux"
 echo -e "${CYAN}Defense & Gaming:${NC}      ${YELLOW}ax defender${NC} | ${YELLOW}ax game boost${NC} | ${YELLOW}ax undercover${NC}"
 echo -e "${CYAN}Dark Forensic Tools:${NC}   ${YELLOW}ax darktrace${NC} | ${YELLOW}ax shadowcam${NC} | ${YELLOW}ax dark-engine${NC}"
+echo -e "${CYAN}Target Tracking:${NC}       ${YELLOW}target-tracker <ip-or-host>${NC} | ${YELLOW}target-tracker 8.8.8.8 --json${NC}"
 echo -e "${CYAN}System Maintenance:${NC}    ${YELLOW}ax update${NC} | ${YELLOW}ax upgrade${NC} | ${YELLOW}ax doctor${NC}"
 echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════════════${NC}\n"

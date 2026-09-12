@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTERIX Admin Panel</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <div class="desktop-shell" id="adminDesktopShell">
+        <div class="floating-window" data-window="ops">
+          <div class="window-titlebar" data-window-id="ops">
+            <div class="titlebar-left">
+              <span class="win-icon">A</span>
+              <span class="win-title">Fleet Control</span>
+            </div>
+            <div class="titlebar-controls">
+              <button class="win-btn min-btn" type="button">−</button>
+              <button class="win-btn max-btn" type="button">□</button>
+              <button class="win-btn close-btn" type="button">×</button>
+            </div>
+          </div>
+          <div class="window-body compact">
+            <div class="mini-metric"><span>Hosts</span><strong>4</strong></div>
+            <div class="mini-metric"><span>Live VMs</span><strong>12</strong></div>
+            <div class="mini-metric"><span>Threat</span><strong>Low</strong></div>
+          </div>
+        </div>
+
+        <div class="floating-window" data-window="snapshots" style="top: 90px; right: 36px; width: 300px;">
+          <div class="window-titlebar" data-window-id="snapshots">
+            <div class="titlebar-left">
+              <span class="win-icon">S</span>
+              <span class="win-title">Snapshots</span>
+            </div>
+            <div class="titlebar-controls">
+              <button class="win-btn min-btn" type="button">−</button>
+              <button class="win-btn max-btn" type="button">□</button>
+              <button class="win-btn close-btn" type="button">×</button>
+            </div>
+          </div>
+          <div class="window-body compact">
+            <div class="info-line"><span>Latest</span><strong>prod-snapshot-01</strong></div>
+            <div class="info-line"><span>Backups</span><strong>8 total</strong></div>
+            <div class="info-line"><span>Status</span><strong>Healthy</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-name">ASTERIX</div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html">Overview</a>
+          <a href="dashboard.html">Console</a>
+          <a href="vms.html">VMs</a>
+          <a href="admin.html" class="active">Admin</a>
+          <a href="settings.html">Settings</a>
+        </nav>
+
+        <div class="nav-actions">
+          <span class="chip online">Admin panel</span>
+          <button id="themeToggleBtn" class="theme-toggle" type="button">Theme: Dark</button>
+          <a class="secondary-btn" href="login.html">Logout</a>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <div>
+          <h1>Infrastructure admin</h1>
+          <div class="page-subtitle">Lifecycle control, snapshots, keys, and orchestration actions.</div>
+        </div>
+        <div class="cta-row">
+          <button class="secondary-btn" type="button">Export plan</button>
+          <button class="primary-btn" type="button">Create snapshot</button>
+        </div>
+      </section>
+
+      <section class="grid-3">
+        <div class="stat-card">
+          <div class="stat-label">VM count</div>
+          <div class="stat-value">12</div>
+          <div class="stat-trend">3 active builds</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Snapshots</div>
+          <div class="stat-value">8</div>
+          <div class="stat-trend">2 pending cleanup</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">SSH keys</div>
+          <div class="stat-value">6</div>
+          <div class="stat-trend">1 rotated today</div>
+        </div>
+      </section>
+
+      <section class="admin-grid" style="margin-top: 22px;">
+        <div class="section-card">
+          <div class="card-title">
+            <h3>VM lifecycle</h3>
+            <button class="primary-btn" type="button">Create VM</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Node</th>
+                  <th>Region</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminVmTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="card-title">
+            <h3>Snapshots</h3>
+          </div>
+          <div id="snapshotList" class="key-list"></div>
+        </div>
+      </section>
+
+      <section class="admin-grid" style="margin-top: 18px;">
+        <div class="section-card">
+          <div class="card-title">
+            <h3>SSH key roster</h3>
+          </div>
+          <div id="adminKeyList" class="key-list"></div>
+        </div>
+
+        <div class="section-card">
+          <div class="card-title">
+            <h3>Operational checklist</h3>
+          </div>
+          <div class="key-list">
+            <div class="key-item">
+              <div class="key-meta"><span class="key-name">Disk health</span><span class="key-fpr">Healthy • 93%</span></div>
+              <span class="pill healthy">OK</span>
+            </div>
+            <div class="key-item">
+              <div class="key-meta"><span class="key-name">Image drift</span><span class="key-fpr">No drift detected</span></div>
+              <span class="pill healthy">OK</span>
+            </div>
+            <div class="key-item">
+              <div class="key-meta"><span class="key-name">Cleanup window</span><span class="key-fpr">Ready in 4 hours</span></div>
+              <span class="pill warning">Queued</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="site.js"></script>
+  </body>
+</html>

@@ -16,7 +16,8 @@ from typing import Any, Dict, List, Optional
 
 OLLAMA_URL = os.getenv("ASTERIX_OLLAMA_URL", "http://localhost:11434")
 MODEL_NAME = os.getenv("ASTERIX_OLLAMA_MODEL", "qwen2.5:3b-instruct")
-SAFE_DEFAULT = "echo 'Ollama offline; no action taken'"
+AI_NAME = os.getenv("ASTERIX_AI_NAME", "ASTERIX AI")
+SAFE_DEFAULT = f"echo '{AI_NAME} offline; no action taken'"
 DANGEROUS_PATTERNS = [
     "rm -rf",
     "rm -r /",
@@ -102,7 +103,7 @@ def _is_dangerous(command: str) -> bool:
 
 def _fallback_command() -> str:
     """Safe, minimal fallback if the model or server is unavailable."""
-    return "echo 'Ollama offline; no action taken'"
+    return f"echo '{AI_NAME} offline; no action taken'"
 
 
 def build_security_summary(system_state: Dict[str, Any], memory_log: str) -> Dict[str, Any]:

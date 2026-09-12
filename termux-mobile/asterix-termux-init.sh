@@ -20,9 +20,23 @@ FAST=0
 STEALTH=0
 
 # Detect Undercover / Stealth Camouflage flags
+THEME="matrix"
+for arg in "$@"; do
+    case "$arg" in
+        --theme=*) THEME="${arg#--theme=}" ;;
+        --theme) THEME="neon" ;;
+        --matrix) THEME="matrix" ;;
+        --neon) THEME="neon" ;;
+        --pulse) THEME="pulse" ;;
+        --glitch) THEME="glitch" ;;
+        --stealth|--undercover|--silent) STEALTH=1; FAST=1; THEME="stealth" ;;
+    esac
+done
+
 if [[ "$*" == *"--stealth"* || "$*" == *"--undercover"* || "$*" == *"--silent"* || -f "$HOME/.asterix_undercover" ]]; then
     STEALTH=1
     FAST=1
+    THEME="stealth"
 fi
 
 [[ "$1" == "--fast" || -n "$CI" ]] && FAST=1
@@ -82,7 +96,20 @@ _glitch_line() {
 }
 
 _show_banner() {
-    echo -e "${FG_CYAN}${BOLD}"
+    case "$THEME" in
+        neon)
+            echo -e "${FG_MAGENTA}${BOLD}"
+            ;;
+        pulse)
+            echo -e "${FG_RED}${BOLD}"
+            ;;
+        stealth)
+            echo -e "${FG_DARKGRAY}${BOLD}"
+            ;;
+        *)
+            echo -e "${FG_CYAN}${BOLD}"
+            ;;
+    esac
     echo "  ░█████╗ ░██████╗████████╗███████╗██████╗ ░██╗██╗░░██╗"
     echo "  ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝"
     echo "  ███████║╚█████╗░░░░██║░░░█████╗░░██████╔╝██║░╚███╔╝░"
@@ -97,6 +124,9 @@ _glitch_banner() {
     [[ $FAST -eq 1 ]] && { _show_banner; return; }
     local colors=("$FG_RED" "$FG_MAGENTA" "$FG_CYAN" "$FG_GREEN")
     local ints=(30 20 10 0)
+    if [[ "$THEME" == "neon" ]]; then colors=("$FG_MAGENTA" "$FG_LTBLUE" "$FG_PURPLE" "$FG_CYAN"); fi
+    if [[ "$THEME" == "pulse" ]]; then colors=("$FG_RED" "$FG_YELLOW" "$FG_ORANGE" "$FG_RED"); fi
+    if [[ "$THEME" == "stealth" ]]; then colors=("$FG_DARKGRAY" "$FG_GRAY" "$FG_DKGREEN" "$FG_DARKGRAY"); fi
     local banner_text=("  ░█████╗ ░██████╗████████╗███████╗██████╗ ░██╗██╗░░██╗" \
                        "  ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝" \
                        "  ███████║╚█████╗░░░░██║░░░█████╗░░██████╔╝██║░╚███╔╝░" \
@@ -198,9 +228,20 @@ _run_boot() {
         IFS=':' read -r sub desc <<< "$item"
         count=$(( count + 1 ))
         local mpct=$(( count * 100 / total ))
+        local pulse='⠋'
+        case $(( count % 8 )) in
+            0) pulse='⠙' ;;
+            1) pulse='⠹' ;;
+            2) pulse='⠸' ;;
+            3) pulse='⠼' ;;
+            4) pulse='⠴' ;;
+            5) pulse='⠦' ;;
+            6) pulse='⠧' ;;
+            *) pulse='⠇' ;;
+        esac
         for p in 33 66 100; do
-            printf "\r ${FG_CYAN}[${BOLD}%-22s${R}${FG_CYAN}]${R} ${FG_WHITE}%-36s${R} %b ${FG_YELLOW}%3d%%${R}" \
-                "$sub" "$desc" "$(_step_bar $p)" "$p"
+            printf "\r ${FG_CYAN}[${BOLD}%s${R}${FG_CYAN}]${R} ${FG_WHITE}%-36s${R} %b ${FG_YELLOW}%3d%%${R} ${FG_MAGENTA}%s${R}" \
+                "$pulse $sub" "$desc" "$(_step_bar $p)" "$p" "$pulse"
             [[ $FAST -eq 0 ]] && sleep 0.012
         done
         printf "\r ${FG_CYAN}[${BOLD}%-22s${R}${FG_CYAN}]${R} ${FG_WHITE}%-36s${R} ${FG_GREEN}[ OK ]${R}\n" "$sub" "$desc"
@@ -304,6 +345,24 @@ main() {
         if ! grep -q "nameserver" "$deb_resolv" 2>/dev/null; then
             printf "nameserver 1.1.1.1\nnameserver 8.8.8.8\nnameserver 9.9.9.9\n" > "$deb_resolv" 2>/dev/null || true
         fi
+    fi
+
+    # Optional: register a new mobile target tracker helper for quick IP and host lookups.
+    local tracker_script="$HOME/ASTERIX-OS/termux-mobile/target-tracker.sh"
+    local ai_startup_script="$HOME/ASTERIX-OS/termux-mobile/asterix-ai-startup.sh"
+    if [ -f "$tracker_script" ]; then
+        chmod +x "$tracker_script" 2>/dev/null || true
+        ln -sf "$tracker_script" "$PREFIX/bin/target-tracker" 2>/dev/null || true
+    fi
+    if [ -f "$ai_startup_script" ]; then
+        chmod +x "$ai_startup_script" 2>/dev/null || true
+        ln -sf "$ai_startup_script" "$PREFIX/bin/asterix-ai-startup" 2>/dev/null || true
+    fi
+    export PATH="$PREFIX/bin:$PATH"
+
+    # Launch the local AI just after shell boot so the OS feels active on first login.
+    if [ -x "$PREFIX/bin/asterix-ai-startup" ]; then
+        "$PREFIX/bin/asterix-ai-startup" >/dev/null 2>&1 || true
     fi
 
     # Launch PRoot if debian is healthy, otherwise launch native ax shell

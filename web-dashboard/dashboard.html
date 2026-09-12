@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTERIX Dashboard</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-name">ASTERIX</div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html">Overview</a>
+          <a href="dashboard.html" data-page-link class="active">Console</a>
+          <a href="vms.html" data-page-link>VMs</a>
+          <a href="settings.html" data-page-link>Settings</a>
+        </nav>
+
+        <div class="nav-actions">
+          <span class="chip online">System online</span>
+          <button id="themeToggleBtn" class="theme-toggle" type="button">Theme: Dark</button>
+          <a class="secondary-btn" href="login.html">Sign out</a>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <div>
+          <h1>Operations Console</h1>
+          <div class="page-subtitle">Control layer for security, infrastructure, and autonomous workflows.</div>
+        </div>
+        <div class="cta-row">
+          <button class="secondary-btn" type="button">Refresh</button>
+          <button class="primary-btn" type="button">Launch VM</button>
+        </div>
+      </section>
+
+      <section class="grid-3">
+        <div class="stat-card">
+          <div class="stat-label">Host nodes</div>
+          <div id="statNodes" class="stat-value">4</div>
+          <div class="stat-trend">+1 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Running VMs</div>
+          <div id="statVMs" class="stat-value">12</div>
+          <div class="stat-trend">2 scaling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Uptime</div>
+          <div id="statUptime" class="stat-value">99.4%</div>
+          <div class="stat-trend">Stable</div>
+        </div>
+      </section>
+
+      <section class="dashboard">
+        <aside class="sidebar">
+          <div class="panel sidebar-card">
+            <div class="card-title">
+              <h3>Host fleet</h3>
+              <span class="chip online">Online</span>
+            </div>
+            <div class="node-list">
+              <div class="node-item">
+                <div class="node-meta"><span class="node-name">core-01</span><span class="node-ip">10.0.8.10</span></div>
+                <span class="pill healthy">Healthy</span>
+              </div>
+              <div class="node-item">
+                <div class="node-meta"><span class="node-name">edge-02</span><span class="node-ip">10.0.8.18</span></div>
+                <span class="pill healthy">Healthy</span>
+              </div>
+              <div class="node-item">
+                <div class="node-meta"><span class="node-name">db-04</span><span class="node-ip">10.0.8.42</span></div>
+                <span class="pill warning">Warm</span>
+              </div>
+              <div class="node-item">
+                <div class="node-meta"><span class="node-name">sec-07</span><span class="node-ip">10.0.8.77</span></div>
+                <span class="pill alert">Alert</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel sidebar-card">
+            <div class="card-title">
+              <h3>Security</h3>
+            </div>
+            <div class="node-list">
+              <div class="node-item"><div class="node-meta"><span class="node-name">Firewall</span><span class="node-ip">Strict policy</span></div><span class="pill healthy">Active</span></div>
+              <div class="node-item"><div class="node-meta"><span class="node-name">Threat scan</span><span class="node-ip">NIDS + packet monitor</span></div><span class="pill healthy">Clear</span></div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="main-column">
+          <div class="panel main-card">
+            <div class="section-header">
+              <h3>Resource overview</h3>
+              <button class="secondary-btn" type="button">Refresh</button>
+            </div>
+            <div class="chart-box" aria-label="Resource utilization chart">
+              <div class="bars">
+                <div class="bar" style="height: 32%;"></div>
+                <div class="bar" style="height: 44%;"></div>
+                <div class="bar" style="height: 60%;"></div>
+                <div class="bar" style="height: 52%;"></div>
+                <div class="bar" style="height: 76%;"></div>
+                <div class="bar" style="height: 65%;"></div>
+                <div class="bar" style="height: 82%;"></div>
+                <div class="bar" style="height: 72%;"></div>
+              </div>
+            </div>
+            <div class="metrics-row">
+              <div class="small-box"><span class="kicker">CPU</span><strong id="statCPU">42%</strong></div>
+              <div class="small-box"><span class="kicker">RAM</span><strong id="statRAM">73%</strong></div>
+              <div class="small-box"><span class="kicker">Latency</span><strong id="statLatency">18ms</strong></div>
+              <div class="small-box"><span class="kicker">Threat</span><strong id="statThreat">Low</strong></div>
+            </div>
+          </div>
+
+          <div class="panel main-card">
+            <div class="section-header">
+              <h3>Live workloads</h3>
+              <span class="chip online">Auto-synced</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th>Health</th>
+                  </tr>
+                </thead>
+                <tbody id="workloadTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel main-card">
+            <div class="section-header">
+              <h3>Recent activity</h3>
+              <span class="chip online">Updated now</span>
+            </div>
+            <div id="activityList" class="activity-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="site.js"></script>
+  </body>
+</html>

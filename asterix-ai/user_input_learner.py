@@ -29,6 +29,7 @@ PROFILE_STATUS_FILE = os.path.join(MEMORY_DIR, "profile_status.json")
 WORKSPACE_PROFILE_STATUS_FILE = os.path.join(os.path.dirname(__file__), "profile_status.json")
 
 DEFAULT_PROFILE = {
+    "assistant_name": "ASTERIX AI",
     "version": "1.0",
     "created_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
     "last_interaction": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
@@ -94,6 +95,7 @@ def write_profile_status(profile=None):
     """Write a compact snapshot that the dashboard can poll without reading the full memory profile."""
     current = profile if isinstance(profile, dict) else load_profile()
     snapshot = {
+        "assistant_name": current.get("assistant_name", "ASTERIX AI"),
         "mood": current.get("mood_profile", [])[-1].get("primary_mood", "balanced") if current.get("mood_profile") else "balanced",
         "response_style": current.get("response_style", "balanced"),
         "training_completed": current.get("training_completed", 0),

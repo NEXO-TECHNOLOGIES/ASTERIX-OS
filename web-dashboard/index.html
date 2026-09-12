@@ -3,442 +3,1255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASTERIX OS // Master Operations Portal</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ASTERIX OS // Secure Control Plane</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,2 30,28 2,28' fill='%23040810' stroke='%2300ffea' stroke-width='2.5'/%3E%3Cpolygon points='16,8 25,25 7,25' fill='none' stroke='%2300ff88' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='18' r='3.5' fill='%2300ffea'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="site.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Cyber Background Grid -->
-    <div class="cyber-grid"></div>
-    <div class="cyber-scanline"></div>
-
-    <!-- Header Navigation -->
-    <header class="cyber-header">
-        <div class="header-left">
-            <div class="glitch-logo" data-text="ASTERIX OS">ASTERIX OS</div>
-            <span class="badge cyber-badge">v4.9.0-SEC</span>
-            <span class="badge online-badge">● LIVE NODE</span>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-name">ASTERIX</div>
         </div>
-        <nav class="header-nav">
-            <a href="#home" class="nav-link active">Home</a>
-            <a href="#telemetry" class="nav-link">Telemetry</a>
-            <a href="#downloads" class="nav-link">Downloads &amp; Rufus</a>
-            <a href="#gallery" class="nav-link">ISO Wallpapers</a>
-            <a href="#subsystems" class="nav-link">12 Subsystems</a>
-            <a href="#discord" class="nav-link">Discord Bridge</a>
-            <a href="#terminal" class="nav-link">Terminal Matrix</a>
-            <a href="ai-landing-page.html" class="nav-link">AI Studio</a>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html" class="active">Overview</a>
+          <a href="dashboard.html">Console</a>
+          <a href="vms.html">VMs</a>
+          <a href="settings.html">Settings</a>
         </nav>
-        <div class="header-right">
-            <div class="persistence-indicator">
-                <span class="pulse-dot"></span> PERSISTENCE: <strong>ACTIVE</strong>
+
+        <div class="nav-actions">
+          <span class="chip online">System online</span>
+          <button id="themeToggleBtn" class="theme-toggle" type="button">Theme: Dark</button>
+          <a class="primary-btn" href="login.html">Login</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="panel hero-copy">
+            <div class="eyebrow">Operator Console</div>
+            <h1>Secure the stack. Launch faster.</h1>
+            <p>
+              Asterix gives teams a calm control layer for infrastructure, security telemetry,
+              and autonomous operations. From host health to workflow automation, everything is built
+              to feel fast, clear, and operational.
+            </p>
+            <div class="cta-row">
+              <a class="primary-btn" href="dashboard.html">Open dashboard</a>
+              <a class="secondary-btn" href="login.html">Access portal</a>
             </div>
+            <div class="mini-stats">
+              <div class="mini-stat"><strong>4</strong><span>Host nodes</span></div>
+              <div class="mini-stat"><strong>12</strong><span>Running VMs</span></div>
+              <div class="mini-stat"><strong>99.4%</strong><span>Uptime</span></div>
+            </div>
+          </div>
+
+          <aside class="panel hero-panel">
+            <div class="status-header">
+              <h3>System status</h3>
+              <span class="signal">Stable</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-card"><span class="label">CPU</span><span class="value">42%</span><span class="trend">+3.1% / hr</span></div>
+              <div class="metric-card"><span class="label">RAM</span><span class="value">73%</span><span class="trend">+1.7% / hr</span></div>
+              <div class="metric-card"><span class="label">Latency</span><span class="value">18ms</span><span class="trend">Fast path</span></div>
+              <div class="metric-card"><span class="label">Threat</span><span class="value">Low</span><span class="trend">2 alerts</span></div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="dashboard">
+          <aside class="sidebar">
+            <div class="panel sidebar-card">
+              <div class="card-title">
+                <h3>Host fleet</h3>
+                <span class="chip online">Online</span>
+              </div>
+              <div class="node-list">
+                <div class="node-item"><div class="node-meta"><span class="node-name">core-01</span><span class="node-ip">10.0.8.10</span></div><span class="pill healthy">Healthy</span></div>
+                <div class="node-item"><div class="node-meta"><span class="node-name">edge-02</span><span class="node-ip">10.0.8.18</span></div><span class="pill healthy">Healthy</span></div>
+                <div class="node-item"><div class="node-meta"><span class="node-name">db-04</span><span class="node-ip">10.0.8.42</span></div><span class="pill warning">Warm</span></div>
+                <div class="node-item"><div class="node-meta"><span class="node-name">sec-07</span><span class="node-ip">10.0.8.77</span></div><span class="pill alert">Alert</span></div>
+              </div>
+            </div>
+
+            <div class="panel sidebar-card">
+              <div class="card-title">
+                <h3>Security</h3>
+              </div>
+              <div class="node-list">
+                <div class="node-item"><div class="node-meta"><span class="node-name">Firewall</span><span class="node-ip">Strict policy</span></div><span class="pill healthy">Active</span></div>
+                <div class="node-item"><div class="node-meta"><span class="node-name">Signal monitor</span><span class="node-ip">NIDS scan</span></div><span class="pill healthy">Clear</span></div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="main-column">
+            <div class="panel main-card">
+              <div class="section-header">
+                <h3>Resource overview</h3>
+                <button class="secondary-btn" type="button">Refresh</button>
+              </div>
+              <div class="chart-box" aria-label="Resource utilization chart">
+                <div class="bars">
+                  <div class="bar" style="height: 32%;"></div>
+                  <div class="bar" style="height: 44%;"></div>
+                  <div class="bar" style="height: 60%;"></div>
+                  <div class="bar" style="height: 52%;"></div>
+                  <div class="bar" style="height: 76%;"></div>
+                  <div class="bar" style="height: 65%;"></div>
+                  <div class="bar" style="height: 82%;"></div>
+                  <div class="bar" style="height: 72%;"></div>
+                </div>
+              </div>
+              <div class="metrics-row">
+                <div class="small-box"><span class="kicker">Workers</span><strong>128</strong></div>
+                <div class="small-box"><span class="kicker">Sessions</span><strong>54</strong></div>
+                <div class="small-box"><span class="kicker">Queues</span><strong>18</strong></div>
+                <div class="small-box"><span class="kicker">Deploys</span><strong>6</strong></div>
+              </div>
+            </div>
+
+            <div class="panel main-card">
+              <div class="section-header">
+                <h3>Live workloads</h3>
+                <span class="chip online">Auto-synced</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Service</th><th>Owner</th><th>Status</th><th>Health</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>vm-orchestrator</td><td>ops</td><td><span class="pill healthy">Ready</span></td><td>99.8%</td></tr>
+                    <tr><td>cloud-scan</td><td>security</td><td><span class="pill healthy">Running</span></td><td>97.6%</td></tr>
+                    <tr><td>api-gateway</td><td>platform</td><td><span class="pill warning">Scaling</span></td><td>93.2%</td></tr>
+                    <tr><td>vault-sync</td><td>infra</td><td><span class="pill alert">Review</span></td><td>88.4%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel main-card">
+              <div class="section-header">
+                <h3>Recent activity</h3>
+                <span class="chip online">Updated now</span>
+              </div>
+              <div class="activity-list">
+                <div class="activity-item"><div class="activity-dot"></div><div><strong>VM bootstrap completed</strong><span>Operator workflow finished successfully across 3 hosts.</span></div><time>2m ago</time></div>
+                <div class="activity-item warning"><div class="activity-dot"></div><div><strong>Storage threshold warning</strong><span>Persistent volume nearing the recommended reuse limit.</span></div><time>9m ago</time></div>
+                <div class="activity-item alert"><div class="activity-dot"></div><div><strong>Firewall rule review required</strong><span>One suspicious port pattern was flagged during routine inspection.</span></div><time>14m ago</time></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="site.js"></script>
+</body>
+</html>
+
+    <!-- Boot Splash Screen Overlay -->
+    <div id="bootScreen" class="boot-screen">
+        <div class="boot-center">
+            <div class="boot-logo-glitch" data-text="ASTERIX OS">ASTERIX OS</div>
+            <div class="boot-sub">CYBERNETIC LINUX DISTRO // v2.0 PHANTOM</div>
+            <div class="boot-loader-bar">
+                <div id="bootBarProgress" class="boot-bar-fill"></div>
+            </div>
+            <div id="bootStatusLine" class="boot-status">INITIALIZING KERNEL 6.1-SEC...</div>
+            <div class="boot-sub-logs" id="bootSubLogs">
+                <div>[   0.000000] Linux version 6.1.0-21-sec-amd64 (nexo@asterix-build)</div>
+                <div>[   0.082103] ASTERIX: Initializing Sovereign Threat Mitigator Engine</div>
+                <div>[   0.149204] RAMFS: /asterix_persistent cryptographic mount OK</div>
+            </div>
+            <button id="skipBootBtn" class="boot-skip-btn">
+                <span>LAUNCH DESKTOP IMMEDIATELY</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scanline Shader FX Overlay -->
+    <div class="cyber-scanlines" id="cyberScanlines"></div>
+    <div class="cyber-vignette"></div>
+
+    <!-- Background Wallpaper Layer -->
+    <div class="desktop-wallpaper" id="desktopWallpaper"></div>
+
+    <!-- Top Status Bar / Panel -->
+    <header class="top-bar" id="topBar">
+        <div class="top-bar-left">
+            <button class="start-btn" id="startBtn" title="ASTERIX Application Launcher (Alt+Space)">
+                <svg class="svg-icon start-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <span class="start-text">ASTERIX</span>
+            </button>
+            <div class="workspace-pager">
+                <button class="ws-btn active" data-ws="1" title="Workspace 1: Operations">1</button>
+                <button class="ws-btn" data-ws="2" title="Workspace 2: Security Warfare">2</button>
+                <button class="ws-btn" data-ws="3" title="Workspace 3: Engineering Studio">3</button>
+                <button class="ws-btn" data-ws="4" title="Workspace 4: Telemetry HUD">4</button>
+            </div>
+        </div>
+
+        <div class="top-bar-center">
+            <!-- Active Tasks / Window Switcher Bar -->
+            <div class="window-taskbar" id="windowTaskbar"></div>
+        </div>
+
+        <div class="top-bar-right">
+            <!-- Mini Telemetry -->
+            <div class="tray-telemetry" id="trayTelemetry" title="Live System Load">
+                <span class="tray-badge" id="trayCpuBadge">CPU: <strong>14%</strong></span>
+                <span class="tray-badge" id="trayRamBadge">RAM: <strong>3.2G</strong></span>
+            </div>
+
+            <!-- Sound FX Toggle -->
+            <button class="tray-btn" id="audioToggleBtn" title="Toggle Cyber Audio Synthesizer">
+                <span id="audioIcon" class="svg-icon-wrap">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                </span>
+            </button>
+
+            <!-- Network Status -->
+            <div class="tray-item" title="Network Sentinel: Online (Protected)">
+                <span class="net-status-dot"></span>
+                <span class="net-status-text">10.0.8.24</span>
+            </div>
+
+            <!-- Project Map Link -->
+            <a href="../project_map.html" target="_blank" class="tray-btn" title="Open Codebase Cartographer Topology Map">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </a>
+
+            <!-- Notification Center Trigger -->
+            <button class="tray-btn" id="notifyToggleBtn" title="Notifications &amp; Logs">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span class="notify-counter" id="notifyCount">3</span>
+            </button>
+
+            <!-- Clock / Calendar -->
+            <div class="tray-clock" id="trayClock" title="System Local Clock">
+                <span class="clock-time" id="clockTime">12:00:00</span>
+                <span class="clock-date" id="clockDate">SAT 12 SEP</span>
+            </div>
+
+            <!-- Power / Session Menu -->
+            <button class="tray-btn power-btn" id="powerBtn" title="Power / Lock Session">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+            </button>
         </div>
     </header>
 
-    <main class="dashboard-container">
-        <section id="home" class="panel tab-shell">
-            <div class="panel-header">
-                <div class="panel-title-group">
-                    <span class="section-icon">🏠</span>
-                    <h2>ASTERIX / KALI DUAL-BOOT DESKTOP</h2>
+    <!-- Application Launcher Menu (Start Menu) -->
+    <div class="app-launcher-menu" id="appLauncherMenu">
+        <div class="launcher-header">
+            <div class="launcher-user">
+                <div class="user-avatar">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">operator@asterix-sec</div>
+                    <div class="user-role">ROOT // TIER-MAX SECURITY</div>
                 </div>
             </div>
+            <div class="launcher-search-box">
+                <input type="text" id="launcherSearchInput" placeholder="Search apps, tools, files (e.g. nmap, files, btop)..." autocomplete="off">
+            </div>
+        </div>
 
-            <div class="tab-buttons" role="tablist" aria-label="ASTERIX home tabs">
-                <button class="tab-button active" data-tab="overview">Overview</button>
-                <button class="tab-button" data-tab="dualboot">Dual Boot</button>
-                <button class="tab-button" data-tab="tools">Kali Tools</button>
-                <button class="tab-button" data-tab="ai">AI / Security</button>
-                <button class="tab-button" data-tab="recovery">Recovery</button>
+        <div class="launcher-body">
+            <div class="launcher-sidebar">
+                <button class="cat-btn active" data-cat="all">
+                    <svg class="svg-icon mini" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    <span>All Applications</span>
+                </button>
+                <button class="cat-btn" data-cat="offensive">
+                    <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span>Offensive Warfare</span>
+                </button>
+                <button class="cat-btn" data-cat="engineering">
+                    <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    <span>Dev &amp; Engineering</span>
+                </button>
+                <button class="cat-btn" data-cat="forensics">
+                    <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span>Forensics &amp; Crypto</span>
+                </button>
+                <button class="cat-btn" data-cat="system">
+                    <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>System &amp; Telemetry</span>
+                </button>
+                <button class="cat-btn" data-cat="ai">
+                    <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 4.42-2.87 8.17-6.84 9.5-.5.08-.66-.23-.66-.5v-1.69c0-.58-.2-1.01-.48-1.25 1.5-.17 3.08-.75 3.08-3.35 0-.74-.26-1.34-.69-1.81.07-.17.3-.86-.07-1.79 0 0-.57-.18-1.87.7a6.5 6.5 0 0 0-3.4 0c-1.3-.88-1.87-.7-1.87-.7-.37.93-.14 1.62-.07 1.79-.43.47-.69 1.07-.69 1.81 0 2.61 1.58 3.18 3.08 3.35-.22.19-.42.54-.48 1.05-.43.19-1.53.53-2.22-.63-.14-.24-.55-.78-1.23-.78-.66 0-.15.38.01.5.21.16.45.54.51.68.35.83 1.48.55 1.95.42v1.14c0 .28-.16.58-.66.5C4.87 20.17 2 16.42 2 12A10 10 0 0 1 12 2z"/></svg>
+                    <span>AI Neural Hub</span>
+                </button>
             </div>
 
-            <div class="emotion-meter-wrap" aria-live="polite">
-                <div class="emotion-meter-label">Emotion Meter</div>
-                <div class="emotion-meter"><span id="emotionMeterFill"></span></div>
-                <div id="emotionMeterText" class="emotion-meter-text">balanced</div>
+            <div class="launcher-grid" id="launcherAppsGrid">
+                <!-- Injected via JavaScript with clean SVG icons -->
             </div>
+        </div>
 
-            <div id="tab-overview" class="tab-panel active">
-                <div class="home-grid" id="overviewGrid"></div>
-            </div>
-            <div id="tab-dualboot" class="tab-panel">
-                <div class="desktop-shell">
-                    <div class="boot-window">
-                        <div class="boot-header">
-                            <div class="boot-title">ASTERIX / KALI Boot Manager</div>
-                            <div class="boot-actions">
-                                <span class="tiny-dot"></span>
-                                <span class="tiny-dot"></span>
-                                <span class="tiny-dot"></span>
-                            </div>
-                        </div>
-
-                        <div class="boot-body">
-                            <div class="boot-left">
-                                <div class="os-list">
-                                    <div class="os-entry selected">
-                                        <span class="os-rank">01</span>
-                                        <span class="os-name">ASTERIX OS</span>
-                                        <span class="os-tag">Default</span>
-                                    </div>
-                                    <div class="os-entry">
-                                        <span class="os-rank">02</span>
-                                        <span class="os-name">Kali Linux</span>
-                                        <span class="os-tag">Tools</span>
-                                    </div>
-                                    <div class="os-entry">
-                                        <span class="os-rank">03</span>
-                                        <span class="os-name">Windows 11</span>
-                                        <span class="os-tag">Optional</span>
-                                    </div>
-                                    <div class="os-entry">
-                                        <span class="os-rank">04</span>
-                                        <span class="os-name">Live Rescue</span>
-                                        <span class="os-tag">Recovery</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="boot-right">
-                                <div class="boot-logo-full">ASTERIX</div>
-                                <div class="boot-status" id="bootStatusText">BOOT SEQUENCE READY</div>
-                                <div class="loading-bar"><span id="bootProgressBar"></span></div>
-                                <div class="boot-mode-row">
-                                    <div class="boot-mode" id="bootModeText">Loading ASTERIX OS...</div>
-                                    <div class="countdown" id="countdownValue">7s</div>
-                                </div>
-                                <div class="boot-log" id="bootLogLines">
-                                    <div>[boot] Secure boot chain initialized</div>
-                                    <div>[boot] Boot menu loaded</div>
-                                    <div>[boot] Awaiting OS selection</div>
-                                </div>
-                                <div class="boot-training-note" id="bootTrainingNote">AI training: default boot preference is ASTERIX OS</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="desktop-preview">
-                        <div class="desktop-bar">
-                            <div class="start-pill">Start</div>
-                            <div class="desktop-title">Kali / ASTERIX Workspace</div>
-                            <div class="system-tray">🟢 12:00</div>
-                        </div>
-
-                        <div class="desktop-icons">
-                            <div class="desktop-icon">
-                                <span>💻</span>
-                                <label>Terminal</label>
-                            </div>
-                            <div class="desktop-icon">
-                                <span>🛡️</span>
-                                <label>ASTERIX</label>
-                            </div>
-                            <div class="desktop-icon">
-                                <span>🐉</span>
-                                <label>Kali Tools</label>
-                            </div>
-                            <div class="desktop-icon">
-                                <span>⚙️</span>
-                                <label>Settings</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="home-grid" id="dualbootGrid"></div>
-            </div>
-            <div id="tab-tools" class="tab-panel">
-                <div class="home-grid" id="toolsGrid"></div>
-            </div>
-            <div id="tab-ai" class="tab-panel">
-                <div class="mood-dashboard">
-                    <div class="mood-card mood-status">
-                        <div class="panel-title-group compact">
-                            <span class="section-icon">🧠</span>
-                            <h3>AI MOOD ENGINE</h3>
-                        </div>
-                        <div class="mood-pill" id="aiMoodStatus">balanced</div>
-                        <div class="mood-score" id="aiMoodScore">confidence 0.75</div>
-                    </div>
-                    <div class="mood-card mood-breakdown">
-                        <div class="mood-bars">
-                            <div class="mood-label-row"><span>Frustration</span><span id="moodFrustration">0</span></div>
-                            <div class="mood-bar"><span id="barFrustration" style="width:0%"></span></div>
-                            <div class="mood-label-row"><span>Stress</span><span id="moodStress">0</span></div>
-                            <div class="mood-bar"><span id="barStress" style="width:0%"></span></div>
-                            <div class="mood-label-row"><span>Urgency</span><span id="moodUrgency">0</span></div>
-                            <div class="mood-bar"><span id="barUrgency" style="width:0%"></span></div>
-                            <div class="mood-label-row"><span>Curiosity</span><span id="moodCuriosity">0</span></div>
-                            <div class="mood-bar"><span id="barCuriosity" style="width:0%"></span></div>
-                        </div>
-                    </div>
-                    <div class="mood-card response-card">
-                        <div class="panel-title-group compact">
-                            <span class="section-icon">💬</span>
-                            <h3>ADAPTIVE RESPONSE</h3>
-                        </div>
-                        <p id="aiResponseMessage">I will keep this steady and efficient while we work through it.</p>
-                    </div>
-                </div>
-                <div class="home-grid" id="aiGrid"></div>
-            </div>
-            <div id="tab-recovery" class="tab-panel">
-                <div class="home-grid" id="recoveryGrid"></div>
-            </div>
-        </section>
-
-        <!-- Hero Telemetry Section -->
-        <section id="telemetry" class="panel hero-panel">
-            <div class="hero-content">
-                <h1 class="hero-title">CYBERNETIC MASTER COMMAND MATRIX</h1>
-                <p class="hero-subtitle">Next-Gen Offensive Security, Multi-Language Engineering & Hybrid Live Persistence</p>
-                <div class="telemetry-grid">
-                    <div class="tele-card">
-                        <span class="tele-label">SYSTEM KERNEL</span>
-                        <span class="tele-value cyan">Linux 6.1-sec (Debian Core)</span>
-                    </div>
-                    <div class="tele-card">
-                        <span class="tele-label">SECURITY TIER</span>
-                        <span class="tele-value magenta">MAXIMUM (Autonomous Sovereign Scale)</span>
-                    </div>
-                    <div class="tele-card">
-                        <span class="tele-label">STORAGE VAULT</span>
-                        <span class="tele-value green">/asterix_persistent (Dual-Layer)</span>
-                    </div>
-                    <div class="tele-card">
-                        <span class="tele-label">ACTIVE WORKSPACE</span>
-                        <span class="tele-value yellow">Quad-Grid Tmux Studio</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ISO Wallpapers & Media Showcase Gallery -->
-        <section id="gallery" class="panel">
-            <div class="panel-header">
-                <div class="panel-title-group">
-                    <span class="section-icon">🖼️</span>
-                    <h2>DISTRO-GRADE ISO WALLPAPERS & SPLASHES</h2>
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All Media</button>
-                    <button class="filter-btn" data-filter="boot">GRUB Splashes</button>
-                    <button class="filter-btn" data-filter="neon">Cyberpunk</button>
-                    <button class="filter-btn" data-filter="cosmic">Cosmic Space</button>
-                </div>
-            </div>
-
-            <div class="gallery-grid" id="wallpaperGrid">
-                <!-- Wallpapers injected dynamically via app.js -->
-            </div>
-        </section>
-
-        <!-- 12 Master Security & Engineering Subsystems -->
-        <section id="subsystems" class="panel">
-            <div class="panel-header">
-                <div class="panel-title-group">
-                    <span class="section-icon">⚡</span>
-                    <h2>12 MASTER COMMAND SUBSYSTEMS</h2>
-                </div>
-                <input type="text" id="toolSearch" class="cyber-input" placeholder="Search tool (e.g. nmap, rust, sqlmap, hashcat)...">
-            </div>
-
-            <div class="subsystems-grid" id="subsystemsGrid">
-                <!-- Subsystems Cards injected dynamically via app.js -->
-            </div>
-        </section>
-
-        <!-- Discord Cloud Storage & Task Bridge Section -->
-        <section id="discord" class="panel discord-panel">
-            <div class="panel-header">
-                <div class="panel-title-group">
-                    <span class="section-icon">🤖</span>
-                    <h2>DISCORD CLOUD VAULT & ASYNC TASK BRIDGE</h2>
-                </div>
-                <span class="badge discord-badge">50-Coins Panel & Webhook Ready</span>
-            </div>
-
-            <div class="discord-grid">
-                <div class="discord-card">
-                    <h3>⚡ Webhook Dispatcher</h3>
-                    <p>Transmit instant alerts, telemetry snapshots, and automated scan logs directly to your private Discord server.</p>
-                    
-                    <div class="form-group">
-                        <label>Discord Webhook URL:</label>
-                        <input type="password" id="discordWebhookInput" class="cyber-input" placeholder="https://discord.com/api/webhooks/...">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Payload Message:</label>
-                        <input type="text" id="discordMsgInput" class="cyber-input" placeholder="ASTERIX OS Node task completed successfully!">
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="cyber-btn cyan-btn" onclick="sendDiscordTest()">📤 Transmit Test Alert</button>
-                        <button class="cyber-btn magenta-btn" onclick="sendDiscordStatus()">📊 Push Telemetry Report</button>
-                    </div>
-                    <div id="discordStatusMsg" class="status-box"></div>
-                </div>
-
-                <div class="discord-card">
-                    <h3>💾 CLI Commands for Discord Cloud</h3>
-                    <div class="code-block">
-                        <pre><code># 1. Configure Webhook URL
-as-discord setup
-
-# 2. Push Instant Alert
-as-discord notify "Port scan on subnet 10.0.0.0/24 finished!"
-
-# 3. Upload File or Loot Archive (up to 25MB)
-as-discord send /tmp/scan_results.txt "Target Recon Report"
-
-# 4. Backup Entire Persistent Storage Vault
-as-discord backup</code></pre>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quick Terminal Matrix & Aliases -->
-        <section id="terminal" class="panel">
-            <div class="panel-header">
-                <div class="panel-title-group">
-                    <span class="section-icon">🪟</span>
-                    <h2>ULTIMATE TERMINAL MATRIX CHEATSHEET</h2>
-                </div>
-            </div>
-
-            <div class="terminal-table-wrapper">
-                <table class="cyber-table">
-                    <thead>
-                        <tr>
-                            <th>Command / Alias</th>
-                            <th>Description</th>
-                            <th>Shortcut Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>as-quad</code></td>
-                            <td>Instant 4-Way Quad-Grid Tmux Workspace (Sniffer, Scanner, Shell, Monitor)</td>
-                            <td><span class="key-badge">Ctrl+A</span> <span class="key-badge">q</span></td>
-                        </tr>
-                        <tr>
-                            <td><code>as-recon</code></td>
-                            <td>Jump to 01. Reconnaissance & OSINT Hub (Nmap, Masscan, DnsRecon)</td>
-                            <td><span class="key-badge">asterix --recon</span></td>
-                        </tr>
-                        <tr>
-                            <td><code>as-web</code></td>
-                            <td>Jump to 02. Web Application Warfare (SQLMap, Gobuster, Nikto, FFUF)</td>
-                            <td><span class="key-badge">asterix --web-audit</span></td>
-                        </tr>
-                        <tr>
-                            <td><code>as-exploit</code></td>
-                            <td>Jump to 03. Exploitation & Payloads (Metasploit MSF, SearchSploit)</td>
-                            <td><span class="key-badge">asterix --exploit</span></td>
-                        </tr>
-                        <tr>
-                            <td><code>as-crack</code></td>
-                            <td>Jump to 04. Password & Hash Auditing (Hashcat, John The Ripper, Hydra)</td>
-                            <td><span class="key-badge">asterix --passwords</span></td>
-                        </tr>
-                        <tr>
-                            <td><code>as-dev</code></td>
-                            <td>Jump to 09. Full-Stack Developer Studio (Rust, Go, C/C++, Python, Node)</td>
-                            <td><span class="key-badge">asterix --dev</span></td>
-                        </tr>
-                        <tr>
-                            <td><code>run-rs &lt;file.rs&gt;</code></td>
-                            <td>Compile and run standalone Rust script in one step</td>
-                            <td><span class="key-badge">rustc</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Downloads & Live Boot Section -->
-        <section id="downloads" class="panel downloads-panel">
-            <h2 class="panel-title">OFFICIAL ASTERIX OS DOWNLOADS &amp; LIVE BOOT</h2>
-            <p class="panel-subtitle">Download ISO images, P2P Torrents, and configure Rufus Live Persistence</p>
-            
-            <div class="downloads-table-wrapper" style="overflow-x: auto; margin-top: 15px;">
-                <table class="cyber-table">
-                    <thead>
-                        <tr>
-                            <th>Image Edition</th>
-                            <th>Version</th>
-                            <th>Arch</th>
-                            <th>Download / Torrent</th>
-                            <th>Size</th>
-                            <th>SHA-256 Checksum</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>ASTERIX OS Full Cyber Suite ISO</strong></td>
-                            <td>v2.0.0</td>
-                            <td><code>x86_64</code></td>
-                            <td><a href="../releases/asterix-os-v2.0-amd64-full.iso.torrent" style="color:#00ffea; margin-right:8px;">Torrent</a> <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#ff00ea;">Direct</a></td>
-                            <td><span class="badge" style="background:#ffaa00; color:#000;">4.2 GB</span></td>
-                            <td><code>e3b0c442...</code></td>
-                        </tr>
-                        <tr>
-                            <td><strong>ASTERIX OS Stealth &amp; Undercover ISO</strong></td>
-                            <td>v2.0.0</td>
-                            <td><code>x86_64</code></td>
-                            <td><a href="../releases/asterix-os-v2.0-amd64-stealth.iso.torrent" style="color:#00ffea; margin-right:8px;">Torrent</a> <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#ff00ea;">Direct</a></td>
-                            <td><span class="badge" style="background:#ffaa00; color:#000;">1.8 GB</span></td>
-                            <td><code>a7b3c298...</code></td>
-                        </tr>
-                        <tr>
-                            <td><strong>ASTERIX OS Minimal Netinstall ISO</strong></td>
-                            <td>v2.0.0</td>
-                            <td><code>x86_64</code></td>
-                            <td><a href="../releases/asterix-os-v2.0-amd64-netinstall.iso.torrent" style="color:#00ffea; margin-right:8px;">Torrent</a> <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#ff00ea;">Direct</a></td>
-                            <td><span class="badge" style="background:#ffaa00; color:#000;">650 MB</span></td>
-                            <td><code>f5c2d119...</code></td>
-                        </tr>
-                        <tr>
-                            <td><strong>ASTERIX OS ARM64 Mobile PRoot</strong></td>
-                            <td>v2.0.0</td>
-                            <td><code>aarch64</code></td>
-                            <td><a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" style="color:#00ffea;">Termux Script</a></td>
-                            <td><span class="badge" style="background:#ffaa00; color:#000;">380 MB</span></td>
-                            <td><code>9c21b442...</code></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="rufus-card" style="margin-top: 25px; padding: 20px; background: rgba(0, 255, 234, 0.05); border: 1px solid rgba(0, 255, 234, 0.3); border-radius: 6px;">
-                <h3 style="color: #00ffea; margin-bottom: 10px;">⚡ How to Flash with Rufus (Windows with Persistence):</h3>
-                <ol style="margin-left: 20px; line-height: 1.8; color: #ccc;">
-                    <li>Download and open <strong>Rufus</strong> (<a href="https://rufus.ie" target="_blank" style="color:#00ffea;">rufus.ie</a>).</li>
-                    <li>Select your USB Flash Drive (8 GB or larger).</li>
-                    <li>Select the ASTERIX ISO and set the <strong>Persistent partition size</strong> slider (4 GB - 16 GB).</li>
-                    <li>Ensure Partition Scheme is <strong>MBR</strong> and Target is <strong>BIOS or UEFI</strong>.</li>
-                    <li>Click <strong>START</strong> and choose <em>"Write in ISO Image mode (Recommended)"</em>.</li>
-                </ol>
-                <p style="margin-top: 10px; color: #ff3366;"><strong>⚠ Note:</strong> Do NOT use UNetBootin; it modifies and breaks the master bootloader.</p>
-            </div>
-        </section>
-    </main>
-
-    <!-- Fullscreen Image Modal -->
-    <div id="imageModal" class="modal" onclick="closeModal()">
-        <span class="modal-close">&times;</span>
-        <img class="modal-content" id="modalImg">
-        <div id="modalCaption" class="modal-caption"></div>
+        <div class="launcher-footer">
+            <button class="quick-act-btn" onclick="openWindow('as-terminal')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                <span>Terminal (Ctrl+Alt+T)</span>
+            </button>
+            <button class="quick-act-btn" onclick="openWindow('as-settings')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Wallpapers &amp; Themes</span>
+            </button>
+            <button class="quick-act-btn" onclick="openWindow('as-boot')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                <span>ISO &amp; Rufus</span>
+            </button>
+            <button class="quick-act-btn" onclick="window.open('../project_map.html', '_blank')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>Codebase Cartographer</span>
+            </button>
+        </div>
     </div>
 
-    <footer class="cyber-footer">
-        <p>ASTERIX OS // NEXT-GENERATION CYBERNETIC PLATFORM &middot; BUILT FOR OPERATORS &amp; DEVELOPERS</p>
-    </footer>
+    <!-- Notification Drawer -->
+    <aside class="notification-drawer" id="notificationDrawer">
+        <div class="drawer-header">
+            <h3>CYBER TELEMETRY FEED</h3>
+            <button class="drawer-close" id="closeDrawerBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="drawer-list" id="drawerList">
+            <div class="drawer-item info">
+                <div class="item-title">Kernel Booted Successfully</div>
+                <div class="item-desc">ASTERIX Linux 6.1-sec loaded with 12 sovereign subsystems.</div>
+                <div class="item-time">Just now</div>
+            </div>
+            <div class="drawer-item alert">
+                <div class="item-title">Network Sentinel Active</div>
+                <div class="item-desc">Defensive port enumeration &amp; threat mitigation active on eth0.</div>
+                <div class="item-time">2m ago</div>
+            </div>
+            <div class="drawer-item success">
+                <div class="item-title">Persistent Vault Mounted</div>
+                <div class="item-desc">Encrypted overlay ready at /asterix_persistent (AES-256-XTS).</div>
+                <div class="item-time">5m ago</div>
+            </div>
+        </div>
+    </aside>
 
+    <!-- Desktop Canvas Workspace -->
+    <main class="desktop-workspace" id="desktopWorkspace">
+
+        <!-- Desktop Grid of Icons -->
+        <div class="desktop-icons-grid" id="desktopIconsGrid">
+            <div class="desktop-icon-item" data-app="as-terminal" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                </div>
+                <span class="icon-label">Terminal</span>
+                <span class="icon-sub">as-sh</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-files" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <span class="icon-label">File Manager</span>
+                <span class="icon-sub">Posix FS</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-security" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <span class="icon-label">Cyber Suite</span>
+                <span class="icon-sub">12 Subsystems</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-monitor" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
+                <span class="icon-label">Btop Telemetry</span>
+                <span class="icon-sub">Task Manager</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-code" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <span class="icon-label">Code Studio</span>
+                <span class="icon-sub">Rust &bull; C &bull; Py</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-ai" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                </div>
+                <span class="icon-label">AI Neural Core</span>
+                <span class="icon-sub">Operator Copilot</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-store" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                </div>
+                <span class="icon-label">Software Center</span>
+                <span class="icon-sub">APT / AS-PKG</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-settings" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <span class="icon-label">Control Center</span>
+                <span class="icon-sub">Wallpapers &amp; Themes</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-boot" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <span class="icon-label">ISO &amp; Rufus</span>
+                <span class="icon-sub">Live Boot Hub</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-discord" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                </div>
+                <span class="icon-label">Discord Cloud</span>
+                <span class="icon-sub">Storage &amp; Tasks</span>
+            </div>
+            <div class="desktop-icon-item" data-app="as-trash" tabindex="0">
+                <div class="icon-bubble">
+                    <svg class="svg-icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </div>
+                <span class="icon-label">Trash</span>
+                <span class="icon-sub">0 Items</span>
+            </div>
+        </div>
+
+        <!-- Floating Windows Container -->
+        <div class="windows-container" id="windowsContainer">
+
+            <!-- WINDOW 1: ASTERIX TERMINAL (as-sh) -->
+            <div class="cyber-window" id="win-as-terminal" style="top: 40px; left: 60px; width: 840px; height: 520px; display: flex;">
+                <div class="window-titlebar" data-win="as-terminal">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                        </span>
+                        <span class="win-title">operator@asterix-sec: ~ (as-sh bash emulator)</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-terminal')" title="Minimize">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-terminal')" title="Maximize">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-terminal')" title="Close">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body terminal-window-body">
+                    <div class="terminal-container" id="terminalOutput" onclick="focusTerminalInput()"></div>
+                    <div class="terminal-input-line">
+                        <span class="term-prompt"><span class="prompt-user">operator@asterix</span>:<span class="prompt-dir">~</span>$ </span>
+                        <input type="text" id="terminalInput" class="term-input" autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Shell: <strong>/bin/as-sh</strong></span>
+                    <span>Charset: <strong>UTF-8</strong></span>
+                    <span>Type <strong>help</strong> or <strong>neofetch</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 2: FILE EXPLORER (as-files) -->
+            <div class="cyber-window" id="win-as-files" style="top: 70px; left: 180px; width: 880px; height: 500px; display: none;">
+                <div class="window-titlebar" data-win="as-files">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        </span>
+                        <span class="win-title">Nautilus // ASTERIX Virtual POSIX File Explorer</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-files')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-files')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-files')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body files-window-body">
+                    <div class="files-toolbar">
+                        <div class="files-nav-btns">
+                            <button class="file-act-btn" onclick="navigateFilesBack()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button class="file-act-btn" onclick="navigateFilesForward()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                            <button class="file-act-btn" onclick="navigateFilesUp()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                                <span>Up</span>
+                            </button>
+                        </div>
+                        <div class="files-path-bar">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <input type="text" id="filesPathInput" value="/home/operator" readonly>
+                        </div>
+                        <div class="files-actions">
+                            <button class="file-act-btn" onclick="createNewFilePrompt()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                <span>New File</span>
+                            </button>
+                            <button class="file-act-btn" onclick="createNewDirPrompt()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                                <span>New Folder</span>
+                            </button>
+                            <button class="file-act-btn" onclick="openFileEditor()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                <span>Edit</span>
+                            </button>
+                            <button class="file-act-btn" onclick="saveSelectedFile()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                <span>Save</span>
+                            </button>
+                            <button class="file-act-btn" onclick="renameSelectedFile()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                                <span>Rename</span>
+                            </button>
+                            <button class="file-act-btn" onclick="deleteSelectedItem()">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="files-split">
+                        <div class="files-sidebar">
+                            <div class="sidebar-sec-title">PLACES</div>
+                            <button class="files-side-btn active" onclick="browseDirectory('/home/operator')">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                                <span>Home</span>
+                            </button>
+                            <button class="files-side-btn" onclick="browseDirectory('/asterix_persistent')">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Persistent Vault</span>
+                            </button>
+                            <button class="files-side-btn" onclick="browseDirectory('/bin')">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                                <span>/bin Binaries</span>
+                            </button>
+                            <button class="files-side-btn" onclick="browseDirectory('/etc')">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                <span>/etc Config</span>
+                            </button>
+                            <button class="files-side-btn" onclick="browseDirectory('/var/log')">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                <span>/var/log Logs</span>
+                            </button>
+                            <button class="files-side-btn" onclick="browseDirectory('/')">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                                <span>/ Root FS</span>
+                            </button>
+                        </div>
+                        <div class="files-content-area">
+                            <div class="files-grid" id="filesGrid"></div>
+                            <div class="file-preview-pane" id="filePreviewPane">
+                                <div class="preview-header">
+                                    <span id="previewFileName">File Preview</span>
+                                    <div class="preview-actions">
+                                        <button class="file-act-btn mini" onclick="openFileEditor()">Edit</button>
+                                        <button class="file-act-btn mini" onclick="saveSelectedFile()">Save</button>
+                                        <button class="mini-close" onclick="closeFilePreview()">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <pre class="preview-code" id="previewFileContent"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="window-statusbar" id="filesStatusBar">
+                    <span>6 items | Free space: 42.8 GB (Persistent Ext4)</span>
+                </div>
+            </div>
+
+            <!-- WINDOW 3: SECURITY SUITE (as-security) -->
+            <div class="cyber-window" id="win-as-security" style="top: 90px; left: 140px; width: 980px; height: 560px; display: none;">
+                <div class="window-titlebar" data-win="as-security">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </span>
+                        <span class="win-title">ASTERIX Sovereign Security Warfare Suite // 12 Subsystems</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-security')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-security')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-security')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body security-window-body">
+                    <div class="sec-top-tabs" id="secSubsystemTabs"></div>
+                    <div class="sec-main-stage">
+                        <div class="sec-details-panel" id="secDetailsPanel"></div>
+                        <div class="sec-console-panel">
+                            <div class="console-header">
+                                <span>SIMULATED SUBSYSTEM EXECUTION HUD</span>
+                                <button class="mini-run-btn" id="secRunSimBtn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                    <span>EXECUTE SUITE MODULE</span>
+                                </button>
+                            </div>
+                            <div class="sec-console-output" id="secConsoleOutput">
+                                <div class="term-dim">[SYSTEM] Select an offensive or defensive subsystem above and click 'EXECUTE SUITE MODULE'.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Security Engine: <strong>Autonomous Sovereign Tier</strong></span>
+                    <span>Mitigation: <strong>ARP / SYN / DNS Flood Filter Armed</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 4: SYSTEM MONITOR / BTOP (as-monitor) -->
+            <div class="cyber-window" id="win-as-monitor" style="top: 100px; left: 220px; width: 900px; height: 540px; display: none;">
+                <div class="window-titlebar" data-win="as-monitor">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </span>
+                        <span class="win-title">Btop++ // ASTERIX Microsecond Real-Time Telemetry HUD</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-monitor')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-monitor')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-monitor')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body btop-window-body">
+                    <div class="btop-quad">
+                        <!-- CPU Pane -->
+                        <div class="btop-card cpu-card">
+                            <div class="btop-card-header">
+                                <span>CPU 12-CORE MATRIX [AMD Ryzen 9 / 6.1-sec]</span>
+                                <span class="btop-val" id="btopCpuPct">24%</span>
+                            </div>
+                            <canvas id="cpuGraphCanvas" width="400" height="90" class="tele-canvas"></canvas>
+                            <div class="core-grid" id="cpuCoreGrid"></div>
+                        </div>
+
+                        <!-- Memory Pane -->
+                        <div class="btop-card mem-card">
+                            <div class="btop-card-header">
+                                <span>MEMORY &amp; SWAP TELEMETRY</span>
+                                <span class="btop-val" id="btopMemPct">3.4 GB / 16.0 GB</span>
+                            </div>
+                            <div class="mem-bars-wrap">
+                                <div class="mem-label">RAM (21%)</div>
+                                <div class="meter-bar"><div class="meter-fill cyan" style="width: 21%;"></div></div>
+                                <div class="mem-label">Persistent ZRAM (8%)</div>
+                                <div class="meter-bar"><div class="meter-fill magenta" style="width: 8%;"></div></div>
+                                <div class="mem-label">Storage Overlay /asterix_persistent (14%)</div>
+                                <div class="meter-bar"><div class="meter-fill green" style="width: 14%;"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Network IO Pane -->
+                        <div class="btop-card net-card">
+                            <div class="btop-card-header">
+                                <span>NETWORK INTERFACES (eth0 &amp; wlan0mon)</span>
+                                <span class="btop-val" id="btopNetSpeed">▲ 4.2 MB/s | ▼ 18.9 MB/s</span>
+                            </div>
+                            <canvas id="netGraphCanvas" width="400" height="70" class="tele-canvas"></canvas>
+                        </div>
+
+                        <!-- Active Processes Table -->
+                        <div class="btop-card proc-card">
+                            <div class="btop-card-header">
+                                <span>SOVEREIGN PROCESS MATRIX</span>
+                                <button class="mini-kill-btn" onclick="killSelectedProcess()">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                                    <span>KILL PROCESS</span>
+                                </button>
+                            </div>
+                            <div class="proc-table-wrap">
+                                <table class="cyber-proc-table" id="procTable">
+                                    <thead>
+                                        <tr>
+                                            <th>PID</th>
+                                            <th>USER</th>
+                                            <th>CPU%</th>
+                                            <th>MEM%</th>
+                                            <th>COMMAND</th>
+                                            <th>STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="procTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Tasks: <strong id="btopTaskCount">142 total</strong></span>
+                    <span>Load average: <strong>0.34, 0.28, 0.19</strong></span>
+                    <span>Uptime: <strong id="btopUptime">14h 32m</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 5: CODE STUDIO (as-code) -->
+            <div class="cyber-window" id="win-as-code" style="top: 80px; left: 160px; width: 920px; height: 540px; display: none;">
+                <div class="window-titlebar" data-win="as-code">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </span>
+                        <span class="win-title">Code Studio // Multi-Language IDE (Rust, C/C++, Python3)</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-code')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-code')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-code')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body code-window-body">
+                    <div class="code-editor-top">
+                        <div class="code-tabs" id="codeEditorTabs">
+                            <button class="code-tab active" data-file="net_sentinel.rs">net_sentinel.rs (Rust)</button>
+                            <button class="code-tab" data-file="dark_engine.c">dark_engine.c (C)</button>
+                            <button class="code-tab" data-file="ai_threat_triage.py">ai_threat_triage.py (Python)</button>
+                            <button class="code-tab" data-file="bootloader.asm">bootloader.asm (x86_64)</button>
+                        </div>
+                        <div class="code-actions">
+                            <button class="code-btn run" onclick="runCodeStudioScript()">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <span>COMPILE &amp; RUN</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-main-layout">
+                        <div class="code-gutter" id="codeGutter"></div>
+                        <textarea id="codeEditorTextArea" class="code-textarea" spellcheck="false"></textarea>
+                    </div>
+                    <div class="code-output-pane" id="codeOutputPane">
+                        <div class="output-header">
+                            <span>COMPILATION &amp; TEST RUNNER OUTPUT</span>
+                            <button class="mini-close" onclick="document.getElementById('codeOutputPane').classList.toggle('collapsed')">_</button>
+                        </div>
+                        <pre class="output-content" id="codeOutputConsole">Press [COMPILE &amp; RUN] to execute via auto-compiler toolchain.</pre>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span id="codeFileMeta">Language: <strong>Rust (rustc 1.80)</strong></span>
+                    <span>Self-Healing Compiler: <strong>Armed</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 6: AI NEURAL COPILOT (as-ai) -->
+            <div class="cyber-window" id="win-as-ai" style="top: 95px; left: 240px; width: 850px; height: 530px; display: none;">
+                <div class="window-titlebar" data-win="as-ai">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                        </span>
+                        <span class="win-title">ASTERIX Neural AI Copilot // Sovereign LLM Runtime</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-ai')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-ai')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-ai')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body ai-window-body">
+                    <div class="ai-chat-history" id="aiChatHistory">
+                        <div class="ai-msg bot">
+                            <div class="msg-author">[AI] ASTERIX NEURAL ADVISOR [v3.0.0-PRO]</div>
+                            <div class="msg-body">Operator identified. Sovereign threat triage, auto-repair, and network telemetry bridges are online. How may I assist your mission today?</div>
+                        </div>
+                    </div>
+                    <div class="ai-input-area">
+                        <div class="ai-quick-prompts">
+                            <button class="ai-chip" onclick="sendAiPrompt('Analyze current subnet security and suggest nmap parameters')">Recon Strategy</button>
+                            <button class="ai-chip" onclick="sendAiPrompt('Check system vulnerability status and memory W^X protection')">Memory Audit</button>
+                            <button class="ai-chip" onclick="sendAiPrompt('Show code repair suggestions for C memory leaks')">Auto-Repair</button>
+                            <button class="ai-chip" onclick="sendAiPrompt('Explain how Rufus live persistence works on ASTERIX ISO')">Rufus Persistence</button>
+                        </div>
+                        <div class="ai-input-box-row">
+                            <input type="text" id="aiChatInput" placeholder="Ask ASTERIX AI about security, terminal commands, code fixes...">
+                            <button class="cyber-btn cyan-btn" onclick="sendAiChat()">Send</button>
+                            <button class="cyber-btn voice-btn" id="voiceMicBtn" title="Voice Input (Web Speech API)">
+                                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Model: <strong>qwen2.5:3b-instruct (Local Sovereign)</strong></span>
+                    <span>Safety Filter: <strong>Offensive Pentest Sandbox</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 7: SOFTWARE CENTER / APT (as-store) -->
+            <div class="cyber-window" id="win-as-store" style="top: 110px; left: 190px; width: 860px; height: 510px; display: none;">
+                <div class="window-titlebar" data-win="as-store">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        </span>
+                        <span class="win-title">ASTERIX Software Center // APT &amp; AS-PKG Repository</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-store')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-store')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-store')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body store-window-body">
+                    <div class="store-search-bar">
+                        <input type="text" id="storeSearchInput" placeholder="Search security packages, compilers, toolchains...">
+                        <button class="store-sync-btn" onclick="syncStoreRepositories()">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                            <span>apt-get update</span>
+                        </button>
+                    </div>
+                    <div class="store-grid" id="storePackagesGrid"></div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Repository: <strong>deb.asterix-os.org/sec phantom main</strong></span>
+                    <span>Installed: <strong>2,482 packages</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 8: CONTROL CENTER & SETTINGS (as-settings) -->
+            <div class="cyber-window" id="win-as-settings" style="top: 85px; left: 170px; width: 880px; height: 540px; display: none;">
+                <div class="window-titlebar" data-win="as-settings">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        </span>
+                        <span class="win-title">Distro Control Center // Wallpapers &amp; Cyber Appearance</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-settings')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-settings')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-settings')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body settings-window-body">
+                    <div class="settings-nav">
+                        <button class="set-nav-btn active" data-set-tab="wallpapers">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <span>HD Wallpapers (26)</span>
+                        </button>
+                        <button class="set-nav-btn" data-set-tab="theme">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z"/></svg>
+                            <span>Color Themes</span>
+                        </button>
+                        <button class="set-nav-btn" data-set-tab="fx">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <span>Shaders &amp; Sound</span>
+                        </button>
+                        <button class="set-nav-btn" data-set-tab="about">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span>About ASTERIX OS</span>
+                        </button>
+                    </div>
+                    <div class="settings-content">
+                        <!-- Wallpapers Tab -->
+                        <div class="set-tab-panel active" id="set-tab-wallpapers">
+                            <div class="set-header">Select Desktop Background (Saved to Local Storage)</div>
+                            <div class="wallpapers-shelf" id="wallpapersShelf"></div>
+                        </div>
+
+                        <!-- Theme Tab -->
+                        <div class="set-tab-panel" id="set-tab-theme">
+                            <div class="set-header">Cybernetic Neon Color Profiles</div>
+                            <div class="themes-grid">
+                                <div class="theme-card active" data-theme="theme-cyan" onclick="selectColorTheme('theme-cyan')">
+                                    <div class="theme-swatch cyan"></div>
+                                    <div class="theme-name">Electric Cyan</div>
+                                    <div class="theme-desc">Default ASTERIX Sovereign aesthetic</div>
+                                </div>
+                                <div class="theme-card" data-theme="theme-matrix" onclick="selectColorTheme('theme-matrix')">
+                                    <div class="theme-swatch matrix"></div>
+                                    <div class="theme-name">Matrix Terminal Green</div>
+                                    <div class="theme-desc">Classic phosphor hacker console</div>
+                                </div>
+                                <div class="theme-card" data-theme="theme-magenta" onclick="selectColorTheme('theme-magenta')">
+                                    <div class="theme-swatch magenta"></div>
+                                    <div class="theme-name">Synthwave Magenta</div>
+                                    <div class="theme-desc">Cyberpunk retro-wave glow</div>
+                                </div>
+                                <div class="theme-card" data-theme="theme-crimson" onclick="selectColorTheme('theme-crimson')">
+                                    <div class="theme-swatch crimson"></div>
+                                    <div class="theme-name">Blood Crimson</div>
+                                    <div class="theme-desc">High-alert offensive red team mode</div>
+                                </div>
+                                <div class="theme-card" data-theme="theme-amber" onclick="selectColorTheme('theme-amber')">
+                                    <div class="theme-swatch amber"></div>
+                                    <div class="theme-name">Amber Fallout</div>
+                                    <div class="theme-desc">Vintage amber VT220 terminal aesthetic</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FX Tab -->
+                        <div class="set-tab-panel" id="set-tab-fx">
+                            <div class="set-header">Display Shaders &amp; Sound Engine</div>
+                            <div class="toggles-list">
+                                <label class="toggle-row">
+                                    <span>CRT Scanlines Shader</span>
+                                    <input type="checkbox" id="scanlineCheckbox" checked onchange="toggleScanlines(this.checked)">
+                                </label>
+                                <label class="toggle-row">
+                                    <span>Synthesizer UI Audio Effects (Clicks, Chimes)</span>
+                                    <input type="checkbox" id="soundCheckbox" checked onchange="toggleAudio(this.checked)">
+                                </label>
+                                <label class="toggle-row">
+                                    <span>Glitch Bloom Glow Effects</span>
+                                    <input type="checkbox" id="bloomCheckbox" checked onchange="toggleBloom(this.checked)">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- About Tab -->
+                        <div class="set-tab-panel" id="set-tab-about">
+                            <div class="about-card">
+                                <h2>ASTERIX OS v2.0 - Phantom</h2>
+                                <p>A sovereign, multi-language cybernetic operating system distribution engineered for offensive security operators, low-level reverse engineers, and autonomous AI-assisted defense.</p>
+                                <table class="about-table">
+                                    <tr><td>Kernel</td><td>Linux 6.1.0-sec-amd64</td></tr>
+                                    <tr><td>Architecture</td><td>x86_64 / aarch64 (Hybrid UEFI+BIOS)</td></tr>
+                                    <tr><td>Maintainer</td><td>NEXO-TECHNOLOGIES</td></tr>
+                                    <tr><td>License</td><td>MIT Open Source</td></tr>
+                                    <tr><td>Release Stage</td><td>Production Master</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Appearance: <strong>Cyber Glassmorphism</strong></span>
+                    <span>Config State: <strong>Auto-Saved</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 9: ISO & DUAL-BOOT MANAGER (as-boot) -->
+            <div class="cyber-window" id="win-as-boot" style="top: 90px; left: 150px; width: 920px; height: 530px; display: none;">
+                <div class="window-titlebar" data-win="as-boot">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                        </span>
+                        <span class="win-title">Live Boot Center // Official ISO Downloads &amp; Rufus Persistence</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-boot')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-boot')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-boot')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body boot-window-body">
+                    <div class="iso-downloads-grid">
+                        <div class="iso-card">
+                            <div class="iso-header">
+                                <span class="iso-badge full">FULL SUITE</span>
+                                <h3>ASTERIX OS Full Cyber Suite</h3>
+                            </div>
+                            <p>All 12 offensive subsystems, compilers, tools, desktop HUD and AI engine.</p>
+                            <div class="iso-meta">Size: <strong>4.2 GB</strong> | Arch: <strong>x86_64</strong></div>
+                            <div class="iso-btns">
+                                <a href="../releases/asterix-os-v2.0-amd64-full.iso.torrent" class="iso-btn torrent">P2P Torrent</a>
+                                <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" target="_blank" class="iso-btn direct">Direct Download</a>
+                            </div>
+                        </div>
+
+                        <div class="iso-card">
+                            <div class="iso-header">
+                                <span class="iso-badge stealth">STEALTH</span>
+                                <h3>Stealth &amp; Undercover Edition</h3>
+                            </div>
+                            <p>Hardened RAM-only live mode with automated MAC rotation and zero trace scrub.</p>
+                            <div class="iso-meta">Size: <strong>1.8 GB</strong> | Arch: <strong>x86_64</strong></div>
+                            <div class="iso-btns">
+                                <a href="../releases/asterix-os-v2.0-amd64-stealth.iso.torrent" class="iso-btn torrent">P2P Torrent</a>
+                                <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" target="_blank" class="iso-btn direct">Direct Download</a>
+                            </div>
+                        </div>
+
+                        <div class="iso-card">
+                            <div class="iso-header">
+                                <span class="iso-badge minimal">NETINSTALL</span>
+                                <h3>Minimal Netinstall ISO</h3>
+                            </div>
+                            <p>Ultra-lightweight micro image for custom bare-metal installs or VPS setups.</p>
+                            <div class="iso-meta">Size: <strong>650 MB</strong> | Arch: <strong>x86_64</strong></div>
+                            <div class="iso-btns">
+                                <a href="../releases/asterix-os-v2.0-amd64-netinstall.iso.torrent" class="iso-btn torrent">P2P Torrent</a>
+                                <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" target="_blank" class="iso-btn direct">Direct Download</a>
+                            </div>
+                        </div>
+
+                        <div class="iso-card">
+                            <div class="iso-header">
+                                <span class="iso-badge mobile">ARM64</span>
+                                <h3>Termux Mobile PRoot</h3>
+                            </div>
+                            <p>Complete ASTERIX offensive tools suite for Android without root requirement.</p>
+                            <div class="iso-meta">Size: <strong>380 MB</strong> | Arch: <strong>aarch64</strong></div>
+                            <div class="iso-btns">
+                                <a href="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases" target="_blank" class="iso-btn direct">Termux Script</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rufus-guide-box">
+                        <h4>HOW TO FLASH LIVE USB WITH PERSISTENCE (RUFUS):</h4>
+                        <ol>
+                            <li>Download Rufus (<a href="https://rufus.ie" target="_blank">rufus.ie</a>) on Windows.</li>
+                            <li>Select your USB drive (&gt;= 8GB) and choose the downloaded ASTERIX ISO.</li>
+                            <li>Drag the <strong>"Persistent partition size"</strong> slider to 4 GB - 16 GB.</li>
+                            <li>Set Partition scheme to <strong>MBR</strong> and Target system to <strong>BIOS or UEFI</strong>.</li>
+                            <li>Click START and select <em>"Write in ISO Image mode"</em>. All changes on USB will be saved forever!</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Bootloader: <strong>GRUB 2.06 Dual-Boot Capable</strong></span>
+                    <span>Target: <strong>Live USB / Bare Metal</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 10: DISCORD CLOUD VAULT (as-discord) -->
+            <div class="cyber-window" id="win-as-discord" style="top: 105px; left: 205px; width: 850px; height: 500px; display: none;">
+                <div class="window-titlebar" data-win="as-discord">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                        </span>
+                        <span class="win-title">Discord Cloud Vault &amp; Async Task Bridge</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-discord')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-discord')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-discord')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body discord-window-body">
+                    <div class="discord-split">
+                        <div class="discord-form-card">
+                            <h3>Webhook Cloud Dispatcher</h3>
+                            <p>Transmit instant telemetry snapshots, security alerts, and loot reports directly to your Discord operations channel.</p>
+                            <div class="form-group">
+                                <label>Discord Webhook URL:</label>
+                                <input type="password" id="discordWebhookInput" class="cyber-input" placeholder="https://discord.com/api/webhooks/...">
+                            </div>
+                            <div class="form-group">
+                                <label>Payload Alert Message:</label>
+                                <input type="text" id="discordMsgInput" class="cyber-input" value="ASTERIX OS Distro Node operational // All systems nominal">
+                            </div>
+                            <div class="btn-row">
+                                <button class="cyber-btn cyan-btn" onclick="sendDiscordTest()">Transmit Alert</button>
+                                <button class="cyber-btn magenta-btn" onclick="sendDiscordStatus()">Push Telemetry</button>
+                            </div>
+                            <div id="discordStatusMsg" class="discord-status-msg"></div>
+                        </div>
+
+                        <div class="discord-commands-card">
+                            <h3>CLI Bridge Integration</h3>
+                            <div class="code-snippet">
+<pre><code># Send alerts from CLI
+as-discord notify "Port scan complete!"
+
+# Upload captured pcap / loot
+as-discord send /tmp/loot.zip "Recon Loot"
+
+# Backup /asterix_persistent
+as-discord backup</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>Bridge Status: <strong>Ready</strong></span>
+                    <span>Webhook API: <strong>Discord REST v10</strong></span>
+                </div>
+            </div>
+
+            <!-- WINDOW 11: TRASH (as-trash) -->
+            <div class="cyber-window" id="win-as-trash" style="top: 130px; left: 260px; width: 640px; height: 400px; display: none;">
+                <div class="window-titlebar" data-win="as-trash">
+                    <div class="titlebar-left">
+                        <span class="win-icon">
+                            <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </span>
+                        <span class="win-title">Trash Bin // Recycle Depot</span>
+                    </div>
+                    <div class="titlebar-controls">
+                        <button class="win-btn min-btn" onclick="minimizeWindow('as-trash')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button class="win-btn max-btn" onclick="maximizeWindow('as-trash')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        </button>
+                        <button class="win-btn close-btn" onclick="closeWindow('as-trash')">
+                            <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-body trash-window-body">
+                    <div class="trash-empty-state">
+                        <div class="trash-big-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </div>
+                        <h3>Trash is Empty</h3>
+                        <p>No deleted files or artifacts in the recycle depot.</p>
+                    </div>
+                </div>
+                <div class="window-statusbar">
+                    <span>0 items | 0 KB</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- File Explorer Right-Click Context Menu -->
+        <div class="file-explorer-context-menu" id="fileExplorerContextMenu">
+            <div class="file-explorer-context-item" onclick="handleFileExplorerContextAction('open')">
+                <span>Open</span>
+            </div>
+            <div class="file-explorer-context-item" onclick="handleFileExplorerContextAction('new-file')">
+                <span>New File</span>
+            </div>
+            <div class="file-explorer-context-item" onclick="handleFileExplorerContextAction('new-folder')">
+                <span>New Folder</span>
+            </div>
+            <div class="file-explorer-context-item" onclick="handleFileExplorerContextAction('rename')">
+                <span>Rename</span>
+            </div>
+            <div class="file-explorer-context-item" onclick="handleFileExplorerContextAction('delete')">
+                <span>Delete</span>
+            </div>
+        </div>
+
+        <!-- Desktop Right-Click Context Menu -->
+        <div class="desktop-context-menu" id="desktopContextMenu">
+            <div class="ctx-item" onclick="openWindow('as-terminal')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <span>Open Terminal Here</span>
+            </div>
+            <div class="ctx-item" onclick="openWindow('as-files')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span>Open File Explorer</span>
+            </div>
+            <div class="ctx-item" onclick="createNewFilePrompt()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Create New File</span>
+            </div>
+            <div class="ctx-item" onclick="createNewDirPrompt()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span>Create New Folder</span>
+            </div>
+            <div class="ctx-item" onclick="openSelectedDesktopItem()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M12 4l8 8-8 8"/></svg>
+                <span>Open Selected Item</span>
+            </div>
+            <div class="ctx-item" onclick="renameSelectedDesktopItem()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                <span>Rename Selected Shortcut</span>
+            </div>
+            <div class="ctx-item" onclick="removeSelectedDesktopItem()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Remove Selected Shortcut</span>
+            </div>
+            <div class="ctx-divider"></div>
+            <div class="ctx-item" onclick="openWindow('as-settings')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Change Wallpaper &amp; Theme</span>
+            </div>
+            <div class="ctx-item" onclick="window.open('../project_map.html', '_blank')">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                <span>Codebase Cartographer</span>
+            </div>
+            <div class="ctx-item" onclick="toggleDesktopFullscreen()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                <span>Toggle Fullscreen (F11)</span>
+            </div>
+            <div class="ctx-item" onclick="toggleAudioSynth()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <span>Toggle Sound FX</span>
+            </div>
+            <div class="ctx-divider"></div>
+            <div class="ctx-item" onclick="showSystemInfoModal()">
+                <svg class="svg-icon mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>About ASTERIX OS</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Master Audio Synthesizer Script -->
     <script src="app.js"></script>
 </body>
 </html>

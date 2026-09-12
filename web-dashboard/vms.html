@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTERIX VM Panel</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-name">ASTERIX</div>
+        </div>
+
+        <nav class="nav">
+          <a href="index.html">Overview</a>
+          <a href="dashboard.html">Console</a>
+          <a href="vms.html" class="active">VMs</a>
+          <a href="settings.html">Settings</a>
+        </nav>
+
+        <div class="nav-actions">
+          <span class="chip online">Cluster active</span>
+          <button id="themeToggleBtn" class="theme-toggle" type="button">Theme: Dark</button>
+          <a class="secondary-btn" href="login.html">Logout</a>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <div>
+          <h1>VM panel</h1>
+          <div class="page-subtitle">Provision, monitor, and scale secure workloads.</div>
+        </div>
+        <div class="cta-row">
+          <input id="quickSearch" type="text" placeholder="Search VMs" style="padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--input-bg); color: var(--text); min-width: 180px;" />
+          <button id="openVmModalBtn" class="primary-btn" type="button">Create VM</button>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="vm-toolbar">
+          <div class="card-title" style="margin: 0;"><h3>Managed workloads</h3></div>
+          <button id="addKeyBtn" class="secondary-btn" type="button">Add SSH key</button>
+        </div>
+        <div class="vm-layout">
+          <div id="vmGrid" class="vm-grid"></div>
+          <aside class="ssh-panel section-card">
+            <div class="card-title"><h3>SSH keys</h3></div>
+            <div id="sshList" class="key-list"></div>
+          </aside>
+        </div>
+      </section>
+    </div>
+
+    <div id="vmModal" class="modal hidden" aria-modal="true" role="dialog">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Create VM</h3>
+          <button id="closeVmModalBtn" class="close-modal" type="button" aria-label="Close dialog">×</button>
+        </div>
+
+        <form id="vmForm" class="modal-form">
+          <div class="field">
+            <label for="vmName">VM name</label>
+            <input id="vmName" name="vmName" type="text" placeholder="demo-vm-01" required />
+          </div>
+
+          <div class="field">
+            <label for="vmRegion">Region</label>
+            <select id="vmRegion" name="vmRegion">
+              <option>us-east</option>
+              <option>us-central</option>
+              <option>eu-west</option>
+              <option>ap-south</option>
+              <option>local</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="vmImage">OS image</label>
+            <select id="vmImage" name="vmImage">
+              <option>Ubuntu 24.04 LTS</option>
+              <option>Debian 12</option>
+              <option>Fedora 40</option>
+              <option>Windows Server 2022</option>
+              <option>Custom ISO</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="vmCpu">CPU</label>
+            <input id="vmCpu" name="vmCpu" type="text" value="4 vCPU" />
+          </div>
+
+          <div class="field">
+            <label for="vmRam">Memory</label>
+            <input id="vmRam" name="vmRam" type="text" value="16 GB" />
+          </div>
+
+          <div class="field">
+            <label for="vmKey">SSH key</label>
+            <select id="vmKey" name="vmKey">
+              <option>operator@asterix</option>
+              <option>ci-bot@dev</option>
+              <option>edge-gateway</option>
+              <option>new-key</option>
+            </select>
+          </div>
+
+          <div class="modal-actions">
+            <button class="secondary-btn" type="button" id="cancelVmBtn">Cancel</button>
+            <button class="primary-btn" type="submit">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="site.js"></script>
+  </body>
+</html>

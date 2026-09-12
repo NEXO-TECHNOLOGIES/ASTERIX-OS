@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTERIX Settings</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-name">ASTERIX</div>
+        </div>
+
+        <nav class="nav">
+          <a href="index.html">Overview</a>
+          <a href="dashboard.html">Console</a>
+          <a href="vms.html">VMs</a>
+          <a href="settings.html" class="active">Settings</a>
+        </nav>
+
+        <div class="nav-actions">
+          <span class="chip online">Secure config</span>
+          <button id="themeToggleBtn" class="theme-toggle" type="button">Theme: Dark</button>
+          <a class="secondary-btn" href="login.html">Logout</a>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <div>
+          <h1>System settings</h1>
+          <div class="page-subtitle">Adjust host behavior, security posture, and operator preferences.</div>
+        </div>
+        <button class="primary-btn" type="button">Save changes</button>
+      </section>
+
+      <section class="settings-grid">
+        <div class="section-card">
+          <div class="card-title">
+            <h3>Security</h3>
+          </div>
+
+          <div class="toggle-row">
+            <span>Live threat scanning</span>
+            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span>Port lockdown</span>
+            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span>Auto-rotate SSH keys</span>
+            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span>GPU telemetry</span>
+            <label class="switch"><input type="checkbox" /><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="card-title">
+            <h3>Operator profile</h3>
+          </div>
+
+          <div class="field">
+            <label for="profileName">Operator name</label>
+            <input id="profileName" type="text" value="operator" />
+          </div>
+          <div class="field">
+            <label for="themeMode">Theme</label>
+            <select id="themeMode">
+              <option>Cyber cyan</option>
+              <option>Night violet</option>
+              <option>Signal green</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="alertLevel">Alert level</label>
+            <select id="alertLevel">
+              <option>Moderate</option>
+              <option selected>High priority</option>
+              <option>Silent mode</option>
+            </select>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="site.js"></script>
+  </body>
+</html>

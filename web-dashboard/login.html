@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTERIX Access Portal</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <div class="login-wrap">
+      <div class="auth-card">
+        <div class="eyebrow">Operator access</div>
+        <h2>Login to Asterix</h2>
+        <p>Verify access to the sovereign control plane and secure workloads.</p>
+
+        <form id="loginForm">
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" value="operator" />
+          </div>
+
+          <div class="field">
+            <label for="host">Control host</label>
+            <select id="host" name="host">
+              <option>asterix-primary</option>
+              <option>asterix-edge</option>
+              <option>asterix-ops</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" value="asterix" />
+          </div>
+
+          <div class="auth-actions">
+            <label class="check-row"><input type="checkbox" checked /> Keep signed in</label>
+            <a class="form-link" href="index.html">Back to home</a>
+          </div>
+
+          <div class="cta-row" style="margin-top: 24px;">
+            <button class="primary-btn" type="submit">Access console</button>
+            <button class="secondary-btn" type="button" onclick="window.location.href='index.html'">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="site.js"></script>
+  </body>
+</html>

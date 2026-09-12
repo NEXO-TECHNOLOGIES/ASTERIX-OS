@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTERIX Operator Console</title>
+    <style>
+      :root {
+        --bg: #070d18;
+        --bg-2: #0f1728;
+        --panel: rgba(15, 23, 40, 0.88);
+        --panel-strong: rgba(17, 31, 52, 0.96);
+        --panel-soft: rgba(17, 31, 52, 0.7);
+        --line: rgba(110, 231, 255, 0.2);
+        --line-strong: rgba(110, 231, 255, 0.5);
+        --text: #e6f7ff;
+        --muted: #8fa9bf;
+        --cyan: #5ce1ff;
+        --cyan-2: #5cf2b8;
+        --violet: #8a7dff;
+        --amber: #ffbb55;
+        --red: #ff6b7d;
+        --green: #5ff2a2;
+        --shadow: 0 18px 40px rgba(16, 217, 255, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top, rgba(92, 225, 255, 0.16), transparent 28%),
+          linear-gradient(180deg, #02070d 0%, #08121d 100%);
+        color: var(--text);
+        font-family: Inter, Segoe UI, sans-serif;
+      }
+
+      a { color: inherit; text-decoration: none; }
+      button { font: inherit; }
+
+      .shell {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px 22px 60px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        background: rgba(9, 15, 24, 0.7);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 14px;
+        backdrop-filter: blur(12px);
+        z-index: 10;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(92,225,255,0.2), rgba(138,125,255,0.18));
+        border: 1px solid var(--line-strong);
+        color: var(--cyan);
+        font-weight: 800;
+      }
+
+      .brand-name {
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 0.87rem;
+      }
+
+      .nav a:hover { color: var(--text); }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(92,225,255,0.04);
+        color: var(--text);
+        font-size: 0.8rem;
+      }
+
+      .chip.online::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(95,242,162,0.8);
+      }
+
+      .primary-btn, .secondary-btn {
+        border: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .primary-btn {
+        background: linear-gradient(90deg, var(--cyan), #6ce7ff 35%, var(--cyan-2));
+        color: #031319;
+        font-weight: 800;
+        box-shadow: 0 15px 30px rgba(92,225,255,0.25);
+      }
+
+      .secondary-btn {
+        background: rgba(92,225,255,0.06);
+        color: var(--text);
+        border: 1px solid var(--line);
+      }
+
+      .primary-btn:hover, .secondary-btn:hover { transform: translateY(-1px); }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        padding-top: 26px;
+      }
+
+      .panel {
+        background: linear-gradient(180deg, rgba(15, 23, 40, 0.9), rgba(10,16,26,0.9));
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        padding: 30px 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(92,225,255,0.07);
+        border: 1px solid var(--line);
+        color: var(--cyan);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        margin-bottom: 16px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.6rem, 4vw, 4.3rem);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
+      }
+
+      .hero-copy p {
+        color: var(--muted);
+        line-height: 1.7;
+        margin: 18px 0 22px;
+        font-size: 1.02rem;
+        max-width: 620px;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .mini-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .mini-stat {
+        padding: 12px 14px;
+        background: rgba(92,225,255,0.03);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+
+      .mini-stat strong {
+        display: block;
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+      }
+
+      .mini-stat span {
+        font-size: 0.74rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .hero-panel {
+        padding: 20px;
+      }
+
+      .status-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .status-header h3 {
+        margin: 0;
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .signal {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.75rem;
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgba(95,242,162,0.08);
+        color: var(--green);
+        border: 1px solid rgba(95,242,162,0.25);
+      }
+
+      .signal::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(95,242,162,0.7);
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .metric-card {
+        padding: 16px 14px;
+        border-radius: 14px;
+        background: rgba(92,225,255,0.04);
+        border: 1px solid var(--line);
+      }
+
+      .metric-card .label {
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .metric-card .value {
+        display: block;
+        font-size: 1.7rem;
+        margin-top: 10px;
+        font-weight: 700;
+      }
+
+      .metric-card .trend {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 0.74rem;
+        color: var(--green);
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: 270px 1fr;
+        gap: 24px;
+        margin-top: 26px;
+      }
+
+      .sidebar,
+      .main-column {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .sidebar-card,
+      .main-card {
+        padding: 18px 18px 14px;
+      }
+
+      .card-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .card-title h3 {
+        margin: 0;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .node-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .node-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 12px;
+        border: 1px solid var(--line);
+        background: rgba(92,225,255,0.02);
+        border-radius: 12px;
+      }
+
+      .node-meta {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .node-name {
+        font-weight: 600;
+      }
+
+      .node-ip {
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        border: 1px solid transparent;
+      }
+
+      .pill.healthy {
+        background: rgba(95,242,162,0.1);
+        color: var(--green);
+        border-color: rgba(95,242,162,0.28);
+      }
+
+      .pill.alert {
+        background: rgba(255,107,125,0.08);
+        color: var(--red);
+        border-color: rgba(255,107,125,0.24);
+      }
+
+      .pill.warning {
+        background: rgba(255,187,85,0.09);
+        color: var(--amber);
+        border-color: rgba(255,187,85,0.22);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .section-header h3 {
+        margin: 0;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .chart-box {
+        position: relative;
+        height: 170px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(9, 15, 24, 0.9), rgba(11, 18, 30, 0.7));
+      }
+
+      .bars {
+        position: absolute;
+        inset: 14px 14px 20px 14px;
+        display: flex;
+        align-items: end;
+        gap: 10px;
+      }
+
+      .bar {
+        flex: 1;
+        border-radius: 8px 8px 0 0;
+        background: linear-gradient(180deg, var(--cyan), rgba(92,225,255,0.25));
+        box-shadow: 0 0 18px rgba(92,226,255,0.25);
+      }
+
+      .bar:nth-child(2n) {
+        background: linear-gradient(180deg, var(--violet), rgba(138,125,255,0.25));
+      }
+
+      .metrics-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .small-box {
+        padding: 16px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(92,225,255,0.02);
+      }
+
+      .small-box .kicker {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .small-box strong {
+        font-size: 1.6rem;
+      }
+
+      .table-wrap {
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(8, 14, 22, 0.7);
+      }
+
+      th, td {
+        padding: 14px 12px;
+        border-bottom: 1px solid rgba(110, 231, 255, 0.09);
+        text-align: left;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: rgba(92,225,255,0.03);
+      }
+
+      td {
+        color: var(--text);
+      }
+
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .activity-item {
+        display: grid;
+        grid-template-columns: 34px 1fr auto;
+        gap: 12px;
+        padding: 12px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(92,225,255,0.02);
+      }
+
+      .activity-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin-top: 4px;
+        background: var(--cyan);
+        box-shadow: 0 0 18px rgba(92,225,255,0.6);
+      }
+
+      .activity-item.warning .activity-dot {
+        background: var(--amber);
+        box-shadow: 0 0 16px rgba(255,187,85,0.55);
+      }
+
+      .activity-item.alert .activity-dot {
+        background: var(--red);
+        box-shadow: 0 0 16px rgba(255,107,125,0.55);
+      }
+
+      .activity-item strong {
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .activity-item span {
+        color: var(--muted);
+        font-size: 0.74rem;
+      }
+
+      .activity-item time {
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
+
+      @media (max-width: 940px) {
+        .hero, .dashboard {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .topbar {
+          flex-wrap: wrap;
+          padding: 14px;
+        }
+
+        .nav {
+          width: 100%;
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+
+        .nav-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .mini-stats, .metrics-row {
+          grid-template-columns: repeat(2, minmax(120px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div class="brand-name">ASTERIX</div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#overview">Overview</a>
+          <a href="#operations">Operations</a>
+          <a href="#telemetry">Telemetry</a>
+          <a href="#security">Security</a>
+        </nav>
+
+        <div class="nav-actions">
+          <span class="chip online">System online</span>
+          <button class="secondary-btn" type="button">UI mode</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" id="overview">
+          <div class="panel hero-copy">
+            <div class="eyebrow">Operator Console</div>
+            <h1>Secure the stack. Launch faster.</h1>
+            <p>
+              Asterix gives teams a calm control layer for infrastructure, security telemetry,
+              and autonomous operations. From host health to workflow automation, everything is built
+              to feel fast, clear, and operational.
+            </p>
+            <div class="cta-row">
+              <button class="primary-btn" type="button">Launch VM</button>
+              <button class="secondary-btn" type="button">Open shell</button>
+            </div>
+
+            <div class="mini-stats">
+              <div class="mini-stat">
+                <strong>4</strong>
+                <span>Host nodes</span>
+              </div>
+              <div class="mini-stat">
+                <strong>12</strong>
+                <span>Running VMs</span>
+              </div>
+              <div class="mini-stat">
+                <strong>99.4%</strong>
+                <span>Uptime</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="panel hero-panel">
+            <div class="status-header">
+              <h3>System status</h3>
+              <span class="signal">Stable</span>
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric-card">
+                <span class="label">CPU</span>
+                <span class="value">42%</span>
+                <span class="trend">+3.1% / hr</span>
+              </div>
+
+              <div class="metric-card">
+                <span class="label">RAM</span>
+                <span class="value">73%</span>
+                <span class="trend">+1.7% / hr</span>
+              </div>
+
+              <div class="metric-card">
+                <span class="label">Latency</span>
+                <span class="value">18ms</span>
+                <span class="trend">Fast path</span>
+              </div>
+
+              <div class="metric-card">
+                <span class="label">Threat</span>
+                <span class="value">Low</span>
+                <span class="trend">2 alerts</span>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="dashboard" id="operations">
+          <aside class="sidebar">
+            <div class="panel sidebar-card">
+              <div class="card-title">
+                <h3>Host fleet</h3>
+                <span class="chip online">Online</span>
+              </div>
+
+              <div class="node-list">
+                <div class="node-item">
+                  <div class="node-meta">
+                    <span class="node-name">core-01</span>
+                    <span class="node-ip">10.0.8.10</span>
+                  </div>
+                  <span class="pill healthy">Healthy</span>
+                </div>
+
+                <div class="node-item">
+                  <div class="node-meta">
+                    <span class="node-name">edge-02</span>
+                    <span class="node-ip">10.0.8.18</span>
+                  </div>
+                  <span class="pill healthy">Healthy</span>
+                </div>
+
+                <div class="node-item">
+                  <div class="node-meta">
+                    <span class="node-name">db-04</span>
+                    <span class="node-ip">10.0.8.42</span>
+                  </div>
+                  <span class="pill warning">Warm</span>
+                </div>
+
+                <div class="node-item">
+                  <div class="node-meta">
+                    <span class="node-name">sec-07</span>
+                    <span class="node-ip">10.0.8.77</span>
+                  </div>
+                  <span class="pill alert">Alert</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel sidebar-card" id="security">
+              <div class="card-title">
+                <h3>Security status</h3>
+              </div>
+
+              <div class="node-list">
+                <div class="node-item">
+                  <div class="node-meta">
+                    <span class="node-name">Firewall</span>
+                    <span class="node-ip">Strict policy</span>
+                  </div>
+                  <span class="pill healthy">Active</span>
+                </div>
+
+                <div class="node-item">
+                  <div class="node-meta">
+                    <span class="node-name">Signal monitor</span>
+                    <span class="node-ip">NIDS scan</span>
+                  </div>
+                  <span class="pill healthy">Clear</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="main-column">
+            <div class="panel main-card" id="telemetry">
+              <div class="section-header">
+                <h3>Resource overview</h3>
+                <button class="secondary-btn" type="button">Refresh</button>
+              </div>
+
+              <div class="chart-box" aria-label="Resource utilization chart">
+                <div class="bars">
+                  <div class="bar" style="height: 32%;"></div>
+                  <div class="bar" style="height: 44%;"></div>
+                  <div class="bar" style="height: 60%;"></div>
+                  <div class="bar" style="height: 52%;"></div>
+                  <div class="bar" style="height: 76%;"></div>
+                  <div class="bar" style="height: 65%;"></div>
+                  <div class="bar" style="height: 82%;"></div>
+                  <div class="bar" style="height: 72%;"></div>
+                </div>
+              </div>
+
+              <div class="metrics-row">
+                <div class="small-box">
+                  <span class="kicker">Workers</span>
+                  <strong>128</strong>
+                </div>
+                <div class="small-box">
+                  <span class="kicker">Sessions</span>
+                  <strong>54</strong>
+                </div>
+                <div class="small-box">
+                  <span class="kicker">Queues</span>
+                  <strong>18</strong>
+                </div>
+                <div class="small-box">
+                  <span class="kicker">Deploys</span>
+                  <strong>6</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel main-card">
+              <div class="section-header">
+                <h3>Live workloads</h3>
+                <span class="chip online">Auto-synced</span>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Service</th>
+                      <th>Owner</th>
+                      <th>Status</th>
+                      <th>Health</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>vm-orchestrator</td>
+                      <td>ops</td>
+                      <td><span class="pill healthy">Ready</span></td>
+                      <td>99.8%</td>
+                    </tr>
+                    <tr>
+                      <td>cloud-scan</td>
+                      <td>security</td>
+                      <td><span class="pill healthy">Running</span></td>
+                      <td>97.6%</td>
+                    </tr>
+                    <tr>
+                      <td>api-gateway</td>
+                      <td>platform</td>
+                      <td><span class="pill warning">Scaling</span></td>
+                      <td>93.2%</td>
+                    </tr>
+                    <tr>
+                      <td>vault-sync</td>
+                      <td>infra</td>
+                      <td><span class="pill alert">Review</span></td>
+                      <td>88.4%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel main-card">
+              <div class="section-header">
+                <h3>Recent activity</h3>
+                <span class="chip online">Updated now</span>
+              </div>
+
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-dot"></div>
+                  <div>
+                    <strong>VM bootstrap completed</strong>
+                    <span>Operator workflow finished successfully across 3 hosts.</span>
+                  </div>
+                  <time>2m ago</time>
+                </div>
+
+                <div class="activity-item warning">
+                  <div class="activity-dot"></div>
+                  <div>
+                    <strong>Storage threshold warning</strong>
+                    <span>Persistent volume nearing the recommended reuse limit.</span>
+                  </div>
+                  <time>9m ago</time>
+                </div>
+
+                <div class="activity-item alert">
+                  <div class="activity-dot"></div>
+                  <div>
+                    <strong>Firewall rule review required</strong>
+                    <span>One suspicious port pattern was flagged during routine inspection.</span>
+                  </div>
+                  <time>14m ago</time>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const timeEl = document.querySelector('.chip.online');
+      const refreshBtn = document.querySelector('.secondary-btn');
+
+      function updateTimeText() {
+        const now = new Date();
+        const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const date = now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+        document.querySelector('.chip.online').textContent = `${time} • ${date}`;
+      }
+
+      refreshBtn.addEventListener('click', () => {
+        refreshBtn.textContent = 'Refreshed';
+        setTimeout(() => { refreshBtn.textContent = 'Refresh'; }, 1200);
+      });
+
+      updateTimeText();
+      setInterval(updateTimeText, 1000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "completed": [
+    "debug_probe"
+  ],
+  "score": 20,
+  "level": "Beginner",
+  "unlocked": [
+    "debug_probe",
+    "shell_runner"
+  ],
+  "badge": "Debugger",
+  "day": "Day 1"
+}

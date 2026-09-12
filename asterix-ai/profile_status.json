@@ -1,7 +1,8 @@
 {
+  "assistant_name": "ASTERIX AI",
   "mood": "calm",
   "response_style": "balanced",
-  "training_completed": 45,
+  "training_completed": 50,
   "learning_quota": 100,
   "training_mode": "project_self_evolving",
   "confidence": 0.75,

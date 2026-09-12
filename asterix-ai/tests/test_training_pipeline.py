@@ -142,3 +142,49 @@ def test_self_evolution_allows_safe_learning_but_blocks_os_mutation():
 
     assert result["updated"] is True
     assert "user prefers fast" in result["fact"].lower()
+
+
+def test_tool_registry_is_persisted_when_missing():
+    import tool_generator
+    original = tool_generator.REGISTRY_PATH
+    temp_path = original.parent / "tool_registry_test.json"
+    tool_generator.REGISTRY_PATH = temp_path
+    try:
+        if temp_path.exists():
+            temp_path.unlink()
+        registry = tool_generator.load_registry()
+        assert registry["tools"] == []
+        assert registry["pending"] == []
+        assert temp_path.exists()
+    finally:
+        tool_generator.REGISTRY_PATH = original
+        if temp_path.exists():
+            temp_path.unlink()
+
+
+def test_tool_generator_creates_safe_project_tools_only():
+    from tool_generator import generate_safe_tool, TOOL_LIBRARY
+
+    generated = generate_safe_tool(
+        "dashboard",
+        "mood dashboard panel",
+        categories=["ui", "dashboard"],
+        project_scope="project",
+    )
+
+    assert generated["status"] == "created"
+    assert generated["tool_type"] == "dashboard"
+    assert generated["file_name"].endswith(".py")
+    assert generated["safety"] == "safe"
+    assert "rm -rf" not in generated["code"].lower()
+
+    blocked = generate_safe_tool(
+        "kernel_patch",
+        "bootloader rewrite",
+        categories=["kernel", "system"],
+        project_scope="system",
+    )
+
+    assert blocked["status"] == "blocked"
+    assert blocked["reason"].lower().startswith("blocked") or "unsafe" in blocked["reason"].lower()
+    assert "kernel_patch" in TOOL_LIBRARY["blocked"]
