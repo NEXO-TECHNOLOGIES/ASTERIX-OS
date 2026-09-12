@@ -12,25 +12,53 @@ AI_LOG_FILE="${AI_LOG_DIR}/ai_boot.log"
 mkdir -p "$AI_LOG_DIR" 2>/dev/null || true
 
 run_auto_fix_engine() {
-    echo "ASTERIX auto-heal: checking package integrity and host repair state..." >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
+    local max_attempts=5
+    local attempt=1
+    local repaired=0
 
-    if command -v termux-change-repo >/dev/null 2>&1; then
-        termux-change-repo >/dev/null 2>&1 || true
-    fi
+    echo "ASTERIX auto-heal: entering repair loop (max ${max_attempts} passes)..." >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
 
-    if command -v pkg >/dev/null 2>&1; then
-        pkg update -y >/dev/null 2>&1 || true
-        pkg upgrade -y >/dev/null 2>&1 || true
-        pkg reinstall -y curl libcurl >/dev/null 2>&1 || true
-        pkg install -y git wget openssl >/dev/null 2>&1 || true
-    fi
+    while [ "$attempt" -le "$max_attempts" ]; do
+        echo "ASTERIX auto-heal: pass ${attempt}/${max_attempts}" >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
 
-    if command -v ax >/dev/null 2>&1 || [ -x "$HOME/ASTERIX-OS/bin/ax" ]; then
-        ax doctor --fix >/tmp/asterix_auto_fix.log 2>&1 || true
-    fi
+        if command -v termux-change-repo >/dev/null 2>&1; then
+            termux-change-repo >/dev/null 2>&1 || true
+        fi
 
-    if [ -f "$AI_ENTRY" ]; then
-        python3 "$AI_ENTRY" --security >/tmp/asterix_ai_boot_status.txt 2>&1 || true
+        if command -v pkg >/dev/null 2>&1; then
+            pkg update -y >/dev/null 2>&1 || true
+            pkg upgrade -y >/dev/null 2>&1 || true
+            pkg reinstall -y curl libcurl >/dev/null 2>&1 || true
+            pkg install -y git wget openssl >/dev/null 2>&1 || true
+        fi
+
+        if command -v git >/dev/null 2>&1 && [ -d "$ASTERIX_ROOT" ]; then
+            git -C "$ASTERIX_ROOT" pull --ff-only >/dev/null 2>&1 || true
+        fi
+
+        if command -v ax >/dev/null 2>&1 || [ -x "$HOME/ASTERIX-OS/bin/ax" ]; then
+            ax doctor --fix >/tmp/asterix_auto_fix.log 2>&1 || true
+        fi
+
+        if [ -f "$AI_ENTRY" ]; then
+            python3 "$AI_ENTRY" --security >/tmp/asterix_ai_boot_status.txt 2>&1 || true
+        fi
+
+        if command -v git >/dev/null 2>&1 && command -v curl >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
+            repaired=1
+        fi
+
+        if [ "$repaired" -eq 1 ] && (command -v git >/dev/null 2>&1 && command -v curl >/dev/null 2>&1); then
+            echo "ASTERIX auto-heal: environment stable on pass ${attempt}." >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
+            break
+        fi
+
+        attempt=$((attempt + 1))
+        sleep 1 2>/dev/null || true
+    done
+
+    if [ "$repaired" -ne 1 ]; then
+        echo "ASTERIX auto-heal: max repair attempts reached; continuing with degraded mode." >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
     fi
 
     echo "ASTERIX auto-heal complete." >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
