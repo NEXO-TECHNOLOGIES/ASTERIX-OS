@@ -76,6 +76,59 @@ ax ai ask "show me the current system posture"
 
 ---
 
+## Termux recovery: if commands stop working after install
+
+If the user installs ASTERIX on Termux and then commands like `pkg`, `curl`, `git`, or `apt` stop working, the root cause is usually a broken repository state or a corrupted `curl/libcurl` package. This is a recovery path that should be documented and used immediately.
+
+### Manual repair flow
+
+```bash
+termux-change-repo
+pkg update
+pkg upgrade
+pkg reinstall -y curl libcurl
+pkg install -y git wget openssl
+```
+
+If the repository list is stale or broken, reset it first:
+
+```bash
+termux-change-repo
+```
+
+Then re-run:
+
+```bash
+pkg update
+pkg upgrade
+```
+
+If `curl` is still failing, force a clean reinstall:
+
+```bash
+pkg reinstall -y curl libcurl
+```
+
+### Auto-heal startup script
+
+Add this to the first-boot or startup flow so the system repairs itself automatically before continuing:
+
+```bash
+#!/data/data/com.termux/files/usr/bin/bash
+set -e
+
+echo "[ASTERIX] repairing Termux package state..."
+termux-change-repo || true
+pkg update || true
+pkg upgrade -y || true
+pkg reinstall -y curl libcurl || true
+pkg install -y git wget openssl || true
+```
+
+This prevents the system from becoming a dead shell after install when a repo or library package becomes invalid.
+
+---
+
 ## Architecture overview
 
 ```text
