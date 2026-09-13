@@ -11,6 +11,10 @@
 #   ax shadowcam paths <ip_or_host>      (test common RTSP channel paths)
 #   ax shadowcam report <ip_or_host>     (generate full audit report)
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-$(command -v python3 || command -v python || true)}"
+
 R='\033[0m'; BOLD='\033[1m'; DIM='\033[2m'
 FG_DARKGRAY='\033[38;5;237m'; FG_GRAY='\033[38;5;243m'
 FG_GREEN='\033[38;5;46m';     FG_DKGREEN='\033[38;5;22m'
@@ -197,6 +201,33 @@ CMD="${1:-}"
 TARGET="${2:-}"
 PORT="${3:-554}"
 
+# If the user does not know the exact target, use a local network discovery pass.
+if [[ -z "$TARGET" && "$CMD" != "help" && "$CMD" != "--help" && "$CMD" != "-h" && "$CMD" != "discover" ]]; then
+    local_ip=$(python3 - <<'PY'
+import socket
+s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8",80))
+print(s.getsockname()[0])
+s.close()
+PY
+)
+    if [[ -n "$local_ip" ]]; then
+        TARGET=$(python3 - <<PY
+import ipaddress, socket
+s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8",80))
+ip=s.getsockname()[0]
+s.close()
+try:
+    print(str(ipaddress.ip_network(f"{ip}/24", strict=False)))
+except Exception:
+    print("192.168.1.0/24")
+PY
+)
+        echo -e "${FG_YELLOW}[!] No explicit target supplied. Attempting local discovery for likely camera/stream devices on ${TARGET}.${R}"
+    fi
+fi
+
 case "$CMD" in
     audit)
         [[ -z "$TARGET" ]] && { echo "Usage: ax shadowcam audit <ip_or_host> [port]"; exit 1; }
@@ -212,6 +243,16 @@ case "$CMD" in
         ;;
     onvif)
         probe_onvif "$TARGET"
+        ;;
+    discover)
+        if [[ -n "$PYTHON_BIN" ]]; then
+            "$PYTHON_BIN" "$REPO_ROOT/scripts-hub/shadowcam_discover.py" --json 2>/dev/null || \
+            "$PYTHON_BIN" "$SCRIPT_DIR/shadowcam_discover.py" --json 2>/dev/null || \
+            "$PYTHON_BIN" "$(pwd)/scripts-hub/shadowcam_discover.py" --json
+        else
+            echo -e "${FG_RED}[!] No Python interpreter was found for Shadowcam discovery.${R}"
+            exit 1
+        fi
         ;;
     report)
         [[ -z "$TARGET" ]] && { echo "Usage: ax shadowcam report <ip_or_host> [port]"; exit 1; }
@@ -230,6 +271,7 @@ case "$CMD" in
         echo -e "   ${FG_CYAN}ax shadowcam scan <subnet>${R}       Scan network for exposed camera ports (554, 8554)"
         echo -e "   ${FG_CYAN}ax shadowcam paths <host> [port]${R}  Test 18 standard industrial RTSP channels"
         echo -e "   ${FG_CYAN}ax shadowcam onvif [ip]${R}          WS-Discovery probe for ONVIF surveillance hardware"
+        echo -e "   ${FG_CYAN}ax shadowcam discover${R}           Detect likely local surveillance hosts without a known IP"
         echo -e "   ${FG_CYAN}ax shadowcam report <host>${R}        Comprehensive camera security report"
         echo ""
         ;;

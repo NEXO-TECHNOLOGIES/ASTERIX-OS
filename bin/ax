@@ -3767,6 +3767,19 @@ cmd_cam_hunter() {
     fi
 }
 
+cmd_black_hole() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/black_hole.py"
+    [ -f "$script" ] || script="scripts-hub/black_hole.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or black_hole.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
 cmd_proxychains() {
     local ax_root
     ax_root=$(find_asterix_root)
@@ -5936,6 +5949,7 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax boot-tool [guide|rufus]${C_RESET}  Live USB creator, Rufus/Ventoy profiles & drive scanner"
     echo -e "  ${C_CYAN}ax arsenal [search|info|list]${C_RESET} 180+ Cyber & Red Team tools catalog (offline metadata)"
     echo -e "  ${C_CYAN}ax cam-hunter [hotel|scan|rf|guide]${C_RESET} Hotel privacy counter-surveillance & hidden camera detector"
+    echo -e "  ${C_CYAN}ax black-hole [status|scan|--json]${C_RESET} Privacy hardening suite: DNS/IP protection, local surveillance & hidden cam/mic checks"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
@@ -6916,6 +6930,10 @@ case "$SUBCOMMAND" in
     cam-hunter|hotel-guard|tscm|spycam-scan|privacy-sweep)
         shift
         cmd_cam_hunter "$@"
+        ;;
+    black-hole|blackhole|privacy-hub|privacy-sentinel)
+        shift
+        cmd_black_hole "$@"
         ;;
     auto-update|update-daemon|live-sync|fdroid-sync|updater)
         shift

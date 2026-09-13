@@ -59,6 +59,11 @@ ax status
 ax list
 ```
 
+## Security tools index
+
+- [Black Hole](scripts-hub/BLACK_HOLE_README.md) — local privacy hardening and hostile-surveillance detection for Wi‑Fi, USB, and host-side exposure checks.
+
+
 For boot and UI theme workflows:
 
 ```bash

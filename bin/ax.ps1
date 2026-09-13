@@ -415,6 +415,36 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("shadowcam", "cctv", "cam-audit") } {
+        $shadowcamScript = Join-Path $AsterixRoot "scripts-hub\shadowcam_discover.py"
+        $bashShadowcam = Join-Path $AsterixRoot "scripts-hub\ax-shadowcam.sh"
+        if ($RealPython -and (Test-Path $shadowcamScript)) {
+            if ($RemainingArgs.Count -gt 0 -and $RemainingArgs[0] -eq "discover") {
+                & $RealPython $shadowcamScript --json
+            } elseif ($RemainingArgs.Count -gt 0 -and $RemainingArgs[0] -eq "scan") {
+                & $RealPython $shadowcamScript --subnet $RemainingArgs[1] --json
+            } else {
+                $gitBash = "C:\Program Files\Git\bin\bash.exe"
+                if (Test-Path $gitBash -and (Test-Path $bashShadowcam)) {
+                    & $gitBash $bashShadowcam @RemainingArgs
+                } else {
+                    Write-Host "  [INFO] Use: ax shadowcam discover | ax shadowcam scan <subnet> | ax shadowcam audit <host> [port]" -ForegroundColor Cyan
+                }
+            }
+        } else {
+            Write-Host "  [ERROR] Python runtime or shadowcam_discover.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("black-hole", "blackhole", "privacy-hub", "privacy-sentinel") } {
+        $blackHoleScript = Join-Path $AsterixRoot "scripts-hub\black_hole.py"
+        if ($RealPython -and (Test-Path $blackHoleScript)) {
+            & $RealPython $blackHoleScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or black_hole.py not found." -ForegroundColor Red
+        }
+    }
+
     { $_ -in @("self-evolve", "evolve", "ai-learn", "ai-update", "threat-feed", "auto-learn") } {
         $evolveScript = Join-Path $AsterixRoot "asterix-ai\ax-self-evolve.py"
         if ($RealPython -and (Test-Path $evolveScript)) {
