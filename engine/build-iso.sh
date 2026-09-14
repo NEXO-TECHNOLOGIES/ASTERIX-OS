@@ -373,7 +373,54 @@ fi
 EOF
 chmod +x config/hooks/normal/0950-install-plymouth.hook.chroot
 
-echo -e "${YELLOW}[*] Step 6: Building ASTERIX ISO Image (this may take several minutes)...${NC}"
+echo -e "${YELLOW}[*] Step 6: Building custom ASTERIX kernel and initramfs...${NC}"
+if [ -x "../../kernel/build-kernel.sh" ]; then
+    (cd "../../" && bash kernel/build-kernel.sh)
+    mkdir -p config/includes.binary/boot
+    cp "../../kernel-build/out/vmlinuz-asterix" "config/includes.binary/boot/vmlinuz-asterix"
+    cp "../../kernel-build/out/initrd-asterix.img" "config/includes.binary/boot/initrd-asterix.img"
+    echo -e "${GREEN}[✔] Custom ASTERIX kernel and initramfs bundled into live ISO payload.${NC}"
+else
+    echo -e "${CYAN}[i] No custom kernel builder found at ../../kernel/build-kernel.sh; using the default Debian kernel path.${NC}"
+fi
+
+# Optional: ensure GRUB entries prefer the custom kernel if present.
+if [ -f "config/includes.binary/boot/vmlinuz-asterix" ] && [ -f "config/includes.binary/boot/initrd-asterix.img" ]; then
+    mkdir -p config/bootloaders/grub-pc
+    mkdir -p config/bootloaders/grub-efi
+    cat << 'KERNEL_BOOT' > config/bootloaders/grub-pc/grub.cfg
+set default="0"
+set timeout=10
+
+menuentry "ASTERIX OS v2.0 'Phantom' (Default)" {
+    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence
+    initrd /boot/initrd-asterix.img
+}
+
+menuentry "ASTERIX OS v2.0 'Phantom' (Stealth)" {
+    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence loglevel=0 vt.global_cursor_default=0 asterix.stealth=1
+    initrd /boot/initrd-asterix.img
+}
+
+menuentry "ASTERIX OS v2.0 'Phantom' (Forensic)" {
+    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix noeject noswap noautomount quiet splash persistence
+    initrd /boot/initrd-asterix.img
+}
+
+menuentry "ASTERIX OS v2.0 'Phantom' (Dual-Boot Host)" {
+    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence
+    initrd /boot/initrd-asterix.img
+}
+
+menuentry "Windows 10 / 11 (Host Boot Manager)" {
+    insmod chain
+    search --no-floppy --set=root --file /EFI/Microsoft/Boot/bootmgfw.efi
+    chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+}
+KERNEL_BOOT
+fi
+
+echo -e "${YELLOW}[*] Step 7: Building ASTERIX ISO Image (this may take several minutes)...${NC}"
 lb build
 
 if [ -f "live-image-amd64.hybrid.iso" ]; then
