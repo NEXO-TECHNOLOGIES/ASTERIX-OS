@@ -101,9 +101,20 @@ def _is_dangerous(command: str) -> bool:
     )
 
 
-def _fallback_command() -> str:
-    """Safe, minimal fallback if the model or server is unavailable."""
-    return f"echo '{AI_NAME} offline; no action taken'"
+try:
+    from .peak_brain import peak_ai
+except ImportError:
+    try:
+        from peak_brain import peak_ai
+    except ImportError:
+        peak_ai = None
+
+
+def _fallback_command(system_state: Optional[Dict[str, Any]] = None, memory_log: str = "") -> str:
+    """Seamlessly fall back to Peak Embedded Intelligence when external Ollama is offline."""
+    if peak_ai and system_state:
+        return peak_ai.suggest_system_action(system_state, memory_log)
+    return "ax status"
 
 
 def build_security_summary(system_state: Dict[str, Any], memory_log: str) -> Dict[str, Any]:
@@ -195,12 +206,12 @@ def suggest_action(system_state: Dict[str, Any], memory_log: str) -> str:
         command = _strip_command(raw_text)
 
         if not command or _is_dangerous(command):
-            return _fallback_command()
+            return _fallback_command(system_state, memory_log)
 
         return command
 
     except (urllib.error.URLError, OSError, ValueError, TimeoutError):
-        return _fallback_command()
+        return _fallback_command(system_state, memory_log)
 
 
 def security_scan(system_state: Dict[str, Any], memory_log: str) -> Dict[str, Any]:

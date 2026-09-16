@@ -1,20 +1,130 @@
 # 🌌 ASTERIX OS — New Updates & Architectural Enhancements
 > **Next-Generation Cybernetic Operating System & High-Performance Security Platform**  
-> *Latest Update Release | Zero-Vulnerability Hardening & Windows Feature Parity*
+> *Latest Update Release | Web Code Structure Engine & Termux Max-Tier Upgrade*
 
 ---
 
 ## 📑 Overview of Recent Upgrades
 
-This update cycle significantly elevates **ASTERIX OS** into a high-performance polyglot operating environment featuring:
-1. **🛡️ Pure-Rust ASTERIX Defender Core** — Antivirus, Encrypted Quarantine Vault & Windows Security Center telemetry.
-2. **⚡ LIGHTNING Autonomous WAF & Web SOC** — 16-module reverse proxy, real-time threat intelligence & SOC HUD.
-3. **🎮 APEX OVERDRIVE & eSports Kernel Gaming Suite** — Windows Game Mode & DirectX HAGS parity with sub-0.5ms timers and 60 FPS HUD.
-4. **🏢 Upgraded Windows Enterprise Feature Suite** — Native cryptographic ports of System Restore (VSS), Event Viewer, System File Checker (SFC), Task Manager EcoQoS, Local Security Policy (secpol), Sandbox, AppLocker, BitLocker, Credential Guard, and Exploit Guard.
-5. **🛡️ ASTERIX OS Tactical Stealth & Anti-Forensics Suite** — Disguise engine (Undercover), cryptographic wipe (Nuke), system tweaks, forensic write-blocking, and RF spectrum audit.
-6. **📦 Modular External Package Registry** — Unified GitHub auto-cloning and synchronization system.
-7. **🔒 Zero-Vulnerability Security Hardening** — Kernel ASLR preservation, localhost loopback binding, and cryptographic file integrity seals.
-8. **🗺️ Updated Visual Architecture Diagram** — High-resolution diagrammatic layout saved at the repository root.
+This update cycle introduces high-impact architectural enhancements:
+1. **🌌 Peak Cognitive Neural AI & Supabase Cloud Memory (`ax ai` / `asterix-ai`)** — Upgraded from offline-only placeholder to a multi-tiered cognitive reasoning engine with persistent Supabase Cloud Memory, SQLite local caching, vector similarity search, and a deep offline knowledge matrix covering microkernels, assembly, C, and cybersecurity.
+2. **🛡️ ASTERIX Cyber Microkernel in C and Assembly (`kernel/`)** — Freestanding bare-metal microkernel with Multiboot v1 bootstrap (`boot.asm`), CPU exception and IRQ interrupt stubs (`isr.asm`), memory-mapped VGA console driver (`vga.h`), 8259 PIC remapping and IDT (`idt.h`), physical frame memory allocator (`kernel.h`), round-robin scheduler, and `int 0x80` syscall gateway.
+3. **⚡ Stage 2 Bootloader & SIMD Crypto Assembly Engine (`boot-asm/`)** — Transitions 16-bit real mode to 32-bit protected mode and 64-bit long mode (`asterix-stage2-loader.asm`), INT 0x15 E820 system memory probe, dual A20 line gate, 4-level paging, and AVX2/SSE2 vectorized cryptographic accelerator (`asterix-simd-crypto.asm`).
+4. **🔐 Native C Standalone Cryptography & Raw Socket Packet Engine (`core-utils-c/`)** — Zero-dependency standalone implementations of ChaCha20-Poly1305 AEAD and AES-256 (`asterix-crypto-core.c`), plus raw socket packet decoder and stealth scan anomaly detector (`asterix-packet-engine.c`).
+5. **🌐 Web Code Structure & Deep Source Extraction Engine (`ax web-structure` / `ax curl-tree` / `ax webdump`)** — Next-Gen `curl` alternative that parses full DOM trees, JavaScript bundles and extracted internal APIs, CSS stylesheets, form endpoints, tech stack and security posture, and exports the complete offline code structure with zero external pip dependencies.
+6. **📱 Termux Mobile System Center & Toolbox (`ax mobile-sys` / `termux-toolbox`)** — Dedicated hardware HUD, battery health metrics, multi-DNS resolver latency benchmarking, storage cache purging, and Termux self-healing diagnostics.
+
+---
+
+## 0. 🌌 Peak Cognitive Neural AI & Supabase Cloud Memory Bridge
+
+The ASTERIX AI subsystem (`asterix-ai/`) has been upgraded to a resilient multi-tier cognitive architecture:
+
+### Multi-Tier Inference Hierarchy:
+- **Tier 1: Cloud & Local LLM Integration**: Automatically discovers and queries local Ollama models (`qwen2.5:3b-instruct` or custom models) or Cloud REST endpoints. Non-blocking health checks prevent socket hangs when offline.
+- **Tier 2: Peak Embedded Cognitive Matrix (Zero Dependencies)**: When offline or Ollama is unavailable, the AI autonomously draws from a deep technical reasoning matrix covering:
+  - Microkernel design (paging, GDT, IDT, system call gateways, PIC remapping)
+  - x86_64 & ARM64 assembly (System V AMD64 ABI, registers, bootloaders, SIMD)
+  - C systems programming (memory safety, stack canaries, ASLR, leak triage)
+  - Hardware-accelerated cryptography (ChaCha20, Poly1305, AES-256)
+  - Offensive cybersecurity & SOC triage (OWASP Top 10, SSRF guards, attack surfaces)
+  - Android Termux resource governance & PRoot optimization
+
+### Persistent Supabase Cloud Memory:
+- **Persistent Local Cache**: Uses SQLite (`asterix-ai/cognitive_memory.db`) with automatic connection lifecycle management and zero platform file locks.
+- **Supabase Cloud Bridge**: Seamless bidirectional synchronization with Supabase PostgREST backend. Configurable via `ax ai cloud-setup <URL> <KEY>` or environment variables `ASTERIX_SUPABASE_URL` / `ASTERIX_SUPABASE_KEY`.
+- **Vector & Keyword Semantic Recall**: Token similarity scoring augments user prompts with recalled operational context and past dialogue turns.
+
+```bash
+ax ai ask "how do syscalls work in the kernel?"       # Ask Peak AI with cognitive memory recall
+ax ai chat                                            # Interactive conversational cyber session
+ax ai cloud-setup <SUPABASE_URL> <SUPABASE_ANON_KEY>  # Link AI to Supabase cloud memory
+ax ai cloud-sync                                      # Force bidirectional memory sync
+ax ai cloud-memory                                    # Inspect total and synced memory count
+```
+
+---
+
+## 0.1 🛡️ ASTERIX Cyber Microkernel in C and Assembly (`kernel/`)
+
+Located in `kernel/`, the ASTERIX Cyber Microkernel provides a freestanding Ring 0 bare-metal kernel foundation:
+
+- **Multiboot v1 Bootstrap (`kernel/src/boot.asm`)**:
+  - Aligned Multiboot header (Magic: `0x1BADB002`, Flags: `0x03`, Checksum: `-0x1BADB005`) compatible with GNU GRUB and QEMU.
+  - Initial 32 KB kernel stack and GDT initialization before transitioning control to `kmain`.
+- **CPU Exception & Hardware IRQ Stubs (`kernel/src/isr.asm`)**:
+  - Dedicated assembly ISR entry points for CPU exceptions 0–31 (Divide-by-zero, Page Fault, GPF, etc.).
+  - Hardware IRQ stubs 0–15 remapped via 8259 PIC to interrupts 32–47.
+  - Software interrupt `int 0x80` syscall gate.
+- **C Microkernel Core (`kernel/src/kernel.c`)**:
+  - Freestanding memory-mapped VGA video driver at `0xB8000` (80x25 text grid, 16 hardware colors, automatic scrolling).
+  - 8259 PIC master/slave remapping (`0x20` and `0xA0` ports).
+  - Physical Memory Frame Allocator (PMM) managing up to 128 MB of RAM in 4 KB physical pages with bitmap tracking.
+  - Process Control Block (`pcb_t`) structures and Round-Robin scheduler stub.
+  - Syscall dispatcher handling `SYS_WRITE (1)`, `SYS_READ (2)`, `SYS_YIELD (3)`, `SYS_GETPID (4)`, and `SYS_AUDIT (5)`.
+
+Build and run in QEMU:
+```bash
+cd kernel && make
+make qemu
+```
+
+---
+
+## 0.2 ⚡ Bare-Metal Assembly Systems Expansion (`boot-asm/`)
+
+- **Stage 2 Loader (`boot-asm/asterix-stage2-loader.asm`)**:
+  - Probes available physical memory using BIOS INT 0x15 AX=0xE820 and stores the memory map at physical address `0x9000`.
+  - Enables the A20 address line via Fast A20 (port `0x92`) and 8042 Keyboard Controller fallback.
+  - Verifies CPUID support and checks for 64-bit Long Mode capability (`EDX bit 29`).
+  - Sets up 4-level identity paging (PML4 at `0x1000`, PDPT at `0x2000`, PD at `0x3000` with 2MB huge pages).
+  - Enables PAE in `CR4`, enables `EFER.LME` (MSR `0xC0000080`), activates paging in `CR0`, and executes a 64-bit far jump into Long Mode.
+- **AVX2 / SSE Vectorized Cryptographic Engine (`boot-asm/asterix-simd-crypto.asm`)**:
+  - `asterix_simd_xor_stream`: AVX2 256-bit vectorized stream encryption processing 32 bytes per instruction with SSE2 fallback.
+  - `asterix_simd_entropy_scan`: Hardware vectorized byte frequency histogram counter for packed malware analysis and entropy calculation.
+  - `asterix_simd_chacha_qr`: Vectorized ChaCha20 quarter-round (ARX) execution in registers.
+
+---
+
+## 0.3 🔐 Standalone Native C Cryptographic Core & Packet Engine (`core-utils-c/`)
+
+- **Standalone Cryptographic Core (`core-utils-c/src/asterix-crypto-core.c`)**:
+  - **Zero External Dependencies**: Standard C99 implementation without OpenSSL or libsodium.
+  - **ChaCha20 Stream Cipher**: RFC 8439 compliant 256-bit key and 96-bit nonce stream cipher.
+  - **Poly1305 Authenticator**: Constant-time polynomial evaluation modulo $2^{130} - 5$.
+  - **AEAD Construction**: ChaCha20-Poly1305 authenticated encryption with associated data.
+  - **AES-256 Block Cipher**: Rijndael S-Box substitution and 14-round key expansion.
+  - Includes `--test` self-test suite (validating against official RFC 8439 and NIST SP 800-38A vectors) and `--bench` throughput benchmark.
+- **Raw Socket Packet Engine (`core-utils-c/src/asterix-packet-engine.c`)**:
+  - Live wire capture and protocol parsing for Ethernet, IPv4, TCP, UDP, and ICMP.
+  - Autonomous stealth scan detection: flags NULL scans (no flags), XMAS tree scans (FIN+PSH+URG), SYN-FIN illegal scans, and Land attack loopback exploits.
+  - Synthetic threat pattern audit mode (`--test`) for automated protocol validation.
+
+---
+
+## 0. 🌐 Web Code Structure & Deep Source Extraction Engine (`ax web-structure` / `ax curl-tree`)
+
+Built with **100% Python Standard Library (Zero Pip Dependencies)**, this engine transforms basic `curl <url>` into a full architectural code analyzer and offline code structure dumper.
+
+### Core Capabilities:
+- **Intelligent URL Resolver**: Automatically normalizes bare domains (`target.com` -> `https://target.com`), follows redirects, and handles TLS gracefully.
+- **Architectural DOM Hierarchy Tree**: Renders a clean visual ASCII/ANSI tree diagram (`├──`, `└──`) of `<head>`, `<nav>`, `<main>`, `<section>`, forms, and components.
+- **JavaScript & Module Extraction**: Extracts external scripts, inline script blocks, ES6 modules, and parses code to discover internal REST/GraphQL/WebSocket endpoints and AJAX calls (`fetch`, `axios`, etc.).
+- **CSS & Styling Architecture**: Maps stylesheets, `@import` rules, fonts, and inline styles.
+- **API & Endpoint Scanner**: Catalogs all discovered API routes, forms, methods, and parameters.
+- **Technology Stack & Security Fingerprinting**: Automatically fingerprints CMS, frontend frameworks (React, Next.js, Vue, Nuxt, Angular, Tailwind, Bootstrap), web servers (Nginx, Cloudflare, Apache), and audits security headers (CSP, HSTS, X-Frame-Options, CORS).
+- **Offline Code Structure Reconstructor (`--dump <dir>`)**: Downloads, prettifies, de-minifies, and organizes the complete codebase into an offline project folder (`index.html`, `js/`, `css/`, `manifest.json`, `endpoints.json`, `structure_tree.txt`).
+
+### CLI Usage:
+```bash
+ax web-structure https://example.com          # Interactive architectural code structure tree
+ax curl-tree example.com                      # Visual ASCII tree alternative to plain curl
+ax web-structure example.com --source         # Beautified, syntax-highlighted code with line numbers
+ax web-structure example.com --endpoints      # Extract all internal API routes and forms
+ax web-structure example.com --dump ./dump    # Full offline code structure downloader & beautifier
+ax mobile-sys battery                         # Mobile battery and hardware telemetry
+ax mobile-sys dns                             # Mobile DNS latency benchmark (1.1.1.1, 8.8.8.8, 9.9.9.9)
+```
 
 ---
 

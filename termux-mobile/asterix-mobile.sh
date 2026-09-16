@@ -9,6 +9,8 @@ MOBILE_DIR="${ASTERIX_ROOT}/termux-mobile"
 TARGET_SCRIPT="${MOBILE_DIR}/target-tracker.sh"
 AI_SCRIPT="${MOBILE_DIR}/asterix-ai-startup.sh"
 BOOT_SCRIPT="${MOBILE_DIR}/asterix-termux-init.sh"
+WEB_SCRIPT="${MOBILE_DIR}/web-structure.sh"
+TOOLBOX_SCRIPT="${MOBILE_DIR}/termux-toolbox.sh"
 
 usage() {
     cat <<'USAGE'
@@ -17,6 +19,10 @@ ASTERIX Mobile Helper
 Usage:
   asterix-mobile start [--theme=neon]
   asterix-mobile ai
+  asterix-mobile web-structure <url> [--tree|--source|--endpoints|--dump <dir>]
+  asterix-mobile curl-tree <url>
+  asterix-mobile webdump <url> <dir>
+  asterix-mobile toolbox [battery|dns|clean|doctor]
   asterix-mobile tracker <ip-or-host> [--geo|--save|--json|--history]
   asterix-mobile sweep <ip-range>
   asterix-mobile theme <matrix|neon|pulse|glitch|stealth>
@@ -24,6 +30,9 @@ Usage:
 
 Examples:
   asterix-mobile start --theme=neon
+  asterix-mobile curl-tree https://example.com
+  asterix-mobile webdump https://example.com ./site_dump
+  asterix-mobile toolbox battery
   asterix-mobile tracker 8.8.8.8 --geo
   asterix-mobile sweep 192.168.1.0/24
   asterix-mobile theme pulse
@@ -34,6 +43,8 @@ ensure_scripts() {
     [ -f "$TARGET_SCRIPT" ] && chmod +x "$TARGET_SCRIPT" 2>/dev/null || true
     [ -f "$AI_SCRIPT" ] && chmod +x "$AI_SCRIPT" 2>/dev/null || true
     [ -f "$BOOT_SCRIPT" ] && chmod +x "$BOOT_SCRIPT" 2>/dev/null || true
+    [ -f "$WEB_SCRIPT" ] && chmod +x "$WEB_SCRIPT" 2>/dev/null || true
+    [ -f "$TOOLBOX_SCRIPT" ] && chmod +x "$TOOLBOX_SCRIPT" 2>/dev/null || true
 }
 
 cmd="${1:-help}"
@@ -55,6 +66,68 @@ case "$cmd" in
             "$AI_SCRIPT"
         else
             echo "AI startup script not found: $AI_SCRIPT"
+            exit 1
+        fi
+        ;;
+    web-structure|webstructure|web-source)
+        if [ -f "$WEB_SCRIPT" ]; then
+            "$WEB_SCRIPT" "$@"
+        else
+            echo "Web structure script not found: $WEB_SCRIPT"
+            exit 1
+        fi
+        ;;
+    curl-tree)
+        if [ -f "$WEB_SCRIPT" ]; then
+            "$WEB_SCRIPT" --tree "$@"
+        else
+            echo "Web structure script not found: $WEB_SCRIPT"
+            exit 1
+        fi
+        ;;
+    webdump)
+        if [ -f "$WEB_SCRIPT" ]; then
+            url="${1:-}"
+            dir="${2:-./site_dump}"
+            if [ -z "$url" ]; then
+                echo "Usage: asterix-mobile webdump <url> [output_dir]"
+                exit 1
+            fi
+            "$WEB_SCRIPT" "$url" --dump "$dir"
+        else
+            echo "Web structure script not found: $WEB_SCRIPT"
+            exit 1
+        fi
+        ;;
+    toolbox|sys|mobile-sys)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" "$@"
+        else
+            echo "Toolbox script not found: $TOOLBOX_SCRIPT"
+            exit 1
+        fi
+        ;;
+    battery|hw|hardware)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" battery "$@"
+        else
+            echo "Toolbox script not found: $TOOLBOX_SCRIPT"
+            exit 1
+        fi
+        ;;
+    clean|purge|optimize)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" clean "$@"
+        else
+            echo "Toolbox script not found: $TOOLBOX_SCRIPT"
+            exit 1
+        fi
+        ;;
+    doctor|heal|repair)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" doctor "$@"
+        else
+            echo "Toolbox script not found: $TOOLBOX_SCRIPT"
             exit 1
         fi
         ;;

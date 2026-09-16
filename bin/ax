@@ -3520,6 +3520,38 @@ cmd_scaffold() {
     fi
 }
 
+cmd_web_structure() {
+    local py; py=$(resolve_asterix_python)
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/scripts-hub/ax-web-structure.py"
+    [ -f "$script" ] || script="scripts-hub/ax-web-structure.py"
+    if [ -n "$py" ] && [ -f "$script" ]; then
+        $py "$script" "$@"
+    else
+        echo -e "${C_RED}[!] Error: Python runtime or ax-web-structure.py not found.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_mobile_toolbox() {
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/termux-mobile/termux-toolbox.sh"
+    [ -f "$script" ] || script="termux-mobile/termux-toolbox.sh"
+    if [ -f "$script" ]; then
+        bash "$script" "$@"
+    else
+        local py; py=$(resolve_asterix_python)
+        local py_script="${ax_root}/scripts-hub/ax-mobile-toolbox.py"
+        [ -f "$py_script" ] || py_script="scripts-hub/ax-mobile-toolbox.py"
+        if [ -n "$py" ] && [ -f "$py_script" ]; then
+            $py "$py_script" "$@"
+        else
+            echo -e "${C_RED}[!] Error: Mobile toolbox script not found.${C_RESET}"
+            return 1
+        fi
+    fi
+}
+
 cmd_unblock() {
     local py; py=$(resolve_asterix_python)
     local ax_root; ax_root=$(find_asterix_root)
@@ -5954,7 +5986,11 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
     echo -e "  ${C_CYAN}ax auto-update [on|off|start|stop|check|status|log]${C_RESET}  F-Droid-style live repo sync daemon"
-    echo -e "  ${C_CYAN}ax secure-chat [start|lan|client|status]${C_RESET} Zero-knowledge E2EE localhost chat vault\n"
+    echo -e "  ${C_CYAN}ax secure-chat [start|lan|client|status]${C_RESET} Zero-knowledge E2EE localhost chat vault"
+    echo -e "  ${C_CYAN}ax web-structure <url>${C_RESET}  Deep Web Code Structure, DOM tree, JS/CSS assets & API mapper"
+    echo -e "  ${C_CYAN}ax curl-tree <url>${C_RESET}      Next-Gen curl: visual DOM hierarchy, script/style & route tree"
+    echo -e "  ${C_CYAN}ax webdump <url> <dir>${C_RESET}  Download & reconstruct entire website codebase into offline folder"
+    echo -e "  ${C_CYAN}ax mobile-sys [action]${C_RESET}  Mobile hardware HUD, battery health, DNS latency & cache cleaner\n"
 
     echo -e "${C_WHITE}${C_BOLD}CONVERSATIONAL SOC AI & EXPERT COPILOT:${C_RESET}"
     echo -e "  ${C_MAGENTA}ax ai chat${C_RESET}              Interactive conversational cybersecurity session"
@@ -6854,6 +6890,14 @@ case "$SUBCOMMAND" in
     scaffold|synth)
         shift
         cmd_scaffold "$@"
+        ;;
+    web-structure|curl-tree|webdump|site-dump|websnoop|web-source)
+        shift
+        cmd_web_structure "$@"
+        ;;
+    mobile-sys|termux-box|termux-doctor|mobile-toolbox)
+        shift
+        cmd_mobile_toolbox "$@"
         ;;
     unblock|port-kill|kill-port)
         shift

@@ -18,6 +18,7 @@
 #define C_YELLOW  "\033[38;5;220m"
 #define C_RED     "\033[38;5;196m"
 #define C_WHITE   "\033[38;5;231m"
+#define C_MAGENTA "\033[38;5;213m"
 #define C_BOLD    "\033[1m"
 #define C_RESET   "\033[0m"
 

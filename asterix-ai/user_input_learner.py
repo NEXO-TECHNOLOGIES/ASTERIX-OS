@@ -28,6 +28,21 @@ PROFILE_FILE = os.path.join(MEMORY_DIR, "user_profile.json")
 PROFILE_STATUS_FILE = os.path.join(MEMORY_DIR, "profile_status.json")
 WORKSPACE_PROFILE_STATUS_FILE = os.path.join(os.path.dirname(__file__), "profile_status.json")
 
+LINUX_TOOL_CREATION_KEYWORDS = [
+    "bash tool", "shell tool", "linux tool", "cli tool", "command line tool",
+    "python cli", "argparse", "click", "typer", "bash script", "getopts",
+    "rust cli", "clap", "structopt", "daemon", "systemd service", "service unit",
+    "cron job", "watchdog", "background process", "process manager", "pid file",
+    "log rotation", "safe defaults", "verbose mode", "json output", "exit codes",
+    "filesystem walker", "process monitor", "network monitor", "port scanner", "port watch",
+    "log parser", "log scan", "service checker", "service monitor", "port monitor",
+    "system health check", "audit tool", "monitoring tool", "linux utility", "file scanner",
+    "network utility", "security audit", "process watcher", "health watchdog",
+    "tool builder", "create tool", "build utility", "automation script", "terminal app",
+    "shell utility", "linux automation", "termux tool", "desktop tool", "service loop",
+    "systemctl status", "open ports", "socket watcher", "file watcher", "netstat", "ss -tulpn"
+]
+
 DEFAULT_PROFILE = {
     "assistant_name": "ASTERIX AI",
     "version": "1.0",
@@ -44,7 +59,8 @@ DEFAULT_PROFILE = {
         "autonomous_healing": 5,
         "network_warfare": 5,
         "web_security": 5,
-        "reverse_engineering": 5
+        "reverse_engineering": 5,
+        "linux_tooling": 6
     },
     "learned_facts": [],
     "self_evolution_log": [],
@@ -141,13 +157,13 @@ def analyze_emotional_state(query):
     }
 
     mood_markers = {
-        "frustration": ["frustrated", "annoyed", "angry", "driving me crazy", "ugh", "hate", "terrible", "bad", "broken", "awful"],
-        "stress": ["stress", "stressed", "overwhelmed", "panic", "urgent", "hurry", "pressure", "crazy", "difficult", "not working"],
-        "urgency": ["fast", "quick", "hurry", "immediately", "now", "urgent", "asap", "right now", "please hurry"],
-        "confidence": ["sure", "confident", "clear", "yes", "definitely", "good", "works", "done", "perfect"],
-        "curiosity": ["why", "how", "what", "teach me", "explain", "learn", "show me", "curious"],
-        "excitement": ["love", "awesome", "great", "amazing", "cool", "excited", "nice", "super"],
-        "calm": ["calm", "okay", "fine", "steady", "chill", "relaxed", "easy"],
+        "frustration": ["frustrated", "annoyed", "angry", "driving me crazy", "ugh", "hate", "terrible", "bad", "broken", "awful", "stuck", "blocked", "confused", "lost"],
+        "stress": ["stress", "stressed", "overwhelmed", "panic", "urgent", "hurry", "pressure", "crazy", "difficult", "not working", "chaotic", "overloaded", "burned out"],
+        "urgency": ["fast", "quick", "hurry", "immediately", "now", "urgent", "asap", "right now", "please hurry", "at once"],
+        "confidence": ["sure", "confident", "clear", "yes", "definitely", "good", "works", "done", "perfect", "focused", "ready", "determined", "sharp"],
+        "curiosity": ["why", "how", "what", "teach me", "explain", "learn", "show me", "curious", "train", "guide me", "break it down"],
+        "excitement": ["love", "awesome", "great", "amazing", "cool", "excited", "nice", "super", "pumped", "hyped", "buzzing"],
+        "calm": ["calm", "okay", "fine", "steady", "chill", "relaxed", "easy", "peaceful", "clearheaded"],
     }
 
     for mood, markers in mood_markers.items():
@@ -402,19 +418,35 @@ def ingest_query(query):
     if mood["curiosity"] >= 2:
         profile["interest_weights"]["reverse_engineering"] = profile["interest_weights"].get("reverse_engineering", 0) + 1
 
+    tool_keyword_matches = 0
+    for kw in LINUX_TOOL_CREATION_KEYWORDS:
+        if kw.lower() in q_lower:
+            tool_keyword_matches += 1
+
     topic_keywords = {
         "kernel_hardening": ["aslr", "kptr", "sysctl", "hardening", "kernel", "yama", "ptrace", "swappiness"],
         "exploit_mitigation": ["buffer", "overflow", "rop", "canary", "payload", "shellcode", "heap"],
         "autonomous_healing": ["repair", "fix", "compiler", "build", "broken", "syntax", "heal"],
         "network_warfare": ["proxy", "socks", "proxychains", "syn", "dos", "arp", "packet", "sniff"],
         "web_security": ["sql", "injection", "xss", "csrf", "ssrf", "web", "waf", "portswigger"],
-        "reverse_engineering": ["disassembly", "radare", "gdb", "ida", "ghidra", "elf", "binary"]
+        "reverse_engineering": ["disassembly", "radare", "gdb", "ida", "ghidra", "elf", "binary"],
+        "linux_tooling": [
+            "linux tool", "cli tool", "bash tool", "shell tool", "command line utility", "argparse", "getopts",
+            "daemon", "service", "sysadmin tool", "tool builder", "create a tool", "tool creation",
+            "process monitor", "process watcher", "log parser", "log scan", "audit tool", "monitoring tool",
+            "automation script", "terminal app", "shell utility", "linux automation", "termux tool", "desktop tool",
+            "service checker", "port watch", "file scanner", "health watchdog", "network monitor", "socket watcher",
+            "system health check", "security audit", "open ports", "service monitor"
+        ]
     }
 
     for topic, kws in topic_keywords.items():
         for kw in kws:
             if kw in q_lower:
                 profile["interest_weights"][topic] = profile["interest_weights"].get(topic, 0) + 1
+
+    if tool_keyword_matches:
+        profile["interest_weights"]["linux_tooling"] = profile["interest_weights"].get("linux_tooling", 0) + tool_keyword_matches
 
     advanced_terms = ["rop", "gadget", "ebpf", "vdso", "aslr", "heap", "relro", "canary", "nasm", "syscall"]
     intermediate_terms = ["sql", "xss", "suid", "proxychains", "compile", "sysctl", "nmap", "wireshark"]

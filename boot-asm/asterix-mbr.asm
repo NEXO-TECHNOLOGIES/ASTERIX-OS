@@ -68,10 +68,21 @@ relocated_entry:
     mov si, msg_chainload
     call print_str
 
-    ; Extract LBA Start Sector from partition entry (offset 8 in entry)
+    ; Hardened validation: active entry must have a non-zero LBA and a valid disk sector.
     mov si, [active_part_ptr]
-    mov eax, [si + 8]       ; Starting LBA sector
+    cmp byte [si], 0x80
+    jne .invalid_partition
+    mov eax, [si + 8]
+    test eax, eax
+    jz .invalid_partition
     mov [dap_lba_low], eax
+
+    ; Clear packet fields before read to avoid stale boot data.
+    xor eax, eax
+    mov [disk_address_packet + 2], ax
+    mov [disk_address_packet + 4], ax
+    mov [disk_address_packet + 6], ax
+    mov [disk_address_packet + 8], ax
 
     ; Use BIOS INT 0x13 Extended Read (LBA Packet)
     mov si, disk_address_packet
@@ -95,6 +106,11 @@ relocated_entry:
 
     ; Jump to loaded VBR at 0x0000:0x7C00
     jmp 0x0000:0x7C00
+
+.invalid_partition:
+    mov si, msg_bad_part
+    call print_str
+    jmp .interactive_mode
 
 .read_error:
     mov si, msg_read_err
@@ -233,6 +249,7 @@ msg_banner:
     db 13, 10, " [ ASTERIX OS :: NEXT-GEN SECURE MBR BOOTLOADER v2.0 ]", 13, 10
     db " -------------------------------------------------------------", 13, 10, 0
 msg_no_active:  db " [!] Warning: No bootable partition (0x80) marked.", 13, 10, 0
+msg_bad_part:   db " [!] Error: Active partition is invalid or has a zero LBA.", 13, 10, 0
 msg_chainload:  db " [*] Active partition detected. Reading VBR sector...", 13, 10, 0
 msg_vbr_ok:     db " [✔] VBR signature (0xAA55) verified. Chainloading OS...", 13, 10, 0
 msg_read_err:   db " [!] Error: INT 13h disk read failed.", 13, 10, 0

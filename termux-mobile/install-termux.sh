@@ -320,6 +320,20 @@ if command -v git >/dev/null 2>&1; then
     echo -e "${GREEN}[✔] Security packages synchronized inside $ASTERIX_DIR/packages.${NC}"
 fi
 
+# Step 12: Registering Mobile CLI Tools & Symlinks
+for tool in web-structure.sh termux-toolbox.sh target-tracker.sh asterix-ai-startup.sh; do
+    [ -f "$ASTERIX_DIR/termux-mobile/$tool" ] && chmod +x "$ASTERIX_DIR/termux-mobile/$tool" 2>/dev/null || true
+done
+if [ -f "$ASTERIX_DIR/termux-mobile/web-structure.sh" ]; then
+    ln -sf "$ASTERIX_DIR/termux-mobile/web-structure.sh" "$PREFIX/bin/web-structure" 2>/dev/null || true
+    ln -sf "$ASTERIX_DIR/termux-mobile/web-structure.sh" "$PREFIX/bin/curl-tree" 2>/dev/null || true
+    ln -sf "$ASTERIX_DIR/termux-mobile/web-structure.sh" "$PREFIX/bin/webdump" 2>/dev/null || true
+fi
+if [ -f "$ASTERIX_DIR/termux-mobile/termux-toolbox.sh" ]; then
+    ln -sf "$ASTERIX_DIR/termux-mobile/termux-toolbox.sh" "$PREFIX/bin/termux-toolbox" 2>/dev/null || true
+    ln -sf "$ASTERIX_DIR/termux-mobile/termux-toolbox.sh" "$PREFIX/bin/mobile-sys" 2>/dev/null || true
+fi
+
 # Configure autostart in ~/.bashrc if not already present
 if ! grep -q "ASTERIX OS Startup" "$HOME/.bashrc" 2>/dev/null; then
     cat << 'AUTO' >> "$HOME/.bashrc"
@@ -332,7 +346,7 @@ if [ -t 1 ]; then
     [ -x "$PREFIX/bin/asterix-loader" ] && asterix-loader
     [ -x "$PREFIX/bin/asterix-ai-startup" ] && "$PREFIX/bin/asterix-ai-startup"
     echo -e "\033[38;5;220mType '\033[1max\033[0m\033[38;5;220m' or '\033[1masterix\033[0m\033[38;5;220m' to enter the ASTERIX Security Sandbox.\033[0m"
-    echo -e "\033[38;5;141mTools: ax defender | ax game | ax undercover | ax darktrace | ax shadowcam | target-tracker\033[0m\n"
+    echo -e "\033[38;5;141mTools: ax defender | ax game | ax undercover | ax darktrace | ax shadowcam | curl-tree | webdump | mobile-sys\033[0m\n"
 fi
 AUTO
 fi
@@ -342,6 +356,8 @@ echo -e "${GREEN}${BOLD}[✔] ASTERIX OS MOBILE INSTALLATION COMPLETE!${NC}"
 echo -e "${CYAN}Core OS Directory:${NC}     $ASTERIX_DIR"
 echo -e "${CYAN}Safe Local Storage:${NC}    $PERSIST_LOCAL"
 echo -e "${CYAN}Launch Commands:${NC}       Type ${YELLOW}ax${NC} or ${YELLOW}asterix${NC} anywhere in Termux"
+echo -e "${CYAN}Web Code Extraction:${NC}  ${YELLOW}ax curl-tree <url>${NC} | ${YELLOW}ax webdump <url> <dir>${NC}"
+echo -e "${CYAN}Mobile System Center:${NC}  ${YELLOW}ax mobile-sys${NC} | ${YELLOW}termux-toolbox battery${NC}"
 echo -e "${CYAN}Defense & Gaming:${NC}      ${YELLOW}ax defender${NC} | ${YELLOW}ax game boost${NC} | ${YELLOW}ax undercover${NC}"
 echo -e "${CYAN}Dark Forensic Tools:${NC}   ${YELLOW}ax darktrace${NC} | ${YELLOW}ax shadowcam${NC} | ${YELLOW}ax dark-engine${NC}"
 echo -e "${CYAN}Target Tracking:${NC}       ${YELLOW}target-tracker <ip-or-host>${NC} | ${YELLOW}target-tracker 8.8.8.8 --json${NC}"

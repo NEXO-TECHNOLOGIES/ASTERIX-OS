@@ -16,6 +16,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 from ai_brain import suggest_action, suggest_fix, security_scan
 
 
@@ -183,12 +190,92 @@ def fix_code_file(file_path: str) -> int:
     return 0
 
 
+try:
+    from peak_brain import peak_ai
+    from cloud_memory import memory_hub
+except ImportError:
+    try:
+        from .peak_brain import peak_ai
+        from .cloud_memory import memory_hub
+    except ImportError:
+        peak_ai = None
+        memory_hub = None
+
+
+def interactive_chat():
+    """Starts an interactive cybernetic conversational session with Asterix Peak AI."""
+    print("\n╔══════════════════════════════════════════════════════════════════════╗")
+    print("║   🌌 ASTERIX AI // PEAK CONVERSATIONAL COGNITIVE CONSOLE v3.5        ║")
+    print("║   [ Cloud & Vector Memory Active • Type 'exit' or 'quit' to close ]  ║")
+    print("╚══════════════════════════════════════════════════════════════════════╝\n")
+    if memory_hub:
+        stats = memory_hub.get_stats()
+        print(f"  • Cognitive Memories: {stats['total_memories']} ({stats['synced_to_cloud']} synced to Supabase/Cloud)")
+        print(f"  • Cloud Connection:   {'Connected' if stats['cloud_connected'] else 'Local Offline Cache'}\n")
+
+    while True:
+        try:
+            prompt = input("asterix-ai ❯ ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nSession ended.")
+            break
+
+        if not prompt:
+            continue
+        if prompt.lower() in {"exit", "quit", "q", ":q"}:
+            print("Disconnecting cognitive console.")
+            break
+
+        if peak_ai:
+            reply = peak_ai.reason(prompt)
+            print(f"\n{reply}\n")
+        else:
+            print(f"\nASTERIX AI: Ready. Query received: '{prompt}'\n")
+
+
 def main() -> int:
     """CLI entry point."""
-    parser = argparse.ArgumentParser(description="ASTERIX AI command assistant")
+    parser = argparse.ArgumentParser(description="ASTERIX AI Command & Intelligence Hub")
     parser.add_argument("--fix", dest="fix_file", help="Repair a source file with the local AI")
     parser.add_argument("--security", action="store_true", help="Run a security posture scan before suggesting actions")
+    parser.add_argument("--chat", action="store_true", help="Launch interactive conversational chat with cognitive memory")
+    parser.add_argument("--ask", type=str, help="Inquire Asterix Peak AI on any cyber vector, C/Assembly code or OS topic")
+    parser.add_argument("--cloud-sync", action="store_true", help="Synchronize cognitive memory with Supabase or Cloud REST API")
+    parser.add_argument("--cloud-setup", nargs=2, metavar=("URL", "KEY"), help="Configure Supabase Cloud Memory (URL KEY)")
+    parser.add_argument("--memory", action="store_true", help="Display cognitive memory statistics and recent items")
     args = parser.parse_args()
+
+    if args.cloud_setup:
+        url, key = args.cloud_setup
+        if memory_hub:
+            memory_hub.save_config(url, key)
+            print(f"[✔] Supabase Cloud Memory configured for {url}")
+            return 0
+
+    if args.cloud_sync:
+        if memory_hub:
+            print("[*] Synchronizing cognitive memory with Supabase Cloud...")
+            res = memory_hub.sync_cloud()
+            print(f"[✔] Cloud Sync Result: {res}")
+            return 0
+
+    if args.memory:
+        if memory_hub:
+            stats = memory_hub.get_stats()
+            print("\nASTERIX Cognitive Memory State:")
+            for k, v in stats.items():
+                print(f"  • {k}: {v}")
+            return 0
+
+    if args.chat:
+        interactive_chat()
+        return 0
+
+    if args.ask:
+        if peak_ai:
+            ans = peak_ai.reason(args.ask)
+            print(f"\n{ans}\n")
+            return 0
 
     if args.fix_file:
         return fix_code_file(args.fix_file)
@@ -207,12 +294,15 @@ def main() -> int:
     print("\nASTERIX AI suggestion:")
     print(suggestion)
 
-    answer = input("Run this? [y/N]: ").strip().lower()
-    if answer in {"y", "yes"}:
-        print("[+] Executing safe command...")
-        return run_command(suggestion)
+    if sys.stdin.isatty():
+        try:
+            answer = input("Run this? [y/N]: ").strip().lower()
+            if answer in {"y", "yes"}:
+                print("[+] Executing safe command...")
+                return run_command(suggestion)
+        except (KeyboardInterrupt, EOFError):
+            pass
 
-    print("[!] Command not executed.")
     return 0
 
 

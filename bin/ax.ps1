@@ -464,6 +464,24 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("web-structure", "curl-tree", "webdump", "site-dump", "websnoop", "web-source") } {
+        $webScript = Join-Path $AsterixRoot "scripts-hub\ax-web-structure.py"
+        if ($RealPython -and (Test-Path $webScript)) {
+            & $RealPython $webScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-web-structure.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("mobile-sys", "termux-box", "termux-doctor", "mobile-toolbox") } {
+        $mobilePy = Join-Path $AsterixRoot "scripts-hub\ax-mobile-toolbox.py"
+        if ($RealPython -and (Test-Path $mobilePy)) {
+            & $RealPython $mobilePy @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-mobile-toolbox.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -507,6 +525,10 @@ switch ($Command.ToLower()) {
             Write-Host "    ax cam-hunter [hotel|scan|rf|guide] Hotel privacy counter-surveillance & hidden camera detector"
             Write-Host "    ax self-evolve [evolve|status|daemon Nh|wipe] Autonomous AI continuous learning from CVE/threat feeds"
             Write-Host "    ax termux-bundle                Package full ASTERIX OS ARM64 Termux stable bundle (~312 MB)"
+            Write-Host "    ax web-structure <url>          Deep Web Code Structure, DOM tree, JS/CSS assets & API mapper"
+            Write-Host "    ax curl-tree <url>              Next-Gen curl: visual DOM hierarchy, script/style & route tree"
+            Write-Host "    ax webdump <url> <dir>          Download & reconstruct entire website codebase into offline folder"
+            Write-Host "    ax mobile-sys [action]          Mobile hardware HUD, battery health, DNS latency & cache cleaner"
         }
     }
 }

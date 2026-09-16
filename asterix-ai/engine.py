@@ -51,6 +51,17 @@ except ImportError:
     except ImportError:
         hardware_sensor = None
 
+try:
+    from .peak_brain import peak_ai
+    from .cloud_memory import memory_hub
+except ImportError:
+    try:
+        from peak_brain import peak_ai
+        from cloud_memory import memory_hub
+    except ImportError:
+        peak_ai = None
+        memory_hub = None
+
 C_RESET = "\033[0m"
 C_BOLD = "\033[1m"
 C_CYAN = "\033[38;5;51m"
@@ -262,6 +273,14 @@ def cmd_ask(query, in_chat=False):
     matches.sort(key=lambda x: x[0], reverse=True)
 
     if not matches:
+        if peak_ai:
+            reply = peak_ai.reason(query)
+            print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI (Peak Cognitive Engine) ❯{C_RESET}\n")
+            for line in reply.split("\n"):
+                print(f"  {line}")
+            print()
+            return
+
         print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} I analyzed your inquiry, but did not find an exact matching knowledge module.")
         print(f"  {C_WHITE}Here is general guidance from our cybersecurity core:{C_RESET}\n")
         print(f"  • {C_CYAN}Kernel & Defense Baseline:{C_RESET} Run {C_GREEN}ax ai audit{C_RESET} or {C_GREEN}ax secpol audit{C_RESET} to evaluate live system hardening.")
@@ -688,6 +707,28 @@ def main():
                 print(f"  {C_WHITE}This rule will adapt future AI responses and threat models.{C_RESET}\n")
         else:
             print(f"{C_RED}[!] Usage: ax ai teach \"<fact or preference to remember>\"{C_RESET}")
+    elif args[0] in ("cloud-sync", "sync-cloud"):
+        if memory_hub:
+            print("[*] Synchronizing cognitive memory with Supabase Cloud...")
+            res = memory_hub.sync_cloud()
+            print(f"[✔] Cloud Sync Result: {res}")
+        else:
+            print("[!] Cloud memory hub not available.")
+    elif args[0] in ("cloud-setup", "setup-cloud"):
+        if len(args) >= 3 and memory_hub:
+            url, key = args[1], args[2]
+            memory_hub.save_config(url, key)
+            print(f"[✔] Supabase Cloud Memory configured for {url}")
+        else:
+            print("[!] Usage: ax ai cloud-setup <SUPABASE_URL> <SUPABASE_ANON_KEY>")
+    elif args[0] in ("cloud-memory", "memories", "cloud-stats"):
+        if memory_hub:
+            stats = memory_hub.get_stats()
+            print("\nASTERIX Cognitive Memory State:")
+            for k, v in stats.items():
+                print(f"  • {k}: {v}")
+        else:
+            print("[!] Cloud memory hub not available.")
     elif args[0] in ("about", "what", "info", "overview", "features", "whoami", "what-is"):
         lang = args[1] if len(args) > 1 else os.environ.get("ASTERIX_LANG", "en")
         cmd_about(lang)

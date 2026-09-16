@@ -56,6 +56,9 @@ echo -e "${YELLOW}[*] Step 1: Staging ASTERIX Termux deployment files...${NC}"
 # Core files
 cp "${ASTERIX_ROOT}/termux-mobile/asterix-termux-init.sh" "$STAGING_DIR/asterix-termux/"
 cp "${ASTERIX_ROOT}/termux-mobile/install-termux.sh"      "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/web-structure.sh" ]  && cp "${ASTERIX_ROOT}/termux-mobile/web-structure.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/termux-toolbox.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/termux-toolbox.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/asterix-mobile.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/asterix-mobile.sh" "$STAGING_DIR/asterix-termux/"
 
 # Master command dispatcher
 mkdir -p "$STAGING_DIR/asterix-termux/bin"
@@ -71,7 +74,7 @@ rsync -av --exclude="__pycache__" --exclude="*.pyc" \
 
 # Scripts hub (Python tools)
 mkdir -p "$STAGING_DIR/asterix-termux/scripts-hub"
-for pyfile in ax-arsenal.py ax-boot-tool.py ax-cam-hunter.py ax-undercover.py ax-privacy.py ax-doctor.py ax-shield.py ax-scratch.py ax-bounty.py ax-cartographer.py ax-intel-defense.py ax-cloud-defense.py; do
+for pyfile in ax-arsenal.py ax-boot-tool.py ax-cam-hunter.py ax-undercover.py ax-privacy.py ax-doctor.py ax-shield.py ax-scratch.py ax-bounty.py ax-cartographer.py ax-intel-defense.py ax-cloud-defense.py ax-web-structure.py ax-mobile-toolbox.py; do
     [ -f "${ASTERIX_ROOT}/scripts-hub/${pyfile}" ] && \
         cp "${ASTERIX_ROOT}/scripts-hub/${pyfile}" "$STAGING_DIR/asterix-termux/scripts-hub/"
 done

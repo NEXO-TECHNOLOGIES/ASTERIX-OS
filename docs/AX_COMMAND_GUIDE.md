@@ -226,6 +226,33 @@ You can prepend `ax` to **any system command**. For example:
 | **`ax arp`** | `ax arp` | Dumps local ARP table. |
 | **`ax connections`** | `ax connections` | Lists active established connections and socket endpoints. |
 | **`ax traffic`** | `ax traffic` | Real-time network interface RX/TX bytes and packet telemetry. |
+| **`ax web-structure <url>`** | `ax web-structure target.com` | Deep Web Code Structure, DOM hierarchy, script bundles, stylesheets & API mapper. |
+| **`ax curl-tree <url>`** | `ax curl-tree target.com` | Next-Gen `curl` alternative: visual DOM tree, JavaScript/CSS asset tree & endpoints. |
+| **`ax webdump <url> <dir>`** | `ax webdump target.com ./dump` | Download and reconstruct entire website codebase into an organized offline directory. |
+| **`ax mobile-sys [action]`** | `ax mobile-sys battery` | Mobile hardware HUD, battery health, thermal status, DNS latency & cache optimizer. |
+
+#### `ax web-structure <url>` (aliases: `ax curl-tree`, `ax webdump`, `ax websnoop`)
+* **Purpose**: Next-Gen alternative to basic `curl`. Instead of merely streaming unformatted raw HTML text, this engine performs full architectural analysis:
+  1. **Visual DOM Hierarchy Tree**: Outputs clean ASCII tree layout of `<head>`, `<nav>`, `<main>`, `<section>`, forms, and components.
+  2. **JavaScript & Bundle Extraction**: Discovers external scripts, inline scripts, ES6 modules, and mines internal API routes and AJAX/Fetch endpoints.
+  3. **CSS Architecture**: Discovers stylesheets, `@import` rules, and typography fonts.
+  4. **API Route & Form Scanner**: Identifies REST endpoints, form targets, methods, and input fields.
+  5. **Tech Stack Profiler**: Fingerprints frameworks (React, Vue, Next.js, Angular, Tailwind), CMS, web servers, and security headers (CSP, HSTS, X-Frame-Options).
+  6. **Offline Code Reconstructor (`--dump <dir>`)**: Exports beautified `index.html`, `js/`, `css/`, `endpoints.json`, and `structure_tree.txt`.
+* **Usage**:
+  * `ax web-structure https://target.com` (interactive tree view)
+  * `ax curl-tree target.com` (visual ASCII tree)
+  * `ax web-structure target.com --source` (syntax-highlighted code with line numbers)
+  * `ax web-structure target.com --endpoints` (list all discovered API routes & forms)
+  * `ax webdump target.com ./site_archive` (download and reconstruct entire site codebase)
+
+#### `ax mobile-sys` (alias: `termux-toolbox`)
+* **Purpose**: Mobile and Termux system center offering battery health monitoring, multi-DNS resolver latency benchmarking (Cloudflare, Google, Quad9, OpenDNS), storage cache purging (`apt clean`, `/tmp`, dead sockets), and self-healing diagnostics.
+* **Usage**:
+  * `ax mobile-sys all`
+  * `ax mobile-sys battery`
+  * `ax mobile-sys dns`
+  * `ax mobile-sys clean`
 
 ---
 

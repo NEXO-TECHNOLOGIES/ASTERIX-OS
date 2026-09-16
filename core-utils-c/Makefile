@@ -15,7 +15,9 @@ SRCS = src/asterix-sysinfo.c \
        src/asterix-rootkit-detect.c \
        src/asterix-syscall-mon.c \
        src/asterix-env-dump.c \
-       src/asterix-code-repair.c
+       src/asterix-code-repair.c \
+       src/asterix-crypto-core.c \
+       src/asterix-packet-engine.c
 
 BINS = bin/asterix-sysinfo \
        bin/asterix-memview \
@@ -25,7 +27,9 @@ BINS = bin/asterix-sysinfo \
        bin/asterix-rootkit-detect \
        bin/asterix-syscall-mon \
        bin/asterix-env-dump \
-       bin/asterix-code-repair
+       bin/asterix-code-repair \
+       bin/asterix-crypto-core \
+       bin/asterix-packet-engine
 
 all: directories $(BINS)
 
@@ -57,6 +61,12 @@ bin/asterix-env-dump: src/asterix-env-dump.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 bin/asterix-code-repair: src/asterix-code-repair.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
+bin/asterix-crypto-core: src/asterix-crypto-core.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
+bin/asterix-packet-engine: src/asterix-packet-engine.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 install: all

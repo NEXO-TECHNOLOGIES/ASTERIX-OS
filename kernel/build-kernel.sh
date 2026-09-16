@@ -53,6 +53,20 @@ fi
 cp "$CONFIG_FILE" "$WORK_DIR/src/.config"
 cd "$WORK_DIR/src"
 make olddefconfig
+
+# Harden the kernel defaults for a more defensive live ISO build.
+if [ -x "scripts/config" ]; then
+  scripts/config --enable CONFIG_STACKPROTECTOR_STRONG
+  scripts/config --enable CONFIG_STRICT_KERNEL_RWX
+  scripts/config --enable CONFIG_RANDOMIZE_BASE
+  scripts/config --enable CONFIG_SLAB_FREELIST_RANDOM
+  scripts/config --enable CONFIG_SLAB_FREELIST_HARDENED
+  scripts/config --enable CONFIG_HARDENED_USERCOPY
+  scripts/config --enable CONFIG_INIT_ON_ALLOC_DEFAULT_ON
+  scripts/config --enable CONFIG_FORTIFY_SOURCE
+  scripts/config --enable CONFIG_UBSAN
+fi
+
 make -j"$BUILD_THREADS" bzImage modules
 
 make modules_install INSTALL_MOD_PATH="$OUT_DIR/modules"

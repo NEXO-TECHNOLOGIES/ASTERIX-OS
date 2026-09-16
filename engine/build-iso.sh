@@ -392,23 +392,30 @@ if [ -f "config/includes.binary/boot/vmlinuz-asterix" ] && [ -f "config/includes
 set default="0"
 set timeout=10
 
-menuentry "ASTERIX OS v2.0 'Phantom' (Default)" {
+# ASTERIX OS multi-profile boot menu
+menuentry "ASTERIX OS — Default Live Session" {
     linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence
     initrd /boot/initrd-asterix.img
 }
 
-menuentry "ASTERIX OS v2.0 'Phantom' (Stealth)" {
-    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence loglevel=0 vt.global_cursor_default=0 asterix.stealth=1
+menuentry "ASTERIX OS — Stealth Live Session" {
+    linux /boot/vmlinuz-asterix \
+        boot=live components username=asterix hostname=asterix \
+        quiet splash persistence loglevel=0 vt.global_cursor_default=0 asterix.stealth=1
     initrd /boot/initrd-asterix.img
 }
 
-menuentry "ASTERIX OS v2.0 'Phantom' (Forensic)" {
-    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix noeject noswap noautomount quiet splash persistence
+menuentry "ASTERIX OS — Forensic Live Session" {
+    linux /boot/vmlinuz-asterix \
+        boot=live components username=asterix hostname=asterix \
+        noeject noswap noautomount quiet splash persistence
     initrd /boot/initrd-asterix.img
 }
 
-menuentry "ASTERIX OS v2.0 'Phantom' (Dual-Boot Host)" {
-    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence
+menuentry "ASTERIX OS — Dual-Boot Host Mode" {
+    linux /boot/vmlinuz-asterix \
+        boot=live components username=asterix hostname=asterix \
+        quiet splash persistence rootdelay=5
     initrd /boot/initrd-asterix.img
 }
 

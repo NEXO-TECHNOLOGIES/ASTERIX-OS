@@ -295,6 +295,9 @@ _final_splash() {
     echo -e " ${FG_YELLOW}${BOLD}LAUNCH COMMANDS:${R}"
     echo -e "   ${FG_CYAN}ax${R}              Full Cybernetic Command & Control Hub"
     echo -e "   ${FG_CYAN}asterix${R}         Alias for ax"
+    echo -e "   ${FG_CYAN}ax curl-tree <url>${R} Next-Gen web code structure & asset tree"
+    echo -e "   ${FG_CYAN}ax webdump <url>${R}   Dump complete site codebase to offline folder"
+    echo -e "   ${FG_CYAN}ax mobile-sys${R}     Mobile hardware HUD, battery & DNS benchmark"
     echo -e "   ${FG_CYAN}ax darktrace${R}    Stealth memory, entropy & log triage"
     echo -e "   ${FG_CYAN}ax shadowcam${R}    Camera & RTSP/ONVIF security auditor"
     echo -e "   ${FG_CYAN}ax dark-engine${R}  Pure-Rust stealth & entropy engine"
@@ -354,9 +357,18 @@ main() {
         chmod +x "$tracker_script" 2>/dev/null || true
         ln -sf "$tracker_script" "$PREFIX/bin/target-tracker" 2>/dev/null || true
     fi
-    if [ -f "$ai_startup_script" ]; then
-        chmod +x "$ai_startup_script" 2>/dev/null || true
-        ln -sf "$ai_startup_script" "$PREFIX/bin/asterix-ai-startup" 2>/dev/null || true
+    local web_script="$HOME/ASTERIX-OS/termux-mobile/web-structure.sh"
+    local toolbox_script="$HOME/ASTERIX-OS/termux-mobile/termux-toolbox.sh"
+    if [ -f "$web_script" ]; then
+        chmod +x "$web_script" 2>/dev/null || true
+        ln -sf "$web_script" "$PREFIX/bin/web-structure" 2>/dev/null || true
+        ln -sf "$web_script" "$PREFIX/bin/curl-tree" 2>/dev/null || true
+        ln -sf "$web_script" "$PREFIX/bin/webdump" 2>/dev/null || true
+    fi
+    if [ -f "$toolbox_script" ]; then
+        chmod +x "$toolbox_script" 2>/dev/null || true
+        ln -sf "$toolbox_script" "$PREFIX/bin/termux-toolbox" 2>/dev/null || true
+        ln -sf "$toolbox_script" "$PREFIX/bin/mobile-sys" 2>/dev/null || true
     fi
     export PATH="$PREFIX/bin:$PATH"
 

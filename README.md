@@ -650,6 +650,12 @@ ax compress <target>    # Create compressed tar archive
 ax extract <archive>    # Automatically extract any archive format
 ax find-large [dir]     # Find top 15 largest files on disk
 
+# Web Architecture & Code Structure (Next-Gen curl alternative)
+ax web-structure <url>  # Extract complete DOM tree, JS/CSS assets & API routes
+ax curl-tree <url>      # Visual ASCII hierarchy & asset tree alternative to curl
+ax webdump <url> <dir>  # Download & reconstruct full website codebase into folder
+ax mobile-sys [action]  # Termux/Mobile hardware HUD, battery & DNS latency benchmark
+
 # Direct Cyber Subsystem Launchers (no flags required)
 ax recon                # 01. Reconnaissance & OSINT (Nmap, Masscan, Whois)
 ax web                  # 02. Web Application Warfare (SQLMap, Gobuster, Nikto)
@@ -1112,6 +1118,95 @@ curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/se
   ```bash
   apt clean && pkg clean
   ```
+
+---
+
+## ✅ Validation Checklist (Linux Host + Termux Stability)
+
+Use this checklist in order. Stop at the first failing stage and fix only that layer before continuing.
+
+### Stage 1 — Native C build validation (Linux host)
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential gcc make nasm git curl wget ca-certificates
+
+cd /path/to/ASTERIX\ OS/core-utils-c
+./build.sh
+ls -l bin
+```
+Expected pass markers:
+- `Successfully compiled all C binaries in .../bin/`
+- `ls -l bin` shows `asterix-sysinfo`, `asterix-memview`, `asterix-netprobe`, `asterix-hasher`, and `asterix-shredder`
+
+Expected fail markers:
+- missing macros or compiler errors such as `C_MAGENTA` or `undefined reference`
+- `gcc` or `make` not found
+
+### Stage 2 — Assembly validation (Linux host)
+```bash
+cd /path/to/ASTERIX\ OS/boot-asm
+make
+ls -l bin
+```
+Expected pass markers:
+- output contains `MBR sector binary` and `ELF64 binary` success lines
+- `bin/asterix-mbr.bin` exists
+
+Expected fail markers:
+- NASM errors
+- missing `ld` or `nasm`
+
+### Stage 3 — Custom kernel validation (Linux host)
+```bash
+cd /path/to/ASTERIX\ OS
+sudo bash kernel/build-kernel.sh
+```
+Expected pass markers:
+- `[ASTERIX KERNEL] Build complete.`
+- generated `vmlinuz-asterix` and `initrd-asterix.img` in `kernel-build/out`
+
+Expected fail markers:
+- missing kernel dependencies
+- `make` or toolchain errors
+- config parse failures
+
+### Stage 4 — Live ISO validation (Linux host)
+```bash
+cd /path/to/ASTERIX\ OS/engine
+sudo bash build-iso.sh
+ls -l ../ | grep -Ei 'asterix.*iso|asterix.*img|vmlinuz'
+```
+Expected pass markers:
+- `lb build` completes successfully
+- generated ISO artifact appears in the repo root or parent directory
+- GRUB menu includes the default / stealth / forensic / dual-boot entries
+
+Expected fail markers:
+- `live-build` package errors
+- missing `grub`, `xorriso`, or `debootstrap`
+- custom kernel payload missing from `config/includes.binary/boot`
+
+### Stage 5 — Termux repair and stability validation
+```bash
+pkg update
+pkg upgrade
+dpkg --configure -a
+apt --fix-broken install
+pkg install -y build-essential git curl wget python rust golang make clang
+termux-setup-storage
+```
+Expected pass markers:
+- package manager commands complete without repeated broken-state errors
+- `gcc --version` and `make --version` return valid versions
+- `git --version` and `python --version` work cleanly
+
+Expected fail markers:
+- `dpkg` lock or broken package state
+- `pkg` or `apt` failing repeatedly on repo state
+- missing `gcc`, `make`, or `git` after install
+
+### Stability rule
+Always repair package state before adding build tools on Termux. If `dpkg` is broken, the environment is unstable even if the ASTERIX source is correct.
 
 ---
 

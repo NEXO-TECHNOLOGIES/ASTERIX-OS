@@ -23,11 +23,12 @@ if ! command -v gcc >/dev/null 2>&1; then
     fi
 fi
 
-$COMPILER -O3 -Wall -Wextra -D_GNU_SOURCE src/asterix-sysinfo.c -o bin/asterix-sysinfo
-$COMPILER -O3 -Wall -Wextra -D_GNU_SOURCE src/asterix-memview.c -o bin/asterix-memview
-$COMPILER -O3 -Wall -Wextra -D_GNU_SOURCE src/asterix-netprobe.c -o bin/asterix-netprobe
-$COMPILER -O3 -Wall -Wextra -D_GNU_SOURCE src/asterix-hasher.c -o bin/asterix-hasher
-$COMPILER -O3 -Wall -Wextra -D_GNU_SOURCE src/asterix-shredder.c -o bin/asterix-shredder
+# Keep compiler warnings visible but tolerate the project’s mixed source style.
+$COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-sysinfo.c -o bin/asterix-sysinfo
+$COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-memview.c -o bin/asterix-memview
+$COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-netprobe.c -o bin/asterix-netprobe
+$COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-hasher.c -o bin/asterix-hasher
+$COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-shredder.c -o bin/asterix-shredder
 
 echo -e "\033[32m[✔] Successfully compiled all C binaries in ${SCRIPT_DIR}/bin/\033[0m"
 ls -lh bin/

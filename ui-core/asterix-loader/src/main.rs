@@ -978,6 +978,7 @@ fn print_cli_help() {
     println!("  {C_MAGENTA}ax forensic-mode <enable>${C_RESET}  Hardened Live forensic write-blocker (noswap noautomount)");
     println!("  {C_MAGENTA}ax rf-audit${C_RESET}                Multi-radio wireless, monitor mode & Bluetooth audit");
     println!("  {C_MAGENTA}ax cam-hunter [hotel|scan|rf]${C_RESET}Hotel privacy counter-surveillance & hidden camera detector");
+    println!("  {C_MAGENTA}ax black-hole [status|scan|--json]${C_RESET}Privacy hardening suite: DNS/IP protection, local surveillance & hidden cam/mic checks");
     println!("  {C_MAGENTA}ax power [status|boost|save]${C_RESET} Mobile/Linux CPU governor, thermal & battery controller");
     println!("  {C_MAGENTA}ax clean-pro${C_RESET}               Zero-crash cache purge, temporary file cleanup & SSD TRIM");
     println!("  {C_MAGENTA}ax flow${C_RESET}                    Real-time socket states, DNS latency benchmark & flow monitor");
@@ -1294,6 +1295,7 @@ fn main() {
         "forensic-mode" | "forensics-mode" | "write-block" => { dispatch_ax_tool(&args[1..]); return; }
         "rf-audit" | "air-audit" | "kismet-audit" => { dispatch_ax_tool(&args[1..]); return; }
         "cam-hunter" | "hotel-guard" | "tscm" | "spycam-scan" | "privacy-sweep" => { dispatch_ax_tool(&args[1..]); return; }
+        "black-hole" | "blackhole" | "privacy-hub" | "privacy-sentinel" => { dispatch_ax_tool(&args[1..]); return; }
         "power" | "governor" | "cpu-power" | "battery-health" => { dispatch_ax_tool(&args[1..]); return; }
         "clean-pro" | "disk-clean" | "purge-cache" | "trim" => { dispatch_ax_tool(&args[1..]); return; }
         "flow" | "net-flow" | "netstat-pro" | "socket-audit" => { dispatch_ax_tool(&args[1..]); return; }
