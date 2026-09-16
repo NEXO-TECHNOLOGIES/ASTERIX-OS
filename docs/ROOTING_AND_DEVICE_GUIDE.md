@@ -33,6 +33,9 @@ The default ASTERIX mobile engine utilizes user-space `ptrace` hooking to provid
 │  │  │  • Native Rust Loader (asterix-loader)        │  │  │
 │  │  │  • Security Toolchain (MSF, Nmap, Netcat)     │  │  │
 │  │  │  • Persistent Vault (/asterix_persistent)     │  │  │
+│  │  │  • Multi-DNS Failover (1.1.1.1 / 8.8.8.8)     │  │  │
+│  │  │  • Zero-Crash APT Sandbox (User 'root')       │  │  │
+│  │  │  • Resilient Folder Engine (10 Stores)        │  │  │
 │  │  └───────────────────────┬───────────────────────┘  │  │
 │  └──────────────────────────┼──────────────────────────┘  │
 │                             ▼                             │
@@ -40,10 +43,38 @@ The default ASTERIX mobile engine utilizes user-space `ptrace` hooking to provid
 └───────────────────────────────────────────────────────────┘
 ```
 
-### Capabilities
-* Full access to TCP/UDP socket creation and network analysis.
-* Automated persistent data synchronization with Android shared storage.
-* Zero risk of device bricking or warranty invalidation.
+### Capabilities & Hardening Features
+* **Zero-Crash APT Sandbox**: Automatically enforces `APT::Sandbox::User "root"` to eliminate the common PRoot `_apt` permission denied error.
+* **Resilient Multi-DNS Resolver**: Populates `/etc/resolv.conf` with multi-provider failover (Cloudflare, Google, Quad9) with query rotation.
+* **Daemon Startup Blocker**: Deploys `/usr/sbin/policy-rc.d` returning `101`, preventing package upgrade crashes from missing systemd/init.
+* **Shared Memory Emulation**: Configures `/dev/shm` and `/tmp` with mode `1777` for POSIX semaphores and multiprocessing.
+* **Link2Symlink Hardlink Emulation**: Overcomes Android FAT/fuse filesystem limitations, ensuring directory creation and package operations succeed without hardlink permission errors.
+
+### Resilient Folder Architecture
+All mission data is organized across 10 persistent storage categories:
+- `projects/`: User codebases, repositories, and tactical scripts.
+- `scans/`: Network reconnaissance, Nmap, Nikto, and masscan logs.
+- `loot/`: Captured hashes, credentials, and exfiltrated payloads.
+- `captures/`: PCAP traffic logs and wireless captures.
+- `reports/`: Audit findings, executive summaries, and compliance logs.
+- `notes/`: Target tracking and engagement documentation.
+- `scripts/`: Custom Python, Rust, and Bash tooling.
+- `payloads/`: Compiled binaries, shellcodes, and exploit proofs.
+- `wordlists/`: Password dictionaries, fuzzing lists, and wordlists.
+- `workspace/`: Ephemeral workspace for active testing.
+
+### Debian Rootless CLI Commands
+```bash
+ax debian                            # Launch hardened Debian rootless PRoot shell
+ax debian run <command...>           # Execute command inside Debian rootless
+ax debian folder create <name>       # Create new resilient folder with validation
+ax debian folder template <n> <t>    # Create folder with template (recon, exploit, web, dev)
+ax debian folder tree                # Display ASCII directory tree of persistent storage
+ax debian folder fix-perms           # Recursively fix directory (0755) and file permissions
+ax debian doctor                     # Run comprehensive diagnostic on Debian rootless
+ax debian repair                     # Auto-heal all Debian rootless configs and directories
+ax debian status                     # Display container status and storage telemetry
+```
 
 ---
 

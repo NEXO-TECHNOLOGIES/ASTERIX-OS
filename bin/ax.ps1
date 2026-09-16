@@ -502,6 +502,33 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("verify", "release-check", "checksum") } {
+        $verifyScript = Join-Path $AsterixRoot "scripts-hub\ax-release-verify.py"
+        if ($RealPython -and (Test-Path $verifyScript)) {
+            & $RealPython $verifyScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-release-verify.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("folder", "folders", "workspace-dir") } {
+        $debScript = Join-Path $AsterixRoot "scripts-hub\ax-debian-manager.py"
+        if ($RealPython -and (Test-Path $debScript)) {
+            & $RealPython $debScript "folder" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-debian-manager.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("debian", "proot", "rootless") } {
+        $debScript = Join-Path $AsterixRoot "scripts-hub\ax-debian-manager.py"
+        if ($RealPython -and (Test-Path $debScript)) {
+            & $RealPython $debScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-debian-manager.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -551,6 +578,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax curl-tree <url>              Next-Gen curl: visual DOM hierarchy, script/style & route tree"
             Write-Host "    ax webdump <url> <dir>          Download & reconstruct entire website codebase into offline folder"
             Write-Host "    ax mobile-sys [action]          Mobile hardware HUD, battery health, DNS latency & cache cleaner"
+            Write-Host "    ax verify                       Cryptographically audit codebase against SHA-256 manifest"
+            Write-Host "    ax debian [doctor|fix|enter]    Debian PRoot container diagnostics, self-healing & shell"
+            Write-Host "    ax folder [new|template|ls]     Mission folder management with metadata & permission repair"
         }
     }
 }

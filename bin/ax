@@ -2016,6 +2016,8 @@ cmd_sandbox() {
                 firejail --noprofile --private --quiet bash -c "$cmd"
             elif command -v unshare >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
                 unshare -m -p -f --mount-proc bash -c "$cmd"
+            elif command -v proot >/dev/null 2>&1; then
+                proot -r / -0 -b /dev -b /proc -b /sys -b "$HOME" -w "$HOME" bash -c "$cmd"
             else
                 (
                     export HOME=$(mktemp -d /tmp/ax_sb_XXXXXX)
@@ -2057,6 +2059,8 @@ cmd_sandbox() {
                       bash --norc
             elif command -v firejail >/dev/null 2>&1; then
                 firejail --noprofile --private="$sb_tmp" --quiet bash
+            elif command -v proot >/dev/null 2>&1; then
+                proot -r / -0 -b /dev -b /proc -b /sys -b "$sb_tmp:$HOME" -w "$HOME" bash
             else
                 (
                     export HOME="$sb_tmp"
@@ -2071,6 +2075,66 @@ cmd_sandbox() {
             echo -e "\n${C_GREEN}[✔] Sandbox successfully destroyed. Zero artifacts left on host system.${C_RESET}\n"
             ;;
     esac
+}
+
+cmd_debian() {
+    local script_mgr=""
+    for cand in \
+        "$ASTERIX_DIR/scripts-hub/ax-debian-manager.py" \
+        "/opt/ASTERIX-OS/scripts-hub/ax-debian-manager.py" \
+        "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" \
+        "$(dirname "$0")/../scripts-hub/ax-debian-manager.py"; do
+        if [ -f "$cand" ]; then
+            script_mgr="$cand"
+            break
+        fi
+    done
+
+    local py_bin=""
+    for py in python3 python; do
+        if command -v "$py" >/dev/null 2>&1; then
+            py_bin="$py"
+            break
+        fi
+    done
+
+    if [ -n "$script_mgr" ] && [ -n "$py_bin" ]; then
+        "$py_bin" "$script_mgr" "$@"
+    elif [ -f "$ASTERIX_DIR/termux-mobile/debian-rootless.sh" ]; then
+        bash "$ASTERIX_DIR/termux-mobile/debian-rootless.sh" "$@"
+    elif command -v proot-distro >/dev/null 2>&1; then
+        local pdir="$HOME/asterix_persistent"
+        [ -d "$HOME/.asterix_storage" ] && pdir="$HOME/.asterix_storage"
+        mkdir -p "$pdir"/{projects,scans,loot,captures,reports,notes,scripts,payloads,wordlists,workspace} 2>/dev/null || true
+        proot-distro login --link2symlink --bind "$ASTERIX_DIR:/opt/ASTERIX-OS" --bind "$pdir:/asterix_persistent" debian -- "$@"
+    else
+        echo -e "${C_RED}[!] Debian Rootless (PRoot) subsystem not detected.${C_RESET}"
+        echo -e "    Run: pkg install -y proot proot-distro && proot-distro install debian"
+        return 1
+    fi
+}
+
+cmd_folder() {
+    cmd_debian folder "$@"
+}
+
+cmd_verify() {
+    local verify_script=""
+    for cand in \
+        "$ASTERIX_DIR/scripts-hub/ax-release-verify.py" \
+        "/opt/ASTERIX-OS/scripts-hub/ax-release-verify.py" \
+        "$HOME/ASTERIX-OS/scripts-hub/ax-release-verify.py" \
+        "$(dirname "$0")/../scripts-hub/ax-release-verify.py"; do
+        if [ -f "$cand" ]; then
+            verify_script="$cand"
+            break
+        fi
+    done
+    if [ -n "$verify_script" ] && command -v python3 >/dev/null 2>&1; then
+        python3 "$verify_script" "$@"
+    else
+        echo -e "${C_CYAN}[*] Cryptographic verifier script not available.${C_RESET}"
+    fi
 }
 
 cmd_applocker() {
@@ -6774,6 +6838,18 @@ case "$SUBCOMMAND" in
     sandbox|isolate-run)
         shift
         cmd_sandbox "$@"
+        ;;
+    debian|proot|rootless)
+        shift
+        cmd_debian "$@"
+        ;;
+    folder|folders|workspace-dir)
+        shift
+        cmd_folder "$@"
+        ;;
+    verify|release-check|checksum)
+        shift
+        cmd_verify "$@"
         ;;
     applocker|whitelist|app-id)
         shift

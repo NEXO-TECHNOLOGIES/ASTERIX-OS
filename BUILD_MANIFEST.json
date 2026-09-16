@@ -60,9 +60,9 @@
     "scripts-hub/ax-web-structure.py": "aa9f41ccadc4e9ff8d953817ddc9f124605a1f48314a7061ba3925c42e70f9c1",
     "scripts-hub/ax-mobile-toolbox.py": "b47d9308db2f2902895ca721afed887f49a473080837e2fb4d86b05e2f34f508",
     "termux-mobile/web-structure.sh": "7aeab823d1a7bf1f21225f84e44c0d4d9a383ec4107df12c9818ffb327c6eac5",
-    "termux-mobile/termux-toolbox.sh": "90ca10633dcfde34be8726056550143574e66e4bf9e3d46a9dd9761ca64e4720",
-    "bin/ax": "5e295711cd744428b8ec9ccb936324be295f2a3d5cc589457e92c373b41ff599",
-    "bin/ax.ps1": "c6ed6482e51e7a63b04e362ff20d26625caeaeeaff76177742dd7c73e6cd86e4",
+    "termux-mobile/termux-toolbox.sh": "5dbf61404017430675cd86d04153064cd095ffe425fc6d2fc51971699cbc10ba",
+    "bin/ax": "a35c37d36b7d5c557c308c0d5924cd510cb3e3ae431894ede355ffb60506070c",
+    "bin/ax.ps1": "13414dc5857da6c62b4d838a7b02f9e4dc0156569e8d15f790e4f265f1f6281a",
     "bin/ax.cmd": "489fce590d9a98126356ab5e61c36f717aaa0e5193339958d89e0d5f70911271",
     "os-computing/os_bridge.py": "1615b021d37f4c7da6819f06127caf2724c09651f08885f2fbde45204ac3c4e5"
   }

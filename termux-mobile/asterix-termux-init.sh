@@ -329,8 +329,10 @@ main() {
         _final_splash
     fi
 
-    # Setup persistence dirs
-    mkdir -p "$HOME/asterix_persistent"/{loot,captures,scripts,notes} 2>/dev/null
+    # Setup resilient persistence dirs
+    local p_dir="$HOME/asterix_persistent"
+    mkdir -p "$p_dir"/{projects,scans,loot,captures,reports,notes,scripts,payloads,wordlists,workspace} 2>/dev/null || true
+    chmod -R 755 "$p_dir" 2>/dev/null || true
 
     # Ensure the ASTERIX command bridge is always loaded in this session and the
     # default shell PATH can resolve the repository-installed dispatchers.
@@ -342,20 +344,38 @@ main() {
         . "$HOME/ASTERIX-OS/ui-core/asterix-shell-env.sh"
     fi
 
-    # Ensure DNS resolver is valid in PRoot Debian container so internet works out of the box
-    local deb_resolv="$PREFIX/var/lib/proot-distro/installed-rootfs/debian/etc/resolv.conf"
-    if [ -f "$deb_resolv" ]; then
-        if ! grep -q "nameserver" "$deb_resolv" 2>/dev/null; then
-            printf "nameserver 1.1.1.1\nnameserver 8.8.8.8\nnameserver 9.9.9.9\n" > "$deb_resolv" 2>/dev/null || true
-        fi
+    # Ensure Debian PRoot container is hardened with multi-DNS, APT Sandbox fix, policy-rc.d, and SHM
+    local deb_root="$PREFIX/var/lib/proot-distro/installed-rootfs/debian"
+    if [ -d "$deb_root" ]; then
+        # 1. DNS failover
+        local deb_resolv="$deb_root/etc/resolv.conf"
+        printf "nameserver 1.1.1.1\nnameserver 8.8.8.8\nnameserver 9.9.9.9\nnameserver 1.0.0.1\noptions timeout:2 attempts:3 rotate\n" > "$deb_resolv" 2>/dev/null || true
+        # 2. APT sandbox user fix
+        mkdir -p "$deb_root/etc/apt/apt.conf.d" 2>/dev/null || true
+        printf '// ASTERIX Rootless Hardening\nAPT::Sandbox::User "root";\nAcquire::Languages "none";\nAcquire::Check-Valid-Until "false";\n' > "$deb_root/etc/apt/apt.conf.d/99termux-rootless" 2>/dev/null || true
+        # 3. Policy-rc.d
+        mkdir -p "$deb_root/usr/sbin" 2>/dev/null || true
+        printf '#!/bin/sh\nexit 101\n' > "$deb_root/usr/sbin/policy-rc.d" 2>/dev/null || true
+        chmod 755 "$deb_root/usr/sbin/policy-rc.d" 2>/dev/null || true
+        # 4. /dev/shm & /tmp
+        mkdir -p "$deb_root/dev/shm" "$deb_root/tmp" 2>/dev/null || true
+        chmod 1777 "$deb_root/dev/shm" "$deb_root/tmp" 2>/dev/null || true
+        # 5. UTF-8 & Hostname
+        printf "LANG=C.UTF-8\nLC_ALL=C.UTF-8\n" > "$deb_root/etc/environment" 2>/dev/null || true
+        printf "127.0.0.1 localhost asterix-rootless\n" > "$deb_root/etc/hosts" 2>/dev/null || true
     fi
 
-    # Optional: register a new mobile target tracker helper for quick IP and host lookups.
+    # Optional: register mobile helpers and Debian rootless manager
     local tracker_script="$HOME/ASTERIX-OS/termux-mobile/target-tracker.sh"
     local ai_startup_script="$HOME/ASTERIX-OS/termux-mobile/asterix-ai-startup.sh"
+    local debian_script="$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh"
     if [ -f "$tracker_script" ]; then
         chmod +x "$tracker_script" 2>/dev/null || true
         ln -sf "$tracker_script" "$PREFIX/bin/target-tracker" 2>/dev/null || true
+    fi
+    if [ -f "$debian_script" ]; then
+        chmod +x "$debian_script" 2>/dev/null || true
+        ln -sf "$debian_script" "$PREFIX/bin/debian-rootless" 2>/dev/null || true
     fi
     local web_script="$HOME/ASTERIX-OS/termux-mobile/web-structure.sh"
     local toolbox_script="$HOME/ASTERIX-OS/termux-mobile/termux-toolbox.sh"
@@ -377,7 +397,7 @@ main() {
         "$PREFIX/bin/asterix-ai-startup" >/dev/null 2>&1 || true
     fi
 
-    # Launch PRoot if debian is healthy, otherwise launch native ax shell
+    # Launch PRoot with unified binds and link2symlink if debian is healthy
     local args=("$@")
     local passthrough=()
     for a in "${args[@]}"; do
@@ -385,11 +405,17 @@ main() {
     done
     local deb_sh="$PREFIX/var/lib/proot-distro/installed-rootfs/debian/bin/sh"
     if command -v proot-distro &>/dev/null && [ -f "$deb_sh" ]; then
-        if [[ ${#passthrough[@]} -gt 0 ]]; then
-            exec proot-distro login --bind "$HOME/asterix_persistent:/asterix_persistent" debian -- "${passthrough[@]}"
-        else
-            exec proot-distro login --bind "$HOME/asterix_persistent:/asterix_persistent" debian
+        local asterix_dir="$HOME/ASTERIX-OS"
+        [ -d "/opt/ASTERIX-OS" ] && asterix_dir="/opt/ASTERIX-OS"
+        local proot_cmd=("proot-distro" "login" "--link2symlink" "--bind" "$asterix_dir:/opt/ASTERIX-OS" "--bind" "$p_dir:/asterix_persistent")
+        if [ -d "/sdcard" ] && [ -w "/sdcard" ]; then
+            proot_cmd+=("--bind" "/sdcard:/sdcard")
         fi
+        proot_cmd+=("debian")
+        if [[ ${#passthrough[@]} -gt 0 ]]; then
+            proot_cmd+=("--" "${passthrough[@]}")
+        fi
+        exec "${proot_cmd[@]}"
     elif [ -x "$PREFIX/bin/ax" ]; then
         exec "$PREFIX/bin/ax" "${passthrough[@]}"
     fi

@@ -395,9 +395,46 @@ class SystemDoctor:
         else:
             print(f"    • Occupied Dev Ports:  {C_GREEN}ALL COMMON DEV PORTS FREE (3000, 5000, 8000, 8080){C_RESET}")
 
+        # --- SECTION 4: DEBIAN ROOTLESS & CONTAINER HEALTH (IF DETECTED) ---
+        prefix = os.environ.get("PREFIX", "")
+        proot_distro_path = (
+            Path(prefix) / "var/lib/proot-distro/installed-rootfs/debian"
+            if prefix else Path("/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/debian")
+        )
+        is_proot = bool(os.environ.get("PROOT_TMP_DIR") or os.environ.get("PROOT_VERSION") or Path("/etc/asterix_proot_marker").exists())
+        has_debian = proot_distro_path.exists() or is_proot
+
+        if has_debian or "termux" in prefix.lower():
+            print(f"  {C_WHITE}{C_BOLD}4. DEBIAN ROOTLESS (PROOT) SUBSYSTEM HEALTH{C_RESET}")
+            if is_proot:
+                print(f"    • Rootless Environment:{C_GREEN}INSIDE PROOT DEBIAN{C_RESET}")
+            elif proot_distro_path.exists():
+                print(f"    • Debian Rootfs:       {C_GREEN}INSTALLED{C_RESET} ({proot_distro_path})")
+            else:
+                print(f"    • Debian Rootfs:       {C_YELLOW}NOT INSTALLED (Run: proot-distro install debian){C_RESET}")
+
+            apt_conf = (proot_distro_path / "etc/apt/apt.conf.d/99termux-rootless") if not is_proot else Path("/etc/apt/apt.conf.d/99termux-rootless")
+            if apt_conf.exists() and 'APT::Sandbox::User "root"' in apt_conf.read_text(encoding="utf-8", errors="replace"):
+                print(f"    • APT Sandbox Config:  {C_GREEN}HARDENED{C_RESET} (Rootless user isolation fixed)")
+            else:
+                print(f"    • APT Sandbox Config:  {C_YELLOW}UNHARDENED{C_RESET} (Run 'ax debian repair' to fix '_apt' error)")
+
+            pdir = Path.home() / "asterix_persistent" if not is_proot else Path("/asterix_persistent")
+            if pdir.exists():
+                std_folders = ["projects", "scans", "loot", "captures", "reports", "notes", "scripts", "payloads", "wordlists", "workspace"]
+                missing = [f for f in std_folders if not (pdir / f).exists()]
+                if not missing:
+                    print(f"    • Persistent Folders:  {C_GREEN}ALL 10 FOLDERS ACTIVE{C_RESET} ({pdir})")
+                else:
+                    print(f"    • Persistent Folders:  {C_YELLOW}PARTIAL{C_RESET} (Missing: {', '.join(missing)})")
+            else:
+                print(f"    • Persistent Folders:  {C_YELLOW}NOT CREATED{C_RESET} (Run 'ax debian folder init')")
+            print()
+
         # Auto-Fix option
         if auto_fix:
-            print(f"\n  {C_CYAN}{C_BOLD}4. AUTONOMOUS REPAIR & ENVIRONMENT HEALING (--fix){C_RESET}")
+            sec_num = 5 if (has_debian or "termux" in prefix.lower()) else 4
+            print(f"\n  {C_CYAN}{C_BOLD}{sec_num}. AUTONOMOUS REPAIR & ENVIRONMENT HEALING (--fix){C_RESET}")
             if sys.platform == "win32":
                 print(f"    • Flushing DNS resolver cache... ", end="")
                 try:
@@ -408,7 +445,20 @@ class SystemDoctor:
             else:
                 print(f"    • Clearing system resolution caches... {C_GREEN}[OK]{C_RESET}")
 
-        print()
+            # Auto-repair Debian rootless if present
+            mgr_path = Path(__file__).parent / "ax-debian-manager.py"
+            if mgr_path.exists():
+                try:
+                    import importlib.util
+                    spec = importlib.util.spec_from_file_location("ax_debian_manager", str(mgr_path))
+                    if spec and spec.loader:
+                        mod = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(mod)
+                        if hasattr(mod, "DebianHardener"):
+                            repairs = mod.DebianHardener.repair_all()
+                            print(f"    • Auto-healed Debian Rootless Subsystem: {C_GREEN}{len(repairs)} repairs applied{C_RESET}")
+                except Exception as e:
+                    pass
 
 
 # =============================================================================

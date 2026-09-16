@@ -37,6 +37,9 @@ usage() {
     echo -e "    ${C_GREEN}net | dns${C_RESET}           Mobile network analysis & multi-DNS latency benchmark"
     echo -e "    ${C_GREEN}clean | purge${C_RESET}       Reclaim mobile disk space (purges pkg cache, /tmp, orphan logs)"
     echo -e "    ${C_GREEN}doctor | heal${C_RESET}       Diagnose & auto-repair broken Termux repos, curl, and PATH"
+    echo -e "    ${C_GREEN}debian-doctor${C_RESET}       Diagnose Debian Rootless (PRoot) container health & DNS"
+    echo -e "    ${C_GREEN}debian-fix${C_RESET}          Auto-heal Debian Rootless (APT sandbox, DNS, /dev/shm)"
+    echo -e "    ${C_GREEN}debian-folder${C_RESET}       Create & manage resilient mission folders"
     echo -e "    ${C_GREEN}clip-copy <text>${C_RESET}    Copy text to Android system clipboard"
     echo -e "    ${C_GREEN}clip-paste${C_RESET}          Print current Android clipboard contents"
     echo -e "    ${C_GREEN}notify <msg>${C_RESET}        Send native Android vibration and notification toast"
@@ -214,6 +217,34 @@ cmd_notify() {
         termux-vibrate -d 300 2>/dev/null || true
     fi
     echo -e "  ${C_GREEN}[✔] Notification triggered: ${msg}${C_RESET}"
+cmd_debian_doctor() {
+    if [ -f "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
+        python3 "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" doctor "$@"
+    elif [ -f "$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh" ]; then
+        bash "$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh" doctor "$@"
+    else
+        echo "Debian Rootless manager not found."
+    fi
+}
+
+cmd_debian_fix() {
+    if [ -f "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
+        python3 "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" repair "$@"
+    elif [ -f "$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh" ]; then
+        bash "$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh" fix "$@"
+    else
+        echo "Debian Rootless manager not found."
+    fi
+}
+
+cmd_debian_folder() {
+    if [ -f "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
+        python3 "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" folder "$@"
+    elif [ -f "$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh" ]; then
+        bash "$HOME/ASTERIX-OS/termux-mobile/debian-rootless.sh" folder "$@"
+    else
+        echo "Debian Rootless manager not found."
+    fi
 }
 
 ACTION="${1:-help}"
@@ -231,6 +262,15 @@ case "$ACTION" in
         ;;
     doctor|heal|repair)
         cmd_doctor "$@"
+        ;;
+    debian-doctor|proot-doctor)
+        cmd_debian_doctor "$@"
+        ;;
+    debian-fix|proot-fix|debian-repair)
+        cmd_debian_fix "$@"
+        ;;
+    debian-folder|folder|mkdir)
+        cmd_debian_folder "$@"
         ;;
     clip-copy|copy)
         cmd_clip_copy "$@"

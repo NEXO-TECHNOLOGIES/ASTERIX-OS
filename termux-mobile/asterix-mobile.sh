@@ -11,6 +11,7 @@ AI_SCRIPT="${MOBILE_DIR}/asterix-ai-startup.sh"
 BOOT_SCRIPT="${MOBILE_DIR}/asterix-termux-init.sh"
 WEB_SCRIPT="${MOBILE_DIR}/web-structure.sh"
 TOOLBOX_SCRIPT="${MOBILE_DIR}/termux-toolbox.sh"
+DEBIAN_SCRIPT="${MOBILE_DIR}/debian-rootless.sh"
 
 usage() {
     cat <<'USAGE'
@@ -18,6 +19,8 @@ ASTERIX Mobile Helper
 
 Usage:
   asterix-mobile start [--theme=neon]
+  asterix-mobile debian [shell|run|doctor|repair|status]
+  asterix-mobile folder [create|tree|list|fix-perms]
   asterix-mobile ai
   asterix-mobile web-structure <url> [--tree|--source|--endpoints|--dump <dir>]
   asterix-mobile curl-tree <url>
@@ -29,6 +32,9 @@ Usage:
   asterix-mobile help
 
 Examples:
+  asterix-mobile debian shell
+  asterix-mobile folder create my_recon --template=recon
+  asterix-mobile debian repair
   asterix-mobile start --theme=neon
   asterix-mobile curl-tree https://example.com
   asterix-mobile webdump https://example.com ./site_dump
@@ -45,6 +51,7 @@ ensure_scripts() {
     [ -f "$BOOT_SCRIPT" ] && chmod +x "$BOOT_SCRIPT" 2>/dev/null || true
     [ -f "$WEB_SCRIPT" ] && chmod +x "$WEB_SCRIPT" 2>/dev/null || true
     [ -f "$TOOLBOX_SCRIPT" ] && chmod +x "$TOOLBOX_SCRIPT" 2>/dev/null || true
+    [ -f "$DEBIAN_SCRIPT" ] && chmod +x "$DEBIAN_SCRIPT" 2>/dev/null || true
 }
 
 cmd="${1:-help}"
@@ -58,6 +65,26 @@ case "$cmd" in
             "$BOOT_SCRIPT" "$@"
         else
             echo "Boot script not found: $BOOT_SCRIPT"
+            exit 1
+        fi
+        ;;
+    debian|proot|rootless)
+        if [ -f "$DEBIAN_SCRIPT" ]; then
+            "$DEBIAN_SCRIPT" "$@"
+        elif [ -f "${ASTERIX_ROOT}/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
+            python3 "${ASTERIX_ROOT}/scripts-hub/ax-debian-manager.py" "$@"
+        else
+            echo "Debian rootless script not found: $DEBIAN_SCRIPT"
+            exit 1
+        fi
+        ;;
+    folder|folders)
+        if [ -f "${ASTERIX_ROOT}/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
+            python3 "${ASTERIX_ROOT}/scripts-hub/ax-debian-manager.py" folder "$@"
+        elif [ -f "$DEBIAN_SCRIPT" ]; then
+            "$DEBIAN_SCRIPT" folder "$@"
+        else
+            echo "Folder manager engine not found."
             exit 1
         fi
         ;;

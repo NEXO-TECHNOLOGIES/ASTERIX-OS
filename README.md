@@ -1,7 +1,10 @@
 # ASTERIX OS
-## Professional Security Linux Distribution Platform
+## Hardened Mobile Security Sandbox & Tactical Linux Platform
 
 > **Language / Idioma / Langue / Sprache / 语言 / لغة / Язык**: [English](README.md) | [Español](docs/locales/README.es.md) | [Français](docs/locales/README.fr.md) | [Deutsch](docs/locales/README.de.md) | [中文](docs/locales/README.zh.md) | [العربية](docs/locales/README.ar.md) | [Русский](docs/locales/README.ru.md)
+
+> [!WARNING]
+> **Authorized Security Auditing & Defensive Research Only**: ASTERIX OS bundles defensive telemetry, network auditing, forensic tools, and packet analysis utilities (`nmap`, `tcpdump`, `tshark`). It is strictly intended for authorized penetration testing, vulnerability assessment, defensive telemetry, and research on infrastructure you own or have explicit written permission to test. See [SECURITY.md](SECURITY.md) for governance and disclosure policies.
 
 ```
     █████╗ ███████╗████████╗███████╗██████╗ ██╗██╗  ██╗     ██████╗ ███████╗
@@ -13,15 +16,15 @@
                      >> NEXT-GEN CYBERNETIC PLATFORM <<
 ```
 
-ASTERIX OS is a modular, security-focused Linux distribution and platform designed for live bootable deployment, developer productivity, dual-boot workflows, mobile operations, and offline-first security research.
+**ASTERIX OS** is a hardened, zero-crash rootless mobile security sandbox and tactical cyber telemetry framework for Android (Termux PRoot) and Linux. It provides a verified, pre-configured Debian PRoot container with strict error handling, multi-DNS failover, a structured 10-tier persistent folder engine, and native Rust telemetry tools.
 
 It combines:
-- a hardened Linux environment
-- an AI-guided operations layer
-- a dual-boot compatible desktop shell
-- a live persistence model
-- a curated security toolkit and utility registry
-- a professional project structure suitable for real-world distro and tooling development
+- A hardened rootless Debian environment for Android Termux with zero-crash error handling
+- An advanced 10-tier mission folder engine (`ax debian folder` / `ax folder`)
+- An AI-guided defensive operations layer (`asterix-ai`)
+- A dual-boot compatible desktop shell and live persistence model
+- A curated security toolkit and utility registry with cryptographic verification
+- A disciplined software supply chain strictly adhering to least privilege and verified packaging
 
 ---
 
@@ -1088,17 +1091,30 @@ sudo ./persistence-setup.sh /dev/sdX
 ```
 
 ### 3. Installing on Android via Termux (Rootless)
-Open Termux on Android and run:
+
+For optimal supply-chain integrity, clone the repository, review the installer, and execute locally:
+
 ```bash
-curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/termux-mobile/install-termux.sh | bash
+# 1. Clone the repository
+git clone https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git "$HOME/ASTERIX-OS"
+cd "$HOME/ASTERIX-OS"
+
+# 2. Review and execute the hardened installer
+bash termux-mobile/install-termux.sh
 ```
-*(Alternative via GitLab: `curl -sSL https://gitlab.com/nexo-technologies-group/asterix-os/-/raw/main/termux-mobile/install-termux.sh | bash`)*
+
+*(Quick-start convenience bootstrap with built-in health checks):*
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/termux-mobile/install-termux.sh)
+```
 
 Once installed, type `ax` or `asterix` anytime to launch the cybernetic OS environment.
 
-### 4. 1-Line Universal Bootstrap (Linux / Bare-Metal / Debian)
+### 4. Universal Bootstrap (Linux / Bare-Metal / Debian)
 ```bash
-curl -sSL https://raw.githubusercontent.com/NEXO-TECHNOLOGIES/ASTERIX-OS/main/setup.sh | bash
+git clone https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git "$HOME/ASTERIX-OS"
+cd "$HOME/ASTERIX-OS"
+bash setup.sh
 ```
 
 ### 5. Termux Troubleshooting & Instant Fixes
