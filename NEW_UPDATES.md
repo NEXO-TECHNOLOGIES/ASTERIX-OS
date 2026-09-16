@@ -451,7 +451,13 @@ The architectural filesystem layout diagram has been refreshed with all recent a
   - `ASTERIX_OS_LAYOUT.jpg` (Layout reference)
 - **Visual Features**:
   - Cyan 3D wireframe **A** logo centered on a dark cybernetic grid.
-  - Multi-tier structured boxes showing `bin/`, `ui-core/`, `engine/`, `termux-mobile/`, `boot-asm/`, `core-utils-rust/` (including `asterix-defender-core`), `packages/` (including `APEX-OVERDRIVE-` and `LIGHTNING-`), and Tier 5 Windows Enterprise Subsystems (`snapshot`, `event-log`, `sfc`, `taskmgr`, `secpol`).
+  - Multi-tier structured boxes representing the full v3.0 "Beyond Kali" architecture:
+    - **Tier 1: [CORE CLI & TUI]**: `bin/` (ax Master CLI, multi-subsystem routers) and `ui-core/` (asterix-loader Rust TUI, shell environment).
+    - **Tier 2: [CONTAINER & MOBILE KERNEL]**: `engine/` (build-iso.sh, live persistence) and `termux-mobile/` (PRoot Debian Rootless, hardware HUD).
+    - **Tier 3: [NATIVE MULTI-LANGUAGE UTILITIES]**: `boot-asm/` (16-bit MBR bootloader, ASM ciphers) and `core-utils-rust/` (asterix-defender-core, crypto-core, net-sentinel, log-hunter).
+    - **Tier 4: [BREAKTHROUGH BEYOND-KALI ENGINES]**: `scripts-hub/` (`ax pathfinder` DAG, `ax team` P2P mesh, `ax ghost` decoy egress, `ax radio` RF sentinel, `ax evidence` vault).
+    - **Tier 5: [PACKAGING & REPO ARCHITECTURE]**: `packages/debs/` (7 Kali-style metapackages), `apt-repo/` (Release/Packages APT repo), `Dockerfile` (Docker desktop sandbox).
+    - **Tier 6: [ENTERPRISE SCOPE & FORENSICS]**: `ax engagement` (scope gating, client workspaces), `ax attest` (vTPM attestation & SBOM), and `ax sandbox` (OverlayFS rollback).
 
 ---
 
