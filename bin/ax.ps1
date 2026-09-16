@@ -680,6 +680,51 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("pathfinder", "graph") } {
+        $pfScript = Join-Path $AsterixRoot "scripts-hub\ax-pathfinder.py"
+        if ($RealPython -and (Test-Path $pfScript)) {
+            & $RealPython $pfScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-pathfinder.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("team", "collab-sync") } {
+        $teamScript = Join-Path $AsterixRoot "scripts-hub\ax-team.py"
+        if ($RealPython -and (Test-Path $teamScript)) {
+            & $RealPython $teamScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-team.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("ghost", "decoy") } {
+        $ghostScript = Join-Path $AsterixRoot "scripts-hub\ax-ghost.py"
+        if ($RealPython -and (Test-Path $ghostScript)) {
+            & $RealPython $ghostScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-ghost.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("radio", "ble", "rf") } {
+        $radioScript = Join-Path $AsterixRoot "scripts-hub\ax-radio.py"
+        if ($RealPython -and (Test-Path $radioScript)) {
+            & $RealPython $radioScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-radio.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("evidence", "proof") } {
+        $evScript = Join-Path $AsterixRoot "scripts-hub\ax-evidence.py"
+        if ($RealPython -and (Test-Path $evScript)) {
+            & $RealPython $evScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-evidence.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -735,6 +780,11 @@ switch ($Command.ToLower()) {
             Write-Host "    ax deb [build-all|meta]         Debian binary metapackage builder (.deb)"
             Write-Host "    ax repo [build|serve]           Local / self-hosted APT repository generator"
             Write-Host "    ax docker [run|build|stop]      Desktop Docker verification & testing sandbox"
+            Write-Host "    ax pathfinder [demo|analyze]    Autonomous DAG attack surface synthesis & HTML graph HUD"
+            Write-Host "    ax team [status|init|lock]      Real-time multiplayer P2P team synchronization mesh"
+            Write-Host "    ax ghost [audit|decoy|morph]    Ghost egress traffic shaping & benign decoy blending"
+            Write-Host "    ax radio [status|ble|evil-twin] Mobile RF & sensor sentinel, AirTag and Evil Twin hunter"
+            Write-Host "    ax evidence [seal|verify]       Tamper-proof evidence vault & RFC 3161 proof envelopes"
         }
     }
 }

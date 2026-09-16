@@ -2306,6 +2306,46 @@ cmd_handoff() {
     "$py_bin" "$script" handoff "$@"
 }
 
+cmd_pathfinder() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-pathfinder.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-pathfinder.py"
+    "$py_bin" "$script" "$@"
+}
+
+cmd_team() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-team.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-team.py"
+    "$py_bin" "$script" "$@"
+}
+
+cmd_ghost() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-ghost.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-ghost.py"
+    "$py_bin" "$script" "$@"
+}
+
+cmd_radio() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-radio.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-radio.py"
+    "$py_bin" "$script" "$@"
+}
+
+cmd_evidence() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-evidence.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-evidence.py"
+    "$py_bin" "$script" "$@"
+}
+
 cmd_applocker() {
     local action="${1:-audit}"
     shift || true
@@ -7083,6 +7123,26 @@ case "$SUBCOMMAND" in
     handoff|sync-device)
         shift
         cmd_handoff "$@"
+        ;;
+    pathfinder|graph)
+        shift
+        cmd_pathfinder "$@"
+        ;;
+    team|collab-sync)
+        shift
+        cmd_team "$@"
+        ;;
+    ghost|decoy)
+        shift
+        cmd_ghost "$@"
+        ;;
+    radio|ble|rf)
+        shift
+        cmd_radio "$@"
+        ;;
+    evidence|proof)
+        shift
+        cmd_evidence "$@"
         ;;
     applocker|whitelist|app-id)
         shift

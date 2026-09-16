@@ -30,3 +30,5 @@ test_vault/
 apt-repo/
 packages/debs/
 dist/
+reports/
+*.axproof
