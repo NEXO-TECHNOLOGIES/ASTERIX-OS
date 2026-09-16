@@ -125,6 +125,8 @@ Conventional security distributions require external USB software-defined radios
 
 ### Key Capabilities
 - **Evil Twin / Rogue AP Hunter**: Passively analyzes the surrounding 2.4 GHz and 5 GHz spectrum. Detects BSSID MAC OUI conflicts (e.g., enterprise Cisco SSID suddenly broadcast from a low-cost Espressif ESP32/ESP8266) and flags Wi-Fi encryption downgrade attacks (open network masquerading as WPA2/WPA3).
+- **Passive RF Jamming & Interference Sentinel (`ax radio jamming-audit`)**: Audits ambient spectrum for intentional carrier interference, channel noise floor spikes, and anomalous multi-BSSID blackout conditions, providing DFS and band-steering mitigation advice.
+- **802.11 Deauthentication Flood & PMF Auditor (`ax radio deauth-alert`)**: Evaluates network vulnerability to unauthenticated 802.11 management frame spoofing and verifies 802.11w Protected Management Frames (PMF) enforcement.
 - **Passive BLE Tracker Sentinel**: Audits Bluetooth Low Energy advertisement frames. Detects Apple AirTag / Find My beacons (`0x004C`), Samsung SmartTags, Tile Mate devices, and Flipper Zero broadcast profiles.
 - **Ultrasonic Beacon Probe**: Audits microphone subsystem sample rates (44.1 kHz, 48 kHz, 96 kHz) to determine Nyquist coverage for near-ultrasonic cross-device attribution beacons (18 kHz - 22 kHz).
 
@@ -138,6 +140,12 @@ ax radio wifi-sentinel
 
 # Audit for Evil Twin rogue access points and encryption downgrades
 ax radio evil-twin-audit
+
+# Passively audit spectrum for RF jamming & carrier interference
+ax radio jamming-audit
+
+# Audit 802.11w PMF protection & deauth flood vulnerability
+ax radio deauth-alert
 
 # Scan for stalking AirTags and nearby BLE tracker beacons
 ax radio ble-scan

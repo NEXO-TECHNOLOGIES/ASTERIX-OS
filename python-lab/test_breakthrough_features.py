@@ -219,6 +219,29 @@ class TestRadioSentinel(unittest.TestCase):
         self.assertEqual(audit["status"], "Audited")
         self.assertTrue(audit["nyquist_max_freq_khz"] >= 20.0)
 
+    def test_jamming_audit(self):
+        # Empty network list simulates broad carrier interference / blackout
+        jam_empty = radio.audit_rf_jamming([])
+        self.assertEqual(jam_empty["threat_level"], "SUSPECTED_WIDEBAND_INTERFERENCE")
+        self.assertTrue(len(jam_empty["anomalies"]) > 0)
+
+        # Populated networks should be nominal
+        sample_nets = [{"channel": "6", "ssid": "Net1"}, {"channel": "11", "ssid": "Net2"}]
+        jam_norm = radio.audit_rf_jamming(sample_nets)
+        self.assertEqual(jam_norm["threat_level"], "NOMINAL")
+        self.assertTrue(len(jam_norm["defensive_countermeasures"]) > 0)
+
+    def test_deauth_floods_audit(self):
+        sample_nets = [
+            {"ssid": "Legacy-Open", "bssid": "00:11:22:33:44:55", "auth": "Open"},
+            {"ssid": "Legacy-WPA2", "bssid": "00:11:22:33:44:56", "auth": "WPA2-PSK"},
+            {"ssid": "Secure-WPA3", "bssid": "00:11:22:33:44:57", "auth": "WPA3-SAE"}
+        ]
+        res = radio.audit_deauth_floods(sample_nets)
+        self.assertEqual(res["protected_networks_count"], 1)
+        self.assertEqual(res["vulnerable_networks_count"], 2)
+        self.assertTrue(len(res["hardening_steps"]) >= 2)
+
 
 class TestEvidenceVault(unittest.TestCase):
     def setUp(self):
