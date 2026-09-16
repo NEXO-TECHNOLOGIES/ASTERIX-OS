@@ -812,13 +812,17 @@
     }
 
     function printTerminalLine(html) {
-        const out = document.getElementById("terminalOutput");
-        if (!out) return;
-        const line = document.createElement("div");
-        line.className = "term-line";
-        line.innerHTML = html;
-        out.appendChild(line);
-        out.scrollTop = out.scrollHeight;
+        const outs = [
+            document.getElementById("terminalOutput"),
+            document.getElementById("portalTermOutput")
+        ].filter(Boolean);
+        outs.forEach(out => {
+            const line = document.createElement("div");
+            line.className = "term-line";
+            line.innerHTML = html;
+            out.appendChild(line);
+            out.scrollTop = out.scrollHeight;
+        });
     }
 
     function printTerminalPromptLine(cmd) {
@@ -874,30 +878,164 @@
         switch (cmd) {
             case "help":
                 printTerminalLine(`
-<span class='term-cyan term-bold'>ASTERIX OS COMMAND MATRIX (as-sh):</span>
-  <span class='term-green'>neofetch</span>           Display ASTERIX OS hardware & distro specs
+<span class='term-cyan term-bold'>ASTERIX OS COMMAND MATRIX (as-sh v4.9.0):</span>
+  <span class='term-yellow term-bold'>[BREAKTHROUGH ENGINES]</span>
+  <span class='term-green'>ax pathfinder</span>       Autonomous Attack Graph & Dijkstra Kill Chains
+  <span class='term-green'>ax team</span>             Multiplayer P2P Operator Sync & De-Confliction
+  <span class='term-green'>ax ghost</span>            Ghost Protocol Decoy Streams & Egress Blending
+  <span class='term-green'>ax radio</span>            Mobile RF Spectral Sentinel & Jamming Audit
+  <span class='term-green'>ax vault</span>            Immutable Merkle Tree Forensic Evidence Vault
+  <span class='term-green'>ax verify</span>           Verify 21/21 Cryptographic Manifest Signatures
+
+  <span class='term-yellow term-bold'>[CORE SYSTEM & CYBER SUITE]</span>
+  <span class='term-green'>neofetch</span>            Display ASTERIX OS hardware & distro specs
   <span class='term-green'>ls [-la] [path]</span>     List directory contents
   <span class='term-green'>cd [path]</span>           Change working directory
   <span class='term-green'>pwd</span>                 Print working directory path
   <span class='term-green'>cat [file]</span>          Display file contents
-  <span class='term-green'>touch [file]</span>        Create a new empty file
-  <span class='term-green'>mkdir [dir]</span>         Create a new directory
-  <span class='term-green'>rm [-rf] [path]</span>     Remove file or directory
+  <span class='term-green'>touch / mkdir / rm</span>  File management commands
   <span class='term-green'>clear</span>               Clear the terminal display
   <span class='term-green'>uname -a</span>            Print kernel release and architecture
-  <span class='term-green'>whoami / id</span>         Show current user identity
-  <span class='term-green'>ps</span>                  Report current system processes
   <span class='term-green'>btop / top</span>          Open microsecond Btop telemetry HUD
   <span class='term-green'>nmap [target]</span>       Simulate multi-threaded port & CVE scanner
   <span class='term-green'>net-sentinel</span>        Execute Rust thread-pooled network engine
   <span class='term-green'>bin-inspector</span>       Run ELF binary W^X & entropy analyzer
-  <span class='term-green'>log-hunter</span>          Scan logs for threat signatures
   <span class='term-green'>crypto-core [hash]</span>  Audit & crack cryptographic hashes
-  <span class='term-green'>python3 [file]</span>      Execute Python script
-  <span class='term-green'>apt [update|install]</span> Package manager for sovereign tools
-  <span class='term-green'>as-ai [prompt]</span>      Query local ASTERIX neural advisor
   <span class='term-green'>matrix</span>              Launch falling phosphor matrix screensaver
   <span class='term-green'>reboot</span>              Reinitialize the ASTERIX web desktop
+`);
+                break;
+
+            case "ax": {
+                const sub = (args[0] || "").toLowerCase();
+                if (sub === "pathfinder" || sub === "pf") {
+                    executeTerminalCommand("pathfinder");
+                } else if (sub === "team" || sub === "sync") {
+                    executeTerminalCommand("team");
+                } else if (sub === "ghost" || sub === "decoy") {
+                    executeTerminalCommand("ghost");
+                } else if (sub === "radio" || sub === "rf") {
+                    executeTerminalCommand("radio");
+                } else if (sub === "vault" || sub === "evidence") {
+                    executeTerminalCommand("vault");
+                } else if (sub === "verify" || sub === "release-verify") {
+                    executeTerminalCommand("verify");
+                } else if (sub === "doctor") {
+                    executeTerminalCommand("doctor");
+                } else {
+                    printTerminalLine(`
+<span class='term-cyan term-bold'>ASTERIX Master Omni-Dispatcher (ax)</span>
+Usage: ax &lt;subsystem|command&gt; [options]
+Breakthroughs: <span class='term-green'>pathfinder</span>, <span class='term-green'>team</span>, <span class='term-green'>ghost</span>, <span class='term-green'>radio</span>, <span class='term-green'>vault</span>, <span class='term-green'>verify</span>
+System: <span class='term-green'>doctor</span>, <span class='term-green'>portal</span>, <span class='term-green'>discord</span>, <span class='term-green'>recon</span>, <span class='term-green'>anti-net</span>
+`);
+                }
+                break;
+            }
+
+            case "pathfinder":
+            case "ax-pathfinder":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-PATHFINDER] Autonomous Lateral Attack Graph Traversal</span>
+<span class='term-yellow'>[*] Ingesting network topology from /asterix_persistent/recon_loot.json...</span>
+<span class='term-green'>[+] 14 nodes discovered, 31 transitive trust edges mapped.</span>
+<span class='term-cyan'>[+] Dijkstra Shortest Kill-Chain Calculation:</span>
+  <span class='term-green'>[Hop 0]</span> 10.0.8.24 (Local Attacker Node)
+  <span class='term-green'>[Hop 1]</span> 10.0.8.102:8080 (Apache Tomcat CVE-2023-4911 - RCE) [Weight: 1.2]
+  <span class='term-green'>[Hop 2]</span> 10.0.8.42 (Internal Jump Box / Credential Extraction) [Weight: 0.8]
+  <span class='term-magenta'>[Hop 3]</span> 10.0.8.10:88 (CORP-DC01 Kerberos KDC / Domain Admin) [Weight: 2.1]
+<span class='term-yellow'>[!] Choke-point identified: Pivot at 10.0.8.42 eliminates 84% of lateral attack paths.</span>
+<span class='term-cyan'>[✔] Mission kill chain modeled in 42ms. Zero cloud telemetry leaked.</span>
+`);
+                break;
+
+            case "team":
+            case "ax-team":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-TEAM] Multiplayer Live Engagement Mesh (P2P Gossip Protocol)</span>
+<span class='term-yellow'>[*] Synchronizing swarm state across 127.0.0.1:9099...</span>
+<span class='term-green'>[+] Peer Nodes Active:</span>
+  <span class='term-cyan'>• Operator-01 (You)</span>    | Role: Lead Exploit  | Target: 10.0.8.102 | Status: <span class='term-green'>LOCKED</span>
+  <span class='term-cyan'>• Ghost-Alpha (Peer)</span>  | Role: Decoy Egress  | Target: 10.0.8.1   | Status: <span class='term-green'>BLENDING</span>
+  <span class='term-cyan'>• Radio-Sentinel (Edge)</span>| Role: RF Hunter     | Target: 2.4/5GHz   | Status: <span class='term-green'>PASSIVE</span>
+<span class='term-green'>[+] Scope De-confliction: 0 collision alerts across 3 active operations.</span>
+<span class='term-cyan'>[✔] P2P gossip mesh synchronized (Ed25519 authenticated).</span>
+`);
+                break;
+
+            case "ghost":
+            case "ax-ghost":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-GHOST] Egress Traffic Blending & Synthetic Decoy Streams</span>
+<span class='term-yellow'>[*] Initializing high-entropy traffic generator...</span>
+<span class='term-green'>[+] Generated 128 synthetic HTTP/2 sessions to benign CDNs (Cloudflare, Akamai).</span>
+<span class='term-green'>[+] Jitter interval: 800ms - 3200ms (Gaussian distribution).</span>
+<span class='term-cyan'>[+] Active C2 Beacon Multiplexing:</span>
+  • Beacon #4821 encapsulated in TLS 1.3 SNI: docs.github.com
+  • Decoy stream ratio: 94% synthetic / 6% operational
+<span class='term-magenta'>[+] SIEM Anomaly Detection Confidence: 0.08 (Normal traffic profile).</span>
+<span class='term-cyan'>[✔] Ghost protocol running in background daemon mode.</span>
+`);
+                break;
+
+            case "radio":
+            case "ax-radio":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-RADIO] Mobile RF Sensor Sentinel & Signal Defense</span>
+<span class='term-yellow'>[*] Scanning 2.4GHz & 5.8GHz ISM spectral noise floor...</span>
+<span class='term-green'>[+] RTL-SDR / HackRF / Termux Wi-Fi Monitor: ARMED</span>
+<span class='term-green'>[+] Current Spectral Floor: -92 dBm (Baseline: Normal)</span>
+<span class='term-yellow'>[*] Passive 802.11 Deauthentication Frame Monitor:</span>
+  • Deauth Frames / sec: 0 (Threshold: 15/s)
+  • Rogue AP Beacons: None detected
+<span class='term-cyan'>[+] Passive Jamming Detector:</span>
+  • Continuous wideband carrier pulse: NONE
+  • Jamming threat score: 0/100 (SECURE)
+<span class='term-cyan'>[✔] Passive RF monitoring compliance active. Zero RF transmissions allowed.</span>
+`);
+                break;
+
+            case "vault":
+            case "ax-vault":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-VAULT] Cryptographic Forensic Evidence Vault</span>
+<span class='term-yellow'>[*] Loading Merkle Tree Chain of Custody (/asterix_persistent/evidence/)...</span>
+<span class='term-green'>[+] Merkle Root Hash: 7b8c04e2f9d1a3c8e5f2b6a9c1d4e7f0b2a5c8d1e4f7a0b3c6d9e2f5a8b1c4d7</span>
+<span class='term-green'>[+] Total Evidence Blocks: 247 immutable chained records</span>
+<span class='term-cyan'>[+] Verification Status:</span>
+  • Block #247: Session Transcript Checksum -> <span class='term-green'>VERIFIED</span>
+  • Block #246: Keystroke Execution Log    -> <span class='term-green'>VERIFIED</span>
+  • Block #245: Packet Capture (PCAP) Hash -> <span class='term-green'>VERIFIED</span>
+<span class='term-green'>[+] Digital Signature: Ed25519 (Operator-Key-ID: 0x9F8B3C1A) [VALID]</span>
+<span class='term-cyan'>[✔] Full chain-of-custody intact. Admissible for forensic presentation.</span>
+`);
+                break;
+
+            case "verify":
+            case "ax-verify":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-RELEASE-VERIFY] Master Cryptographic Manifest Validation</span>
+<span class='term-yellow'>[*] Verifying release checksums in BUILD_MANIFEST.json...</span>
+<span class='term-green'>[PASS] bin/ax                          (SHA-256 Valid)</span>
+<span class='term-green'>[PASS] scripts-hub/ax-pathfinder.py    (SHA-256 Valid)</span>
+<span class='term-green'>[PASS] scripts-hub/ax-team.py          (SHA-256 Valid)</span>
+<span class='term-green'>[PASS] scripts-hub/ax-ghost.py         (SHA-256 Valid)</span>
+<span class='term-green'>[PASS] scripts-hub/ax-radio.py         (SHA-256 Valid)</span>
+<span class='term-green'>[PASS] scripts-hub/ax-evidence.py      (SHA-256 Valid)</span>
+<span class='term-cyan'>[✔] Result: 21 of 21 core release signatures VALID (100% integrity).</span>
+`);
+                break;
+
+            case "doctor":
+            case "ax-doctor":
+                printTerminalLine(`
+<span class='term-cyan term-bold'>[AX-DOCTOR] System Health Diagnostics</span>
+<span class='term-green'>[PASS] Architecture: x86_64 / aarch64 AVF ready</span>
+<span class='term-green'>[PASS] Kernel: Linux 6.1.0-sec POSIX compliant</span>
+<span class='term-green'>[PASS] Zero-Dependency Python: 100% Standard Library</span>
+<span class='term-green'>[PASS] Persistent Mount: /asterix_persistent (Encrypted)</span>
+<span class='term-green'>[PASS] Audio Synthesizer: Web Audio API Active</span>
+<span class='term-cyan'>[✔] All core subsystems green. Node operational.</span>
 `);
                 break;
 
@@ -2785,6 +2923,384 @@ dw 0xAA55                   ; Boot sector signature
     }
 
     // -----------------------------------------------------------------
+    // 17.5. SHOWCASE PORTAL & BREAKTHROUGH MEDIA CONTROLLERS
+    // -----------------------------------------------------------------
+    const THEATER_PLAYLIST = [
+        {
+            id: "master",
+            badge: "CONSOLIDATED TRAILER (35s)",
+            title: "ASTERIX OS Breakthrough Master Showcase",
+            file: "media/videos/ASTERIX_OS_BREAKTHROUGH_MASTER_SHOWCASE_1080p.mp4",
+            runtime: "0:35",
+            desc: "A unified 35-second cinematic showcase trailer revealing all 5 breakthrough engines of ASTERIX OS: AI Attack Path Pathfinder, Decentralized Multiplayer Sync, Ghost Decoy Egress, Edge Mobile RF Sentinel, and Immutable Evidence Vault.",
+            social: "Beyond Kali: The next evolution of tactical offensive and defensive operating environments is here. 5 core breakthrough engines running 100% native with zero dependencies! #ASTERIXOS #Infosec #CyberSecurity",
+            cmd: "ax breakthrough --showcase"
+        },
+        {
+            id: "pathfinder",
+            badge: "ENGINE 01 // GRAPH AI",
+            title: "Attack Path Pathfinder Engine",
+            file: "media/videos/01_ATTACK_PATH_PATHFINDER_1080p.mp4",
+            runtime: "0:07",
+            desc: "Autonomous multi-hop lateral movement modeling using Dijkstra choke-point graph analytics. Maps reachable kill chains from external perimeter breach directly to Domain Admin.",
+            social: "Why stop at port scanning when your OS can calculate the entire kill chain? 🎯 Meet the Attack Path Pathfinder in ASTERIX OS. #CyberSecurity #RedTeam #EthicalHacking",
+            cmd: "ax pathfinder --target 10.0.8.0/24"
+        },
+        {
+            id: "team",
+            badge: "ENGINE 02 // P2P MESH",
+            title: "Multiplayer Live Operator Team Sync",
+            file: "media/videos/02_MULTIPLAYER_TEAM_SYNC_1080p.mp4",
+            runtime: "0:07",
+            desc: "Decentralized peer-to-peer operator mesh for live target locking, scope de-confliction radar, and cross-operator beacon sharing without any centralized cloud dependency.",
+            social: "Red teaming shouldn't be a solo game. 👥 ASTERIX OS brings live P2P multiplayer engagement telemetry and real-time scope de-confliction. #PenetrationTesting #RedTeamOps",
+            cmd: "ax team --status"
+        },
+        {
+            id: "ghost",
+            badge: "ENGINE 03 // OPSEC EVASION",
+            title: "Ghost Protocol & Adaptive Decoys",
+            file: "media/videos/03_GHOST_EGRESS_DECOY_1080p.mp4",
+            runtime: "0:07",
+            desc: "High-entropy SIEM evasion engine generating synthetic HTTP/DNS egress streams while multiplexing actual C2 beacons across stealth multi-hop routes.",
+            social: "Defeat SIEM correlation by blending into legitimate cloud noise. 👻 Ghost Protocol on ASTERIX OS routes stealth beacons under cover of synthetic decoy flows. #OpSec #ThreatHunting",
+            cmd: "ax ghost --stealth"
+        },
+        {
+            id: "radio",
+            badge: "ENGINE 04 // RF DEFENSE",
+            title: "Mobile RF Sensor Mesh & Jamming Sentinel",
+            file: "media/videos/04_MOBILE_RF_SENSOR_SENTINEL_1080p.mp4",
+            runtime: "0:07",
+            desc: "Edge RF telemetry monitor for Android Termux & SDR nodes. Real-time RF spectral noise floor auditing, 802.11 deauth flood alerts, and rogue beacon tri-lateration.",
+            social: "Turn edge mobile nodes into distributed RF telemetry sentinels. 📡 Real-time RF spectral noise floor auditing and 802.11 deauth flood alerts directly from Termux. #SDR #WirelessSecurity",
+            cmd: "ax radio --jamming-audit"
+        },
+        {
+            id: "vault",
+            badge: "ENGINE 05 // FORENSICS",
+            title: "Forensic Evidence Vault & Chain of Custody",
+            file: "media/videos/05_TAMPER_PROOF_EVIDENCE_VAULT_1080p.mp4",
+            runtime: "0:07",
+            desc: "Cryptographic Merkle tree audit logging with SHA-256 block hashing and Ed25519 digital signatures. Generates court-admissible forensic execution proofs.",
+            social: "Court-admissible red team reports with zero doubt. ⚖️ ASTERIX OS logs every keystroke and telemetry packet into an immutable Merkle tree chain-of-custody vault. #DigitalForensics #DFIR",
+            cmd: "ax vault --audit"
+        }
+    ];
+
+    const ARCH_TIERS = {
+        "tier1": {
+            name: "Tier 1: System Root & Configuration",
+            dir: "/ASTERIX OS (Root)",
+            tree: "ASTERIX-OS/\n├── README.md               # Master Distro Documentation\n├── BUILD_MANIFEST.json     # Cryptographic Manifest (21 SHA-256 Signatures)\n├── VERSION.toml            # Version 4.9.0-SEC Metadata\n├── SECURITY.md             # Cryptographic & Disclosure Policy\n├── CHANGELOG.md            # Multi-Year Hardened Release Log\n├── ASTERIX_OS_DIAGRAM.png  # Full Visual Architecture Topology\n└── Dockerfile              # Containerized Hermetic Build Sandbox"
+        },
+        "tier2": {
+            name: "Tier 2: Unified Command Dispatcher",
+            dir: "/bin",
+            tree: "bin/\n├── ax                      # Master 7,400+ line POSIX Bash Omni-Dispatcher\n├── ax.ps1                  # PowerShell Windows Cross-Platform Wrapper\n└── ax.cmd                  # Windows Command Prompt Stub"
+        },
+        "tier3": {
+            name: "Tier 3: Autonomous Defense & Breakthrough Engines",
+            dir: "/scripts-hub",
+            tree: "scripts-hub/\n├── ax-pathfinder.py        # Autonomous Attack Graph & Dijkstra Lateral Movement\n├── ax-team.py              # Multiplayer Live P2P Operator Synchronization\n├── ax-ghost.py             # Ghost Protocol Synthetic Decoys & SIEM Evasion\n├── ax-radio.py             # Mobile RF Spectrum Sentinel & Jamming Auditor\n├── ax-evidence.py          # Cryptographic Merkle Tree Forensic Evidence Vault\n├── ax-video-engine.py      # Autonomous 1080p 60fps Video Production Studio\n├── ax-release-verify.py    # Ed25519 & SHA-256 Manifest Integrity Auditor\n├── ax-doctor.py            # Comprehensive System Diagnostics Probe\n├── ax-apt-repo.py          # Local Signed APT Repository Host Engine\n└── ax-cartographer.py      # Codebase Topology Graph Engine"
+        },
+        "tier4": {
+            name: "Tier 4: Desktop Environment & Web Portal",
+            dir: "/desktop-env & /web-dashboard",
+            tree: "desktop-env/\n├── applications/           # .desktop entry specs for XFCE/MATE/Wayland\n└── autostart/              # Live session bootstrapping\nweb-dashboard/\n├── index.html              # Dual-Mode Showcase Portal & Web Desktop OS\n├── style.css               # 2,500+ line Cyberpunk Desktop Theme & Video HUD\n├── app.js                  # In-Browser Virtual POSIX OS & Synthesizer Engine\n├── media/                  # 1080p Breakthrough MP4s & System Diagrams\n└── wallpapers/             # 26 High-Resolution Distro Wallpapers"
+        },
+        "tier5": {
+            name: "Tier 5: Sovereign Native Binaries",
+            dir: "/core-utils-* (Rust / C / C++ / Go)",
+            tree: "core-utils-rust/             # High-Performance Memory-Safe Daemons\n├── asterix-net-sentinel/   # Thread-pooled live network packet inspector\n├── asterix-crypto-core/    # Parallelized hash cracking & cryptographic suite\n├── asterix-bin-inspector/  # ELF security auditor (NX, ASLR, Canaries, PIE)\n├── asterix-defender-core/  # Real-time threat defense & mitigation daemon\n└── asterix-sys-mon/        # Microsecond system resource telemetry\ncore-utils-c/               # Ultra-hardened C99 system utilities\ncore-utils-go/              # Asynchronous concurrent web reconnaissance\nboot-asm/                   # x86_64 512-byte MBR & UEFI Stage-1 Bootloaders"
+        },
+        "tier6": {
+            name: "Tier 6: AI Brain & Training Curriculum",
+            dir: "/asterix-ai & /python-lab",
+            tree: "asterix-ai/\n├── ai_brain.py             # Autonomous Decision Engine & LLM Pipeline\n├── tool_generator.py       # Dynamic Just-In-Time Exploit & Defense Generator\n└── rules/                  # Sovereign Security Heuristic Rule Matrices\npython-lab/\n├── curriculum.py           # 12-Tier Red/Blue Operator Training System\n├── test_breakthrough_features.py # Full Pytest Verification Suite\n└── progress.json           # Operator Certification & Skill Ledger"
+        },
+        "tier7": {
+            name: "Tier 7: Edge Telemetry & Android Termux",
+            dir: "/termux-mobile",
+            tree: "termux-mobile/\n├── asterix-mobile.sh       # Native Rootless Android Cyber Warfare Launcher\n├── target-tracker.sh       # Edge GPS / Wi-Fi / BLE Telemetry Sentinel\n├── asterix-termux-init.sh  # Automated Proot-Debian Mobile Bootstrap\n└── install-termux.sh       # One-Line Termux Deployment Installer"
+        },
+        "tier8": {
+            name: "Tier 8: Hardened Artifacts & Releases",
+            dir: "/assets, /packages, /iso",
+            tree: "assets/\n├── animations/             # 1080p 60fps MP4 Breakthrough Video Suite\n├── iso-branding/           # GRUB Splash Screens (Cyan, Matrix, Space, Samurai)\n└── wallpapers/             # Distro Wallpapers (1920x1080 & 4K UHD)\npackages/                   # Local .deb distribution bundles\nengine/                     # Debian Live-Build ISO Generation Toolchain"
+        }
+    };
+
+    function initDualMode() {
+        const hash = window.location.hash;
+        if (hash === "#desktop") {
+            setMode("desktop");
+        } else {
+            setMode("portal");
+        }
+
+        // Launch desktop triggers
+        document.querySelectorAll(".btn-launch-desktop, #launchDesktopBtn, .launch-desktop-trigger").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                setMode("desktop");
+                window.location.hash = "desktop";
+                soundFX.chime();
+            });
+        });
+
+        // Return to portal trigger
+        const returnBtn = document.getElementById("returnPortalBtn");
+        if (returnBtn) {
+            returnBtn.addEventListener("click", () => {
+                setMode("portal");
+                window.location.hash = "portal";
+                soundFX.click();
+            });
+        }
+    }
+
+    function setMode(mode) {
+        if (mode === "desktop") {
+            document.body.classList.remove("portal-mode");
+            document.body.classList.add("desktop-mode");
+            const portal = document.getElementById("portalContainer");
+            if (portal) portal.style.display = "none";
+            const topBar = document.getElementById("topBar");
+            if (topBar) topBar.style.display = "flex";
+            const ws = document.getElementById("desktopWorkspace");
+            if (ws) ws.style.display = "block";
+            const wp = document.getElementById("desktopWallpaper");
+            if (wp) wp.style.display = "block";
+            const boot = document.getElementById("bootScreen");
+            if (boot && !boot.dataset.ran) {
+                runBootSequence();
+                boot.dataset.ran = "true";
+            }
+        } else {
+            document.body.classList.remove("desktop-mode");
+            document.body.classList.add("portal-mode");
+            const portal = document.getElementById("portalContainer");
+            if (portal) portal.style.display = "block";
+            const topBar = document.getElementById("topBar");
+            if (topBar) topBar.style.display = "none";
+            const ws = document.getElementById("desktopWorkspace");
+            if (ws) ws.style.display = "none";
+            const wp = document.getElementById("desktopWallpaper");
+            if (wp) wp.style.display = "none";
+            const boot = document.getElementById("bootScreen");
+            if (boot) boot.style.display = "none";
+        }
+    }
+
+    function initVideoTheater() {
+        const playlistContainer = document.getElementById("theaterPlaylist");
+        const videoEl = document.getElementById("theaterVideo");
+        const badgeEl = document.getElementById("theaterBadge");
+        const titleEl = document.getElementById("theaterTitle");
+        const descEl = document.getElementById("theaterDesc");
+        const socialEl = document.getElementById("theaterSocialText");
+        const cmdEl = document.getElementById("theaterCmdText");
+        const copyBtn = document.getElementById("copySocialBtn");
+
+        if (!playlistContainer || !videoEl) return;
+
+        playlistContainer.innerHTML = "";
+        THEATER_PLAYLIST.forEach((item, idx) => {
+            const btn = document.createElement("div");
+            btn.className = `theater-play-item ${idx === 0 ? "active" : ""}`;
+            btn.innerHTML = `
+                <span class="play-item-badge">${item.badge}</span>
+                <span class="play-item-title">${item.title}</span>
+                <span class="play-item-meta">1080p 60fps &bull; ${item.runtime}</span>
+            `;
+            btn.addEventListener("click", () => {
+                selectTheaterVideo(item, btn);
+                soundFX.click();
+            });
+            playlistContainer.appendChild(btn);
+        });
+
+        function selectTheaterVideo(item, btnEl) {
+            document.querySelectorAll(".theater-play-item").forEach(el => el.classList.remove("active"));
+            if (btnEl) btnEl.classList.add("active");
+
+            videoEl.src = item.file;
+            videoEl.play().catch(() => {});
+
+            if (badgeEl) badgeEl.textContent = item.badge;
+            if (titleEl) titleEl.textContent = item.title;
+            if (descEl) descEl.textContent = item.desc;
+            if (socialEl) socialEl.textContent = item.social;
+            if (cmdEl) cmdEl.textContent = item.cmd;
+        }
+
+        if (copyBtn && socialEl) {
+            copyBtn.addEventListener("click", () => {
+                navigator.clipboard.writeText(socialEl.textContent).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = "COPIED!";
+                    setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+                });
+            });
+        }
+
+        // Set initial video
+        if (playlistContainer.firstChild) {
+            selectTheaterVideo(THEATER_PLAYLIST[0], playlistContainer.firstChild);
+        }
+    }
+
+    function initPortalTerminal() {
+        const input = document.getElementById("portalTermInput");
+        const chips = document.querySelectorAll(".term-chip-btn");
+
+        if (input) {
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    const cmd = input.value.trim();
+                    if (cmd) {
+                        printTerminalPromptLine(cmd);
+                        executeTerminalCommand(cmd);
+                        input.value = "";
+                        soundFX.enter();
+                    }
+                } else if (e.key !== "Shift" && e.key !== "Control" && e.key !== "Alt") {
+                    soundFX.type();
+                }
+            });
+        }
+
+        chips.forEach(chip => {
+            chip.addEventListener("click", () => {
+                const cmd = chip.getAttribute("data-cmd");
+                if (cmd) {
+                    printTerminalPromptLine(cmd);
+                    executeTerminalCommand(cmd);
+                    soundFX.enter();
+                }
+            });
+        });
+
+        // Breakthrough card "Run Demo" buttons
+        document.querySelectorAll(".btn-run-term").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const cmd = btn.getAttribute("data-cmd");
+                if (cmd) {
+                    const termSec = document.getElementById("terminal");
+                    if (termSec) termSec.scrollIntoView({ behavior: "smooth" });
+                    setTimeout(() => {
+                        printTerminalPromptLine(cmd);
+                        executeTerminalCommand(cmd);
+                        soundFX.enter();
+                    }, 400);
+                }
+            });
+        });
+    }
+
+    function initArchitectureExplorer() {
+        const tabs = document.querySelectorAll(".arch-tier-tab");
+        const titleEl = document.getElementById("archTierName");
+        const dirEl = document.getElementById("archTierDir");
+        const treeEl = document.getElementById("archTierTree");
+        const diagramPreview = document.getElementById("diagramPreview");
+        const lightbox = document.getElementById("portalLightbox");
+        const lightboxImg = document.getElementById("lightboxImg");
+        const lightboxClose = document.getElementById("lightboxClose");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                const tierId = tab.getAttribute("data-tier");
+                const tier = ARCH_TIERS[tierId];
+                if (tier) {
+                    if (titleEl) titleEl.textContent = tier.name;
+                    if (dirEl) dirEl.textContent = tier.dir;
+                    if (treeEl) treeEl.textContent = tier.tree;
+                }
+                soundFX.click();
+            });
+        });
+
+        if (diagramPreview && lightbox && lightboxImg) {
+            diagramPreview.addEventListener("click", () => {
+                lightboxImg.src = "media/diagrams/ASTERIX_OS_DIAGRAM.png";
+                lightbox.classList.add("open");
+                soundFX.winOpen();
+            });
+        }
+        if (lightboxClose && lightbox) {
+            lightboxClose.addEventListener("click", () => {
+                lightbox.classList.remove("open");
+                soundFX.winClose();
+            });
+        }
+        if (lightbox) {
+            lightbox.addEventListener("click", (e) => {
+                if (e.target === lightbox) {
+                    lightbox.classList.remove("open");
+                    soundFX.winClose();
+                }
+            });
+        }
+    }
+
+    function initPortalGallery() {
+        const grid = document.getElementById("portalGalleryGrid");
+        const filterBtns = document.querySelectorAll(".gallery-filter-btn");
+        if (!grid) return;
+
+        function renderGallery(filter = "all") {
+            grid.innerHTML = "";
+            let list = WALLPAPERS;
+            if (filter === "boot") {
+                list = WALLPAPERS.filter(w => w.file.includes("boot_"));
+            } else if (filter === "neon") {
+                list = WALLPAPERS.filter(w => w.title.toLowerCase().includes("cyber") || w.title.toLowerCase().includes("neon") || w.title.toLowerCase().includes("hacker"));
+            } else if (filter === "cosmic") {
+                list = WALLPAPERS.filter(w => w.title.toLowerCase().includes("cosmic") || w.title.toLowerCase().includes("space") || w.title.toLowerCase().includes("galaxy") || w.title.toLowerCase().includes("planet"));
+            } else if (filter === "samurai") {
+                list = WALLPAPERS.filter(w => w.title.toLowerCase().includes("samurai") || w.title.toLowerCase().includes("dragon") || w.title.toLowerCase().includes("phoenix"));
+            }
+
+            list.forEach(w => {
+                const card = document.createElement("div");
+                card.className = "wallpaper-portal-card";
+                card.innerHTML = `
+                    <img class="wallpaper-portal-thumb" src="wallpapers/${w.file}" alt="${w.title}" loading="lazy" />
+                    <div class="wallpaper-portal-footer">
+                        <span class="wallpaper-portal-title">${w.title}</span>
+                        <a class="wallpaper-download-btn" href="wallpapers/${w.file}" download="${w.file}">Download</a>
+                    </div>
+                `;
+                card.querySelector("img").addEventListener("click", () => {
+                    const lightbox = document.getElementById("portalLightbox");
+                    const lightboxImg = document.getElementById("lightboxImg");
+                    if (lightbox && lightboxImg) {
+                        lightboxImg.src = `wallpapers/${w.file}`;
+                        lightbox.classList.add("open");
+                        soundFX.winOpen();
+                    }
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                filterBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                renderGallery(btn.getAttribute("data-filter"));
+                soundFX.click();
+            });
+        });
+
+        renderGallery("all");
+    }
+
+    // -----------------------------------------------------------------
     // 18. MASTER INITIALIZATION
     // -----------------------------------------------------------------
     document.addEventListener("DOMContentLoaded", () => {
@@ -2809,6 +3325,13 @@ dw 0xAA55                   ; Boot sector signature
         initFileExplorerContextMenu();
         initKeyboardShortcuts();
 
+        // Initialize portal showcase modules
+        initDualMode();
+        initVideoTheater();
+        initPortalTerminal();
+        initArchitectureExplorer();
+        initPortalGallery();
+
         // Audio toggle tray button
         const audioBtn = document.getElementById("audioToggleBtn");
         if (audioBtn) {
@@ -2827,9 +3350,6 @@ dw 0xAA55                   ; Boot sector signature
                 }
             });
         }
-
-        // Run boot sequence
-        runBootSequence();
     });
 
 })();
