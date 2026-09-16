@@ -1,0 +1,33 @@
+name: 💡 Feature Request
+description: Suggest an enhancement, new tool, or architecture improvement
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem or deficiency?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution & Technical Implementation
+      description: Describe the solution you'd like and how it fits into ASTERIX OS.
+    validations:
+      required: true
+  - type: dropdown
+    id: target_subsystem
+    attributes:
+      label: Subsystem
+      options:
+        - Mobile PRoot / Termux
+        - Debian Metapackages (.deb)
+        - Desktop Docker Testing
+        - Android 15 AVF Hypervisor
+        - CLI Dispatcher (ax)
+        - Rust Security Engines
+        - Documentation & Testing
+    validations:
+      required: true

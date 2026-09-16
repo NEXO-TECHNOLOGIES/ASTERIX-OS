@@ -1,0 +1,54 @@
+name: 🐛 Bug Report
+description: Report an issue, crash, or unexpected behavior in ASTERIX OS
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please verify you are running the latest version before submitting.
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Execution Environment
+      description: Where are you running ASTERIX OS?
+      options:
+        - Android Termux (PRoot Debian)
+        - Android 15 Linux Terminal (AVF)
+        - Desktop Linux (Debian/Ubuntu/Arch)
+        - Docker Desktop Container
+        - Windows Host (PowerShell / Git Bash)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ASTERIX OS Version
+      description: Run `ax version` or check `VERSION.toml`
+      placeholder: "e.g. 2.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Run 'ax debian ...'
+        2. Execute '...'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Terminal Logs & Error Output
+      description: Paste terminal output or crash traceback here.
+      render: shell

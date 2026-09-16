@@ -5,19 +5,21 @@
     Native Windows PowerShell entrypoint for ASTERIX OS commands and subsystems.
 #>
 
-param(
-    [Parameter(Position = 0)]
-    [string]$Command = "status",
-    [switch]$fix,
-    [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]]$RemainingArgs
-)
+$Command = "status"
+$RemainingArgs = @()
 
-if ($fix) {
-    if ($Command -and $Command -ne "status") {
-        $RemainingArgs = @($Command) + $RemainingArgs
+if ($args.Count -gt 0) {
+    if ($args[0] -eq "-fix") {
+        $Command = "-fix"
+        if ($args.Count -gt 1) {
+            $RemainingArgs = $args[1..($args.Count - 1)]
+        }
+    } else {
+        $Command = $args[0]
+        if ($args.Count -gt 1) {
+            $RemainingArgs = $args[1..($args.Count - 1)]
+        }
     }
-    $Command = "-fix"
 }
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -529,6 +531,38 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("deb", "debs", "metapackage", "metapackages") } {
+        $builderScript = Join-Path $AsterixRoot "scripts-hub\ax-deb-builder.py"
+        if ($RealPython -and (Test-Path $builderScript)) {
+            & $RealPython $builderScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-deb-builder.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("repo", "apt-repo") } {
+        $repoScript = Join-Path $AsterixRoot "scripts-hub\ax-apt-repo.py"
+        if ($RealPython -and (Test-Path $repoScript)) {
+            & $RealPython $repoScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-apt-repo.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("docker", "desktop-sandbox") } {
+        $composeFile = Join-Path $AsterixRoot "docker-compose.yml"
+        if ($RemainingArgs.Count -eq 0 -or $RemainingArgs[0] -in @("up", "run", "start")) {
+            docker compose -f $composeFile up -d
+            docker exec -it asterix-desktop-sandbox /bin/bash
+        } elseif ($RemainingArgs[0] -eq "build") {
+            docker compose -f $composeFile build
+        } elseif ($RemainingArgs[0] -in @("down", "stop")) {
+            docker compose -f $composeFile down
+        } else {
+            Write-Host "  Usage: ax docker [run|build|stop]" -ForegroundColor Cyan
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
@@ -581,6 +615,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax verify                       Cryptographically audit codebase against SHA-256 manifest"
             Write-Host "    ax debian [doctor|fix|enter]    Debian PRoot container diagnostics, self-healing & shell"
             Write-Host "    ax folder [new|template|ls]     Mission folder management with metadata & permission repair"
+            Write-Host "    ax deb [build-all|meta]         Debian binary metapackage builder (.deb)"
+            Write-Host "    ax repo [build|serve]           Local / self-hosted APT repository generator"
+            Write-Host "    ax docker [run|build|stop]      Desktop Docker verification & testing sandbox"
         }
     }
 }

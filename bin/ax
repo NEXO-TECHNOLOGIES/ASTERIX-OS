@@ -2137,6 +2137,79 @@ cmd_verify() {
     fi
 }
 
+cmd_deb() {
+    local builder_script=""
+    for cand in \
+        "$ASTERIX_DIR/scripts-hub/ax-deb-builder.py" \
+        "/opt/ASTERIX-OS/scripts-hub/ax-deb-builder.py" \
+        "$HOME/ASTERIX-OS/scripts-hub/ax-deb-builder.py" \
+        "$(dirname "$0")/../scripts-hub/ax-deb-builder.py"; do
+        if [ -f "$cand" ]; then
+            builder_script="$cand"
+            break
+        fi
+    done
+    if [ -n "$builder_script" ] && command -v python3 >/dev/null 2>&1; then
+        python3 "$builder_script" "$@"
+    else
+        echo -e "${C_RED}[!] Debian builder script or python3 not available.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_repo() {
+    local repo_script=""
+    for cand in \
+        "$ASTERIX_DIR/scripts-hub/ax-apt-repo.py" \
+        "/opt/ASTERIX-OS/scripts-hub/ax-apt-repo.py" \
+        "$HOME/ASTERIX-OS/scripts-hub/ax-apt-repo.py" \
+        "$(dirname "$0")/../scripts-hub/ax-apt-repo.py"; do
+        if [ -f "$cand" ]; then
+            repo_script="$cand"
+            break
+        fi
+    done
+    if [ -n "$repo_script" ] && command -v python3 >/dev/null 2>&1; then
+        python3 "$repo_script" "$@"
+    else
+        echo -e "${C_RED}[!] APT repository generator or python3 not available.${C_RESET}"
+        return 1
+    fi
+}
+
+cmd_docker() {
+    local action="${1:-run}"
+    shift || true
+    local compose_file="$ASTERIX_DIR/docker-compose.yml"
+    [ ! -f "$compose_file" ] && compose_file="$(dirname "$0")/../docker-compose.yml"
+
+    if ! command -v docker >/dev/null 2>&1; then
+        echo -e "${C_RED}[!] Docker is not installed on this host.${C_RESET}"
+        echo -e "    Please install Docker Desktop or docker-ce to use container sandboxing."
+        return 1
+    fi
+
+    case "$action" in
+        build)
+            echo -e "${C_CYAN}[*] Building ASTERIX OS Desktop Docker Sandbox...${C_RESET}"
+            docker compose -f "$compose_file" build "$@"
+            ;;
+        up|start|run|shell)
+            echo -e "${C_CYAN}[*] Starting ASTERIX OS Desktop Docker Sandbox...${C_RESET}"
+            docker compose -f "$compose_file" up -d
+            docker exec -it asterix-desktop-sandbox /bin/bash
+            ;;
+        down|stop)
+            echo -e "${C_CYAN}[*] Stopping ASTERIX OS Desktop Docker Sandbox...${C_RESET}"
+            docker compose -f "$compose_file" down
+            ;;
+        *)
+            echo -e "${C_CYAN}ASTERIX OS Docker Sandbox Manager${C_RESET}"
+            echo -e "  Usage: ax docker [run|shell|build|stop]"
+            ;;
+    esac
+}
+
 cmd_applocker() {
     local action="${1:-audit}"
     shift || true
@@ -6850,6 +6923,18 @@ case "$SUBCOMMAND" in
     verify|release-check|checksum)
         shift
         cmd_verify "$@"
+        ;;
+    deb|debs|metapackage|metapackages)
+        shift
+        cmd_deb "$@"
+        ;;
+    repo|apt-repo)
+        shift
+        cmd_repo "$@"
+        ;;
+    docker|desktop-sandbox)
+        shift
+        cmd_docker "$@"
         ;;
     applocker|whitelist|app-id)
         shift

@@ -1,0 +1,16 @@
+services:
+  asterix-sandbox:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: asterix-desktop-sandbox
+    hostname: asterix-node
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/opt/ASTERIX-OS
+      - ./asterix_persistent:/asterix_persistent
+    environment:
+      - ASTERIX_DIR=/opt/ASTERIX-OS
+      - TERM=xterm-256color
+    network_mode: bridge

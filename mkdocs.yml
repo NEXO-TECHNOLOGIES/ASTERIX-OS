@@ -1,0 +1,43 @@
+site_name: ASTERIX OS Documentation
+site_url: https://nexo-technologies.github.io/ASTERIX-OS/
+site_description: Official documentation for ASTERIX OS — Hardened Mobile Rootless Security Sandbox
+repo_url: https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS
+repo_name: NEXO-TECHNOLOGIES/ASTERIX-OS
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: cyan
+    accent: deep purple
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+
+nav:
+  - Overview:
+      - Introduction: README.md
+      - Security Policy: SECURITY.md
+      - Changelog: CHANGELOG.md
+      - Contributing: CONTRIBUTING.md
+      - Code of Conduct: CODE_OF_CONDUCT.md
+  - Tool Catalog:
+      - Overview: docs/tools/README.md
+      - Master CLI (ax): docs/tools/ax.md
+      - Debian Rootless Manager: docs/tools/ax-debian-manager.md
+      - System Doctor: docs/tools/ax-doctor.md
+      - Release Verifier: docs/tools/ax-release-verify.md
+      - Web Code Structure: docs/tools/web-structure.md
+      - Net Sentinel: docs/tools/net-sentinel.md
+      - Black Hole Privacy: docs/tools/black-hole.md
+      - Undercover Mode: docs/tools/undercover.md
+      - Shadowcam Discovery: docs/tools/shadowcam.md
+      - Cam Hunter (TSCM): docs/tools/cam-hunter.md
+      - Threat Feed Aggregator: docs/tools/self-evolve.md
+  - Architecture & Guides:
+      - Android 15 Linux Terminal (AVF): docs/ANDROID15_LINUX_TERMINAL_AVF.md
+      - Rooting & Device Guide: docs/ROOTING_AND_DEVICE_GUIDE.md
+      - Tool Audit Report: docs/AUDIT_REPORT_TOOLS.md
+      - Benchmarks: BENCHMARK_RESULTS.md

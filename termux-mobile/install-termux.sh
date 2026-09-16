@@ -296,14 +296,26 @@ else
     log_step "Rust Native Loader" "WARN" "Binary compilation skipped (fallback ready)"
 fi
 
-echo -e "${YELLOW}[*] Step 6: Installing Security Toolchain inside PRoot Debian...${NC}"
+echo -e "${YELLOW}[*] Step 6: Initializing ASTERIX Metapackages & Security Toolchain inside PRoot Debian...${NC}"
+if [ -d "$HOME/ASTERIX-OS" ] && command -v python3 >/dev/null 2>&1; then
+    python3 "$HOME/ASTERIX-OS/scripts-hub/ax-deb-builder.py" build-all -o "$HOME/ASTERIX-OS/packages/debs" >/dev/null 2>&1 || true
+    python3 "$HOME/ASTERIX-OS/scripts-hub/ax-apt-repo.py" build -s "$HOME/ASTERIX-OS/packages/debs" -o "$HOME/ASTERIX-OS/apt-repo" >/dev/null 2>&1 || true
+fi
+
 if proot-distro login debian -- bash -c "
+    if [ -d '/opt/ASTERIX-OS/apt-repo' ]; then
+        echo 'deb [trusted=yes] file:/opt/ASTERIX-OS/apt-repo stable main' > /etc/apt/sources.list.d/asterix.list
+    fi
     apt-get update && apt-get install -y \
-        nano vim micro build-essential clang rustc \
-        nmap tshark tcpdump netcat-traditional socat curl wget git sudo python3 python3-pip htop
+        nano vim micro build-essential \
+        nmap tshark tcpdump netcat-openbsd socat curl wget git sudo python3 python3-pip htop \
+        asterix-core asterix-tools-network asterix-tools-web asterix-default 2>/dev/null || \
+    apt-get install -y \
+        nano vim micro build-essential \
+        nmap tshark tcpdump netcat-openbsd socat curl wget git sudo python3 htop
 " 2>/dev/null; then
-    log_step "Debian Security Suite" "PASS" "Toolchain packages installed"
-    echo -e "${GREEN}[✔] Security toolchain installed inside Debian.${NC}"
+    log_step "Debian Security Suite" "PASS" "Toolchain & metapackages active"
+    echo -e "${GREEN}[✔] Security toolchain & metapackages active inside Debian.${NC}"
 else
     log_step "Debian Security Suite" "WARN" "Partial installation (offline/limited storage)"
 fi

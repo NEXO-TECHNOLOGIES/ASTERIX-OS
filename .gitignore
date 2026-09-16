@@ -26,6 +26,7 @@ project_map.html
 telemetry_routes.py
 test_memory_vuln.c
 test_vault/
-
-
-
+# Generated packages & APT repo
+apt-repo/
+packages/debs/
+dist/
