@@ -2346,6 +2346,14 @@ cmd_evidence() {
     "$py_bin" "$script" "$@"
 }
 
+cmd_video() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-video-engine.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-video-engine.py"
+    "$py_bin" "$script" "$@"
+}
+
 cmd_applocker() {
     local action="${1:-audit}"
     shift || true
@@ -7143,6 +7151,10 @@ case "$SUBCOMMAND" in
     evidence|proof)
         shift
         cmd_evidence "$@"
+        ;;
+    video-create|reel|showcase-video)
+        shift
+        cmd_video "$@"
         ;;
     applocker|whitelist|app-id)
         shift

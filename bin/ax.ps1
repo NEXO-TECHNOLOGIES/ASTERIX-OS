@@ -725,6 +725,15 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("video-create", "reel", "showcase-video") } {
+        $vidScript = Join-Path $AsterixRoot "scripts-hub\ax-video-engine.py"
+        if ($RealPython -and (Test-Path $vidScript)) {
+            & $RealPython $vidScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-video-engine.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"
