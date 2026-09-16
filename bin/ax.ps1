@@ -563,6 +563,123 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("engagement", "eng", "client-workspace") } {
+        $engScript = Join-Path $AsterixRoot "scripts-hub\ax-engagement.py"
+        if ($RealPython -and (Test-Path $engScript)) {
+            & $RealPython $engScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-engagement.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("mode") } {
+        $engScript = Join-Path $AsterixRoot "scripts-hub\ax-engagement.py"
+        if ($RealPython -and (Test-Path $engScript)) {
+            & $RealPython $engScript "mode" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-engagement.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("scope", "scope-check") } {
+        $engScript = Join-Path $AsterixRoot "scripts-hub\ax-engagement.py"
+        if ($RealPython -and (Test-Path $engScript)) {
+            & $RealPython $engScript "scope-check" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-engagement.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("overlay", "rollback") } {
+        $sbScript = Join-Path $AsterixRoot "scripts-hub\ax-sandbox.py"
+        if ($RealPython -and (Test-Path $sbScript)) {
+            & $RealPython $sbScript "overlay" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-sandbox.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("try", "try-tool") } {
+        $sbScript = Join-Path $AsterixRoot "scripts-hub\ax-sandbox.py"
+        if ($RealPython -and (Test-Path $sbScript)) {
+            & $RealPython $sbScript "try" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-sandbox.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("isolate") } {
+        $sbScript = Join-Path $AsterixRoot "scripts-hub\ax-sandbox.py"
+        if ($RealPython -and (Test-Path $sbScript)) {
+            & $RealPython $sbScript "isolate" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-sandbox.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("attest", "tpm-attest") } {
+        $attScript = Join-Path $AsterixRoot "scripts-hub\ax-attestation.py"
+        if ($RealPython -and (Test-Path $attScript)) {
+            & $RealPython $attScript "attest" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-attestation.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("sbom", "cyclonedx") } {
+        $attScript = Join-Path $AsterixRoot "scripts-hub\ax-attestation.py"
+        if ($RealPython -and (Test-Path $attScript)) {
+            & $RealPython $attScript "sbom" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-attestation.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("transparency", "provenance") } {
+        $attScript = Join-Path $AsterixRoot "scripts-hub\ax-attestation.py"
+        if ($RealPython -and (Test-Path $attScript)) {
+            & $RealPython $attScript "transparency" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-attestation.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("governor", "thermal-throttle") } {
+        $syncScript = Join-Path $AsterixRoot "scripts-hub\ax-mobile-sync.py"
+        if ($RealPython -and (Test-Path $syncScript)) {
+            & $RealPython $syncScript "governor" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-mobile-sync.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("gpu", "gpu-profile") } {
+        $syncScript = Join-Path $AsterixRoot "scripts-hub\ax-mobile-sync.py"
+        if ($RealPython -and (Test-Path $syncScript)) {
+            & $RealPython $syncScript "gpu" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-mobile-sync.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("mem-hygiene", "ram-wipe") } {
+        $syncScript = Join-Path $AsterixRoot "scripts-hub\ax-mobile-sync.py"
+        if ($RealPython -and (Test-Path $syncScript)) {
+            & $RealPython $syncScript "mem-hygiene" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-mobile-sync.py not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("handoff", "sync-device") } {
+        $syncScript = Join-Path $AsterixRoot "scripts-hub\ax-mobile-sync.py"
+        if ($RealPython -and (Test-Path $syncScript)) {
+            & $RealPython $syncScript "handoff" @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-mobile-sync.py not found." -ForegroundColor Red
+        }
+    }
+
     default {
         # Fallback to Git Bash ax if available
         $gitBash = "C:\Program Files\Git\bin\bash.exe"

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASTERIX OS Unified Project Data Model",
+  "description": "Standardized schema for offensive, defensive, and engagement telemetry across tools (recon, scanning, exploitation, findings)",
+  "type": "object",
+  "required": ["engagement_id", "client_name", "created_at", "mode", "scope", "hosts", "findings"],
+  "properties": {
+    "engagement_id": {
+      "type": "string",
+      "description": "Unique engagement / job identifier (e.g. ENG-2026-001)"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Client or project entity name"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["lab", "engagement"]
+    },
+    "scope": {
+      "type": "object",
+      "required": ["authorized_cidrs", "authorized_domains", "prohibited_targets", "signed_by", "valid_until"],
+      "properties": {
+        "authorized_cidrs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "authorized_domains": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "prohibited_targets": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "signed_by": { "type": "string" },
+        "valid_until": { "type": "string" },
+        "signature_sha256": { "type": "string" }
+      }
+    },
+    "hosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ip"],
+        "properties": {
+          "ip": { "type": "string" },
+          "hostname": { "type": "string" },
+          "os_guess": { "type": "string" },
+          "status": { "type": "string", "enum": ["up", "down", "filtered"] },
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["port", "proto", "state"],
+              "properties": {
+                "port": { "type": "integer" },
+                "proto": { "type": "string", "enum": ["tcp", "udp"] },
+                "state": { "type": "string", "enum": ["open", "closed", "filtered"] },
+                "service": { "type": "string" },
+                "product": { "type": "string" },
+                "version": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "credentials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "username"],
+        "properties": {
+          "target": { "type": "string" },
+          "service": { "type": "string" },
+          "username": { "type": "string" },
+          "hash_or_secret": { "type": "string" },
+          "type": { "type": "string", "enum": ["plaintext", "ntlm", "sha256", "jwt", "api_key", "ssh_key"] },
+          "captured_at": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "severity", "target"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+          "target": { "type": "string" },
+          "description": { "type": "string" },
+          "remediation": { "type": "string" },
+          "cve": { "type": "string" },
+          "cvss_score": { "type": "number" },
+          "evidence_file": { "type": "string" }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "operator", "action"],
+        "properties": {
+          "timestamp": { "type": "string" },
+          "operator": { "type": "string" },
+          "action": { "type": "string" },
+          "command": { "type": "string" },
+          "output_summary": { "type": "string" },
+          "scope_validated": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

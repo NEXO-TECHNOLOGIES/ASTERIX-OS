@@ -2210,6 +2210,102 @@ cmd_docker() {
     esac
 }
 
+cmd_engagement() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-engagement.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-engagement.py"
+    "$py_bin" "$script" "$@"
+}
+
+cmd_mode() {
+    cmd_engagement mode "$@"
+}
+
+cmd_scope() {
+    cmd_engagement scope-check "$@"
+}
+
+cmd_overlay() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-sandbox.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-sandbox.py"
+    "$py_bin" "$script" overlay "$@"
+}
+
+cmd_try() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-sandbox.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-sandbox.py"
+    "$py_bin" "$script" try "$@"
+}
+
+cmd_isolate() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-sandbox.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-sandbox.py"
+    "$py_bin" "$script" isolate "$@"
+}
+
+cmd_attest() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-attestation.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-attestation.py"
+    "$py_bin" "$script" attest "$@"
+}
+
+cmd_sbom() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-attestation.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-attestation.py"
+    "$py_bin" "$script" sbom "$@"
+}
+
+cmd_transparency() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-attestation.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-attestation.py"
+    "$py_bin" "$script" transparency "$@"
+}
+
+cmd_governor() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-mobile-sync.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-mobile-sync.py"
+    "$py_bin" "$script" governor "$@"
+}
+
+cmd_gpu() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-mobile-sync.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-mobile-sync.py"
+    "$py_bin" "$script" gpu "$@"
+}
+
+cmd_mem_hygiene() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-mobile-sync.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-mobile-sync.py"
+    "$py_bin" "$script" mem-hygiene "$@"
+}
+
+cmd_handoff() {
+    local py_bin="python3"
+    ! command -v python3 >/dev/null 2>&1 && py_bin="python"
+    local script="$ASTERIX_DIR/scripts-hub/ax-mobile-sync.py"
+    [ ! -f "$script" ] && script="$(dirname "$0")/../scripts-hub/ax-mobile-sync.py"
+    "$py_bin" "$script" handoff "$@"
+}
+
 cmd_applocker() {
     local action="${1:-audit}"
     shift || true
@@ -6935,6 +7031,58 @@ case "$SUBCOMMAND" in
     docker|desktop-sandbox)
         shift
         cmd_docker "$@"
+        ;;
+    engagement|eng|client-workspace)
+        shift
+        cmd_engagement "$@"
+        ;;
+    mode)
+        shift
+        cmd_mode "$@"
+        ;;
+    scope|scope-check)
+        shift
+        cmd_scope "$@"
+        ;;
+    overlay|rollback)
+        shift
+        cmd_overlay "$@"
+        ;;
+    try|try-tool)
+        shift
+        cmd_try "$@"
+        ;;
+    isolate)
+        shift
+        cmd_isolate "$@"
+        ;;
+    attest|tpm-attest)
+        shift
+        cmd_attest "$@"
+        ;;
+    sbom|cyclonedx)
+        shift
+        cmd_sbom "$@"
+        ;;
+    transparency|provenance)
+        shift
+        cmd_transparency "$@"
+        ;;
+    governor|thermal-throttle)
+        shift
+        cmd_governor "$@"
+        ;;
+    gpu|gpu-profile)
+        shift
+        cmd_gpu "$@"
+        ;;
+    mem-hygiene|ram-wipe)
+        shift
+        cmd_mem_hygiene "$@"
+        ;;
+    handoff|sync-device)
+        shift
+        cmd_handoff "$@"
         ;;
     applocker|whitelist|app-id)
         shift
