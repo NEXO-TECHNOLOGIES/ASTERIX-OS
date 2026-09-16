@@ -122,13 +122,33 @@ switch ($Command.ToLower()) {
         }
     }
 
-    { $_ -in @("collaborate", "bridge", "sync") } {
+    { $_ -in @("collaborate", "bridge", "sync", "collab", "host-collab") } {
         $pyBridge = Join-Path $AsterixRoot "os-computing\os_bridge.py"
         if ($RealPython -and (Test-Path $pyBridge)) {
             & $RealPython $pyBridge collaborate
         } else {
             $psBridge = Join-Path $AsterixRoot "os-computing\os_bridge.ps1"
             & $psBridge collaborate
+        }
+    }
+
+    { $_ -in @("merge", "os-merge", "merge-os", "fuse-os") } {
+        $pyBridge = Join-Path $AsterixRoot "os-computing\os_bridge.py"
+        if ($RealPython -and (Test-Path $pyBridge)) {
+            & $RealPython $pyBridge merge @RemainingArgs
+        } else {
+            $psBridge = Join-Path $AsterixRoot "os-computing\os_bridge.ps1"
+            & $psBridge merge @RemainingArgs
+        }
+    }
+
+    { $_ -in @("rebuild", "os-rebuild", "build-all", "system-rebuild", "rebuild-asterix") } {
+        $pyBridge = Join-Path $AsterixRoot "os-computing\os_bridge.py"
+        if ($RealPython -and (Test-Path $pyBridge)) {
+            & $RealPython $pyBridge rebuild @RemainingArgs
+        } else {
+            $psBridge = Join-Path $AsterixRoot "os-computing\os_bridge.ps1"
+            & $psBridge rebuild @RemainingArgs
         }
     }
 
@@ -495,7 +515,9 @@ switch ($Command.ToLower()) {
             Write-Host "    ax os-computing [probe|collaborate|compute|imitate|features|status]"
             Write-Host "    ax status"
             Write-Host "    ax probe"
-            Write-Host "    ax collaborate"
+            Write-Host "    ax collaborate / ax collab"
+            Write-Host "    ax merge                     Merge Host OS & ASTERIX OS into unified virtual system"
+            Write-Host "    ax rebuild                   End-to-end multi-language compilation & system seal"
             Write-Host "    ax compute"
             Write-Host "    ax ai [chat|ask|audit]"
             Write-Host "    ax sysfetch"

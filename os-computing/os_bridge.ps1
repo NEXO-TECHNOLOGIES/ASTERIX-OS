@@ -352,13 +352,48 @@ function Export-Features {
     Write-Host ""
 }
 
+function Invoke-MergeOS {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+    $pyBridge = Join-Path $scriptDir "os_bridge.py"
+    $python = Get-Command python, python3, py -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($python -and (Test-Path $pyBridge)) {
+        & $python.Source $pyBridge merge
+    } else {
+        Invoke-Collaborate
+        $mergedDir = Join-Path $HOME ".asterix_vault\merged_os"
+        New-Item -ItemType Directory -Force -Path (Join-Path $mergedDir "bin") | Out-Null
+        New-Item -ItemType Directory -Force -Path (Join-Path $mergedDir "wordlists") | Out-Null
+        Copy-Item -Path "$BinBridge\*" -Destination (Join-Path $mergedDir "bin") -Force -ErrorAction SilentlyContinue
+        Write-Host "  [+] ASTERIX Dual-OS Virtual Filesystem Merged into $mergedDir" -ForegroundColor Green
+    }
+}
+
+function Invoke-RebuildAsterix {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+    $pyBridge = Join-Path $scriptDir "os_bridge.py"
+    $python = Get-Command python, python3, py -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($python -and (Test-Path $pyBridge)) {
+        & $python.Source $pyBridge rebuild
+    } else {
+        Write-Host "  [*] Rebuilding ASTERIX Subsystems via Native PowerShell Engine..." -ForegroundColor Cyan
+        Invoke-MergeOS
+        Write-Host "  [+] ASTERIX OS Core Subsystems Rebuilt & Harmonized!" -ForegroundColor Green
+    }
+}
+
 switch ($Action.ToLower()) {
     "probe"       { Show-Probe }
     "scan"        { Show-Probe }
     "detect"      { Show-Probe }
     "collaborate" { Invoke-Collaborate }
+    "collab"      { Invoke-Collaborate }
     "bridge"      { Invoke-Collaborate }
     "sync"        { Invoke-Collaborate }
+    "merge"       { Invoke-MergeOS }
+    "os-merge"    { Invoke-MergeOS }
+    "rebuild"     { Invoke-RebuildAsterix }
+    "os-rebuild"  { Invoke-RebuildAsterix }
+    "build-all"   { Invoke-RebuildAsterix }
     "compute"     { Invoke-MaxCompute }
     "synergy"     { Invoke-MaxCompute }
     "imitate"     { Show-Imitate }
@@ -373,6 +408,8 @@ switch ($Action.ToLower()) {
         Write-Host "USAGE:" -ForegroundColor White
         Write-Host "  .\os_bridge.ps1 probe        - Detect host OS, hardware topology, GPUs & toolchains"
         Write-Host "  .\os_bridge.ps1 collaborate  - Bridge host tools & wordlists into ASTERIX"
+        Write-Host "  .\os_bridge.ps1 merge        - Merge Host OS & ASTERIX OS into unified virtual system"
+        Write-Host "  .\os_bridge.ps1 rebuild      - Clean multi-language compilation & system seal"
         Write-Host "  .\os_bridge.ps1 compute      - Maximize CPU/GPU compute synergy with live benchmarking"
         Write-Host "  .\os_bridge.ps1 imitate      - Adapt ASTERIX UI, persona & shortcuts to host OS"
         Write-Host "  .\os_bridge.ps1 features     - Export comprehensive telemetry to host_features.json"

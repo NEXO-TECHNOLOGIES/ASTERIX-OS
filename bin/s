@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# ASTERIX OS Master CLI Fast-Path Alias ('s')
+# High-velocity unified launcher forwarding all arguments directly to 'ax'
+# Zero overhead, 100% transparent execution across Linux, WSL, and Termux.
+# ==============================================================================
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "${SCRIPT_DIR}/ax" "$@"

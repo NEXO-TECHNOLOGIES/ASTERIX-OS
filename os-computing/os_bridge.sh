@@ -40,6 +40,8 @@ get_distro_name() {
     fi
 }
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 case "$action" in
     probe|scan|detect)
         echo -e "  ${C_BOLD}HOST ENVIRONMENT & DUAL-BOOT RECONNAISSANCE:${C_RESET}\n"
@@ -77,7 +79,7 @@ case "$action" in
         echo -e "\n  ${C_WHITE}Native Tools Available on Host:${C_RESET} ${C_GREEN}${avail}/${#tools[@]} Verified${C_RESET}\n"
         ;;
 
-    collaborate|bridge|sync|link|fuse)
+    collaborate|bridge|sync|link|fuse|collab|host-collab)
         mkdir -p "$BIN_BRIDGE" "$WORDLISTS_BRIDGE" 2>/dev/null || true
         echo -e "  ${C_CYAN}[*] Synthesizing Cross-OS Security Bridge into: ${VAULT_DIR}...${C_RESET}\n"
 
@@ -110,6 +112,31 @@ case "$action" in
         echo -e "    • Bridged Tools:     ${C_CYAN}${linked}${C_RESET} binaries linked into ${BIN_BRIDGE}"
         echo -e "    • Bridged Wordlists: ${C_CYAN}${wl_linked}${C_RESET} wordlist references mapped"
         echo -e "    • To activate now:   ${C_YELLOW}export PATH=\"${BIN_BRIDGE}:\$PATH\"${C_RESET}\n"
+        ;;
+
+    merge|os-merge|merge-os)
+        if command -v python3 >/dev/null 2>&1 && [ -f "$SCRIPT_DIR/os_bridge.py" ]; then
+            python3 "$SCRIPT_DIR/os_bridge.py" merge "$@"
+        elif command -v python >/dev/null 2>&1 && [ -f "$SCRIPT_DIR/os_bridge.py" ]; then
+            python "$SCRIPT_DIR/os_bridge.py" merge "$@"
+        else
+            echo -e "  ${C_CYAN}[*] Synthesizing Dual-OS Virtual Environment...${C_RESET}"
+            mkdir -p "$HOME/.asterix_vault/merged_os/bin" "$HOME/.asterix_vault/merged_os/wordlists"
+            cp -r "$BIN_BRIDGE"/* "$HOME/.asterix_vault/merged_os/bin/" 2>/dev/null || true
+            echo -e "  ${C_GREEN}[✔] Dual-OS Merged Environment Active!${C_RESET}"
+        fi
+        ;;
+
+    rebuild|os-rebuild|build-all|system-rebuild)
+        if command -v python3 >/dev/null 2>&1 && [ -f "$SCRIPT_DIR/os_bridge.py" ]; then
+            python3 "$SCRIPT_DIR/os_bridge.py" rebuild "$@"
+        elif command -v python >/dev/null 2>&1 && [ -f "$SCRIPT_DIR/os_bridge.py" ]; then
+            python "$SCRIPT_DIR/os_bridge.py" rebuild "$@"
+        else
+            echo -e "  ${C_CYAN}[*] Rebuilding ASTERIX OS Core Systems...${C_RESET}"
+            bash "$0" merge
+            echo -e "  ${C_GREEN}[✔] ASTERIX OS System Rebuilt & Verified!${C_RESET}"
+        fi
         ;;
 
     compute|max-output|synergy)

@@ -6859,9 +6859,17 @@ case "$SUBCOMMAND" in
         shift
         cmd_autocompile "$@"
         ;;
-    os-computing|os-collaborate|host-sync|os-bridge|os-imitate)
+    os-computing|os-collaborate|host-sync|os-bridge|os-imitate|collab|host-collab|collaborate)
         shift
         cmd_os_computing "$@"
+        ;;
+    merge|os-merge|merge-os|fuse-os)
+        shift
+        cmd_os_computing merge "$@"
+        ;;
+    rebuild|os-rebuild|build-all|system-rebuild|rebuild-asterix)
+        shift
+        cmd_os_computing rebuild "$@"
         ;;
     code-repair|code-fix|fix-code|os-fix|repair-code|heal-code)
         shift

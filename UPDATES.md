@@ -591,3 +591,37 @@ Major expansion of the ASTERIX Secure Chat system based on user specifications:
   - Member management panel (`👥 MEMBERS`): view all connected operatives with network endpoints (IP:Port).
   - 1-Click **Kick Member** and **Mute/Unmute Member**.
   - 1-Click **Purge Chat History** across all connected screens.
+
+---
+
+## [21] 🌐 ASTERIX Dual-OS Quantum Fusion & Unified Rebuild Pipeline v3.5
+
+**Updated:** `os-computing/os_bridge.py`, `os-computing/os_bridge.ps1`, `os-computing/os_bridge.sh`, `bin/ax`, `bin/ax.ps1`, `bin/s`, `bin/s.cmd`, `bin/s.ps1`, `BUILD_MANIFEST.json`, `VERSION.toml`
+
+Complete implementation of the **Dual-OS Merge & Unified Rebuild Engine**:
+
+- **Dual-OS Merge & Quantum Bridge (`ax merge` / `s merge`)**:
+  - Truly fuses the Host Operating System (Windows 10/11, Linux, macOS, Termux) with ASTERIX OS into a unified operational environment.
+  - Generates bi-directional command shims in `~/.asterix_vault/merged_os/bin/` with automated path translation (Windows `C:\...` <-> WSL `/mnt/c/...`).
+  - Seamlessly bridges native ASTERIX tools (`ax`, `s`, `ax-ai`, `ax-sysfetch`, `ax-web-structure`, `ax-mobile-toolbox`) so they are globally callable from any directory or shell.
+  - Fuses wordlists (`rockyou.txt`, `SecLists`, custom dictionaries) into `~/.asterix_vault/merged_os/wordlists/`.
+  - Produces sourceable environment profiles: `merge-env.ps1`, `merge-env.bat`, `merge-env.sh`, and `merge-env.fish`.
+  - Exports `merged_manifest.json` documenting the fused substrate.
+
+- **Unified 8-Phase System Rebuild Engine (`ax rebuild` / `s rebuild`)**:
+  - **Phase 1 (Microkernel)**: Structural & Multiboot 0x1BADB002 compliance verification for `kernel/` C and Assembly engines.
+  - **Phase 2 (Boot & SIMD Crypto)**: AVX2/AES-NI SIMD vector validation and 64-bit long mode transitions for `boot-asm/`.
+  - **Phase 3 (Native C Utilities)**: Algorithmic matrix verification and native compilation for ChaCha20-Poly1305, AES-256, and raw socket sniffer in `core-utils-c/`.
+  - **Phase 4 (Rust Subsystems)**: Automated compilation and check verification of all 9 workspace crates in `core-utils-rust/`.
+  - **Phase 5 (Peak AI & Cloud Memory)**: Cognitive memory SQLite schema verification and Supabase sync validation.
+  - **Phase 6 (Mobile PRoot)**: POSIX syntax and encoding verification across `termux-mobile/` and `scripts-hub/`.
+  - **Phase 7 (Dual-OS Bridge Fusion)**: Automated regeneration of all cross-OS shims and wordlist indexes.
+  - **Phase 8 (Master Seal)**: SHA-256 cryptographic seal of all rebuilt system binaries, generating `BUILD_MANIFEST.json`.
+
+- **Fast-Path Master CLI Entrypoints (`s`, `s.cmd`, `s.ps1`)**:
+  - Transparent, zero-overhead command aliases for high-velocity terminal operation:
+    - `s collab` — Bridge host tools and wordlists into ASTERIX.
+    - `s merge` — Merge host OS and ASTERIX into a unified virtual system.
+    - `s rebuild` — Rebuild all ASTERIX subsystems and generate cryptographic seal.
+    - `s ai` — Launch ASTERIX Peak AI copilot.
+
