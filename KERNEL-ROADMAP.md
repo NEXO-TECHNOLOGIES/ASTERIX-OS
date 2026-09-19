@@ -1,283 +1,148 @@
 # ASTERIX OS Kernel Roadmap
 
-## 1. Purpose
+## Mission
+ASTERIX OS is not a Linux clone and not a Windows-derived experience. It is a custom operating system design built around a minimal kernel foundation, a capability-based security model, and a layered runtime that can support mobile, desktop, edge, and distributed workloads without forcing a single host environment.
 
-This roadmap defines the disciplined path from a minimal custom kernel to a credible, layered operating system architecture. It is designed to prevent feature creep and to keep the project focused on the fundamentals that matter most: boot, memory, scheduling, isolation, security, and orchestration.
+The mission is simple:
+1. Prove the kernel boots correctly.
+2. Build the core runtime and memory model.
+3. Add secure user isolation and capability gates.
+4. Add orchestration and clustering above the kernel, not instead of it.
+5. Add AI features only after the base system is stable and verifiable.
 
-The goal is not to build a giant distro immediately. The goal is to prove the base system correctly, then grow upward in a controlled way.
+## Core Rule
+The project must remain source-first and discipline-first.
 
----
+- No copied Ubuntu/WSL environment as a fake replacement for a native custom OS.
+- No feature-heavy promises without a working foundation.
+- No mixing kernel development with unrelated cloud or AI claims.
+- Every layer must be validated before the next layer is built.
 
-## 2. Engineering principle
+## Project Architecture
 
-The project should follow a strict rule:
+### 1. Kernel Core
+Purpose: boot, CPU startup, memory management, interrupts, scheduling.
 
-- build the base kernel before adding complex systems
-- prove each milestone with working output
-- separate infrastructure layers clearly
-- keep AI, clustering, and cloud features as optional layers above the core OS
-- do not confuse orchestration with kernel design
+Required milestones:
+- multiboot-compatible bootloader entry
+- protected mode setup
+- basic VGA/terminal output
+- GDT and IDT
+- PIC/APIC initialization
+- physical and virtual memory basics
+- page tables and paging
+- task scheduler
+- system calls
+- interrupt handling and trap flow
 
----
+### 2. Runtime Layer
+Purpose: userland support, process model, file abstraction, memory-safe execution.
 
-## 3. Core distinction: kernel vs. orchestration vs. AI
+Required milestones:
+- process creation
+- basic executable loading
+- user and kernel privilege separation
+- API and syscall boundary
+- standard library layer for freestanding runtime
+- filesystem abstractions
+- device drivers for basic hardware
 
-A credible operating system has multiple layers with different responsibilities.
+### 3. Security and Capability Layer
+Purpose: enforce mobile-first, rootless-by-default security.
 
-### Kernel layer
-Responsible for:
-- boot
-- CPU startup
-- memory protection
-- interrupts
-- scheduling
+Required milestones:
+- capability-based privilege system
+- privilege descriptors and policy engine
+- sandboxed execution
+- signed modules and trust model
+- device authorization boundaries
+- optional secure enclave or isolation model
+- no real sudo model by default
+
+### 4. Local Cluster / Orchestration Layer
+Purpose: allow distributed workload coordination across local nodes or managed services.
+
+Required milestones:
+- service registry and identity model
+- node discovery
+- resource and workload scheduling
+- health monitoring
+- cluster-aware policy engine
+- secure job dispatch
+
+### 5. AI Enhancement Layer
+Purpose: provide intelligent assistance, not a replacement for the system core.
+
+Required milestones:
+- local AI runtime interface
+- memory and context-aware decision engine
+- policy-aware automation
+- inference and workload adaptation
+- optional cloud extension only after local system is stable
+
+## Milestone Sequence
+
+### Phase 0: Clean Foundation
+- confirm toolchain
+- confirm boot and build path
+- remove junk, dead code, and false assumptions
+- define the real target architecture
+
+### Phase 1: Bare-Metal Kernel
+- boot assembly and linker setup
+- memory layout and startup
+- VGA terminal
+- interrupt and exception handling
+- paging and allocator basics
+- scheduler skeleton
+
+### Phase 2: System Runtime
+- process model
 - syscall interface
-- process isolation
-- low-level driver interaction
+- basic drivers
+- simple filesystem and storage abstraction
+- user-mode environment
 
-### Runtime and service layer
-Responsible for:
-- userland services
-- task management
-- service discovery
-- process lifecycle
-- telemetry and health monitoring
-
-### Cluster orchestration layer
-Responsible for:
-- node registration
-- workload placement
-- health checks
-- resource-aware scheduling
-- failover logic
-- coordination across connected machines
-
-### Security and trust layer
-Responsible for:
-- capability checks
-- policy enforcement
-- sandbox boundaries
-- safe hardware integration
-- permission mediation
-
-### AI layer
-Responsible for:
-- optimization suggestions
-- predictive scheduling
-- workflow enhancement
-- adaptive tuning
-- not replacing the base system model
-
-AI should be a layer above the core system and should not be confused with core kernel functionality.
-
----
-
-## 4. Current maturity target
-
-The project is not yet at the level of a complete kernel maintainer or production distributed systems engineer. That is okay. The roadmap is meant to move the project from a concept-heavy system into a real engineering progression.
-
-Focus first on:
-- minimal bootable kernel foundation
-- stable memory model
-- scheduling and processes
-- trusted execution boundaries
-- layered orchestration design
-
----
-
-## 5. Milestone roadmap
-
-### Milestone 1: Boot and minimal kernel entry
-
-Objective:
-- assemble and link a minimal kernel successfully
-- boot into a simple entry point
-- confirm the basic ELF and startup pipeline works
-
-Deliverables:
-- bootloader or multiboot startup
-- stack setup
-- CPU state initialization
-- basic kernel entry function
-- minimal text output
-
-### Milestone 2: Protected mode and basic memory layout
-
-Objective:
-- establish architecture-safe memory setup
-- verify early memory mapping
-- define the initial runtime layout
-
-Deliverables:
-- memory map
-- simple paging or page-table model
-- stable kernel addresses
-- low-level memory region definitions
-
-### Milestone 3: Interrupts and exceptions
-
-Objective:
-- handle interrupts and faults correctly
-- build a basic interrupt descriptor table
-- provide a reliable trap/exception path
-
-Deliverables:
-- IDT initialization
-- handler stubs
-- interrupt routing
-- fault handling and panic state
-
-### Milestone 4: Process and scheduling model
-
-Objective:
-- create a minimal process abstraction
-- schedule tasks with a deterministic model
-- support cooperative or preemptive scheduling depending on architecture
-
-Deliverables:
-- task struct
-- process states
-- scheduler loop
-- context switch primitive
-- basic switching between tasks
-
-### Milestone 5: Syscall interface
-
-Objective:
-- define system calls cleanly
-- support user-space requests in a minimal form
-- establish a controlled privilege boundary
-
-Deliverables:
-- syscall table
-- user-space bridge
-- permission checks
-- basic service calls
-
-### Milestone 6: Memory allocator and protection
-
-Objective:
-- create safe allocation primitives
-- separate kernel and user memory boundaries
-- add basic protection rules
-
-Deliverables:
-- allocator design
-- page-based handling
-- memory ownership model
-- protection checks
-
-### Milestone 7: Driver and hardware abstraction layer
-
-Objective:
-- support core device abstraction without overwhelming the kernel
-- define a clean driver model
-
-Deliverables:
-- VGA/console driver
-- timer driver
-- keyboard/mouse or input abstraction
-- storage or serial support where needed
-
-### Milestone 8: Userland and service runtime
-
-Objective:
-- create a minimal userland environment
-- support service startup and management
-- establish runtime isolation
-
-Deliverables:
-- process manager
-- service registry
-- basic runtime shell
-- task launch model
-
-### Milestone 9: Security and trust model
-
-Objective:
-- define capability-based access and policy enforcement
-- keep privilege boundaries strict
-- support rootless-safe workflows
-
-Deliverables:
+### Phase 3: Security Model
 - capability model
-- secure IPC
-- trusted service boundaries
-- policy enforcement framework
+- permission policy engine
+- rootless defaults
+- restricted execution boundaries
+- secure service communication
 
-### Milestone 10: Local cluster orchestration
+### Phase 4: Cluster and Service Layer
+- orchestration model
+- service detection and node health
+- work distribution and deployment
+- secure state coordination
 
-Objective:
-- coordinate trusted devices or machines on a local network
-- provide deterministic workload distribution
-- use resource-aware scheduling
+### Phase 5: AI and Intelligent Interface
+- local AI policy and memory support
+- adaptive behavior and self-healing loops
+- intelligent resource balancing
+- optional cloud extensions
 
-Deliverables:
-- node registration
-- health checks
-- workload scheduler
-- resource tracking
-- fallback logic
+## Non-Goals for the Current Phase
+The project should not chase these before the foundation is proven:
+- full desktop Linux compatibility
+- large app ecosystem parity
+- fake “works everywhere” claims
+- AI-first design before kernel maturity
+- copy-paste Ubuntu or Android adaptation without custom architecture
 
-### Milestone 11: Optional AI enhancement layer
+## Success Criteria
+ASTRIX OS can be considered technically credible when:
+- the kernel builds from source in a native toolchain
+- the kernel boots successfully in QEMU or equivalent emulator
+- interrupts, memory, and scheduling behave predictably
+- processes can run under minimal runtime protection
+- capability-based security is enforced without requiring root escalation
+- clustering and AI are layered above stable system primitives
 
-Objective:
-- add optional intelligence on top of the cluster and services
-- keep AI as a helper, not as a replacement for the OS core
+## Current Status
+The project is in a reset and re-foundation stage.
 
-Deliverables:
-- scheduler recommendations
-- optimization heuristics
-- telemetry-based tuning
-- optional assistance features
+The focus right now is not to build everything at once. The priority is to establish the minimum viable kernel stack and prove each layer before expanding outward.
 
-### Milestone 12: Cloud and remote expansion
-
-Objective:
-- connect to remote environments only after the local system model is stable
-- treat cloud as a secondary distribution layer
-
-Deliverables:
-- remote orchestration bridge
-- secure transport layer
-- remote resource awareness
-- dispatch and failover support
-
----
-
-## 6. Design rule: keep the architecture honest
-
-The system should not say:
-
-- "we are an AI cluster OS" before the kernel is proven
-- "we have a secure system" before the memory model is stable
-- "we support distributed execution" before scheduling and isolation are working
-
-A professional architecture should always be honest about current maturity.
-
----
-
-## 7. The ideal project progression
-
-The most realistic path is:
-
-1. minimal bootable kernel
-2. memory and scheduler
-3. syscall model
-4. runtime services
-5. trust and privilege model
-6. local cluster scheduler
-7. optional AI optimization layers
-8. cloud integration later
-
-This is the correct engineering ordering.
-
----
-
-## 8. Final statement
-
-ASTERIX OS should not be defined by vague product ambition. It should be defined by a disciplined path from a working kernel to a layered, secure, distributed operating system.
-
-The core objective is to prove the base system, then build upward.
-
-That is the path toward real kernel credibility and real systems engineering.
+## Final Principle
+ASTERIX OS should be understood as a custom multi-purpose operating system with a mobile-first security posture, not a Linux clone and not a one-feature toy project. The kernel is the center, the security model is the identity, and AI or cluster features are extensions of a proven base system.
