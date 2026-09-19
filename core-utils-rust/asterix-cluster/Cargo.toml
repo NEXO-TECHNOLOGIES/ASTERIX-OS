@@ -1,0 +1,8 @@
+[package]
+name = "asterix-cluster"
+version = "4.5.0"
+edition = "2021"
+authors = ["ASTERIX OS Systems & Cluster Team"]
+description = "World-Record Multi-PC Hardware Mesh, Core/GPU Pooling & Distributed Execution Engine in Rust, C & Assembly"
+
+[dependencies]

@@ -1,4 +1,4 @@
-# 🔍 ASTERIX OS Tool Safety & Code Audit Report
+# [SCAN] ASTERIX OS Tool Safety & Code Audit Report
 
 **Date of Audit**: September 16, 2026  
 **Auditor**: NEXO TECHNOLOGIES Security Engineering Group  

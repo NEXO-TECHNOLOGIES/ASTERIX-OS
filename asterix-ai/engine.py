@@ -206,7 +206,7 @@ def cmd_audit():
             if "verification" in r:
                 print(f"    {C_WHITE}Verification:{C_RESET}     {C_GRAY}{r['verification']}{C_RESET}\n")
     else:
-        print(f"\n  {C_GREEN}{C_BOLD}[✔] ZERO DEFICIENCIES IDENTIFIED. ALL OPERATING SYSTEM MITIGATIONS ENFORCED.{C_RESET}\n")
+        print(f"\n  {C_GREEN}{C_BOLD}[[OK]] ZERO DEFICIENCIES IDENTIFIED. ALL OPERATING SYSTEM MITIGATIONS ENFORCED.{C_RESET}\n")
 
 def cmd_ask(query, in_chat=False):
     if not in_chat:
@@ -224,7 +224,7 @@ def cmd_ask(query, in_chat=False):
             pass
 
     if recalled_facts:
-        print(f"  {C_YELLOW}{C_BOLD}🧠 COGNITIVE MEMORY ENGAGED [Context Recalled]:{C_RESET}")
+        print(f"  {C_YELLOW}{C_BOLD} COGNITIVE MEMORY ENGAGED [Context Recalled]:{C_RESET}")
         for fact in recalled_facts:
             print(f"   {C_CYAN}•{C_RESET} {C_WHITE}{fact}{C_RESET}")
         print()
@@ -234,7 +234,7 @@ def cmd_ask(query, in_chat=False):
     # Real-Time 3-Tier Hardware & OS Telemetry Integration
     hw_triggers = {"hardware", "telemetry", "specs", "cpu", "processor", "ram", "memory", "cycles", "sensors", "diagnostics"}
     if tokens.intersection(hw_triggers) and hardware_sensor:
-        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} Live 3-tier Assembly/C hardware telemetry bridge engaged:\n")
+        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI {C_RESET} Live 3-tier Assembly/C hardware telemetry bridge engaged:\n")
         report = hardware_sensor.format_telemetry_narrative()
         for rline in report.split("\n"):
             print(f"  {rline}")
@@ -275,13 +275,13 @@ def cmd_ask(query, in_chat=False):
     if not matches:
         if peak_ai:
             reply = peak_ai.reason(query)
-            print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI (Peak Cognitive Engine) ❯{C_RESET}\n")
+            print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI (Peak Cognitive Engine) {C_RESET}\n")
             for line in reply.split("\n"):
                 print(f"  {line}")
             print()
             return
 
-        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} I analyzed your inquiry, but did not find an exact matching knowledge module.")
+        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI {C_RESET} I analyzed your inquiry, but did not find an exact matching knowledge module.")
         print(f"  {C_WHITE}Here is general guidance from our cybersecurity core:{C_RESET}\n")
         print(f"  • {C_CYAN}Kernel & Defense Baseline:{C_RESET} Run {C_GREEN}ax ai audit{C_RESET} or {C_GREEN}ax secpol audit{C_RESET} to evaluate live system hardening.")
         print(f"  • {C_CYAN}Autonomous Healing:{C_RESET} If dealing with broken source code, run {C_GREEN}ax code-repair fix .{C_RESET}")
@@ -293,7 +293,7 @@ def cmd_ask(query, in_chat=False):
 
     # Handle Conversational Intent Modules (greetings, identity, advice)
     if "response" in top_rule:
-        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET}\n")
+        print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI {C_RESET}\n")
         for line in top_rule["response"].split("\n"):
             print(f"  {line}")
         if any(w in query.lower() for w in ("who are you", "what are you", "identity")) and hardware_sensor:
@@ -309,7 +309,7 @@ def cmd_ask(query, in_chat=False):
     cat = rule.get("category", "").upper()
     sev = rule.get("severity", "INFO")
 
-    print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI ❯{C_RESET} Here is a comprehensive technical breakdown on this subject:\n")
+    print(f"  {C_MAGENTA}{C_BOLD}ASTERIX AI {C_RESET} Here is a comprehensive technical breakdown on this subject:\n")
     print(f"{C_BLUE}═"*74 + f"{C_RESET}")
     print(f" {C_MAGENTA}{C_BOLD}KNOWLEDGE MODULE [{rid}]: {name}{C_RESET}")
     print(f" {C_GRAY}Category: {cat} | Severity Level: {sev} | Confidence: {min(99, score * 30 + 35)}%{C_RESET}")
@@ -355,7 +355,7 @@ def cmd_chat():
 
     while True:
         try:
-            prompt = input(f"{C_GREEN}{C_BOLD}user ❯{C_RESET} ").strip()
+            prompt = input(f"{C_GREEN}{C_BOLD}user {C_RESET} ").strip()
             if not prompt:
                 continue
             if prompt.lower() in ("exit", "quit", "bye", "q"):
@@ -365,7 +365,7 @@ def cmd_chat():
                 fact_text = prompt.split(":", 1)[1].strip()
                 if user_input_learner:
                     count = user_input_learner.teach_fact(fact_text)
-                    print(f"\n  {C_GREEN}{C_BOLD}ASTERIX AI ❯{C_RESET} I have permanently recorded this in my memory [Memory Bank: {count} Facts]:")
+                    print(f"\n  {C_GREEN}{C_BOLD}ASTERIX AI {C_RESET} I have permanently recorded this in my memory [Memory Bank: {count} Facts]:")
                     print(f"  {C_CYAN}\"{fact_text}\"{C_RESET}")
                     print(f"  I will adapt future advice and threat models accordingly.\n")
                 continue
@@ -702,7 +702,7 @@ def main():
             fact = " ".join(args[1:])
             if user_input_learner:
                 count = user_input_learner.teach_fact(fact)
-                print(f"\n  {C_GREEN}{C_BOLD}[✔] ASTERIX AI Learned New Fact [Total Memory: {count} Facts]:{C_RESET}")
+                print(f"\n  {C_GREEN}{C_BOLD}[[OK]] ASTERIX AI Learned New Fact [Total Memory: {count} Facts]:{C_RESET}")
                 print(f"  {C_CYAN}\"{fact}\"{C_RESET}\n")
                 print(f"  {C_WHITE}This rule will adapt future AI responses and threat models.{C_RESET}\n")
         else:
@@ -711,14 +711,14 @@ def main():
         if memory_hub:
             print("[*] Synchronizing cognitive memory with Supabase Cloud...")
             res = memory_hub.sync_cloud()
-            print(f"[✔] Cloud Sync Result: {res}")
+            print(f"[[OK]] Cloud Sync Result: {res}")
         else:
             print("[!] Cloud memory hub not available.")
     elif args[0] in ("cloud-setup", "setup-cloud"):
         if len(args) >= 3 and memory_hub:
             url, key = args[1], args[2]
             memory_hub.save_config(url, key)
-            print(f"[✔] Supabase Cloud Memory configured for {url}")
+            print(f"[[OK]] Supabase Cloud Memory configured for {url}")
         else:
             print("[!] Usage: ax ai cloud-setup <SUPABASE_URL> <SUPABASE_ANON_KEY>")
     elif args[0] in ("cloud-memory", "memories", "cloud-stats"):

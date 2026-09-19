@@ -93,12 +93,12 @@ class LiveBootTool:
                 pass
 
         if drives:
-            print(f"{GREEN}✓ Found {len(drives)} Removable USB Flash Drive(s):{RESET}\n")
+            print(f"{GREEN}[OK] Found {len(drives)} Removable USB Flash Drive(s):{RESET}\n")
             for d in drives:
                 print(f"  • {BOLD}{CYAN}{d['id']}{RESET} : {d['name']} ({YELLOW}{d['size']}{RESET}) - Status: {GREEN}{d['status']}{RESET}")
             print(f"\n{CYAN}Recommendation:{RESET} Select target drive in Rufus or Ventoy for live deployment.")
         else:
-            print(f"{YELLOW}⚠ No removable USB storage drives currently detected.{RESET}")
+            print(f"{YELLOW}[!] No removable USB storage drives currently detected.{RESET}")
             print(f"  ↳ Please plug in a USB flash drive (>= 8 GB recommended for persistence).")
         return drives
 
@@ -133,9 +133,9 @@ class LiveBootTool:
         try:
             with open(out_file, "w", encoding="utf-8") as f:
                 f.write(rufus_cfg)
-            print(f"{GREEN}✓ Created Rufus configuration file:{RESET} {BOLD}{out_file}{RESET}")
+            print(f"{GREEN}[OK] Created Rufus configuration file:{RESET} {BOLD}{out_file}{RESET}")
         except Exception as e:
-            print(f"{RED}✗ Error writing {out_file}: {e}{RESET}")
+            print(f"{RED} Error writing {out_file}: {e}{RESET}")
 
         print(f"\n{BOLD}[HOW TO FLASH ASTERIX OS USING RUFUS (PERSISTENT LIVE USB)]{RESET}")
         print(f"  1. Download and launch {BOLD}Rufus{RESET} (https://rufus.ie).")
@@ -169,9 +169,9 @@ class LiveBootTool:
         try:
             with open(v_json_path, "w", encoding="utf-8") as f:
                 json.dump(v_cfg, f, indent=4)
-            print(f"{GREEN}✓ Created Ventoy configuration:{RESET} {BOLD}{v_json_path}{RESET}")
+            print(f"{GREEN}[OK] Created Ventoy configuration:{RESET} {BOLD}{v_json_path}{RESET}")
         except Exception as e:
-            print(f"{RED}✗ Error: {e}{RESET}")
+            print(f"{RED} Error: {e}{RESET}")
 
         print(f"\n{BOLD}[HOW TO USE VENTOY WITH ASTERIX OS]{RESET}")
         print(f"  • Ventoy is the ideal multi-boot solution: copy ISOs directly to USB.")
@@ -221,19 +221,19 @@ class LiveBootTool:
 
             print(f"\n{BOLD}[BOOT SECTOR INSPECTION]{RESET}")
             if has_mbr_sig:
-                print(f"  • MBR Boot Signature: {GREEN}✓ VALID (0xAA55){RESET}")
+                print(f"  • MBR Boot Signature: {GREEN}[OK] VALID (0xAA55){RESET}")
             else:
-                print(f"  • MBR Boot Signature: {YELLOW}⚠ Pure Optical ISO (Non-hybrid MBR){RESET}")
+                print(f"  • MBR Boot Signature: {YELLOW}[!] Pure Optical ISO (Non-hybrid MBR){RESET}")
 
             if has_isofs:
-                print(f"  • ISO9660 Header:     {GREEN}✓ DETECTED (El Torito Boot Catalog present){RESET}")
+                print(f"  • ISO9660 Header:     {GREEN}[OK] DETECTED (El Torito Boot Catalog present){RESET}")
             else:
                 print(f"  • ISO9660 Header:     Standard stream")
 
-            print(f"\n{GREEN}✓ VERIFIED: Compatible with Rufus, BalenaEtcher, Ventoy, and Linux dd.{RESET}")
+            print(f"\n{GREEN}[OK] VERIFIED: Compatible with Rufus, BalenaEtcher, Ventoy, and Linux dd.{RESET}")
             return True
         except Exception as e:
-            print(f"{RED}✗ Audit failed: {e}{RESET}")
+            print(f"{RED} Audit failed: {e}{RESET}")
             return False
 
     @classmethod
@@ -290,7 +290,7 @@ class LiveBootTool:
         )
         with open(rufus_path, "w", encoding="utf-8") as f:
             f.write(rufus_cfg)
-        print(f"  {GREEN}✔ Created Rufus Dual-Boot Profile:{RESET} {rufus_path}")
+        print(f"  {GREEN}[OK] Created Rufus Dual-Boot Profile:{RESET} {rufus_path}")
 
         # 2. ventoy.json
         ventoy_path = os.path.join(out_dir, "ventoy", "ventoy.json")
@@ -315,7 +315,7 @@ class LiveBootTool:
         }
         with open(ventoy_path, "w", encoding="utf-8") as f:
             json.dump(ventoy_cfg, f, indent=4)
-        print(f"  {GREEN}✔ Created Ventoy Multi-Boot Profile:{RESET} {ventoy_path}")
+        print(f"  {GREEN}[OK] Created Ventoy Multi-Boot Profile:{RESET} {ventoy_path}")
 
         # 3. boot/grub/grub.cfg (Dual-boot menu with Windows Chainloader)
         grub_path = os.path.join(out_dir, "boot", "grub", "grub.cfg")
@@ -355,7 +355,7 @@ class LiveBootTool:
         )
         with open(grub_path, "w", encoding="utf-8") as f:
             f.write(grub_cfg)
-        print(f"  {GREEN}✔ Created GRUB2 Dual-Boot EFI Menu:{RESET} {grub_path}")
+        print(f"  {GREEN}[OK] Created GRUB2 Dual-Boot EFI Menu:{RESET} {grub_path}")
 
         # 4. persistence_asterix.dat (Sparse Ext4 Container)
         dat_path = os.path.join(out_dir, "persistence_asterix.dat")
@@ -363,14 +363,14 @@ class LiveBootTool:
             with open(dat_path, "wb") as f:
                 f.seek((size_gb * 1024 * 1024 * 1024) - 1)
                 f.write(b"\0")
-            print(f"  {GREEN}✔ Provisioned {size_gb} GB Sparse Persistence Container:{RESET} {dat_path}")
+            print(f"  {GREEN}[OK] Provisioned {size_gb} GB Sparse Persistence Container:{RESET} {dat_path}")
         except Exception as e:
-            print(f"  {YELLOW}⚠ Could not allocate sparse persistence file: {e}{RESET}")
+            print(f"  {YELLOW}[!] Could not allocate sparse persistence file: {e}{RESET}")
 
         # 5. DUAL_BOOT_SETUP_GUIDE.md
         guide_path = os.path.join(out_dir, "DUAL_BOOT_SETUP_GUIDE.md")
         guide_content = (
-            f"# 🚀 ASTERIX OS v2.0 'Phantom' — Dual-Boot & Multi-OS Setup Guide\n\n"
+            f"# [RUN] ASTERIX OS v2.0 'Phantom' — Dual-Boot & Multi-OS Setup Guide\n\n"
             f"This bundle provides all pre-configured files to dual-boot **ASTERIX OS** alongside **Windows 10/11** or secondary operating systems from a single USB drive.\n\n"
             f"## Method 1: Rufus (Dedicated Live USB with {size_gb} GB Persistence)\n"
             f"1. Download and run **Rufus** (https://rufus.ie).\n"
@@ -389,7 +389,7 @@ class LiveBootTool:
         )
         with open(guide_path, "w", encoding="utf-8") as f:
             f.write(guide_content)
-        print(f"  {GREEN}✔ Created Comprehensive Dual-Boot Guide:{RESET} {guide_path}")
+        print(f"  {GREEN}[OK] Created Comprehensive Dual-Boot Guide:{RESET} {guide_path}")
 
         print(f"\n{BOLD}[BUNDLE READY IN '{out_dir}/']{RESET}")
         print(f"  • {BOLD}rufus.ini{RESET}                  Automated Rufus profile with {size_gb} GB persistence")
@@ -426,7 +426,7 @@ class LiveBootTool:
         print(f"  • Current Session User:    {CYAN}{cur_user}{RESET}")
         print(f"  • Root / Admin Privilege:  {GREEN if is_root else YELLOW}{'TRUE (Full System Access)' if is_root else 'STANDARD USER (Requires sudo for raw socket tools)'}{RESET}")
         print(f"  • Default Credentials:     Live: {GREEN}asterix:asterix{RESET} | Root: {RED}root:asterix{RESET}")
-        print(f"  • Account Auto-Creation:   {GREEN}✓ Active in ISO bootloader (grub.cfg & isolinux.cfg){RESET}")
+        print(f"  • Account Auto-Creation:   {GREEN}[OK] Active in ISO bootloader (grub.cfg & isolinux.cfg){RESET}")
 
         # 2. DNS & Internet Socket Reachability
         print(f"\n{BOLD}[2/4] INTERNET & DNS RESILIENCE CHECK{RESET}")
@@ -444,10 +444,10 @@ class LiveBootTool:
                 sock.connect((ip, port))
                 latency_ms = (time.time() - t0) * 1000
                 sock.close()
-                print(f"  • {name:<18} ({ip}:{port}): {GREEN}✔ ONLINE{RESET} ({latency_ms:.1f} ms)")
+                print(f"  • {name:<18} ({ip}:{port}): {GREEN}[OK] ONLINE{RESET} ({latency_ms:.1f} ms)")
                 online_count += 1
             except Exception as e:
-                print(f"  • {name:<18} ({ip}:{port}): {RED}✗ UNREACHABLE{RESET} ({e})")
+                print(f"  • {name:<18} ({ip}:{port}): {RED} UNREACHABLE{RESET} ({e})")
 
         # HTTP Resolution
         try:
@@ -457,9 +457,9 @@ class LiveBootTool:
                 status = resp.status
                 latency = (time.time() - t0) * 1000
                 if status == 200:
-                    print(f"  • HTTP Public Resolution: {GREEN}✔ VERIFIED{RESET} (cloudflare.com HTTP {status} in {latency:.1f} ms)")
+                    print(f"  • HTTP Public Resolution: {GREEN}[OK] VERIFIED{RESET} (cloudflare.com HTTP {status} in {latency:.1f} ms)")
         except Exception as e:
-            print(f"  • HTTP Public Resolution: {YELLOW}⚠ LIMITED{RESET} ({e})")
+            print(f"  • HTTP Public Resolution: {YELLOW}[!] LIMITED{RESET} ({e})")
 
         # 3. Network Stack & Drivers
         print(f"\n{BOLD}[3/4] NETWORK ADAPTER & DRIVER STACK{RESET}")
@@ -478,9 +478,9 @@ class LiveBootTool:
         # 4. Overall Health Verdict
         print(f"\n{BOLD}[4/4] SUBSYSTEM VERDICT{RESET}")
         if online_count > 0:
-            print(f"  {GREEN}{BOLD}✔ ALL INTERNET SERVICES & ACCOUNT POLICIES OPERATIONAL.{RESET}\n")
+            print(f"  {GREEN}{BOLD}[OK] ALL INTERNET SERVICES & ACCOUNT POLICIES OPERATIONAL.{RESET}\n")
         else:
-            print(f"  {YELLOW}{BOLD}⚠ OFFLINE MODE: Operating in air-gapped forensic containment.{RESET}\n")
+            print(f"  {YELLOW}{BOLD}[!] OFFLINE MODE: Operating in air-gapped forensic containment.{RESET}\n")
 
 
     @classmethod

@@ -1,5 +1,6 @@
 # Build artifacts & binaries
 target/
+kernel/build/
 *.iso
 *.img
 *.qcow2

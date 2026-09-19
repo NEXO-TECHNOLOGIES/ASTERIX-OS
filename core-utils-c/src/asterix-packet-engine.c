@@ -1,6 +1,6 @@
 /*
  * ==============================================================================
- * 🌌 ASTERIX OS — Native C Raw Socket Packet Engine & Protocol Analyzer v3.5
+ * [ASTERIX] ASTERIX OS — Native C Raw Socket Packet Engine & Protocol Analyzer v3.5
  * Architecture: High-Performance Network Triage, Packet Decoding & Crafting
  * Features:
  *   - L2/L3/L4 Protocol Decoding: Ethernet, IPv4, TCP, UDP, ICMP, DNS
@@ -125,13 +125,13 @@ void analyze_tcp_packet(const ip_hdr_t *ip, const tcp_hdr_t *tcp, size_t payload
 
     /* Cybersecurity Threat Detection Rules */
     if (flags == 0) {
-        printf(" -> ⚠️ [ALERT: NULL SCAN DETECTED]");
+        printf(" -> [!] [ALERT: NULL SCAN DETECTED]");
     } else if ((flags & (TCP_FIN | TCP_PSH | TCP_URG)) == (TCP_FIN | TCP_PSH | TCP_URG)) {
-        printf(" -> ⚠️ [ALERT: XMAS TREE SCAN DETECTED]");
+        printf(" -> [!] [ALERT: XMAS TREE SCAN DETECTED]");
     } else if ((flags & (TCP_SYN | TCP_FIN)) == (TCP_SYN | TCP_FIN)) {
-        printf(" -> ⚠️ [ALERT: MALICIOUS SYN-FIN COMBINATION]");
+        printf(" -> [!] [ALERT: MALICIOUS SYN-FIN COMBINATION]");
     } else if (ip->src_ip == ip->dst_ip && sp == dp) {
-        printf(" -> ⚠️ [ALERT: LAND ATTACK LOOPBACK EXPLOIT]");
+        printf(" -> [!] [ALERT: LAND ATTACK LOOPBACK EXPLOIT]");
     }
     printf("\n");
 }
@@ -231,7 +231,7 @@ void run_synthetic_audit(void) {
     tcp2->flags = TCP_SYN | TCP_FIN;
     analyze_packet(p2, sizeof(p2));
 
-    printf("\n[✔] Synthetic Threat Pattern Decoder Verified.\n");
+    printf("\n[[OK]] Synthetic Threat Pattern Decoder Verified.\n");
 }
 
 int main(int argc, char **argv) {
@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
     }
 
     printf("===============================================================================\n");
-    printf("  🌌 ASTERIX OS — Native C Raw Socket Packet Engine v3.5\n");
+    printf("  [ASTERIX] ASTERIX OS — Native C Raw Socket Packet Engine v3.5\n");
     printf("  Autonomous Protocol Decryption & Threat Heuristics\n");
     printf("===============================================================================\n\n");
     printf("Usage:\n");
@@ -270,7 +270,7 @@ int main(int argc, char **argv) {
             count++;
         }
         close(sock);
-        printf("[✔] Captured and analyzed %d packets.\n", count);
+        printf("[[OK]] Captured and analyzed %d packets.\n", count);
 #else
         printf("[*] Live raw socket capture on Windows requires WinPcap/Npcap or admin rights.\n");
         printf("[*] Running synthetic validation suite instead:\n\n");

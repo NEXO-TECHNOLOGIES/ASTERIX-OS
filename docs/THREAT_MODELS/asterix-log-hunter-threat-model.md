@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-log-hunter`
+# [SEC] Threat Model: `asterix-log-hunter`
 ## High-Throughput Threat Log Forensics & Anomaly Analysis Engine
 
 ### 1. Component Overview

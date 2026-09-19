@@ -112,7 +112,7 @@ void check_hidden_modules() {
             /* Flag suspicious module names */
             if (strstr(mod_name, "hide") || strstr(mod_name, "root") ||
                 strstr(mod_name, "ghost") || strstr(mod_name, "invis")) {
-                printf("  %s⚠ SUSPICIOUS NAME%s", C_RED, C_RESET);
+                printf("  %s[!] SUSPICIOUS NAME%s", C_RED, C_RESET);
             }
             printf("\n");
             count++;
@@ -134,12 +134,12 @@ void check_etc_passwd_integrity() {
         int uid;
         if (sscanf(line, "%63[^:]:%*[^:]:%d", user, &uid) == 2) {
             if (uid == 0 && strcmp(user, "root") != 0) {
-                printf("  %s⚠ UID-0 BACKDOOR ACCOUNT: %s%s\n", C_RED, user, C_RESET);
+                printf("  %s[!] UID-0 BACKDOOR ACCOUNT: %s%s\n", C_RED, user, C_RESET);
             }
         }
     }
     fclose(fp);
-    printf("  %s[✔] /etc/passwd scan complete%s\n", C_GREEN, C_RESET);
+    printf("  %s[[OK]] /etc/passwd scan complete%s\n", C_GREEN, C_RESET);
 }
 
 int main() {
@@ -168,13 +168,13 @@ int main() {
         for (int i = 0; i < sched_count; i++) {
             if (!pid_in_list(sched_pids[i], proc_pids, proc_count)) {
                 char name[64] = "<kernel-hidden>";
-                printf("  %s⚠ HIDDEN PID: %-7d  NAME: %s%s\n",
+                printf("  %s[!] HIDDEN PID: %-7d  NAME: %s%s\n",
                        C_RED, sched_pids[i], name, C_RESET);
                 hidden_count++;
             }
         }
         if (hidden_count == 0)
-            printf("  %s[✔] No hidden processes detected via scheduler comparison%s\n",
+            printf("  %s[[OK]] No hidden processes detected via scheduler comparison%s\n",
                    C_GREEN, C_RESET);
     } else {
         printf("  %s[!] /proc/sched_debug unavailable — kernel comparison skipped%s\n",
@@ -184,6 +184,6 @@ int main() {
     check_hidden_modules();
     check_etc_passwd_integrity();
 
-    printf("\n%s[✔] Rootkit detection scan complete.%s\n\n", C_GREEN, C_RESET);
+    printf("\n%s[[OK]] Rootkit detection scan complete.%s\n\n", C_GREEN, C_RESET);
     return 0;
 }

@@ -252,7 +252,7 @@ def cmd_enable():
     state["enabled"] = True
     save_state(state)
     log("Auto-update ENABLED by user", "CONFIG")
-    print(f"  {C_GREEN}{C_BOLD}[✔] ASTERIX AUTO-UPDATE: ENABLED [ON]{C_RESET}")
+    print(f"  {C_GREEN}{C_BOLD}[[OK]] ASTERIX AUTO-UPDATE: ENABLED [ON]{C_RESET}")
     print(f"  {C_GRAY}Live repository synchronization is now active.{C_RESET}\n")
     pid = read_pid()
     alive = False

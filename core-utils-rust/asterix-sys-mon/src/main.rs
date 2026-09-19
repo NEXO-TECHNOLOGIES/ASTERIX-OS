@@ -337,7 +337,7 @@ fn render_hud(snapshot: bool) {
             mem.swap_total_kb as f32 / 1024.0);
     }
 
-    println!("\n{C_CYAN}{C_BOLD} 📊 TOP SYSTEM PROCESSES (BY PHYSICAL MEMORY RSS):{C_RESET}");
+    println!("\n{C_CYAN}{C_BOLD} [STATS] TOP SYSTEM PROCESSES (BY PHYSICAL MEMORY RSS):{C_RESET}");
     println!("  {C_GRAY}{:<8} {:<24} {:<6} {:<8} {:<10} {}{C_RESET}",
         "PID", "PROCESS NAME", "STATE", "THREADS", "RSS (KB)", "RSS (MB)");
     println!("  {C_GRAY}{}{C_RESET}", "─".repeat(74));

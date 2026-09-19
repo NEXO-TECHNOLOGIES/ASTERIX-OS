@@ -22,11 +22,11 @@ if command -v cargo >/dev/null 2>&1; then
     echo -e "${GREEN}[*] Detected Cargo. Building optimized release binary...${NC}"
     cargo build --release
     cp target/release/asterix-loader ./asterix-loader
-    echo -e "${GREEN}${BOLD}[✔] Binary built successfully: ./asterix-loader${NC}"
+    echo -e "${GREEN}${BOLD}[[OK]] Binary built successfully: ./asterix-loader${NC}"
 elif command -v rustc >/dev/null 2>&1; then
     echo -e "${YELLOW}[*] Detected standalone rustc. Compiling src/main.rs directly...${NC}"
     rustc -O -C lto=yes -C panic=abort src/main.rs -o asterix-loader
-    echo -e "${GREEN}${BOLD}[✔] Binary compiled successfully: ./asterix-loader${NC}"
+    echo -e "${GREEN}${BOLD}[[OK]] Binary compiled successfully: ./asterix-loader${NC}"
 else
     echo -e "${RED}[!] ERROR: Neither 'cargo' nor 'rustc' was found in PATH.${NC}"
     echo -e "${YELLOW}Install Rust using:${NC}"

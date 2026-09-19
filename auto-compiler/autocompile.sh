@@ -125,7 +125,7 @@ while [ $pass -le $max_passes ]; do
 
     if [ $rc -eq 0 ]; then
         success=1
-        echo -e "  ${C_GREEN}${C_BOLD}[✔] COMPILATION SUCCEEDED!${C_RESET}"
+        echo -e "  ${C_GREEN}${C_BOLD}[[OK]] COMPILATION SUCCEEDED!${C_RESET}"
         if [ -f "$out_bin" ]; then
             if command -v strip >/dev/null 2>&1 && [ "$compiler" != "go" ]; then
                 strip --strip-unneeded "$out_bin" 2>/dev/null || true

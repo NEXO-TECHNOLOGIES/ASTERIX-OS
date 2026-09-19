@@ -471,14 +471,14 @@ def render_html_graph(graph: AttackGraph, shortest_path: Optional[List[str]], lo
 
 <header>
   <div class="logo">
-    <span>🕸️ ASTERIX OS</span>
+    <span> ASTERIX OS</span>
     <span class="badge">PATHFINDER v3.0</span>
   </div>
   <div class="controls">
-    <button id="btn-shortest" class="active" onclick="setHighlight('shortest')">⚡ Shortest Path</button>
-    <button id="btn-stealth" onclick="setHighlight('stealth')">👻 Lowest Noise (Stealth)</button>
-    <button id="btn-all" onclick="setHighlight('all')">🌐 Full Attack Surface</button>
-    <button onclick="resetView()">🎯 Center HUD</button>
+    <button id="btn-shortest" class="active" onclick="setHighlight('shortest')">[*] Shortest Path</button>
+    <button id="btn-stealth" onclick="setHighlight('stealth')"> Lowest Noise (Stealth)</button>
+    <button id="btn-all" onclick="setHighlight('all')">[NET] Full Attack Surface</button>
+    <button onclick="resetView()">[TARGET] Center HUD</button>
   </div>
 </header>
 
@@ -817,12 +817,12 @@ def main():
         print(f"\n{C_YELLOW}{C_BOLD}[+] IDENTIFIED CROWN JEWELS & OBJECTIVES:{C_RESET}")
         for cj in cj_nodes:
             meta = graph.nodes[cj].get("metadata", {})
-            print(f"    🎯 {C_BOLD}{graph.nodes[cj]['label']}{C_RESET} (OS: {meta.get('os', 'N/A')})")
+            print(f"    [TARGET] {C_BOLD}{graph.nodes[cj]['label']}{C_RESET} (OS: {meta.get('os', 'N/A')})")
 
     if args.command in ("paths", "demo"):
         print(f"\n{C_CYAN}{C_BOLD}[*] COMPUTED ATTACK VECTOR TRAVERSALS:{C_RESET}")
         if shortest_path:
-            print(f"\n  {C_CYAN}{C_BOLD}⚡ SHORTEST ATTACK PATH (Hops: {len(shortest_path)-1}, Cost: {sp_dist:.1f}){C_RESET}")
+            print(f"\n  {C_CYAN}{C_BOLD}[*] SHORTEST ATTACK PATH (Hops: {len(shortest_path)-1}, Cost: {sp_dist:.1f}){C_RESET}")
             for idx, nid in enumerate(shortest_path):
                 arrow = " ──▶ " if idx < len(shortest_path) - 1 else ""
                 print(f"    [{idx}] {graph.nodes[nid]['label']}{arrow}")
@@ -830,7 +830,7 @@ def main():
             print(f"  {C_YELLOW}[!] No direct path found to {target_cj}{C_RESET}")
 
         if lowest_noise_path:
-            print(f"\n  {C_GREEN}{C_BOLD}👻 LOWEST-NOISE STEALTH PATH (Detection Noise Score: {ln_noise:.1f}){C_RESET}")
+            print(f"\n  {C_GREEN}{C_BOLD} LOWEST-NOISE STEALTH PATH (Detection Noise Score: {ln_noise:.1f}){C_RESET}")
             for idx, nid in enumerate(lowest_noise_path):
                 arrow = " ──▶ " if idx < len(lowest_noise_path) - 1 else ""
                 print(f"    [{idx}] {graph.nodes[nid]['label']}{arrow}")
@@ -840,7 +840,7 @@ def main():
         print(f"\n{C_MAGENTA}{C_BOLD}[*] CRITICAL NETWORK CHOKEPOINTS (High-Value Pivot Targets):{C_RESET}")
         if chokepoints:
             for nid, count in chokepoints[:5]:
-                print(f"    🛡️  {C_BOLD}{graph.nodes[nid]['label']}{C_RESET} (Intersected in {count} optimal traversals)")
+                print(f"    [SEC]  {C_BOLD}{graph.nodes[nid]['label']}{C_RESET} (Intersected in {count} optimal traversals)")
         else:
             print(f"    {C_DIM}None detected.{C_RESET}")
 
@@ -848,8 +848,8 @@ def main():
     out_html = args.export_html or ("reports/attack_path_graph.html" if args.command == "export-html" or args.command == "demo" else None)
     if out_html:
         render_html_graph(graph, shortest_path, lowest_noise_path, out_html)
-        print(f"\n{C_GREEN}{C_BOLD}[✓] Exported Interactive Cyber Attack Graph Visualizer:{C_RESET}")
-        print(f"    📄 {os.path.abspath(out_html)}")
+        print(f"\n{C_GREEN}{C_BOLD}[[OK]] Exported Interactive Cyber Attack Graph Visualizer:{C_RESET}")
+        print(f"     {os.path.abspath(out_html)}")
 
 
 if __name__ == "__main__":

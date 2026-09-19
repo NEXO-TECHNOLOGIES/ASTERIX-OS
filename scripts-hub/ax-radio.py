@@ -373,11 +373,11 @@ def main():
         alerts = audit_evil_twins(nets)
         print(f"\n{C_MAGENTA}{C_BOLD}[*] EVIL TWIN & ROGUE ACCESS POINT ANALYSIS:{C_RESET}")
         if not alerts:
-            print(f"  {C_GREEN}[✓] Clean spectrum: No duplicate SSIDs with conflicting OUIs or encryption downgrades.{C_RESET}")
+            print(f"  {C_GREEN}[[OK]] Clean spectrum: No duplicate SSIDs with conflicting OUIs or encryption downgrades.{C_RESET}")
         else:
             for a in alerts:
                 c_color = C_RED if a["severity"] == "CRITICAL" else (C_YELLOW if a["severity"] == "HIGH" else C_CYAN)
-                print(f"\n  {c_color}{C_BOLD}🚨 [{a['severity']}] {a['type']}{C_RESET}")
+                print(f"\n  {c_color}{C_BOLD}[ALERT] [{a['severity']}] {a['type']}{C_RESET}")
                 print(f"     Target SSID: {C_BOLD}{a['ssid']}{C_RESET}")
                 print(f"     Details:     {a['description']}")
                 print(f"     Conflicting BSSIDs:")
@@ -395,9 +395,9 @@ def main():
         if jamming["anomalies"]:
             print(f"  • Anomalies Flagged:")
             for anom in jamming["anomalies"]:
-                print(f"    {C_YELLOW}⚠ {anom}{C_RESET}")
+                print(f"    {C_YELLOW}[!] {anom}{C_RESET}")
         else:
-            print(f"  {C_GREEN}[✓] No carrier wave or wideband noise anomalies detected on current band.{C_RESET}")
+            print(f"  {C_GREEN}[[OK]] No carrier wave or wideband noise anomalies detected on current band.{C_RESET}")
         print(f"  • Anti-Jamming Mitigations:")
         for mit in jamming["defensive_countermeasures"]:
             print(f"    - {mit}")
@@ -410,7 +410,7 @@ def main():
         if deauth["vulnerable_networks"]:
             print(f"  • Top Exposed Networks (Susceptible to Unauthenticated Deauth Floods):")
             for vn in deauth["vulnerable_networks"][:3]:
-                print(f"    {C_RED}⚠ {vn['ssid']}{C_RESET} ({vn['bssid']}) ── Auth: {vn['auth']} [PMF: None]")
+                print(f"    {C_RED}[!] {vn['ssid']}{C_RESET} ({vn['bssid']}) ── Auth: {vn['auth']} [PMF: None]")
         print(f"  • Active Deauth Frame Signatures:")
         for ev in deauth["simulated_telemetry"]:
             print(f"    [{ev['timestamp']}] Target: {ev['target_bssid']} | Code: {ev['reason_code']} | State: {C_GREEN}{ev['status']}{C_RESET}")
@@ -423,7 +423,7 @@ def main():
         print(f"\n{C_CYAN}{C_BOLD}[*] PASSIVE BLE BEACON & TRACKER SENTINEL:{C_RESET}")
         for t in trackers:
             color = C_RED if t["stalking_risk"] == "HIGH" else (C_GREEN if t["stalking_risk"] == "LOW" else C_YELLOW)
-            print(f"\n  {color}{C_BOLD}📻 {t['type']}{C_RESET} (Risk: {color}{t['stalking_risk']}{C_RESET})")
+            print(f"\n  {color}{C_BOLD} {t['type']}{C_RESET} (Risk: {color}{t['stalking_risk']}{C_RESET})")
             print(f"     MAC:          {t['mac']} (Rotating: {t['rotating_mac']})")
             print(f"     Signal RSSI:  {t['rssi']} dBm")
             print(f"     Manufacturer: {t['manufacturer_id']}")

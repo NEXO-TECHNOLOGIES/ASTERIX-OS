@@ -1,11 +1,11 @@
-# ☁️ ASTERIX OS Cloud Calculations & 50-Coins Panel Integration
+#  ASTERIX OS Cloud Calculations & 50-Coins Panel Integration
 ### Offload Heavy Computations & Store Cloud Vaults with Your Discord / Hosting Panel
 
 **ASTERIX OS** includes a dedicated **Cloud Compute & Remote Storage Engine** designed to interface directly with your hosting panel (e.g. 50-coins container, Pterodactyl panel, VPS, or Discord bot worker).
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌──────────────────────────────────────┐                         ┌──────────────────────────────────────┐
@@ -20,7 +20,7 @@
 
 ---
 
-## 🚀 1. Deploying the Cloud Worker on Your 50-Coins Panel
+## [RUN] 1. Deploying the Cloud Worker on Your 50-Coins Panel
 
 Inside your hosting panel (Python, Node, or generic Linux egg):
 
@@ -35,12 +35,12 @@ Inside your hosting panel (Python, Node, or generic Linux egg):
    ```
 4. Your panel will output:
    ```
-   [✔] ASTERIX Cloud Compute & Storage Node ONLINE on port 8080
+   [[OK]] ASTERIX Cloud Compute & Storage Node ONLINE on port 8080
    ```
 
 ---
 
-## ⚡ 2. Linking ASTERIX OS to Your Panel
+## [*] 2. Linking ASTERIX OS to Your Panel
 
 On your ASTERIX OS machine or Termux mobile session:
 
@@ -56,7 +56,7 @@ as-cloud status
 
 ---
 
-## 💻 3. Performing Cloud Calculations (`as-cloud compute`)
+## [HOST] 3. Performing Cloud Calculations (`as-cloud compute`)
 
 Instead of overloading your local device's CPU or battery, offload intensive jobs to your panel:
 
@@ -77,7 +77,7 @@ as-cloud compute "python3 -c 'import hashlib; print(hashlib.sha256(b\"asterix\")
 
 ---
 
-## 💾 4. Using the Panel as Remote Cloud Storage
+## [DISK] 4. Using the Panel as Remote Cloud Storage
 
 ### Upload a file to your cloud vault:
 ```bash
@@ -96,7 +96,7 @@ as-cloud pull notes.txt
 
 ---
 
-## 🤖 5. Discord Webhook & Bot Alerts Integration
+## [AI] 5. Discord Webhook & Bot Alerts Integration
 
 Combine the cloud panel with Discord webhooks:
 ```bash

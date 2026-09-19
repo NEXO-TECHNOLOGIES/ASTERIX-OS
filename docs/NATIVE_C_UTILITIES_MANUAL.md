@@ -1,10 +1,10 @@
-# 🔧 ASTERIX OS — Native C Systems Utilities Manual
+# [TOOL] ASTERIX OS — Native C Systems Utilities Manual
 
 A comprehensive guide to all native C utilities compiled and shipped with ASTERIX OS.
 
 ---
 
-## 🧱 Building the Native C Suite
+##  Building the Native C Suite
 
 ```bash
 # Compile all utilities (requires gcc or clang)
@@ -18,7 +18,7 @@ sudo make install      # Installs to /usr/local/bin/
 
 ---
 
-## 🖥️ 1. `asterix-sysinfo` — Hardware & Kernel Telemetry Probe
+## [SCREEN] 1. `asterix-sysinfo` — Hardware & Kernel Telemetry Probe
 
 Reads low-level kernel registers and system files to display CPU model, memory layout, thermal zones, and uptime.
 
@@ -30,7 +30,7 @@ asterix-sysinfo
 
 ---
 
-## 🔬 2. `asterix-memview` — Memory & Binary Hex Inspector
+##  2. `asterix-memview` — Memory & Binary Hex Inspector
 
 Displays colorized hex dumps of any binary file or live process memory mappings from `/proc/<pid>/maps`.
 
@@ -49,7 +49,7 @@ asterix-memview -p <PID>
 
 ---
 
-## 📡 3. `asterix-netprobe` — Non-Blocking Network & Port Prober
+## [SIGNAL] 3. `asterix-netprobe` — Non-Blocking Network & Port Prober
 
 Asynchronous multi-port TCP connection tester with live latency measurements.
 
@@ -68,7 +68,7 @@ asterix-netprobe target.htb 80 443 500
 
 ---
 
-## 🔑 4. `asterix-hasher` — Cryptographic Integrity Verifier
+## [KEY] 4. `asterix-hasher` — Cryptographic Integrity Verifier
 
 Zero-dependency, standalone CRC-32 and SHA-256 file checksum calculator.
 
@@ -83,7 +83,7 @@ asterix-hasher /asterix_persistent/loot.tar.gz
 
 ---
 
-## 🗑️ 5. `asterix-shredder` — DoD Secure Storage Wiper
+##  5. `asterix-shredder` — DoD Secure Storage Wiper
 
 Multi-pass cryptographic random overwrite + zero-fill sanitizer. File is truncated and unlinked after shredding.
 
@@ -102,7 +102,7 @@ asterix-shredder /dev/sdb 35
 
 ---
 
-## 🔍 6. `asterix-proctrace` — Real-Time Process & Memory Tracer
+## [SCAN] 6. `asterix-proctrace` — Real-Time Process & Memory Tracer
 
 Live top-30 process monitor sorted by RAM usage, refreshing every second.
 
@@ -118,7 +118,7 @@ asterix-proctrace --pid 1234
 
 ---
 
-## 🤖 7. `scripts-hub/` Automation Suite
+## [AI] 7. `scripts-hub/` Automation Suite
 
 | Script | Usage | Description |
 |:---|:---|:---|
@@ -129,7 +129,7 @@ asterix-proctrace --pid 1234
 
 ---
 
-## ⚡ ASTERIX Shell Aliases
+## [*] ASTERIX Shell Aliases
 
 ```bash
 as-sysinfo      # Launch asterix-sysinfo

@@ -30,11 +30,11 @@ $COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-netprobe.c -o bin/asterix-
 $COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-hasher.c -o bin/asterix-hasher
 $COMPILER -O2 -Wall -Wextra -D_GNU_SOURCE src/asterix-shredder.c -o bin/asterix-shredder
 
-echo -e "\033[32m[✔] Successfully compiled all C binaries in ${SCRIPT_DIR}/bin/\033[0m"
+echo -e "\033[32m[[OK]] Successfully compiled all C binaries in ${SCRIPT_DIR}/bin/\033[0m"
 ls -lh bin/
 
 if [ "$EUID" -eq 0 ] || [ -w "/usr/local/bin" ]; then
     cp -f bin/* /usr/local/bin/
     chmod 755 /usr/local/bin/asterix-*
-    echo -e "\033[32m[✔] Installed to /usr/local/bin/ globally!\033[0m"
+    echo -e "\033[32m[[OK]] Installed to /usr/local/bin/ globally!\033[0m"
 fi

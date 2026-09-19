@@ -96,7 +96,7 @@ done
 
 # Auto-generated Termux install guide
 cat > "$STAGING_DIR/asterix-termux/TERMUX_INSTALL_GUIDE.md" << 'GUIDE_EOF'
-# 📱 ASTERIX OS v2.0 'Phantom' — Termux ARM64 Install Guide
+# [MOBILE] ASTERIX OS v2.0 'Phantom' — Termux ARM64 Install Guide
 
 ## Requirements
 - Android 7.0 or later
@@ -148,12 +148,12 @@ ax boot-tool dualboot 4      # Generate dual-boot USB files
 ~1.5 GB expanded (with Debian PRoot)
 GUIDE_EOF
 
-echo -e "${GREEN}  [✔] Staging complete: $(find "$STAGING_DIR" -type f | wc -l) files staged${NC}"
+echo -e "${GREEN}  [[OK]] Staging complete: $(find "$STAGING_DIR" -type f | wc -l) files staged${NC}"
 
 echo -e "${YELLOW}[*] Step 2: Computing staging directory size...${NC}"
 STAGING_SIZE_BYTES=$(find "$STAGING_DIR" -type f -exec wc -c {} + 2>/dev/null | tail -1 | awk '{print $1}')
 STAGING_SIZE_MB=$(echo "$STAGING_SIZE_BYTES" | awk '{printf "%.1f", $1/1048576}')
-echo -e "${GREEN}  [✔] Pre-compression payload: ${STAGING_SIZE_MB} MB${NC}"
+echo -e "${GREEN}  [[OK]] Pre-compression payload: ${STAGING_SIZE_MB} MB${NC}"
 
 echo -e "${YELLOW}[*] Step 3: Creating compressed .tar.gz bundle...${NC}"
 cd "$STAGING_DIR"
@@ -162,8 +162,8 @@ tar -czf "$BUNDLE_PATH" asterix-termux/ 2>/dev/null
 BUNDLE_BYTES=$(wc -c < "$BUNDLE_PATH")
 BUNDLE_MB=$(echo "$BUNDLE_BYTES" | awk '{printf "%.1f", $1/1048576}')
 
-echo -e "${GREEN}  [✔] Bundle created: ${BUNDLE_PATH}${NC}"
-echo -e "${GREEN}  [✔] Compressed size: ${BUNDLE_MB} MB${NC}"
+echo -e "${GREEN}  [[OK]] Bundle created: ${BUNDLE_PATH}${NC}"
+echo -e "${GREEN}  [[OK]] Compressed size: ${BUNDLE_MB} MB${NC}"
 
 echo -e "${YELLOW}[*] Step 4: Computing SHA-256 & SHA-512 checksums...${NC}"
 if command -v sha256sum > /dev/null 2>&1; then
@@ -188,7 +188,7 @@ rm -rf "$STAGING_DIR"
 
 echo ""
 echo -e "${CYAN}${BOLD}══════════════════════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}${BOLD}  ✔ ASTERIX OS TERMUX ARM64 BUNDLE READY FOR DISTRIBUTION!${NC}"
+echo -e "${GREEN}${BOLD}  [OK] ASTERIX OS TERMUX ARM64 BUNDLE READY FOR DISTRIBUTION!${NC}"
 echo -e "${CYAN}══════════════════════════════════════════════════════════════════${NC}"
 echo -e "  • Bundle:    ${YELLOW}${BUNDLE_PATH}${NC}"
 echo -e "  • Size:      ${YELLOW}${BUNDLE_MB} MB${NC}"

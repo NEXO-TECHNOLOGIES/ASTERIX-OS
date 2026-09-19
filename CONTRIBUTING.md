@@ -4,13 +4,13 @@ Thank you for your interest in contributing to **ASTERIX OS**! We welcome contri
 
 ---
 
-## 🧭 Code of Conduct
+##  Code of Conduct
 
 All contributors are expected to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) and uphold the [Authorized Testing Only](SECURITY.md) guidelines.
 
 ---
 
-## 🛠️ Development Setup & Standards
+##  Development Setup & Standards
 
 ### 1. Zero External Dependency Policy for Core Scripts
 To guarantee instant execution across mobile Android Termux, embedded systems, and minimal Linux containers:
@@ -34,7 +34,7 @@ python scripts-hub/ax-release-verify.py --update
 
 ---
 
-## 🧪 Testing Your Changes
+## [TEST] Testing Your Changes
 
 Before submitting a pull request, you must run the local automated test suite:
 
@@ -53,7 +53,7 @@ All tests must pass (`OK`).
 
 ---
 
-## 🔀 Submitting a Pull Request
+## [TWIST] Submitting a Pull Request
 
 1. Fork the repository and create a descriptive branch: `git checkout -b feat/your-feature-name`.
 2. Follow Conventional Commits format:

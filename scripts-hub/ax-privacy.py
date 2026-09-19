@@ -239,19 +239,19 @@ class MediaScrubber:
                 total_bytes_scrubbed += result["saved_bytes"]
                 print(f"  • {C_BOLD}{result['file']}{C_RESET}:")
                 for item in result["findings"]:
-                    icon = f"{C_RED}🚨{C_RESET}" if "CRITICAL" in item else f"{C_YELLOW}⚠{C_RESET}"
+                    icon = f"{C_RED}[ALERT]{C_RESET}" if "CRITICAL" in item else f"{C_YELLOW}[!]{C_RESET}"
                     print(f"    ↳ {icon} {item}")
                 if not audit_only:
-                    print(f"    {C_GREEN}✓ Stripped {result['saved_bytes']} bytes of tracking metadata (Lossless).{C_RESET}")
+                    print(f"    {C_GREEN}[OK] Stripped {result['saved_bytes']} bytes of tracking metadata (Lossless).{C_RESET}")
             else:
-                print(f"  • {C_BOLD}{result['file']}{C_RESET}: {C_GREEN}✓ No tracking metadata present (Clean).{C_RESET}")
+                print(f"  • {C_BOLD}{result['file']}{C_RESET}: {C_GREEN}[OK] No tracking metadata present (Clean).{C_RESET}")
 
         print(f"\n  {C_WHITE}{C_BOLD}SUMMARY:{C_RESET}")
         print(f"  • Files Inspected:       {C_BOLD}{total_files}{C_RESET}")
         print(f"  • Contained Metadata:    {C_YELLOW}{total_sanitized}{C_RESET}")
         if not audit_only:
             print(f"  • Metadata Excised:      {C_GREEN}{total_bytes_scrubbed} bytes{C_RESET}")
-            print(f"\n  {C_GREEN}{C_BOLD}✓ SUCCESS: All media assets have been anonymized for zero-trace sharing.{C_RESET}\n")
+            print(f"\n  {C_GREEN}{C_BOLD}[OK] SUCCESS: All media assets have been anonymized for zero-trace sharing.{C_RESET}\n")
 
 
 # =============================================================================
@@ -430,12 +430,12 @@ class IPShield:
         if stun_ip:
             if stun_ip == public_ip:
                 webrtc_vulnerable = True
-                print(f"    {C_RED}{C_BOLD}🚨 VULNERABLE: Direct STUN queries expose your exact public IP!{C_RESET}")
+                print(f"    {C_RED}{C_BOLD}[ALERT] VULNERABLE: Direct STUN queries expose your exact public IP!{C_RESET}")
                 print(f"    {C_DIM}Any website using WebRTC JavaScript can reveal this IP without VPN protection.{C_RESET}")
             else:
-                print(f"    {C_YELLOW}⚠ STUN mapped to alternate endpoint ({stun_ip}). NAT/VPN translation active.{C_RESET}")
+                print(f"    {C_YELLOW}[!] STUN mapped to alternate endpoint ({stun_ip}). NAT/VPN translation active.{C_RESET}")
         else:
-            print(f"    {C_GREEN}✓ SECURE: STUN UDP probes blocked or dropped by local firewall.{C_RESET}")
+            print(f"    {C_GREEN}[OK] SECURE: STUN UDP probes blocked or dropped by local firewall.{C_RESET}")
 
         # 3. IPv6 Leak Audit
         print(f"\n  {C_WHITE}{C_BOLD}3. IPV6 DUAL-STACK LEAK AUDIT:{C_RESET}")
@@ -451,11 +451,11 @@ class IPShield:
             pass
 
         if has_ipv6 and ipv6_addr and not ipv6_addr.startswith("fe80"):
-            print(f"    {C_RED}{C_BOLD}🚨 IPV6 LEAK RISK: Active Global Unicast Address detected!{C_RESET}")
+            print(f"    {C_RED}{C_BOLD}[ALERT] IPV6 LEAK RISK: Active Global Unicast Address detected!{C_RESET}")
             print(f"    ↳ Global IPv6: {ipv6_addr}")
             print(f"    {C_DIM}Many VPNs only tunnel IPv4, leaking your ISP identity through IPv6.{C_RESET}")
         else:
-            print(f"    {C_GREEN}✓ SECURE: Zero unencapsulated global IPv6 egress detected.{C_RESET}")
+            print(f"    {C_GREEN}[OK] SECURE: Zero unencapsulated global IPv6 egress detected.{C_RESET}")
 
         # 4. Privacy Scorecard
         score = 100
@@ -472,7 +472,7 @@ class IPShield:
             if has_ipv6:
                 print(f"  2. Disable IPv6 on your network adapter if using an IPv4-only VPN tunnel.")
         else:
-            print(f"  {C_GREEN}✓ Excellent privacy posture: High resistance to tracking and IP de-anonymization.{C_RESET}\n")
+            print(f"  {C_GREEN}[OK] Excellent privacy posture: High resistance to tracking and IP de-anonymization.{C_RESET}\n")
 
 
 # =============================================================================

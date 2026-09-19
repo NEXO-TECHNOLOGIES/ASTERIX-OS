@@ -93,7 +93,7 @@ class CallShield:
                "Detecting inaudible 18kHz-22kHz cross-device surveillance beacons")
 
         if not os.path.isfile(audio_path):
-            print(f"{RED}✗ ERROR: Target audio file not found: {audio_path}{RESET}")
+            print(f"{RED} ERROR: Target audio file not found: {audio_path}{RESET}")
             return False
 
         print(f"{CYAN}Auditing audio container:{RESET} {audio_path}")
@@ -110,7 +110,7 @@ class CallShield:
                 print(f"  • Duration:    {num_frames / sample_rate:.2f} seconds")
 
                 if sample_rate < 40000:
-                    print(f"\n{YELLOW}⚠ WARNING: Sample rate ({sample_rate} Hz) cannot capture ultrasonic band (>18kHz).")
+                    print(f"\n{YELLOW}[!] WARNING: Sample rate ({sample_rate} Hz) cannot capture ultrasonic band (>18kHz).")
                     print(f"  Ultrasonic beacons require >= 44,100 Hz sampling rate to record.{RESET}")
                     return True
 
@@ -144,26 +144,26 @@ class CallShield:
                 power_display = f"{power:.2e}"
                 # Intentional beacon threshold: normalized power >= 1.0e-3 (equivalent to significant tone amplitude)
                 if power >= 1.0e-3:
-                    print(f"  • {freq:5d} Hz: {RED}🚨 CRITICAL SPIKE detected (Power: {power_display}){RESET}")
+                    print(f"  • {freq:5d} Hz: {RED}[ALERT] CRITICAL SPIKE detected (Power: {power_display}){RESET}")
                     beacon_detected = True
                     detected_freqs.append(freq)
                 else:
-                    print(f"  • {freq:5d} Hz: {GREEN}✓ Normal background floor ({power_display}){RESET}")
+                    print(f"  • {freq:5d} Hz: {GREEN}[OK] Normal background floor ({power_display}){RESET}")
 
             print(f"\n{BOLD}[SURVEILLANCE BEACON EVALUATION]{RESET}")
             if beacon_detected:
-                print(f"{RED}🚨 THREAT IDENTIFIED: Active Ultrasonic Tracking Beacon Detected!{RESET}")
+                print(f"{RED}[ALERT] THREAT IDENTIFIED: Active Ultrasonic Tracking Beacon Detected!{RESET}")
                 print(f"  ↳ Emitting frequencies: {', '.join(f'{f} Hz' for f in detected_freqs)}")
                 print(f"  ↳ Vector: Cross-device ultrasonic beaconing (e.g. SilverPush / Lisnr / Ad-tracking).")
                 print(f"  ↳ Impact: Unpaired devices sharing this room can correlate identities via microphone!")
                 print(f"  ↳ Mitigation: Apply a 16 kHz low-pass audio filter to neutralize covert tracking.")
             else:
-                print(f"{GREEN}✓ CLEAN: Zero ultrasonic beacons detected in audio stream.{RESET}")
+                print(f"{GREEN}[OK] CLEAN: Zero ultrasonic beacons detected in audio stream.{RESET}")
                 print(f"  ↳ Audio stream is free of cross-device ultrasonic tracking beacons.")
 
             return not beacon_detected
         except Exception as e:
-            print(f"{RED}✗ Failed to parse audio file: {e}{RESET}")
+            print(f"{RED} Failed to parse audio file: {e}{RESET}")
             return False
 
     @classmethod
@@ -181,7 +181,7 @@ class CallShield:
                 with open(target_or_file, "r", encoding="utf-8", errors="ignore") as f:
                     sip_data = f.read()
             except Exception as e:
-                print(f"{RED}✗ Error reading file: {e}{RESET}")
+                print(f"{RED} Error reading file: {e}{RESET}")
                 return False
         else:
             print(f"{CYAN}Auditing live VoIP Endpoint / SIP URI:{RESET} {target_or_file}")
@@ -206,10 +206,10 @@ class CallShield:
         has_cleartext_udp = "sip/2.0/udp" in sip_data.lower()
 
         if has_sips or has_tls:
-            print(f"  • Protocol:    {GREEN}✓ SECURE (SIPS / SIP over TLS 5061){RESET}")
+            print(f"  • Protocol:    {GREEN}[OK] SECURE (SIPS / SIP over TLS 5061){RESET}")
             print(f"  • Signaling:   Encrypted against ISP call-metadata sniffing.")
         else:
-            print(f"  • Protocol:    {RED}🚨 VULNERABLE: Cleartext SIP (UDP/TCP Port 5060){RESET}")
+            print(f"  • Protocol:    {RED}[ALERT] VULNERABLE: Cleartext SIP (UDP/TCP Port 5060){RESET}")
             print(f"  • Risk:        ISPs and network taps can extract Caller ID, Dialed Numbers, and Call Duration.")
 
         print(f"\n{BOLD}[2. AUDIO MEDIA ENCRYPTION (RTP vs SRTP)]{RESET}")
@@ -217,32 +217,32 @@ class CallShield:
         has_rtp = "rtp/avp" in sip_data.lower()
 
         if has_srtp:
-            print(f"  • Media Type:  {GREEN}✓ SECURE: Secure RTP (SRTP - RFC 3711){RESET}")
+            print(f"  • Media Type:  {GREEN}[OK] SECURE: Secure RTP (SRTP - RFC 3711){RESET}")
             print(f"  • Audio Feed:  AES-128/256 Counter Mode encrypted voice payload.")
         elif has_rtp:
-            print(f"  • Media Type:  {RED}🚨 CRITICAL: Unencrypted RTP/AVP Stream{RESET}")
+            print(f"  • Media Type:  {RED}[ALERT] CRITICAL: Unencrypted RTP/AVP Stream{RESET}")
             print(f"  • Eavesdropping Risk: High! Anyone capturing packets can reconstruct the raw audio call!")
         else:
-            print(f"  • Media Type:  {YELLOW}⚠ Undetermined audio media profile.{RESET}")
+            print(f"  • Media Type:  {YELLOW}[!] Undetermined audio media profile.{RESET}")
 
         print(f"\n{BOLD}[3. NETWORK LEAKAGE & PRIVATE IP RECONNAISSANCE]{RESET}")
         private_ip_match = re.findall(r"(?:192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+)", sip_data)
         if private_ip_match:
             unique_ips = sorted(list(set(private_ip_match)))
-            print(f"  • Internal IP Leak: {RED}🚨 LEAKED: Private LAN IPs exposed in SIP/SDP headers!{RESET}")
+            print(f"  • Internal IP Leak: {RED}[ALERT] LEAKED: Private LAN IPs exposed in SIP/SDP headers!{RESET}")
             for pip in unique_ips:
                 print(f"    ↳ Exposed LAN endpoint: {pip}")
             print(f"    ↳ Surveillance risk: Enables targeted internal network traversal and caller tracking.")
         else:
-            print(f"  • Internal IP Leak: {GREEN}✓ SECURE: Zero LAN IP addresses disclosed in SDP.{RESET}")
+            print(f"  • Internal IP Leak: {GREEN}[OK] SECURE: Zero LAN IP addresses disclosed in SDP.{RESET}")
 
         print(f"\n{BOLD}[4. USER-AGENT HARDENING]{RESET}")
         ua_match = re.search(r"User-Agent:\s*([^\r\n]+)", sip_data, re.IGNORECASE)
         if ua_match:
-            print(f"  • Software Banner: {YELLOW}⚠ Broadcasts '{ua_match.group(1)}'{RESET}")
+            print(f"  • Software Banner: {YELLOW}[!] Broadcasts '{ua_match.group(1)}'{RESET}")
             print(f"    ↳ Recommendation: Strip User-Agent to prevent targeted VoIP vulnerability exploitation.")
         else:
-            print(f"  • Software Banner: {GREEN}✓ Clean (No User-Agent disclosed){RESET}")
+            print(f"  • Software Banner: {GREEN}[OK] Clean (No User-Agent disclosed){RESET}")
 
         print(f"\n{BOLD}========================================================================={RESET}")
         score = (35 if has_sips or has_tls else 0) + (45 if has_srtp else 0) + (10 if not private_ip_match else 0) + (10 if not ua_match else 0)
@@ -281,11 +281,11 @@ class CallShield:
 
         print(f"\n{BOLD}[AUDIO HARDWARE CAPTURE STATUS]{RESET}")
         if suspicious:
-            print(f"{RED}🚨 WARNING: Detected active audio capture handles:{RESET}")
+            print(f"{RED}[ALERT] WARNING: Detected active audio capture handles:{RESET}")
             for item in suspicious:
                 print(f"  • {item}")
         else:
-            print(f"{GREEN}✓ No unauthorized background processes currently holding microphone locks.{RESET}")
+            print(f"{GREEN}[OK] No unauthorized background processes currently holding microphone locks.{RESET}")
             print(f"  • Host OS Audio Subsystem: Inactive / Idle")
 
         print(f"\n{CYAN}Hardening Recommendations:{RESET}")
@@ -312,7 +312,7 @@ class VisionShield:
                "Auditing image bitplanes for hidden LSB payloads, tracking dots & watermarks")
 
         if not os.path.isfile(image_path):
-            print(f"{RED}✗ ERROR: Target file not found: {image_path}{RESET}")
+            print(f"{RED} ERROR: Target file not found: {image_path}{RESET}")
             return False
 
         print(f"{CYAN}Forensic analysis target:{RESET} {image_path}")
@@ -324,7 +324,7 @@ class VisionShield:
             with open(image_path, "rb") as f:
                 data = f.read()
         except Exception as e:
-            print(f"{RED}✗ Failed to read image: {e}{RESET}")
+            print(f"{RED} Failed to read image: {e}{RESET}")
             return False
 
         # Check format
@@ -360,7 +360,7 @@ class VisionShield:
 
         sample_len = min(len(pixel_bytes), 200000)
         if sample_len < 100:
-            print(f"{YELLOW}⚠ Insufficient pixel data to conduct statistical bitplane audit.{RESET}")
+            print(f"{YELLOW}[!] Insufficient pixel data to conduct statistical bitplane audit.{RESET}")
             return True
 
         samples = pixel_bytes[:sample_len]
@@ -406,16 +406,16 @@ class VisionShield:
         print(f"\n{BOLD}[SURVEILLANCE WATERMARK & STEGO VERDICT]{RESET}")
         # High entropy (>0.995) + artificial 50/50 LSB equalization
         if entropy > 0.995 and 0.48 <= p0 <= 0.52:
-            print(f"{RED}🚨 CRITICAL: High Probability of Hidden Steganographic Payload / Tracking Watermark!{RESET}")
+            print(f"{RED}[ALERT] CRITICAL: High Probability of Hidden Steganographic Payload / Tracking Watermark!{RESET}")
             print(f"  ↳ The LSB distribution exhibits maximum artificial randomization (Entropy: {entropy:.5f}).")
             print(f"  ↳ Vector: Covert payload injection, encrypted watermark, or Machine Identification Code.")
             print(f"  ↳ Remediation: Re-encode or sanitize through ASTERIX Vision Cloaker.")
             return False
         elif entropy > 0.98:
-            print(f"{YELLOW}⚠ SUSPICIOUS: Bitplane entropy is elevated ({entropy:.4f}). Potential watermark.{RESET}")
+            print(f"{YELLOW}[!] SUSPICIOUS: Bitplane entropy is elevated ({entropy:.4f}). Potential watermark.{RESET}")
             return True
         else:
-            print(f"{GREEN}✓ CLEAN: Natural pixel variance confirmed (Entropy: {entropy:.4f}).{RESET}")
+            print(f"{GREEN}[OK] CLEAN: Natural pixel variance confirmed (Entropy: {entropy:.4f}).{RESET}")
             print(f"  ↳ No hidden LSB payload or surveillance steganography detected.")
             return True
 
@@ -430,7 +430,7 @@ class VisionShield:
                "Injecting imperceptible adversarial noise to disrupt facial recognition AI")
 
         if not os.path.isfile(image_path):
-            print(f"{RED}✗ ERROR: Target file not found: {image_path}{RESET}")
+            print(f"{RED} ERROR: Target file not found: {image_path}{RESET}")
             return False
 
         print(f"{CYAN}Source Media:{RESET} {image_path}")
@@ -440,7 +440,7 @@ class VisionShield:
             with open(image_path, "rb") as f:
                 data = bytearray(f.read())
         except Exception as e:
-            print(f"{RED}✗ Failed to read source file: {e}{RESET}")
+            print(f"{RED} Failed to read source file: {e}{RESET}")
             return False
 
         is_bmp = data.startswith(b'BM')
@@ -489,16 +489,16 @@ class VisionShield:
             with open(output_path, "wb") as f:
                 f.write(data)
         except Exception as e:
-            print(f"{RED}✗ Failed to write output file: {e}{RESET}")
+            print(f"{RED} Failed to write output file: {e}{RESET}")
             return False
 
         print(f"\n{BOLD}[CLOAKING VERIFICATION RESULT]{RESET}")
         print(f"  • Altered Pixel Coordinates: {perturbed_count:,}")
         print(f"  • Visual Degradation:        {GREEN}0.00% (Indistinguishable to human eye){RESET}")
-        print(f"  • AI Facial Feature Vectors: {RED}🚨 DISRUPTED{RESET}")
+        print(f"  • AI Facial Feature Vectors: {RED}[ALERT] DISRUPTED{RESET}")
         print(f"    ↳ Feature map embeddings (FaceNet / InsightFace / ResNet-50) shifted off-manifold.")
         print(f"    ↳ Mass surveillance crawlers fail to correlate this image with your biometric database identity.")
-        print(f"\n{GREEN}✓ SUCCESS: Biometrically cloaked image saved to: {output_path}{RESET}")
+        print(f"\n{GREEN}[OK] SUCCESS: Biometrically cloaked image saved to: {output_path}{RESET}")
         return True
 
     @classmethod
@@ -508,7 +508,7 @@ class VisionShield:
                "Auditing video containers for hidden GPS coordinates, telemetry & serials")
 
         if not os.path.isfile(video_path):
-            print(f"{RED}✗ Video file not found: {video_path}{RESET}")
+            print(f"{RED} Video file not found: {video_path}{RESET}")
             return False
 
         print(f"{CYAN}Auditing video asset:{RESET} {video_path}")
@@ -519,7 +519,7 @@ class VisionShield:
             with open(video_path, "rb") as f:
                 header = f.read(min(size, 2000000))
         except Exception as e:
-            print(f"{RED}✗ Error reading video: {e}{RESET}")
+            print(f"{RED} Error reading video: {e}{RESET}")
             return False
 
         # Scan for common MP4 atoms / markers
@@ -545,12 +545,12 @@ class VisionShield:
             print(f"  • Found Box: {atom}")
 
         if suspicious_tags:
-            print(f"\n{RED}🚨 SURVEILLANCE TELEMETRY IDENTIFIED:{RESET}")
+            print(f"\n{RED}[ALERT] SURVEILLANCE TELEMETRY IDENTIFIED:{RESET}")
             for tag in suspicious_tags:
-                print(f"  ↳ {RED}⚠ {tag}{RESET}")
+                print(f"  ↳ {RED}[!] {tag}{RESET}")
             print(f"  Mitigation: Strip user-data (`udta`) and location atoms before publishing.")
         else:
-            print(f"\n{GREEN}✓ SECURE: Zero embedded GPS telemetry or hardware tracking tracks found.{RESET}")
+            print(f"\n{GREEN}[OK] SECURE: Zero embedded GPS telemetry or hardware tracking tracks found.{RESET}")
         return True
 
 
@@ -601,15 +601,15 @@ class StealthTrace:
         print(f"  GLOBAL UNIQUENESS RATIO:          {BOLD}{RED}1 in {uniqueness_ratio:,.0f} devices{RESET}")
         print(f"{BOLD}========================================================================={RESET}")
 
-        print(f"\n{RED}🚨 SURVEILLANCE RISK:{RESET}")
+        print(f"\n{RED}[ALERT] SURVEILLANCE RISK:{RESET}")
         print(f"  Even if you change IP address, use Tor, or clear all cookies:")
         print(f"  Websites calculating these 6 hashes can uniquely identify and track your machine!")
 
         print(f"\n{CYAN}ASTERIX Anti-Fingerprint Countermeasures:{RESET}")
-        print(f"  ✓ Enforce Canvas 2D random subpixel noise injection (breaks hash constancy)")
-        print(f"  ✓ Spoof WebGL vendor/renderer to generic 'Mesa OffScreen / Generic GPU'")
-        print(f"  ✓ Quantize AudioContext buffer to 44.1kHz with zero oscillator jitter")
-        print(f"  ✓ Restrict font enumeration to the standard 12 web-safe system fonts")
+        print(f"  [OK] Enforce Canvas 2D random subpixel noise injection (breaks hash constancy)")
+        print(f"  [OK] Spoof WebGL vendor/renderer to generic 'Mesa OffScreen / Generic GPU'")
+        print(f"  [OK] Quantize AudioContext buffer to 44.1kHz with zero oscillator jitter")
+        print(f"  [OK] Restrict font enumeration to the standard 12 web-safe system fonts")
         return True
 
     @classmethod
@@ -657,7 +657,7 @@ class StealthTrace:
             print(f"  ↳ ASTERIX Defense: Enforce TLS ClientHello extension ordering to match standard browsers.")
             return True
         except Exception as e:
-            print(f"{RED}✗ Handshake failed: {e}{RESET}")
+            print(f"{RED} Handshake failed: {e}{RESET}")
             return False
 
     @classmethod
@@ -689,7 +689,7 @@ class StealthTrace:
         padded_packets = [1500 for _ in unpadded_packets]
         print(f"  • Padded Packet Burst (Bytes): {padded_packets}")
         print(f"  • Padded Packet Size Entropy: {BOLD}{GREEN}0.000 bits{RESET} (Zero variance / Flat profile)")
-        print(f"  • Surveillance Fingerprint:     {GREEN}✓ PROTECTED: Side-channel size analysis completely neutralized.{RESET}")
+        print(f"  • Surveillance Fingerprint:     {GREEN}[OK] PROTECTED: Side-channel size analysis completely neutralized.{RESET}")
         return True
 
 

@@ -664,13 +664,13 @@ def print_doctor_report(results: Dict[str, Any]) -> None:
     if results["repairs_performed"]:
         print(f"  {C_GREEN}{C_BOLD}Automated Repairs Executed:{C_RESET}")
         for r in results["repairs_performed"]:
-            print(f"    {C_GREEN}✔{C_RESET} {r}")
+            print(f"    {C_GREEN}[OK]{C_RESET} {r}")
         print("")
 
     if results["overall_healthy"]:
-        print(f"  {C_GREEN}{C_BOLD}✓ ALL SYSTEMS NOMINAL: Debian Rootless is hardened and ready!{C_RESET}\n")
+        print(f"  {C_GREEN}{C_BOLD}[OK] ALL SYSTEMS NOMINAL: Debian Rootless is hardened and ready!{C_RESET}\n")
     else:
-        print(f"  {C_YELLOW}{C_BOLD}⚠ ISSUES DETECTED: Run 'ax debian repair' to automatically fix all issues.{C_RESET}\n")
+        print(f"  {C_YELLOW}{C_BOLD}[!] ISSUES DETECTED: Run 'ax debian repair' to automatically fix all issues.{C_RESET}\n")
 
 
 def print_folder_tree() -> None:
@@ -770,8 +770,8 @@ def main():
         print(f"  {C_CYAN}{C_BOLD}[EXECUTING DEBIAN ROOTLESS SELF-HEALING REPAIR]{C_RESET}\n")
         repairs = DebianHardener.repair_all()
         for r in repairs:
-            print(f"  {C_GREEN}✔{C_RESET} {r}")
-        print(f"\n  {C_GREEN}{C_BOLD}✓ Self-healing complete! All configurations synchronized.{C_RESET}\n")
+            print(f"  {C_GREEN}[OK]{C_RESET} {r}")
+        print(f"\n  {C_GREEN}{C_BOLD}[OK] Self-healing complete! All configurations synchronized.{C_RESET}\n")
 
     elif sub in ("status", "info"):
         if "--json" in sys.argv:
@@ -795,12 +795,12 @@ def main():
                     tpl = a
             res = FolderEngine.create_folder(fname, template=tpl)
             if res["status"] == "ok":
-                print(f"  {C_GREEN}✔ Successfully created folder:{C_RESET} {C_YELLOW}{res['path']}{C_RESET}")
+                print(f"  {C_GREEN}[OK] Successfully created folder:{C_RESET} {C_YELLOW}{res['path']}{C_RESET}")
                 print(f"  • Template:     {C_CYAN}{res['template']}{C_RESET}")
                 print(f"  • Subfolders:   {C_WHITE}{', '.join(res['subdirs'])}{C_RESET}")
                 print(f"  • Write Tested: {C_GREEN}VERIFIED (100% stable){C_RESET}\n")
             else:
-                print(f"  {C_RED}✖ Error: {res.get('message', 'Failed to create folder')}{C_RESET}\n")
+                print(f"  {C_RED}[FAIL] Error: {res.get('message', 'Failed to create folder')}{C_RESET}\n")
 
         elif action in ("template", "tpl"):
             if len(sys.argv) < 4:
@@ -810,20 +810,20 @@ def main():
             tpl = sys.argv[4] if len(sys.argv) > 4 else "general"
             res = FolderEngine.create_folder(fname, template=tpl)
             if res["status"] == "ok":
-                print(f"  {C_GREEN}✔ Created templated folder:{C_RESET} {C_YELLOW}{res['path']}{C_RESET} (Template: {tpl})\n")
+                print(f"  {C_GREEN}[OK] Created templated folder:{C_RESET} {C_YELLOW}{res['path']}{C_RESET} (Template: {tpl})\n")
             else:
-                print(f"  {C_RED}✖ Error: {res.get('message', 'Failed')}{C_RESET}\n")
+                print(f"  {C_RED}[FAIL] Error: {res.get('message', 'Failed')}{C_RESET}\n")
 
         elif action in ("tree", "list", "ls"):
             print_folder_tree()
 
         elif action in ("fix-perms", "permissions", "chmod"):
             res = FolderEngine.fix_permissions()
-            print(f"  {C_GREEN}✔ Permissions Fixed:{C_RESET} {res['dirs_fixed']} dirs (0755), {res['files_fixed']} files (0644/0755), {res['cleaned_locks']} locks cleaned.")
+            print(f"  {C_GREEN}[OK] Permissions Fixed:{C_RESET} {res['dirs_fixed']} dirs (0755), {res['files_fixed']} files (0644/0755), {res['cleaned_locks']} locks cleaned.")
 
         elif action in ("init", "setup", "standard"):
             res = FolderEngine.ensure_standard_folders()
-            print(f"  {C_GREEN}✔ Standard persistent folders initialized at:{C_RESET} {res['base']}")
+            print(f"  {C_GREEN}[OK] Standard persistent folders initialized at:{C_RESET} {res['base']}")
             print(f"  • Folders: {', '.join(STANDARD_PERSISTENT_FOLDERS)}\n")
         else:
             print(f"Unknown folder action '{action}'. Available: create, template, tree, list, fix-perms, init")

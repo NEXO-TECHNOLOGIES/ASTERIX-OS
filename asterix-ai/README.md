@@ -1,4 +1,4 @@
-# 🧠 ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
+#  ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
 
 Welcome to **ASTERIX AI**, the native expert system and automated SOC (Security Operations Center) triage engine built specifically for ASTERIX OS.
 
@@ -6,7 +6,7 @@ ASTERIX AI operates on an **expert rule-based inference model** designed for air
 
 ---
 
-## ⚡ Core Architecture
+## [*] Core Architecture
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -30,7 +30,7 @@ ASTERIX AI operates on an **expert rule-based inference model** designed for air
 
 ---
 
-## 🛠️ Usage & Commands
+##  Usage & Commands
 
 ### 1. Automated System & Security Audit
 Evaluate all knowledge-base rules against the live operating system state and receive an instant resilience score and remediation plan:
@@ -61,7 +61,7 @@ ax ai rules
 
 ---
 
-## 📋 Rule Definition Schema
+##  Rule Definition Schema
 
 All rules are defined in standard JSON format inside the `rules/` directory (`security.json`, `system.json`, `network.json`, or any custom `.json` file added).
 
@@ -96,7 +96,7 @@ All rules are defined in standard JSON format inside the `rules/` directory (`se
 
 ---
 
-## 🔒 Security & Performance Guarantee
+## [LOCK] Security & Performance Guarantee
 
 1. **Deterministic Execution**: Pure rule evaluation with no probabilistic hallucinations or unpredictable behavior.
 2. **Instant Response**: Under 5 milliseconds execution time on standard hardware.

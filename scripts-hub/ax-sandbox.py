@@ -141,7 +141,7 @@ class SandboxRunner:
         Guarantees zero persistent residue on host filesystem.
         """
         temp_workspace = Path(tempfile.mkdtemp(prefix="ax_sandbox_try_"))
-        print(f"\n  {C_CYAN}{C_BOLD}⚡ Launching Throwaway Sandbox...{C_RESET}")
+        print(f"\n  {C_CYAN}{C_BOLD}[*] Launching Throwaway Sandbox...{C_RESET}")
         print(f"  • Ephemeral Root: {temp_workspace}")
         print(f"  • Isolation: Read-only host mounts + isolated throwaway HOME")
         print(f"  • Command: {' '.join(command_args)}\n")
@@ -182,7 +182,7 @@ class SandboxRunner:
         finally:
             print(f"\n  {C_CYAN}[*] Destroying throwaway sandbox environment...{C_RESET}")
             shutil.rmtree(temp_workspace, ignore_errors=True)
-            print(f"  {C_GREEN}✔ Sandbox destroyed. 0 bytes written to host persistence.{C_RESET}\n")
+            print(f"  {C_GREEN}[OK] Sandbox destroyed. 0 bytes written to host persistence.{C_RESET}\n")
 
         return exit_code
 
@@ -243,7 +243,7 @@ def main():
             print(BANNER)
             print(f"  {C_YELLOW}[!] Initiating instant transaction rollback...{C_RESET}")
             purged = mgr.rollback()
-            print(f"  {C_GREEN}✔ Rollback Complete: Purged {purged} file(s) from mutable upper layer.{C_RESET}")
+            print(f"  {C_GREEN}[OK] Rollback Complete: Purged {purged} file(s) from mutable upper layer.{C_RESET}")
             print(f"    System environment has been restored to clean read-only baseline.")
 
         elif args.action == "diff":
@@ -255,7 +255,7 @@ def main():
 
         elif args.action == "sync-base":
             mgr.record_baseline(Path(args.source))
-            print(f"  {C_GREEN}✔ Read-only baseline updated from {args.source}.{C_RESET}")
+            print(f"  {C_GREEN}[OK] Read-only baseline updated from {args.source}.{C_RESET}")
 
     elif args.subcommand == "try":
         if not args.command:

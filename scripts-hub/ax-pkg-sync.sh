@@ -153,7 +153,7 @@ build_sentinel() {
         $SUDO cp "$bin_out" "${INSTALL_DIR}/anti-reverse-sentinel" 2>/dev/null || true
         $SUDO chmod 755 "${INSTALL_DIR}/anti-reverse-sentinel" 2>/dev/null || true
         $SUDO ln -sf "${INSTALL_DIR}/anti-reverse-sentinel" "${INSTALL_DIR}/anti-rev" 2>/dev/null || true
-        echo -e "    ${C_GREEN}[✔] anti-reverse-sentinel installed to ${INSTALL_DIR}${C_RESET}"
+        echo -e "    ${C_GREEN}[[OK]] anti-reverse-sentinel installed to ${INSTALL_DIR}${C_RESET}"
     else
         echo -e "    ${C_YELLOW}[!] rustc/cargo not available or compilation skipped.${C_RESET}"
     fi
@@ -200,7 +200,7 @@ cmd_sync() {
 
         pkg_path=$(resolve_package_path "$pkg_name")
         if [ -d "$pkg_path" ]; then
-            echo -e "  ${C_GREEN}[✔] Resolved package path:${C_RESET} ${pkg_path}"
+            echo -e "  ${C_GREEN}[[OK]] Resolved package path:${C_RESET} ${pkg_path}"
 
             # Make all shell scripts executable
             find "$pkg_path" -maxdepth 3 -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
@@ -222,7 +222,7 @@ cmd_sync() {
                         $SUDO cp "${pkg_path}/${src}" "${INSTALL_DIR}/${src}" 2>/dev/null || true
                         $SUDO chmod 755 "${INSTALL_DIR}/${src}" 2>/dev/null || true
                         $SUDO ln -sf "${INSTALL_DIR}/${src}" "${INSTALL_DIR}/${alias_name}" 2>/dev/null || true
-                        echo -e "  ${C_GREEN}[✔] Linked command:${C_RESET} ${alias_name}"
+                        echo -e "  ${C_GREEN}[[OK]] Linked command:${C_RESET} ${alias_name}"
                     fi
                 done
 
@@ -237,12 +237,12 @@ cmd_sync() {
                     $SUDO cp "${pkg_path}/thunder.sh" "${INSTALL_DIR}/thunder.sh" 2>/dev/null || true
                     $SUDO chmod 755 "${INSTALL_DIR}/thunder.sh" 2>/dev/null || true
                     $SUDO ln -sf "${INSTALL_DIR}/thunder.sh" "${INSTALL_DIR}/thunder" 2>/dev/null || true
-                    echo -e "  ${C_GREEN}[✔] Linked command:${C_RESET} thunder"
+                    echo -e "  ${C_GREEN}[[OK]] Linked command:${C_RESET} thunder"
                 fi
                 if [ -f "${pkg_path}/ip-rotator/ip_rotator.sh" ]; then
                     $SUDO chmod +x "${pkg_path}/ip-rotator/ip_rotator.sh" 2>/dev/null || true
                     $SUDO ln -sf "${pkg_path}/ip-rotator/ip_rotator.sh" "${INSTALL_DIR}/ip-rotator" 2>/dev/null || true
-                    echo -e "  ${C_GREEN}[✔] Linked command:${C_RESET} ip-rotator"
+                    echo -e "  ${C_GREEN}[[OK]] Linked command:${C_RESET} ip-rotator"
                 fi
             elif [ "$pkg_name" = "ASTERISK-Web-Frality-scanner" ]; then
                 if [ -f "${pkg_path}/run.sh" ]; then
@@ -250,7 +250,7 @@ cmd_sync() {
                     $SUDO cp "${pkg_path}/run.sh" "${INSTALL_DIR}/wscan" 2>/dev/null || true
                     $SUDO chmod 755 "${INSTALL_DIR}/wscan" 2>/dev/null || true
                     $SUDO ln -sf "${INSTALL_DIR}/wscan" "${INSTALL_DIR}/asterisk-wscan" 2>/dev/null || true
-                    echo -e "  ${C_GREEN}[✔] Linked command:${C_RESET} wscan"
+                    echo -e "  ${C_GREEN}[[OK]] Linked command:${C_RESET} wscan"
                 fi
             elif [ "$pkg_name" = "LIGHTNING-" ]; then
                 local lightning_main="${pkg_path}/Lightning/main.py"
@@ -272,7 +272,7 @@ LAUNCHER_EOF
                     $SUDO cp /tmp/lightning-launcher.sh "${INSTALL_DIR}/lightning" 2>/dev/null || true
                     $SUDO chmod 755 "${INSTALL_DIR}/lightning" 2>/dev/null || true
                     $SUDO ln -sf "${INSTALL_DIR}/lightning" "${INSTALL_DIR}/ax-lightning" 2>/dev/null || true
-                    echo -e "  ${C_GREEN}[✔] Linked commands:${C_RESET} lightning, ax-lightning"
+                    echo -e "  ${C_GREEN}[[OK]] Linked commands:${C_RESET} lightning, ax-lightning"
                 fi
             elif [ "$pkg_name" = "APEX-OVERDRIVE-" ]; then
                 if [ -f "${pkg_path}/Launch-ApexOverdrive.sh" ]; then
@@ -283,7 +283,7 @@ LAUNCHER_EOF
                     $SUDO ln -sf "${pkg_path}/Launch-ApexOverdrive.sh" "${INSTALL_DIR}/apex-overdrive" 2>/dev/null || true
                     $SUDO ln -sf "${pkg_path}/Launch-ApexOverdrive.sh" "${INSTALL_DIR}/ax-overdrive" 2>/dev/null || true
                     $SUDO ln -sf "${pkg_path}/Launch-ApexOverdrive.sh" "${INSTALL_DIR}/overdrive" 2>/dev/null || true
-                    echo -e "  ${C_GREEN}[✔] Linked commands:${C_RESET} apex-overdrive, ax-overdrive, overdrive"
+                    echo -e "  ${C_GREEN}[[OK]] Linked commands:${C_RESET} apex-overdrive, ax-overdrive, overdrive"
                 fi
             fi
         fi
@@ -291,7 +291,7 @@ LAUNCHER_EOF
     done
 
     echo -e "${C_GREEN}${C_BOLD}══════════════════════════════════════════════════════════════════════${C_RESET}"
-    echo -e "${C_GREEN}${C_BOLD}[✔] All Security & Performance Packages Synchronized Successfully!${C_RESET}"
+    echo -e "${C_GREEN}${C_BOLD}[[OK]] All Security & Performance Packages Synchronized Successfully!${C_RESET}"
     echo -e "${C_CYAN}Commands ready to use:${C_RESET}"
     echo -e "  ${C_YELLOW}ax anti-net${C_RESET}     - Anti-Network Attack Master Dashboard"
     echo -e "  ${C_YELLOW}ax thunder${C_RESET}      - THUNDER Enterprise Network & Device Defender"

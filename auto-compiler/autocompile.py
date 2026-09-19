@@ -212,7 +212,7 @@ def compile_target(target, user_flags=None, max_iterations=5):
 
         if proc.returncode == 0:
             success = True
-            print(f"\n  {C_GREEN}{C_BOLD}[✔] COMPILATION SUCCEEDED!{C_RESET}")
+            print(f"\n  {C_GREEN}{C_BOLD}[[OK]] COMPILATION SUCCEEDED!{C_RESET}")
             if out_bin and os.path.exists(out_bin):
                 size = os.path.getsize(out_bin)
                 print(f"  {C_CYAN}Output Binary:{C_RESET} {out_bin} ({size:,} bytes)")

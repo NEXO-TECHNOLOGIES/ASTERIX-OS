@@ -614,7 +614,7 @@ fn calculate_entropy(data: &[u8]) -> f64 {
 
 fn identify_hash(hash_str: &str) {
     let trimmed = hash_str.trim();
-    println!("{C_CYAN}{C_BOLD} 🔎 ASTERIX CRYPTOGRAPHIC HASH IDENTIFIER{C_RESET}");
+    println!("{C_CYAN}{C_BOLD} [SCAN] ASTERIX CRYPTOGRAPHIC HASH IDENTIFIER{C_RESET}");
     println!("{C_GRAY}{}{C_RESET}", "─".repeat(65));
     println!("  {C_WHITE}Input String:{C_RESET} {C_YELLOW}{trimmed}{C_RESET}");
     println!("  {C_WHITE}Length:{C_RESET}       {} characters", trimmed.len());
@@ -623,40 +623,40 @@ fn identify_hash(hash_str: &str) {
 
     println!("  {C_CYAN}Possible Hash Formats:{C_RESET}");
     if trimmed.starts_with("$6$") {
-        println!("  {C_GREEN}✔ SHA-512 Crypt (UNIX /etc/shadow standard){C_RESET}");
+        println!("  {C_GREEN}[OK] SHA-512 Crypt (UNIX /etc/shadow standard){C_RESET}");
     } else if trimmed.starts_with("$5$") {
-        println!("  {C_GREEN}✔ SHA-256 Crypt (UNIX /etc/shadow standard){C_RESET}");
+        println!("  {C_GREEN}[OK] SHA-256 Crypt (UNIX /etc/shadow standard){C_RESET}");
     } else if trimmed.starts_with("$1$") {
-        println!("  {C_YELLOW}✔ MD5 Crypt (Legacy UNIX /etc/shadow){C_RESET}");
+        println!("  {C_YELLOW}[OK] MD5 Crypt (Legacy UNIX /etc/shadow){C_RESET}");
     } else if trimmed.starts_with("$2a$") || trimmed.starts_with("$2b$") || trimmed.starts_with("$2y$") {
-        println!("  {C_GREEN}✔ bcrypt Password Hash{C_RESET}");
+        println!("  {C_GREEN}[OK] bcrypt Password Hash{C_RESET}");
     } else if trimmed.starts_with("$argon2") {
-        println!("  {C_GREEN}✔ Argon2 Password Hashing Function{C_RESET}");
+        println!("  {C_GREEN}[OK] Argon2 Password Hashing Function{C_RESET}");
     } else if is_hex {
         match trimmed.len() {
             32 => {
-                println!("  {C_GREEN}✔ MD5 (128-bit RFC 1321){C_RESET}");
-                println!("  {C_GREEN}✔ NTLM (Windows NT LAN Manager){C_RESET}");
-                println!("  {C_GREEN}✔ MD4 / LM Hash{C_RESET}");
+                println!("  {C_GREEN}[OK] MD5 (128-bit RFC 1321){C_RESET}");
+                println!("  {C_GREEN}[OK] NTLM (Windows NT LAN Manager){C_RESET}");
+                println!("  {C_GREEN}[OK] MD4 / LM Hash{C_RESET}");
             }
             40 => {
-                println!("  {C_GREEN}✔ SHA-1 (160-bit FIPS 180-1){C_RESET}");
-                println!("  {C_GREEN}✔ RIPEMD-160{C_RESET}");
+                println!("  {C_GREEN}[OK] SHA-1 (160-bit FIPS 180-1){C_RESET}");
+                println!("  {C_GREEN}[OK] RIPEMD-160{C_RESET}");
             }
             56 => {
-                println!("  {C_GREEN}✔ SHA-224 / SHA3-224{C_RESET}");
+                println!("  {C_GREEN}[OK] SHA-224 / SHA3-224{C_RESET}");
             }
             64 => {
-                println!("  {C_GREEN}✔ SHA-256 (256-bit FIPS 180-4 standard){C_RESET}");
-                println!("  {C_GREEN}✔ Blake2s / Blake3{C_RESET}");
-                println!("  {C_GREEN}✔ Keccak-256 / SHA3-256{C_RESET}");
+                println!("  {C_GREEN}[OK] SHA-256 (256-bit FIPS 180-4 standard){C_RESET}");
+                println!("  {C_GREEN}[OK] Blake2s / Blake3{C_RESET}");
+                println!("  {C_GREEN}[OK] Keccak-256 / SHA3-256{C_RESET}");
             }
             96 => {
-                println!("  {C_GREEN}✔ SHA-384 (384-bit FIPS 180-4){C_RESET}");
+                println!("  {C_GREEN}[OK] SHA-384 (384-bit FIPS 180-4){C_RESET}");
             }
             128 => {
-                println!("  {C_GREEN}✔ SHA-512 (512-bit FIPS 180-4){C_RESET}");
-                println!("  {C_GREEN}✔ Whirlpool / Keccak-512 / Blake2b{C_RESET}");
+                println!("  {C_GREEN}[OK] SHA-512 (512-bit FIPS 180-4){C_RESET}");
+                println!("  {C_GREEN}[OK] Whirlpool / Keccak-512 / Blake2b{C_RESET}");
             }
             _ => {
                 println!("  {C_YELLOW}[!] Non-standard hex hash length. Custom algorithm or partial digest.{C_RESET}");
@@ -720,12 +720,12 @@ fn create_manifest(dir: &Path, output_file: &Path) -> io::Result<()> {
             if let Ok((h256, _, _)) = hash_stream(file, "sha256") {
                 let rel = p.strip_prefix(dir).unwrap_or(p);
                 writeln!(out, "{}  {}", h256, rel.display())?;
-                println!("  {C_GREEN}✔{C_RESET} {C_CYAN}{h256}{C_RESET}  {C_WHITE}{}{C_RESET}", rel.display());
+                println!("  {C_GREEN}[OK]{C_RESET} {C_CYAN}{h256}{C_RESET}  {C_WHITE}{}{C_RESET}", rel.display());
             }
         }
     }
 
-    println!("{C_GREEN}{C_BOLD}[✔] Manifest saved to: {}{C_RESET}\n", output_file.display());
+    println!("{C_GREEN}{C_BOLD}[[OK]] Manifest saved to: {}{C_RESET}\n", output_file.display());
     Ok(())
 }
 
@@ -755,7 +755,7 @@ fn verify_manifest(manifest_file: &Path, base_dir: &Path) -> io::Result<()> {
         let full_path = base_dir.join(&rel_path);
 
         if !full_path.exists() {
-            println!("  {C_RED}✖ MISSING:{C_RESET}  {}", rel_path);
+            println!("  {C_RED}[FAIL] MISSING:{C_RESET}  {}", rel_path);
             missing += 1;
             continue;
         }
@@ -764,16 +764,16 @@ fn verify_manifest(manifest_file: &Path, base_dir: &Path) -> io::Result<()> {
             Ok(f) => {
                 if let Ok((actual_hash, _, _)) = hash_stream(f, "sha256") {
                     if actual_hash.eq_ignore_ascii_case(expected_hash) {
-                        println!("  {C_GREEN}✔ OK:{C_RESET}       {}", rel_path);
+                        println!("  {C_GREEN}[OK] OK:{C_RESET}       {}", rel_path);
                         passed += 1;
                     } else {
-                        println!("  {C_RED}✖ MISMATCH:{C_RESET} {} (Expected {expected_hash}, got {actual_hash})", rel_path);
+                        println!("  {C_RED}[FAIL] MISMATCH:{C_RESET} {} (Expected {expected_hash}, got {actual_hash})", rel_path);
                         failed += 1;
                     }
                 }
             }
             Err(e) => {
-                println!("  {C_RED}✖ ERROR:{C_RESET}    {} ({})", rel_path, e);
+                println!("  {C_RED}[FAIL] ERROR:{C_RESET}    {} ({})", rel_path, e);
                 failed += 1;
             }
         }
@@ -790,7 +790,7 @@ fn verify_manifest(manifest_file: &Path, base_dir: &Path) -> io::Result<()> {
 }
 
 fn run_benchmarks() {
-    println!("{C_CYAN}{C_BOLD} ⚡ BENCHMARKING CRYPTOGRAPHIC HASH THROUGHPUT{C_RESET}");
+    println!("{C_CYAN}{C_BOLD} [*] BENCHMARKING CRYPTOGRAPHIC HASH THROUGHPUT{C_RESET}");
     println!("{C_GRAY}{}{C_RESET}", "─".repeat(65));
 
     let size_bytes = 10 * 1024 * 1024; // 10 MB buffer
@@ -923,7 +923,7 @@ fn main() {
                 let mut buf = Vec::new();
                 if f.read_to_end(&mut buf).is_ok() {
                     let ent = calculate_entropy(&buf);
-                    println!("{C_CYAN}{C_BOLD} 📊 SHANNON ENTROPY AUDIT: {}{C_RESET}", args[2]);
+                    println!("{C_CYAN}{C_BOLD} [STATS] SHANNON ENTROPY AUDIT: {}{C_RESET}", args[2]);
                     println!("{C_GRAY}{}{C_RESET}", "─".repeat(60));
                     println!("  {C_WHITE}Entropy:{C_RESET}     {C_YELLOW}{:.4}{C_RESET} / 8.0000", ent);
                     if ent > 7.2 {
@@ -1002,7 +1002,7 @@ fn main() {
                         eprintln!("{C_RED}[!] Error writing to {}: {}{C_RESET}", out_path.display(), e);
                         return;
                     }
-                    println!("{C_GREEN}{C_BOLD}[✔] SUCCESS: Operation completed. Output written to: {}{C_RESET}", out_path.display());
+                    println!("{C_GREEN}{C_BOLD}[[OK]] SUCCESS: Operation completed. Output written to: {}{C_RESET}", out_path.display());
                 }
                 Err(e) => {
                     eprintln!("{C_RED}[!] Failed to create output {}: {}{C_RESET}", out_path.display(), e);

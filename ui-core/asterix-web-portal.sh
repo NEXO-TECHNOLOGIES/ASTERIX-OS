@@ -31,7 +31,7 @@ cat << 'EOF'
 EOF
 echo -e "\033[0m"
 
-echo -e "\033[32m[✔] Starting ASTERIX OS Web Portal...\033[0m"
+echo -e "\033[32m[[OK]] Starting ASTERIX OS Web Portal...\033[0m"
 echo -e "\033[33m[*] Local URL:    \033[1mhttp://localhost:${PORT}\033[0m"
 echo -e "\033[33m[*] Web Directory: ${PORTAL_DIR}\033[0m"
 echo -e "\033[35m[*] Features:      Wallpaper Gallery, 12 Subsystems Catalog, Discord Bridge\033[0m"

@@ -480,7 +480,7 @@ fn set_isolation(enable: bool) -> io::Result<()> {
         if lock.exists() {
             fs::remove_file(&lock)?;
         }
-        println!("{C_GREEN}{C_BOLD}[✔] ENDPOINT RESTORED: Network isolation lifted.{C_RESET}");
+        println!("{C_GREEN}{C_BOLD}[[OK]] ENDPOINT RESTORED: Network isolation lifted.{C_RESET}");
     }
     Ok(())
 }
@@ -499,18 +499,18 @@ fn show_security_center_status() {
     let q_count = fs::read_dir(&qdir).map(|r| r.count()).unwrap_or(0);
 
     println!("  {C_WHITE}REAL-TIME SHIELD STATUS:{C_RESET}");
-    println!("  {C_GREEN}[✔] Virus & Threat Protection:{C_RESET}     {C_BOLD}ACTIVE (Continuous In-Memory Guard){C_RESET}");
-    println!("  {C_GREEN}[✔] Behavioral Anomaly Scorer:{C_RESET}     {C_BOLD}ACTIVE (Entropy & Shellcode Scanner){C_RESET}");
-    println!("  {C_GREEN}[✔] Ransomware Isolation Vault:{C_RESET}    {C_BOLD}ACTIVE (Encrypted Zero-Perm Quarantine){C_RESET}");
+    println!("  {C_GREEN}[[OK]] Virus & Threat Protection:{C_RESET}     {C_BOLD}ACTIVE (Continuous In-Memory Guard){C_RESET}");
+    println!("  {C_GREEN}[[OK]] Behavioral Anomaly Scorer:{C_RESET}     {C_BOLD}ACTIVE (Entropy & Shellcode Scanner){C_RESET}");
+    println!("  {C_GREEN}[[OK]] Ransomware Isolation Vault:{C_RESET}    {C_BOLD}ACTIVE (Encrypted Zero-Perm Quarantine){C_RESET}");
 
     if isolated {
-        println!("  {C_RED}[✖] Network Isolation Mode:{C_RESET}        {C_RED}{C_BOLD}LOCKED DOWN (Zero Network Traffic){C_RESET}");
+        println!("  {C_RED}[[FAIL]] Network Isolation Mode:{C_RESET}        {C_RED}{C_BOLD}LOCKED DOWN (Zero Network Traffic){C_RESET}");
     } else {
-        println!("  {C_GREEN}[✔] Network Isolation Mode:{C_RESET}        {C_CYAN}NORMAL (Standard Connectivity){C_RESET}");
+        println!("  {C_GREEN}[[OK]] Network Isolation Mode:{C_RESET}        {C_CYAN}NORMAL (Standard Connectivity){C_RESET}");
     }
 
     println!("\n  {C_WHITE}HOST FIREWALL & NETWORK ARMOR:{C_RESET}");
-    println!("  {C_GREEN}[✔] Firewall State:{C_RESET}                 {C_BOLD}ACTIVE (Profile: Public / Dark Stealth){C_RESET}");
+    println!("  {C_GREEN}[[OK]] Firewall State:{C_RESET}                 {C_BOLD}ACTIVE (Profile: Public / Dark Stealth){C_RESET}");
     println!("  {C_CYAN}[•] Default Inbound Policy:{C_RESET}         {C_YELLOW}DROP (Silent Port Drop, No ICMP RST){C_RESET}");
     println!("  {C_CYAN}[•] Default Outbound Policy:{C_RESET}        {C_GREEN}ALLOW (Stateful Inspection){C_RESET}");
     println!("  {C_CYAN}[•] Active Packet Filtering Rules:{C_RESET}  {C_WHITE}7 Core Dynamic Defense Filters{C_RESET}");
@@ -591,7 +591,7 @@ fn show_quarantine_list() {
     }
 
     if count == 0 {
-        println!("  {C_GREEN}[✔] Safe: No active threats currently in quarantine.{C_RESET}\n");
+        println!("  {C_GREEN}[[OK]] Safe: No active threats currently in quarantine.{C_RESET}\n");
     }
 
     println!("{C_BLUE}{}{C_RESET}", "═".repeat(78));
@@ -623,9 +623,9 @@ fn execute_scan(target: &Path, auto_quarantine: bool) {
     println!("  {C_CYAN}[*] Scanned {} files in target scope.{C_RESET}\n", scanned_count);
 
     if findings.is_empty() {
-        println!("  {C_GREEN}{C_BOLD}[✔] SCAN COMPLETE: Zero threats or anomalous payloads detected.{C_RESET}\n");
+        println!("  {C_GREEN}{C_BOLD}[[OK]] SCAN COMPLETE: Zero threats or anomalous payloads detected.{C_RESET}\n");
     } else {
-        println!("  {C_RED}{C_BOLD}⚠ WARNING: {} THREAT(S) DETECTED!{C_RESET}\n", findings.len());
+        println!("  {C_RED}{C_BOLD}[!] WARNING: {} THREAT(S) DETECTED!{C_RESET}\n", findings.len());
         for f in &findings {
             let status = if f.quarantined {
                 format!("{C_GREEN}[NEUTRALIZED / QUARANTINED]{C_RESET}")

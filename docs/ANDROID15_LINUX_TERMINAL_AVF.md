@@ -1,4 +1,4 @@
-# 📱 Android 15 Native Linux Terminal (AVF) Technical Evaluation
+# [MOBILE] Android 15 Native Linux Terminal (AVF) Technical Evaluation
 
 > **Evaluation Topic**: Comparing Android 15's native Linux Terminal (Android Virtualization Framework) against PRoot user-space emulation as execution environments for ASTERIX OS.  
 > **Target Audience**: Systems engineers, mobile security researchers, and package maintainers.
@@ -21,11 +21,11 @@ This document evaluates the architectural differences, benchmarking performance,
 | **Virtual Machine Monitor** | None (runs in Android user namespace) | `crosvm` (Rust-based hypervisor) |
 | **Guest Kernel** | Shared Android Host Kernel | Dedicated Linux Kernel (v6.6+ LTS) |
 | **Privilege Inside Guest** | Simulated UID 0 (fake root) | Actual UID 0 (real Linux root inside VM) |
-| **Raw Socket Support (`AF_PACKET`)** | ❌ Blocked by Android SELinux / capabilities | ✔ Full raw socket support inside guest VM |
-| **Kernel Modules (`insmod`, `modprobe`)**| ❌ Impossible | ✔ Supported if kernel config permits |
+| **Raw Socket Support (`AF_PACKET`)** | [FAIL] Blocked by Android SELinux / capabilities | [OK] Full raw socket support inside guest VM |
+| **Kernel Modules (`insmod`, `modprobe`)**| [FAIL] Impossible | [OK] Supported if kernel config permits |
 | **File I/O Overhead** | High (ptrace path rewriting on every openat) | Low (virtio-fs / virtio-blk direct access) |
 | **Device Compatibility** | Universal (Android 7.0+ on ARM, ARM64, x86) | Limited (Android 15+ devices with pKVM enabled) |
-| **Host Phone Root Required** | ❌ No root required | ❌ No root required |
+| **Host Phone Root Required** | [FAIL] No root required | [FAIL] No root required |
 
 ---
 

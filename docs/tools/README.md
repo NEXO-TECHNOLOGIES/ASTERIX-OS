@@ -1,10 +1,10 @@
-# 🛠️ ASTERIX OS Tool Catalog & Reference Documentation
+#  ASTERIX OS Tool Catalog & Reference Documentation
 
 Welcome to the official, audited documentation for ASTERIX OS tools and subsystems. Every tool included in the distribution is documented with its operational purpose, usage syntax, supported platforms, and security boundaries.
 
 ---
 
-## 📂 Core CLI & Subsystem Managers
+##  Core CLI & Subsystem Managers
 
 | Tool / Subsystem | Binary / Script | Description | Platform Support |
 | :--- | :--- | :--- | :--- |
@@ -15,7 +15,7 @@ Welcome to the official, audited documentation for ASTERIX OS tools and subsyste
 
 ---
 
-## 🌐 Network & Web Security
+## [NET] Network & Web Security
 
 | Tool | Binary / Script | Description | Platform Support |
 | :--- | :--- | :--- | :--- |
@@ -25,7 +25,7 @@ Welcome to the official, audited documentation for ASTERIX OS tools and subsyste
 
 ---
 
-## 🛡️ Counter-Surveillance & Defensive Utilities
+## [SEC] Counter-Surveillance & Defensive Utilities
 
 | Tool | Binary / Script | Description | Platform Support |
 | :--- | :--- | :--- | :--- |
@@ -36,7 +36,7 @@ Welcome to the official, audited documentation for ASTERIX OS tools and subsyste
 
 ---
 
-## 📋 Security Policy & Auditing
+##  Security Policy & Auditing
 
 For ethical usage guidelines and independent code review findings, consult:
 - [**Vulnerability Disclosure & Legal Notice**](../../SECURITY.md)

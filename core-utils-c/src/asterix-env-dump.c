@@ -182,6 +182,6 @@ int main(int argc, char **argv) {
         dump_maps(pid);
     }
 
-    printf("\n%s[✔] Dump complete.%s\n\n", C_GREEN, C_RESET);
+    printf("\n%s[[OK]] Dump complete.%s\n\n", C_GREEN, C_RESET);
     return 0;
 }

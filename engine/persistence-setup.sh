@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =====================================================================
-# 🌌 ASTERIX OS - Live USB Dual-Mode Persistence Engine
+# [ASTERIX] ASTERIX OS - Live USB Dual-Mode Persistence Engine
 # Supports: Standard Ext4 Persistence & Military-Grade LUKS Encrypted Persistence
 # =====================================================================
 
@@ -59,7 +59,7 @@ if [ "$MODE_CHOICE" == "3" ]; then
     exit 0
 fi
 
-echo -e "\n${RED}${BOLD}⚠ CAUTION: You are configuring a persistent partition on: $DEVICE${NC}"
+echo -e "\n${RED}${BOLD}[!] CAUTION: You are configuring a persistent partition on: $DEVICE${NC}"
 echo -e "${YELLOW}Ensure you have flashed the ASTERIX ISO onto this drive first.${NC}"
 read -rp "Do you want to proceed? (y/N): " CONFIRM
 
@@ -145,7 +145,7 @@ INFO
     umount "$MOUNT_DIR"
     cryptsetup close "$MAPPER_NAME"
 
-    echo -e "\n${GREEN}${BOLD}[✔] SUCCESS: Encrypted LUKS Persistence active on ${NEW_PARTITION}!${NC}"
+    echo -e "\n${GREEN}${BOLD}[[OK]] SUCCESS: Encrypted LUKS Persistence active on ${NEW_PARTITION}!${NC}"
     echo -e "${GREEN}Boot your USB and select 'Encrypted LUKS Persistence Vault' in the GRUB menu.${NC}\n"
 
 else
@@ -174,7 +174,7 @@ INFO
     sync
     umount "$MOUNT_DIR"
 
-    echo -e "\n${GREEN}${BOLD}[✔] SUCCESS: Standard Ext4 Persistence active on ${NEW_PARTITION}!${NC}"
+    echo -e "\n${GREEN}${BOLD}[[OK]] SUCCESS: Standard Ext4 Persistence active on ${NEW_PARTITION}!${NC}"
     echo -e "${GREEN}Boot your USB and select 'USB Persistence Enabled' in the GRUB menu.${NC}\n"
 fi
 

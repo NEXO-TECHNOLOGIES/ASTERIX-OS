@@ -1,4 +1,4 @@
-# 🌌 ASTERIX OS: 5 Breakthrough Differentiators Beyond Kali Linux
+# [ASTERIX] ASTERIX OS: 5 Breakthrough Differentiators Beyond Kali Linux
 
 **Document Version**: 3.0.0  
 **Scope**: Advanced Architectural Capabilities  
@@ -15,15 +15,15 @@ ASTERIX OS introduces **5 native breakthrough engines** directly into the operat
 
 | # | Breakthrough Capability | Legacy Offensive OS (Kali/Parrot) | ASTERIX OS Engine |
 |---|---|---|---|
-| 1 | **🕸️ Attack Path Pathfinder** | Disjoint terminal tool outputs; manual mental correlation | Autonomous DAG attack surface synthesis, Dijkstra hop/noise pathfinding, interactive HTML graph |
-| 2 | **👥 Multiplayer Engagements** | Isolated single-operator terminals; risk of scan collision | Real-time P2P encrypted squad synchronization, UDP discovery, logical vector clocks, target locking |
-| 3 | **👻 Ghost Egress & Decoy** | Static IP egress; immediately fingerprinted by EDR/WAF | Dynamic egress traffic shaping, Gaussian jitter, enterprise background decoy blending |
-| 4 | **📻 Mobile RF Sentinel** | Requires external Alfa/HackRF dongles and driver compilation | Native passive BLE tracker detection (AirTags/SmartTags), Evil Twin rogue AP hunter, ultrasonic probe |
-| 5 | **⚖️ Tamper-Proof Vault** | Unsigned flat text logs, easily challenged in litigation | Cryptographic RFC 3161 timestamping, Ed25519/HMAC digital signatures, verifiable `.axproof` envelopes |
+| 1 | ** Attack Path Pathfinder** | Disjoint terminal tool outputs; manual mental correlation | Autonomous DAG attack surface synthesis, Dijkstra hop/noise pathfinding, interactive HTML graph |
+| 2 | ** Multiplayer Engagements** | Isolated single-operator terminals; risk of scan collision | Real-time P2P encrypted squad synchronization, UDP discovery, logical vector clocks, target locking |
+| 3 | ** Ghost Egress & Decoy** | Static IP egress; immediately fingerprinted by EDR/WAF | Dynamic egress traffic shaping, Gaussian jitter, enterprise background decoy blending |
+| 4 | ** Mobile RF Sentinel** | Requires external Alfa/HackRF dongles and driver compilation | Native passive BLE tracker detection (AirTags/SmartTags), Evil Twin rogue AP hunter, ultrasonic probe |
+| 5 | ** Tamper-Proof Vault** | Unsigned flat text logs, easily challenged in litigation | Cryptographic RFC 3161 timestamping, Ed25519/HMAC digital signatures, verifiable `.axproof` envelopes |
 
 ---
 
-## 1. 🕸️ Attack Path Pathfinder (`ax pathfinder` / `ax graph`)
+## 1.  Attack Path Pathfinder (`ax pathfinder` / `ax graph`)
 
 ### Purpose & Architecture
 Instead of reading thousands of lines of raw Nmap XML or tool logs, `ax-pathfinder` automatically ingests the unified engagement data model (`schemas/asterix_project_schema.json`) and builds a **Directed Acyclic Graph (DAG)** mapping:
@@ -34,9 +34,9 @@ Instead of reading thousands of lines of raw Nmap XML or tool logs, `ax-pathfind
 - **Crown Jewels**: Automatically identifies Domain Controllers, Active Directory LDAP nodes, and database vaults.
 
 ### Optimization Algorithms
-- **⚡ Shortest Path**: Uses Dijkstra's algorithm to compute the minimal hop sequence between an external entry vector and high-value target assets.
-- **👻 Lowest-Noise (Stealth) Path**: Weights each traversal edge by its probability of triggering EDR/SIEM detection. Exploitation of loud services incurs high noise penalties, whereas authenticating via harvested credentials has minimal noise weight.
-- **🛡️ Chokepoints & Blast Radius**: Calculates graph centrality to reveal which single host or service, if secured by defenders or compromised by attackers, controls access to the largest radius of downstream assets.
+- **[*] Shortest Path**: Uses Dijkstra's algorithm to compute the minimal hop sequence between an external entry vector and high-value target assets.
+- ** Lowest-Noise (Stealth) Path**: Weights each traversal edge by its probability of triggering EDR/SIEM detection. Exploitation of loud services incurs high noise penalties, whereas authenticating via harvested credentials has minimal noise weight.
+- **[SEC] Chokepoints & Blast Radius**: Calculates graph centrality to reveal which single host or service, if secured by defenders or compromised by attackers, controls access to the largest radius of downstream assets.
 
 ### Usage
 ```bash
@@ -55,7 +55,7 @@ ax pathfinder export-html -o reports/attack_path.html
 
 ---
 
-## 2. 👥 Multiplayer Engagements (`ax team` / `ax collab-sync`)
+## 2.  Multiplayer Engagements (`ax team` / `ax collab-sync`)
 
 ### Purpose & Architecture
 In multi-operator red teams and penetration tests, two operators often scan or exploit the same IP address simultaneously, causing defensive EDR alert spikes or CTF flags to be overwritten. 
@@ -88,7 +88,7 @@ ax team listen
 
 ---
 
-## 3. 👻 Ghost Egress & Decoy Blending (`ax ghost` / `ax decoy`)
+## 3.  Ghost Egress & Decoy Blending (`ax ghost` / `ax decoy`)
 
 ### Purpose & Architecture
 Modern enterprise security centers (SOCs) and Web Application Firewalls (WAFs) detect offensive security testing through **behavioral heuristic scoring**: bursts of high-frequency requests, abnormal User-Agents, and non-standard egress traffic patterns.
@@ -118,7 +118,7 @@ ax ghost morph
 
 ---
 
-## 4. 📻 Mobile RF & Sensor Sentinel (`ax radio` / `ax ble`)
+## 4.  Mobile RF & Sensor Sentinel (`ax radio` / `ax ble`)
 
 ### Purpose & Architecture
 Conventional security distributions require external USB software-defined radios (HackRF, RTL-SDR) or Alfa Wi-Fi dongles to perform wireless auditing. `ax-radio` utilizes **built-in hardware interfaces** across Windows (`netsh`), Linux (`nmcli`/`iw`), and Android Termux (`termux-wifi-scaninfo`) for 100% passive, zero-transmission counter-surveillance.
@@ -156,7 +156,7 @@ ax radio ultrasonic-audit
 
 ---
 
-## 5. ⚖️ Tamper-Proof Evidence Vault (`ax proof` / `ax evidence`)
+## 5.  Tamper-Proof Evidence Vault (`ax proof` / `ax evidence`)
 
 ### Purpose & Architecture
 In penetration testing and incident response engagements, captured artifacts (pcaps, terminal sessions, loot databases, and vulnerability evidence) are frequently challenged in legal proceedings or by client IT management on grounds of potential tampering or unverified timestamps.

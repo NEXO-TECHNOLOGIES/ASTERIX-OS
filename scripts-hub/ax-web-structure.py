@@ -46,7 +46,7 @@ C_BLUE    = "\033[38;5;45m"
 C_ORANGE  = "\033[38;5;208m"
 
 BANNER = f"""{C_CYAN}{C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗
-║{C_WHITE}{C_BOLD}   🌌 ASTERIX OS — WEB CODE STRUCTURE & DEEP SOURCE ENGINE v3.0          {C_RESET}{C_CYAN}║
+║{C_WHITE}{C_BOLD}   [ASTERIX] ASTERIX OS — WEB CODE STRUCTURE & DEEP SOURCE ENGINE v3.0          {C_RESET}{C_CYAN}║
 ║{C_MAGENTA}   [ Full DOM Hierarchy • JS/CSS Asset Tree • API Routes • Offline Dump ]  {C_RESET}{C_CYAN}║
 ╚══════════════════════════════════════════════════════════════════════════╝{C_RESET}"""
 
@@ -912,7 +912,7 @@ def main():
         print(f"{HSEP}")
         print(f"  {C_YELLOW}[*] Output Directory:{C_RESET} {C_WHITE}{args.dump}{C_RESET}")
         res = extractor.dump_code_structure(args.dump)
-        print(f"  {C_GREEN}[✔] Source code and assets successfully dumped!{C_RESET}")
+        print(f"  {C_GREEN}[[OK]] Source code and assets successfully dumped!{C_RESET}")
         print(f"  ├── index.html            (Beautified HTML source)")
         print(f"  ├── structure_tree.txt    (Architectural ASCII tree)")
         print(f"  ├── endpoints.json        (All discovered API routes)")

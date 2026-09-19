@@ -282,7 +282,7 @@ def run_and_debug(command_args):
     # ── Crash Analysis ──
     crash = analyze_crash(stdout, stderr, exit_code, elapsed)
     if crash is None:
-        print(f"\n  {C_GREEN}[✓] No crash detected. Command exited cleanly.{C_RESET}\n")
+        print(f"\n  {C_GREEN}[[OK]] No crash detected. Command exited cleanly.{C_RESET}\n")
         return
 
     print(f"\n{SEP2}")

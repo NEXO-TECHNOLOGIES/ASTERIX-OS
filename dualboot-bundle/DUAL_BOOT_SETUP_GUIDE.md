@@ -1,4 +1,4 @@
-# 🚀 ASTERIX OS v2.0 'Phantom' — Dual-Boot & Multi-OS Setup Guide
+# [RUN] ASTERIX OS v2.0 'Phantom' — Dual-Boot & Multi-OS Setup Guide
 
 This bundle provides all pre-configured files to dual-boot **ASTERIX OS** alongside **Windows 10/11** or secondary operating systems from a single USB drive.
 

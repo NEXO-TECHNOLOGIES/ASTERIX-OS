@@ -1,10 +1,10 @@
-# 📦 `ax-debian-manager` — Debian Rootless Subsystem & Folder Engine
+# [PKG] `ax-debian-manager` — Debian Rootless Subsystem & Folder Engine
 
 A zero-dependency Python engine that manages the Debian rootless (`proot-distro`) container, manages the 10-tier mission folder architecture, and eliminates PRoot failure modes.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax debian [doctor|repair|enter]
@@ -18,7 +18,7 @@ python scripts-hub/ax-debian-manager.py <command> [args...]
 
 ---
 
-## ⚙️ Key Capabilities
+## [*] Key Capabilities
 
 ### 1. Rootless Failure Self-Healing (`ax debian repair`)
 Remediates common PRoot and Termux issues:

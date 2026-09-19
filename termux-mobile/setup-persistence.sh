@@ -47,7 +47,7 @@ if [ -d "/sdcard" ] && [ -w "/sdcard" ]; then
     mkdir -p "$SDCARD_VAULT" 2>/dev/null || true
     ln -sf "$SDCARD_VAULT" "$LOCAL_VAULT/sdcard_bridge" 2>/dev/null || true
     ln -sf "$SDCARD_VAULT" "$LEGACY_VAULT/sdcard_link" 2>/dev/null || true
-    echo -e "${GREEN}[✔] Linked Android external storage: ${SDCARD_VAULT}${NC}"
+    echo -e "${GREEN}[[OK]] Linked Android external storage: ${SDCARD_VAULT}${NC}"
 else
     echo -e "${CYAN}[i] Using resilient Termux private storage (100% stable, zero permissions needed).${NC}"
 fi
@@ -68,4 +68,4 @@ All data placed inside this directory survives container reboots and package upg
 • `workspace/` - Ephemeral and scratch workspace
 EOF
 
-echo -e "${GREEN}${BOLD}[✔] ASTERIX Persistence is ready and hardened at: ${YELLOW}${LOCAL_VAULT}${NC}"
+echo -e "${GREEN}${BOLD}[[OK]] ASTERIX Persistence is ready and hardened at: ${YELLOW}${LOCAL_VAULT}${NC}"

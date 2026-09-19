@@ -1,5 +1,5 @@
 ; ==============================================================================
-; 🌌 ASTERIX OS — AVX2 & SSE Vectorized Cryptographic & Entropy Engine (x86_64)
+; [ASTERIX] ASTERIX OS — AVX2 & SSE Vectorized Cryptographic & Entropy Engine (x86_64)
 ; High-Velocity SIMD Routines for Stream Encryption, ChaCha20 & Shannon Entropy
 ; System V AMD64 ABI:
 ;   Args: RDI, RSI, RDX, RCX, R8, R9 | Return: RAX

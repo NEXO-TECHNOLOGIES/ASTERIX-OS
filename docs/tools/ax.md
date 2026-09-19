@@ -1,10 +1,10 @@
-# 🚀 `ax` — Master CLI Dispatcher
+# [RUN] `ax` — Master CLI Dispatcher
 
 The master command dispatcher for ASTERIX OS, providing a unified CLI interface across Linux, Android Termux, and Windows PowerShell.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax <command> [arguments...]
@@ -19,7 +19,7 @@ powershell -ExecutionPolicy Bypass -File bin/ax.ps1 <command>
 
 ---
 
-## ⚙️ Core Subcommands
+## [*] Core Subcommands
 
 ### System & Diagnostics
 - `ax status`: Display live system telemetry (hostname, kernel, uptime, persistence status).
@@ -37,6 +37,6 @@ powershell -ExecutionPolicy Bypass -File bin/ax.ps1 <command>
 
 ---
 
-## 🔒 Security Constraints
+## [LOCK] Security Constraints
 - All command executions are unprivileged by default.
 - Commands requiring elevated networking capabilities (raw sockets) gracefully detect environment limits and provide fallback implementations.

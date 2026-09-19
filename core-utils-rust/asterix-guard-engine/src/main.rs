@@ -387,7 +387,7 @@ fn print_report(items: &[AuditItem]) {
     };
 
     println!("  {C_WHITE}Security Compliance Score:{C_RESET} {score_color}{C_BOLD}{} / 100{C_RESET}", score);
-    println!("  {C_GREEN}✔ PASSED:{C_RESET} {:2}  |  {C_YELLOW}⚠ WARNINGS:{C_RESET} {:2}  |  {C_RED}✖ FAILED:{C_RESET} {:2}\n",
+    println!("  {C_GREEN}[OK] PASSED:{C_RESET} {:2}  |  {C_YELLOW}[!] WARNINGS:{C_RESET} {:2}  |  {C_RED}[FAIL] FAILED:{C_RESET} {:2}\n",
         pass, warn, fail);
 
     let mut current_cat = "";
@@ -440,8 +440,8 @@ fn generate_hardening_script(items: &[AuditItem], output_path: &Path) -> io::Res
         }
     }
 
-    writeln!(file, "\necho '[✔] Asterix Security Hardening Applied Successfully!'")?;
-    println!("{C_GREEN}{C_BOLD}[✔] Hardening script generated at: {}{C_RESET}", output_path.display());
+    writeln!(file, "\necho '[[OK]] Asterix Security Hardening Applied Successfully!'")?;
+    println!("{C_GREEN}{C_BOLD}[[OK]] Hardening script generated at: {}{C_RESET}", output_path.display());
     Ok(())
 }
 

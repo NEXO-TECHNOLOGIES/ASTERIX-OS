@@ -945,7 +945,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
   <span class='term-green'>[Hop 2]</span> 10.0.8.42 (Internal Jump Box / Credential Extraction) [Weight: 0.8]
   <span class='term-magenta'>[Hop 3]</span> 10.0.8.10:88 (CORP-DC01 Kerberos KDC / Domain Admin) [Weight: 2.1]
 <span class='term-yellow'>[!] Choke-point identified: Pivot at 10.0.8.42 eliminates 84% of lateral attack paths.</span>
-<span class='term-cyan'>[✔] Mission kill chain modeled in 42ms. Zero cloud telemetry leaked.</span>
+<span class='term-cyan'>[[OK]] Mission kill chain modeled in 42ms. Zero cloud telemetry leaked.</span>
 `);
                 break;
 
@@ -959,7 +959,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
   <span class='term-cyan'>• Ghost-Alpha (Peer)</span>  | Role: Decoy Egress  | Target: 10.0.8.1   | Status: <span class='term-green'>BLENDING</span>
   <span class='term-cyan'>• Radio-Sentinel (Edge)</span>| Role: RF Hunter     | Target: 2.4/5GHz   | Status: <span class='term-green'>PASSIVE</span>
 <span class='term-green'>[+] Scope De-confliction: 0 collision alerts across 3 active operations.</span>
-<span class='term-cyan'>[✔] P2P gossip mesh synchronized (Ed25519 authenticated).</span>
+<span class='term-cyan'>[[OK]] P2P gossip mesh synchronized (Ed25519 authenticated).</span>
 `);
                 break;
 
@@ -974,7 +974,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
   • Beacon #4821 encapsulated in TLS 1.3 SNI: docs.github.com
   • Decoy stream ratio: 94% synthetic / 6% operational
 <span class='term-magenta'>[+] SIEM Anomaly Detection Confidence: 0.08 (Normal traffic profile).</span>
-<span class='term-cyan'>[✔] Ghost protocol running in background daemon mode.</span>
+<span class='term-cyan'>[[OK]] Ghost protocol running in background daemon mode.</span>
 `);
                 break;
 
@@ -991,7 +991,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
 <span class='term-cyan'>[+] Passive Jamming Detector:</span>
   • Continuous wideband carrier pulse: NONE
   • Jamming threat score: 0/100 (SECURE)
-<span class='term-cyan'>[✔] Passive RF monitoring compliance active. Zero RF transmissions allowed.</span>
+<span class='term-cyan'>[[OK]] Passive RF monitoring compliance active. Zero RF transmissions allowed.</span>
 `);
                 break;
 
@@ -1007,7 +1007,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
   • Block #246: Keystroke Execution Log    -> <span class='term-green'>VERIFIED</span>
   • Block #245: Packet Capture (PCAP) Hash -> <span class='term-green'>VERIFIED</span>
 <span class='term-green'>[+] Digital Signature: Ed25519 (Operator-Key-ID: 0x9F8B3C1A) [VALID]</span>
-<span class='term-cyan'>[✔] Full chain-of-custody intact. Admissible for forensic presentation.</span>
+<span class='term-cyan'>[[OK]] Full chain-of-custody intact. Admissible for forensic presentation.</span>
 `);
                 break;
 
@@ -1022,7 +1022,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
 <span class='term-green'>[PASS] scripts-hub/ax-ghost.py         (SHA-256 Valid)</span>
 <span class='term-green'>[PASS] scripts-hub/ax-radio.py         (SHA-256 Valid)</span>
 <span class='term-green'>[PASS] scripts-hub/ax-evidence.py      (SHA-256 Valid)</span>
-<span class='term-cyan'>[✔] Result: 21 of 21 core release signatures VALID (100% integrity).</span>
+<span class='term-cyan'>[[OK]] Result: 21 of 21 core release signatures VALID (100% integrity).</span>
 `);
                 break;
 
@@ -1035,7 +1035,7 @@ System: <span class='term-green'>doctor</span>, <span class='term-green'>portal<
 <span class='term-green'>[PASS] Zero-Dependency Python: 100% Standard Library</span>
 <span class='term-green'>[PASS] Persistent Mount: /asterix_persistent (Encrypted)</span>
 <span class='term-green'>[PASS] Audio Synthesizer: Web Audio API Active</span>
-<span class='term-cyan'>[✔] All core subsystems green. Node operational.</span>
+<span class='term-cyan'>[[OK]] All core subsystems green. Node operational.</span>
 `);
                 break;
 
@@ -2943,7 +2943,7 @@ dw 0xAA55                   ; Boot sector signature
             file: "media/videos/01_ATTACK_PATH_PATHFINDER_1080p.mp4",
             runtime: "0:07",
             desc: "Autonomous multi-hop lateral movement modeling using Dijkstra choke-point graph analytics. Maps reachable kill chains from external perimeter breach directly to Domain Admin.",
-            social: "Why stop at port scanning when your OS can calculate the entire kill chain? 🎯 Meet the Attack Path Pathfinder in ASTERIX OS. #CyberSecurity #RedTeam #EthicalHacking",
+            social: "Why stop at port scanning when your OS can calculate the entire kill chain? [TARGET] Meet the Attack Path Pathfinder in ASTERIX OS. #CyberSecurity #RedTeam #EthicalHacking",
             cmd: "ax pathfinder --target 10.0.8.0/24"
         },
         {
@@ -2953,7 +2953,7 @@ dw 0xAA55                   ; Boot sector signature
             file: "media/videos/02_MULTIPLAYER_TEAM_SYNC_1080p.mp4",
             runtime: "0:07",
             desc: "Decentralized peer-to-peer operator mesh for live target locking, scope de-confliction radar, and cross-operator beacon sharing without any centralized cloud dependency.",
-            social: "Red teaming shouldn't be a solo game. 👥 ASTERIX OS brings live P2P multiplayer engagement telemetry and real-time scope de-confliction. #PenetrationTesting #RedTeamOps",
+            social: "Red teaming shouldn't be a solo game.  ASTERIX OS brings live P2P multiplayer engagement telemetry and real-time scope de-confliction. #PenetrationTesting #RedTeamOps",
             cmd: "ax team --status"
         },
         {
@@ -2963,7 +2963,7 @@ dw 0xAA55                   ; Boot sector signature
             file: "media/videos/03_GHOST_EGRESS_DECOY_1080p.mp4",
             runtime: "0:07",
             desc: "High-entropy SIEM evasion engine generating synthetic HTTP/DNS egress streams while multiplexing actual C2 beacons across stealth multi-hop routes.",
-            social: "Defeat SIEM correlation by blending into legitimate cloud noise. 👻 Ghost Protocol on ASTERIX OS routes stealth beacons under cover of synthetic decoy flows. #OpSec #ThreatHunting",
+            social: "Defeat SIEM correlation by blending into legitimate cloud noise.  Ghost Protocol on ASTERIX OS routes stealth beacons under cover of synthetic decoy flows. #OpSec #ThreatHunting",
             cmd: "ax ghost --stealth"
         },
         {
@@ -2973,7 +2973,7 @@ dw 0xAA55                   ; Boot sector signature
             file: "media/videos/04_MOBILE_RF_SENSOR_SENTINEL_1080p.mp4",
             runtime: "0:07",
             desc: "Edge RF telemetry monitor for Android Termux & SDR nodes. Real-time RF spectral noise floor auditing, 802.11 deauth flood alerts, and rogue beacon tri-lateration.",
-            social: "Turn edge mobile nodes into distributed RF telemetry sentinels. 📡 Real-time RF spectral noise floor auditing and 802.11 deauth flood alerts directly from Termux. #SDR #WirelessSecurity",
+            social: "Turn edge mobile nodes into distributed RF telemetry sentinels. [SIGNAL] Real-time RF spectral noise floor auditing and 802.11 deauth flood alerts directly from Termux. #SDR #WirelessSecurity",
             cmd: "ax radio --jamming-audit"
         },
         {
@@ -2983,7 +2983,7 @@ dw 0xAA55                   ; Boot sector signature
             file: "media/videos/05_TAMPER_PROOF_EVIDENCE_VAULT_1080p.mp4",
             runtime: "0:07",
             desc: "Cryptographic Merkle tree audit logging with SHA-256 block hashing and Ed25519 digital signatures. Generates court-admissible forensic execution proofs.",
-            social: "Court-admissible red team reports with zero doubt. ⚖️ ASTERIX OS logs every keystroke and telemetry packet into an immutable Merkle tree chain-of-custody vault. #DigitalForensics #DFIR",
+            social: "Court-admissible red team reports with zero doubt.  ASTERIX OS logs every keystroke and telemetry packet into an immutable Merkle tree chain-of-custody vault. #DigitalForensics #DFIR",
             cmd: "ax vault --audit"
         }
     ];

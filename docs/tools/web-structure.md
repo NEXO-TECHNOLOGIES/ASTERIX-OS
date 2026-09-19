@@ -1,10 +1,10 @@
-# 🌐 `web-structure` — Deep Web DOM & Source Inspector
+# [NET] `web-structure` — Deep Web DOM & Source Inspector
 
 An advanced web architecture analyzer that maps the DOM hierarchy, extracts script and stylesheet dependencies, traces API endpoints, and reconstructs website structures offline.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax web-structure <url>
@@ -19,7 +19,7 @@ python scripts-hub/ax-web-structure.py <url>
 
 ---
 
-## ⚙️ Key Capabilities
+## [*] Key Capabilities
 
 - **Visual DOM Hierarchy (`ax curl-tree <url>`)**: Renders an ASCII tree of the remote website's HTML document object model with tag depths and node counts.
 - **Asset Dependency Mapping**: Extracts all linked `.js`, `.css`, image, font, and API websocket endpoints.

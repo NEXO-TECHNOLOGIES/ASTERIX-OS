@@ -1,24 +1,24 @@
-# 🌌 ASTERIX OS — New Updates & Architectural Enhancements
+# [ASTERIX] ASTERIX OS — New Updates & Architectural Enhancements
 > **Next-Generation Cybernetic Operating System & High-Performance Security Platform**  
 > *Latest Update Release | Zero-Vulnerability Hardening & Windows Feature Parity*
 
 ---
 
-## 📑 Overview of Recent Upgrades
+##  Overview of Recent Upgrades
 
 This update cycle significantly elevates **ASTERIX OS** into a high-performance polyglot operating environment featuring:
-1. **🛡️ Pure-Rust ASTERIX Defender Core** — Antivirus, Encrypted Quarantine Vault & Windows Security Center telemetry.
-2. **⚡ LIGHTNING Autonomous WAF & Web SOC** — 16-module reverse proxy, real-time threat intelligence & SOC HUD.
-3. **🎮 APEX OVERDRIVE & eSports Kernel Gaming Suite** — Windows Game Mode & DirectX HAGS parity with sub-0.5ms timers and 60 FPS HUD.
-4. **🏢 Upgraded Windows Enterprise Feature Suite** — Native cryptographic ports of System Restore (VSS), Event Viewer, System File Checker (SFC), Task Manager EcoQoS, Local Security Policy (secpol), Sandbox, AppLocker, BitLocker, Credential Guard, and Exploit Guard.
-5. **🛡️ ASTERIX OS Tactical Stealth & Anti-Forensics Suite** — Disguise engine (Undercover), cryptographic wipe (Nuke), system tweaks, forensic write-blocking, and RF spectrum audit.
-6. **📦 Modular External Package Registry** — Unified GitHub auto-cloning and synchronization system.
-7. **🔒 Zero-Vulnerability Security Hardening** — Kernel ASLR preservation, localhost loopback binding, and cryptographic file integrity seals.
-8. **🗺️ Updated Visual Architecture Diagram** — High-resolution diagrammatic layout saved at the repository root.
+1. **[SEC] Pure-Rust ASTERIX Defender Core** — Antivirus, Encrypted Quarantine Vault & Windows Security Center telemetry.
+2. **[*] LIGHTNING Autonomous WAF & Web SOC** — 16-module reverse proxy, real-time threat intelligence & SOC HUD.
+3. ** APEX OVERDRIVE & eSports Kernel Gaming Suite** — Windows Game Mode & DirectX HAGS parity with sub-0.5ms timers and 60 FPS HUD.
+4. ** Upgraded Windows Enterprise Feature Suite** — Native cryptographic ports of System Restore (VSS), Event Viewer, System File Checker (SFC), Task Manager EcoQoS, Local Security Policy (secpol), Sandbox, AppLocker, BitLocker, Credential Guard, and Exploit Guard.
+5. **[SEC] ASTERIX OS Tactical Stealth & Anti-Forensics Suite** — Disguise engine (Undercover), cryptographic wipe (Nuke), system tweaks, forensic write-blocking, and RF spectrum audit.
+6. **[PKG] Modular External Package Registry** — Unified GitHub auto-cloning and synchronization system.
+7. **[LOCK] Zero-Vulnerability Security Hardening** — Kernel ASLR preservation, localhost loopback binding, and cryptographic file integrity seals.
+8. ** Updated Visual Architecture Diagram** — High-resolution diagrammatic layout saved at the repository root.
 
 ---
 
-## 1. 🛡️ ASTERIX Defender Core (Pure-Rust Antivirus & Host Firewall)
+## 1. [SEC] ASTERIX Defender Core (Pure-Rust Antivirus & Host Firewall)
 
 Located at `core-utils-rust/asterix-defender-core/`, this engine is built with **100% Pure Safe Rust (Zero External Crates)** for instant, zero-dependency compilation on Bare-Metal Linux, Debian Live ISOs, and Android Termux PRoot.
 
@@ -43,7 +43,7 @@ ax quarantine                # Inspect safely isolated threats in the quarantine
 
 ---
 
-## 2. ⚡ LIGHTNING Autonomous WAF & Web SOC Command Center
+## 2. [*] LIGHTNING Autonomous WAF & Web SOC Command Center
 
 Integrated into the package registry (`packages/LIGHTNING-/`), LIGHTNING delivers military-grade web defense:
 
@@ -74,7 +74,7 @@ ax soc                       # Alias for Web SOC control center
 
 ---
 
-## 3. 🎮 APEX OVERDRIVE & eSports Kernel Gaming Suite
+## 3.  APEX OVERDRIVE & eSports Kernel Gaming Suite
 
 Engineered to match and surpass Windows Game Mode, DirectX Hardware-Accelerated GPU Scheduling (HAGS), and microsecond timer tuning for ultra-low latency eSports gaming.
 
@@ -109,7 +109,7 @@ ax overdrive                 # Launch APEX OVERDRIVE 60 FPS glassmorphic HUD (po
 
 ---
 
-## 4. 🏢 Upgraded Windows Enterprise Feature Suite (Zero-Vulnerability Architecture)
+## 4.  Upgraded Windows Enterprise Feature Suite (Zero-Vulnerability Architecture)
 
 We ported core Windows administrative and reliability subsystems into native, hardened ASTERIX OS tools:
 
@@ -177,7 +177,7 @@ ax exploit-guard asr         # Apply Attack Surface Reduction rules (disable unp
 
 ---
 
-## 5. 🛡️ ASTERIX OS Tactical Stealth, Anti-Forensics & System Hardening Suite
+## 5. [SEC] ASTERIX OS Tactical Stealth, Anti-Forensics & System Hardening Suite
 
 Engineered natively for tactical field operations, cyber defense, and live incident response, these native subsystems integrate operational stealth, anti-forensics, forensic data preservation, and radio frequency reconnaissance directly into the ASTERIX OS platform:
 
@@ -254,7 +254,7 @@ ax carve <target> [out_dir]     # Foremost & Scalpel digital forensics deleted m
 
 ---
 
-## 6. ⚡ Performance, Storage & Network Diagnostics Subsystem
+## 6. [*] Performance, Storage & Network Diagnostics Subsystem
 
 Engineered for high-efficiency operation across both Android Termux mobile devices and Bare-Metal Linux servers:
 
@@ -288,7 +288,7 @@ ax ssl-audit <domain>           # Deep SSL/TLS cipher auditor, expiry tracker & 
 
 ---
 
-## 7. 📦 Modular External Package Registry Architecture
+## 7. [PKG] Modular External Package Registry Architecture
 
 To prevent repository bloat, third-party security tools are managed via automated synchronization:
 
@@ -317,7 +317,7 @@ ax pkg build                 # Rebuild native Rust/C components across all packa
 
 ---
 
-## 8. 🔒 Zero-Vulnerability Security Verification Matrix
+## 8. [LOCK] Zero-Vulnerability Security Verification Matrix
 
 | Component | Security Control Applied | Verification Result |
 | :--- | :--- | :--- |
@@ -331,7 +331,7 @@ ax pkg build                 # Rebuild native Rust/C components across all packa
 
 ---
 
-## 9. 🗺️ ASTERIX OS Visual Architecture Diagram
+## 9.  ASTERIX OS Visual Architecture Diagram
 
 The architectural filesystem layout diagram has been refreshed with all recent additions:
 - **Filesystem Root**: Saved directly in the root directory (not in subfolders):
@@ -351,7 +351,7 @@ The architectural filesystem layout diagram has been refreshed with all recent a
 
 ---
 
-## 10. 🧠 ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
+## 10.  ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
 
 Located in `asterix-ai/`, this is an offline expert triage system operating with **zero cloud dependencies** and **zero GPU requirements**:
 - **Dual Runtime Architecture**:
@@ -376,7 +376,7 @@ ax ai rules                      # Display active knowledge base rules, severity
 
 ---
 
-## 11. ⚡ ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
+## 11. [*] ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
 
 Located in `auto-compiler/`, this engine automates the entire compilation, linting, and bug-healing process with zero manual intervention:
 - **Zero-Manual Error Healing**:
@@ -394,7 +394,7 @@ ax auto-compile <dir>            # Auto-detect and build Makefile, Cargo.toml, o
 
 ---
 
-## 12. 🌐 ASTERIX OS-Computing // Universal Host Collaboration & Bridge v3.0
+## 12. [NET] ASTERIX OS-Computing // Universal Host Collaboration & Bridge v3.0
 
 Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system (Windows 10/11, Linux, macOS, Termux) and mounted dual-boot systems (Debian, Ubuntu, Arch, Fedora, and companion security partitions):
 - **Cross-OS Discovery (`ax os-computing probe`)**:
@@ -424,7 +424,7 @@ ax os-computing status           # Display complete cross-OS collaboration telem
 
 ---
 
-## 13. 🔧 ASTERIX Code-Repair Engine (Native Rust & C Self-Healing)
+## 13. [TOOL] ASTERIX Code-Repair Engine (Native Rust & C Self-Healing)
 
 Located in `core-utils-rust/asterix-code-repair/` and `core-utils-c/src/asterix-code-repair.c`:
 - **Dual-Tier Native Performance**: Tier 1 in pure Rust with zero-cost abstractions; Tier 2 in POSIX C for minimal embedded footprints.
@@ -443,7 +443,7 @@ ax code-repair fix <dir>         # Recursively heal all defects with safety back
 
 ---
 
-## 14. 🧠 Conversational ASTERIX AI v3.0 (ChatGPT-Style Copilot)
+## 14.  Conversational ASTERIX AI v3.0 (ChatGPT-Style Copilot)
 
 Located in `asterix-ai/`:
 - **Interactive Conversational Shell (`ax ai chat`)**: Provides an offline, zero-dependency natural language dialogue interface without sending queries to the cloud.
@@ -461,7 +461,7 @@ ax ai about [es|fr|de|zh|ar|ru]  # Display multilingual ASTERIX overview
 
 ---
 
-## 15. 🌐 ProxyChains Creator & Dynamic Routing Engine
+## 15. [NET] ProxyChains Creator & Dynamic Routing Engine
 
 Located in `proxychains-creator/`:
 - **Protocol Handshake Probing**: Probes SOCKS5 (RFC 1928) and SOCKS4 sockets to ensure genuine proxy availability, not just open ports.
@@ -491,7 +491,7 @@ ASTERIX AI now learns and adapts to the user's thinking style in real time:
 - Detects preferred programming languages automatically
 - `ax ai teach "fact"` — teach the AI a custom rule or preference, stored permanently
 - `ax ai profile` — display full AI memory HUD: interaction telemetry, topic heatmap, learned facts
-- Every `ax ai ask` query now triggers cognitive ingestion + relevant fact recall (displayed as `🧠 COGNITIVE MEMORY ENGAGED`)
+- Every `ax ai ask` query now triggers cognitive ingestion + relevant fact recall (displayed as ` COGNITIVE MEMORY ENGAGED`)
 - `ax ai chat` REPL supports `teach: ...` / `learn: ...` prefix to teach mid-conversation
 
 **New aliases:** `ax-memory`, `ax-teach`, `ai-memory`, `ax-learn`
@@ -563,12 +563,12 @@ A military-grade, two-party encrypted communications bridge designed specificall
   - Visual SHA-256 fingerprint displayed in 4-character blocks for out-of-band MITM verification.
 - **Self-Destruct Timers:**
   - Messages burn after 5s, 15s, 30s, or 60s with visual countdown progress bar.
-- **☣ 1-Click Panic Burn Killswitch:**
+- ** 1-Click Panic Burn Killswitch:**
   - Instantly wipes encryption keys from browser memory, purges room from server RAM, clears DOM, and redirects to `about:blank`.
 - **Synthesized Web Audio API SFX:**
   - Real-time mathematical sound generation for send, receive, burn, and alarm sirens (zero external audio files).
 - **Interactive Terminal CLI Client:**
-  - `ax secure-chat client` allows chatting directly from the terminal prompt (`user ❯ `).
+  - `ax secure-chat client` allows chatting directly from the terminal prompt (`user  `).
 - **Quick Aliases:** `ax-chat`, `ax-secure-chat`, `secure-chat`, `chat-room`.
 
 ---
@@ -584,23 +584,23 @@ Major expansion of the ASTERIX Secure Chat system based on user specifications:
 - **Custom Room Password on Creation:**
   - Room creators explicitly specify their secret room password during initialization.
   - PBKDF2-HMAC-SHA256 (100,000 iterations) with 32-byte salt verifies joining users.
-- **🚨 3-Strike Intrusion Detection System (IDS) & OS Counter-Attack Alerts:**
+- **[ALERT] 3-Strike Intrusion Detection System (IDS) & OS Counter-Attack Alerts:**
   - If a user/attacker inputs a wrong password 3 or more times:
     - Triggers an OS-level terminal alarm:
-      `🚨 [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
+      `[ALERT] [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
     - Displays the attacker's **Target IP, Port, Targeted Room, and Timestamp**.
     - Recommends tactical counter-attacks using preinstalled tools:
       `ax nmap -sV -O <IP>`, `ax killswitch`, `ax decoy <PORT>`, `ax traceroute <IP>`, `ax stealth`.
     - Broadcasts an emergency real-time `intrusion_alert` to all connected web room members with audio alarm siren.
-- **👑 Group Admin Control Suite:**
-  - Room creator receives a cryptographic `admin_token` and `👑 VAULT ADMIN` badge.
-  - Member management panel (`👥 MEMBERS`): view all connected operatives with network endpoints (IP:Port).
+- ** Group Admin Control Suite:**
+  - Room creator receives a cryptographic `admin_token` and ` VAULT ADMIN` badge.
+  - Member management panel (` MEMBERS`): view all connected operatives with network endpoints (IP:Port).
   - 1-Click **Kick Member** and **Mute/Unmute Member**.
   - 1-Click **Purge Chat History** across all connected screens.
 
 ---
 
-## [21] 🌐 ASTERIX Dual-OS Quantum Fusion & Unified Rebuild Pipeline v3.5
+## [21] [NET] ASTERIX Dual-OS Quantum Fusion & Unified Rebuild Pipeline v3.5
 
 **Updated:** `os-computing/os_bridge.py`, `os-computing/os_bridge.ps1`, `os-computing/os_bridge.sh`, `bin/ax`, `bin/ax.ps1`, `bin/s`, `bin/s.cmd`, `bin/s.ps1`, `BUILD_MANIFEST.json`, `VERSION.toml`
 

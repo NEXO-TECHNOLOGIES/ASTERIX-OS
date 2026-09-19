@@ -1,4 +1,4 @@
-# ⚡ ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
+# [*] ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
 
 The **ASTERIX Auto-Compiler** (`auto-compiler/`) is an autonomous multi-language compilation and heuristic source repair system built directly into ASTERIX OS.
 
@@ -6,7 +6,7 @@ It intercepts compiler diagnostics and syntax errors in real-time, automatically
 
 ---
 
-## 🛠️ Key Capabilities
+##  Key Capabilities
 
 - **Zero-Manual Code Healing**:
   - **Implicit Function Resolution**: Automatically identifies undeclared standard library functions (`printf`, `malloc`, `strlen`, `fork`, `close`) and injects the corresponding `#include` statements (`<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<unistd.h>`).
@@ -17,7 +17,7 @@ It intercepts compiler diagnostics and syntax errors in real-time, automatically
 
 ---
 
-## 💻 Supported Languages & Tools
+## [HOST] Supported Languages & Tools
 
 | Language | Primary Compiler | Heuristic Auto-Fixes Supported |
 | :--- | :--- | :--- |
@@ -30,7 +30,7 @@ It intercepts compiler diagnostics and syntax errors in real-time, automatically
 
 ---
 
-## 🚀 CLI Usage
+## [RUN] CLI Usage
 
 ```bash
 # Auto-compile a C source file with self-repair

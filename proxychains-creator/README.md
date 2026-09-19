@@ -1,4 +1,4 @@
-# 🌐 ASTERIX ProxyChains Creator // Proxy Validation & Dynamic Chain Engine
+# [NET] ASTERIX ProxyChains Creator // Proxy Validation & Dynamic Chain Engine
 
 The **ProxyChains Creator** (`proxychains-creator/`) is an automated proxy discovery, handshake validation, and dynamic routing chain synthesis tool built for ASTERIX OS.
 
@@ -6,7 +6,7 @@ It probes SOCKS4, SOCKS5, and HTTP proxies via native socket greetings, evaluate
 
 ---
 
-## ⚡ Key Capabilities
+## [*] Key Capabilities
 
 - **RFC 1928 SOCKS5 & SOCKS4 Handshake Probing**: Sends native binary protocol greeting frames to verify actual proxy functionality, not just open ports.
 - **Detailed IP Telemetry**: Displays `[STATUS] [IP ADDRESS] [PORT] [TYPE: SOCKS4/SOCKS5] [COUNTRY] [LATENCY ms] [CHAIN ORDER]`.
@@ -15,7 +15,7 @@ It probes SOCKS4, SOCKS5, and HTTP proxies via native socket greetings, evaluate
 
 ---
 
-## 🚀 CLI Usage
+## [RUN] CLI Usage
 
 ```bash
 # Scan and test default curated SOCKS proxy nodes

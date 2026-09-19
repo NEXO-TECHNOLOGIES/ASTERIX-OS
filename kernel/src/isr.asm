@@ -1,5 +1,5 @@
 ; =====================================================================
-; 🌌 ASTERIX OS — CPU Exception & Hardware IRQ Assembly Stubs
+; ASTERIX OS - CPU Exception & Hardware IRQ Assembly Stubs
 ; Architecture: 32-bit Protected Mode (i386)
 ; Defines entry points for CPU exceptions 0-31, PIC IRQs 0-15, and int 0x80
 ; Assembler: NASM (nasm -f elf32 isr.asm -o isr.o)

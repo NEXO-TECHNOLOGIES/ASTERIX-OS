@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-crypto-core`
+# [SEC] Threat Model: `asterix-crypto-core`
 ## Cryptographic Identification, Hash Auditing & Verification Engine
 
 ### 1. Component Overview

@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-net-sentinel`
+# [SEC] Threat Model: `asterix-net-sentinel`
 ## High-Performance Network Scanner & Port Enumeration Engine
 
 ### 1. Component Overview

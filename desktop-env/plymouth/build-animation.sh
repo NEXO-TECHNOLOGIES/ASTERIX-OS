@@ -66,7 +66,7 @@ ffmpeg -i "${ANIM_SRC}" \
     -hide_banner -loglevel error
 
 FRAME_COUNT=$(ls "${FRAMES_DIR}"/frame_*.png 2>/dev/null | wc -l)
-echo -e "${GREEN}[✔] Extracted ${FRAME_COUNT} frames at 24fps${NC}"
+echo -e "${GREEN}[[OK]] Extracted ${FRAME_COUNT} frames at 24fps${NC}"
 
 echo -e "${YELLOW}[*] Generating Plymouth theme script...${NC}"
 
@@ -162,12 +162,12 @@ update-alternatives --set \
 plymouth-set-default-theme asterix
 update-initramfs -u 2>/dev/null || true
 
-echo "[✔] ASTERIX Plymouth theme installed successfully."
+echo "[[OK]] ASTERIX Plymouth theme installed successfully."
 HOOK
 chmod +x "${THEME_DIR}/install-plymouth.sh"
 
 echo -e "${GREEN}${BOLD}"
-echo "[✔] Plymouth theme built successfully!"
+echo "[[OK]] Plymouth theme built successfully!"
 echo "    Frames:      ${FRAME_COUNT} PNG files in desktop-env/plymouth/frames/"
 echo "    Theme:       desktop-env/plymouth/asterix.plymouth"
 echo "    Script:      desktop-env/plymouth/asterix.script"

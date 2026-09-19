@@ -486,4 +486,4 @@ else
     USER_TAG="\u"
 fi
 
-PS1="${USER_COLOR}┌──(${USER_TAG}@asterix-sec)─[\[\033[38;5;220m\]\w\[\033[38;5;201m\]\$(_asterix_git_branch)${USER_COLOR}]\n└──╼ \[\033[38;5;46m\]❯\[\033[0m\] "
+PS1="${USER_COLOR}┌──(${USER_TAG}@asterix-sec)─[\[\033[38;5;220m\]\w\[\033[38;5;201m\]\$(_asterix_git_branch)${USER_COLOR}]\n└──╼ \[\033[38;5;46m\]\[\033[0m\] "

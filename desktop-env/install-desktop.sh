@@ -29,4 +29,4 @@ EOF
 chmod +x "${TARGET_ROOT}/etc/xdg/autostart/asterix-desktop.desktop"
 chmod +x "${SCRIPT_DIR}/autostart/asterix-init-desktop.sh"
 
-echo "[✔] ASTERIX OS Desktop Environment installed successfully."
+echo "[[OK]] ASTERIX OS Desktop Environment installed successfully."

@@ -1,4 +1,4 @@
-# 🌐 ASTERIX OS — Multi-Language Deep Systems Architecture & Toolchain Guide
+# [NET] ASTERIX OS — Multi-Language Deep Systems Architecture & Toolchain Guide
 
 ASTERIX OS features a multi-tiered polyglot systems architecture spanning **x86-64 Assembly**, **Pure C11**, **C++17**, **Rust**, and **Go**. Every language was chosen for its distinct architectural strengths:
 
@@ -20,7 +20,7 @@ ASTERIX OS features a multi-tiered polyglot systems architecture spanning **x86-
 
 ---
 
-## ⚡ 1. One-Click Master Build Pipeline (`./build-all.sh`)
+## [*] 1. One-Click Master Build Pipeline (`./build-all.sh`)
 
 To compile the entire multi-language ecosystem in one step:
 
@@ -39,7 +39,7 @@ All resulting binaries are automatically installed into `/usr/local/bin/`.
 
 ---
 
-## 🔬 2. Deep Kernel & OS-Level C Suite (`core-utils-c/`)
+##  2. Deep Kernel & OS-Level C Suite (`core-utils-c/`)
 
 ### A. Rootkit & Stealth Process Detector (`asterix-rootkit-detect` / `as-rootkit`)
 Cross-references the virtual `/proc/` filesystem with kernel scheduler task queues (`/proc/sched_debug`) to expose hidden processes, inspects `/proc/modules` for rogue rootkit drivers, and audits `/etc/passwd` for unauthorized UID-0 backdoor accounts.
@@ -81,7 +81,7 @@ as-envdump <PID> --maps
 
 ---
 
-## 📡 3. Native C++ Cyber Suite (`core-utils-cpp/`)
+## [SIGNAL] 3. Native C++ Cyber Suite (`core-utils-cpp/`)
 
 ### A. Raw Packet Crafter & Layer-3 Sniffer (`asterix-packetcraft` / `as-packetcraft`)
 Builds and sends raw ICMP echo request packets with sub-millisecond precision, and operates an AF_PACKET raw socket sniffer that parses IPv4 headers, TCP control flags (SYN, ACK, FIN, RST, PSH), and UDP ports in real time.
@@ -115,7 +115,7 @@ sudo as-logwatch /var/log/auth.log "malicious_user"
 
 ---
 
-## ⚙️ 4. x86-64 Pure Assembly Engine (`boot-asm/`)
+## [*] 4. x86-64 Pure Assembly Engine (`boot-asm/`)
 
 ### A. Custom MBR Bootloader Sector (`asterix-mbr.asm`)
 Pure 16-bit real-mode x86 assembly bootloader that sets 80x25 text mode, renders the electric cyan ASTERIX boot banner, executes a hardware delay loop, and includes the `0xAA55` boot sector signature.
@@ -138,7 +138,7 @@ as-rawinfo
 
 ---
 
-## 🚀 5. High-Concurrency Go Cyber Engine (`core-utils-go/`)
+## [RUN] 5. High-Concurrency Go Cyber Engine (`core-utils-go/`)
 
 ### Concurrent DNS Enumerator & Web Fingerprinter (`asterix-webrecon` / `as-webrecon`)
 Leverages Go goroutines and worker pools to concurrently brute-force subdomains, resolve IP addresses, probe HTTP/HTTPS endpoints, extract HTML page titles, and audit security response headers.
@@ -151,7 +151,7 @@ as-webrecon --enum target.com 30
 as-webrecon --finger 192.168.1.1
 ```
 
-## 🦀 6. Native Rust Security & Systems Engines (`core-utils-rust/`)
+##  6. Native Rust Security & Systems Engines (`core-utils-rust/`)
 
 ASTERIX OS features 5 high-velocity pure-Rust engines engineered with **Zero External Crate Dependencies** for 100% standalone reliability across bare-metal Linux, Debian Live ISOs, and Android Termux PRoot:
 
@@ -196,7 +196,7 @@ ax guard --generate-fix -o apply-hardening.sh
 
 ---
 
-## ⚡ Quick Reference Table: All Native Toolchain Commands (`ax-*` & `asterix-*`)
+## [*] Quick Reference Table: All Native Toolchain Commands (`ax-*` & `asterix-*`)
 
 | Primary Shortcut | Full Command Form | Language | Binary Target | Description |
 | :--- | :--- | :--- | :--- | :--- |

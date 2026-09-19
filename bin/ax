@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =====================================================================
-# 🌌 ASTERIX OS - Master Omni-Command System & Arsenal Engine: `ax` / `asterix`
+# ASTERIX OS - Master Omni-Command System & Arsenal Engine: `ax` / `asterix`
 # Next-Generation Cybernetic System & Arsenal Management Core
 # Supports 60+ Native High-Velocity Subcommands & Dynamic OS Dispatch
 # =====================================================================
@@ -224,6 +224,10 @@ run_native_bin() {
         "$PREFIX/bin/${bin_name}" "$@"
     elif [ -x "/usr/local/bin/${bin_name}" ]; then
         "/usr/local/bin/${bin_name}" "$@"
+    elif [ -x "$base_dir/bin/${bin_name}" ]; then
+        "$base_dir/bin/${bin_name}" "$@"
+    elif [ -x "$base_dir/bin/${bin_name}.exe" ]; then
+        "$base_dir/bin/${bin_name}.exe" "$@"
     elif [ -x "$base_dir/dist/${bin_name}" ]; then
         "$base_dir/dist/${bin_name}" "$@"
     elif [ -x "$base_dir/core-utils-rust/target/release/${bin_name}" ]; then
@@ -272,7 +276,7 @@ cmd_update() {
             echo -e "${C_GRAY}[i] No standard package manager detected. Skipping index refresh.${C_RESET}"
             ;;
     esac
-    echo -e "${C_GREEN}[✔] Package repository indexes up to date.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Package repository indexes up to date.${C_RESET}"
 
     # Step 2: Check Git upstream repo updates if inside repository
     echo -e "\n${C_YELLOW}[2/4] Checking ASTERIX OS Core Updates...${C_RESET}"
@@ -281,7 +285,7 @@ cmd_update() {
         echo -e "${C_CYAN}[*] Repository found at ${AX_ROOT}${C_RESET}"
         (cd "$AX_ROOT" && git fetch --all --prune 2>/dev/null && git status -uno) || echo -e "${C_GRAY}[i] Offline or local git repo.${C_RESET}"
     else
-        echo -e "${C_GREEN}[✔] ASTERIX OS system files verified.${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] ASTERIX OS system files verified.${C_RESET}"
     fi
 
     # Step 3: Check Security Definitions & Exploit DB
@@ -298,7 +302,7 @@ cmd_update() {
         echo -e "${C_CYAN}[*] Updating Nmap NSE script database...${C_RESET}"
         run_as_root nmap --script-updatedb 2>/dev/null || true
     fi
-    echo -e "${C_GREEN}[✔] Security databases synchronized.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Security databases synchronized.${C_RESET}"
 
     # Step 4: Verify Toolchains
     echo -e "\n${C_YELLOW}[4/4] Verifying Compiler & Runtime Health...${C_RESET}"
@@ -310,7 +314,7 @@ cmd_update() {
         fi
     done
 
-    echo -e "\n${C_GREEN}${C_BOLD}[✔] ax update complete! System ready for operation or 'ax upgrade'.${C_RESET}\n"
+    echo -e "\n${C_GREEN}${C_BOLD}[[OK]] ax update complete! System ready for operation or 'ax upgrade'.${C_RESET}\n"
 }
 
 cmd_upgrade() {
@@ -338,7 +342,7 @@ cmd_upgrade() {
             echo -e "${C_GRAY}[i] No supported package manager found for full OS package upgrade.${C_RESET}"
             ;;
     esac
-    echo -e "${C_GREEN}[✔] OS system packages upgraded.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] OS system packages upgraded.${C_RESET}"
 
     # Step 2: Rebuild Native ASTERIX Suites (C, C++, Go, Assembly)
     echo -e "\n${C_YELLOW}[2/4] Rebuilding Native ASTERIX Multi-Language Utilities...${C_RESET}"
@@ -355,7 +359,7 @@ cmd_upgrade() {
             (cd /etc/asterix/core-utils-cpp && make all && run_as_root make install 2>/dev/null) || true
         fi
     fi
-    echo -e "${C_GREEN}[✔] Native tool suites updated.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Native tool suites updated.${C_RESET}"
 
     # Step 3: Recompile / Update Rust Command & Control Hub
     echo -e "\n${C_YELLOW}[3/4] Rebuilding ASTERIX Native Rust Command Matrix...${C_RESET}"
@@ -370,11 +374,11 @@ cmd_upgrade() {
         if command -v cargo >/dev/null 2>&1; then
             echo -e "${C_CYAN}[*] Building release binary with cargo...${C_RESET}"
             (cd "$LOADER_SRC" && cargo build --release && run_as_root cp target/release/asterix-loader /usr/local/bin/asterix-loader 2>/dev/null || true)
-            echo -e "${C_GREEN}[✔] asterix-loader successfully compiled and installed.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] asterix-loader successfully compiled and installed.${C_RESET}"
         elif command -v rustc >/dev/null 2>&1; then
             echo -e "${C_CYAN}[*] Compiling directly with rustc...${C_RESET}"
             (cd "$LOADER_SRC" && rustc -O -C lto=yes src/main.rs -o /tmp/asterix-loader && run_as_root cp /tmp/asterix-loader /usr/local/bin/asterix-loader 2>/dev/null || true)
-            echo -e "${C_GREEN}[✔] asterix-loader compiled.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] asterix-loader compiled.${C_RESET}"
         else
             echo -e "${C_GRAY}[i] Rust compiler not detected; using existing binary.${C_RESET}"
         fi
@@ -391,9 +395,9 @@ cmd_upgrade() {
             pkg clean >/dev/null 2>&1 || true
             ;;
     esac
-    echo -e "${C_GREEN}[✔] System caches cleaned.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] System caches cleaned.${C_RESET}"
 
-    echo -e "\n${C_GREEN}${C_BOLD}[✔] ax upgrade complete! All systems and arsenals are up to date.${C_RESET}\n"
+    echo -e "\n${C_GREEN}${C_BOLD}[[OK]] ax upgrade complete! All systems and arsenals are up to date.${C_RESET}\n"
 }
 
 cmd_install() {
@@ -506,7 +510,7 @@ cmd_clean() {
     if [ -n "$CLEAN_SCRIPT" ]; then
         bash "$CLEAN_SCRIPT" 2>/dev/null || true
     fi
-    echo -e "${C_GREEN}[✔] Clean completed.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Clean completed.${C_RESET}"
 }
 
 cmd_build() {
@@ -530,9 +534,9 @@ cmd_doctor() {
         local name="$1"
         local category="$2"
         if command -v "$name" >/dev/null 2>&1; then
-            printf "  ${C_GREEN}✔${C_RESET} %-24s %-22s ${C_GREEN}[OK]${C_RESET}\n" "$name" "$category"
+            printf "  ${C_GREEN}[OK]${C_RESET} %-24s %-22s ${C_GREEN}[OK]${C_RESET}\n" "$name" "$category"
         else
-            printf "  ${C_RED}✖${C_RESET} %-24s %-22s ${C_YELLOW}[MISSING]${C_RESET}\n" "$name" "$category"
+            printf "  ${C_RED}[FAIL]${C_RESET} %-24s %-22s ${C_YELLOW}[MISSING]${C_RESET}\n" "$name" "$category"
         fi
     }
 
@@ -577,11 +581,11 @@ cmd_doctor() {
     # Persistent storage check
     echo -e "\n${C_WHITE}${C_BOLD}Storage Subsystem:${C_RESET}"
     if [ -d "/asterix_persistent" ]; then
-        echo -e "  ${C_GREEN}✔${C_RESET} Persistent Volume (/asterix_persistent) : ${C_GREEN}CONNECTED${C_RESET}"
+        echo -e "  ${C_GREEN}[OK]${C_RESET} Persistent Volume (/asterix_persistent) : ${C_GREEN}CONNECTED${C_RESET}"
     elif [ -d "$HOME/asterix_persistent" ]; then
-        echo -e "  ${C_GREEN}✔${C_RESET} Persistent Volume ($HOME/asterix_persistent) : ${C_GREEN}CONNECTED (Termux)${C_RESET}"
+        echo -e "  ${C_GREEN}[OK]${C_RESET} Persistent Volume ($HOME/asterix_persistent) : ${C_GREEN}CONNECTED (Termux)${C_RESET}"
     else
-        echo -e "  ${C_YELLOW}⚠${C_RESET} Persistent Volume : ${C_YELLOW}SIMULATED (Ephemeral)${C_RESET}"
+        echo -e "  ${C_YELLOW}[!]${C_RESET} Persistent Volume : ${C_YELLOW}SIMULATED (Ephemeral)${C_RESET}"
     fi
 
     echo -e "\n${C_CYAN}[i] Tip: Run 'ax update && ax upgrade' to repair missing modules.${C_RESET}\n"
@@ -822,10 +826,10 @@ cmd_shred() {
     echo -e "${C_RED}${C_BOLD}[*] Performing Multi-Pass Cryptographic Wipe on:${C_RESET} ${C_WHITE}${1}${C_RESET}"
     if command -v shred >/dev/null 2>&1; then
         shred -u -z -n 3 "$1"
-        echo -e "${C_GREEN}[✔] File permanently obliterated.${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] File permanently obliterated.${C_RESET}"
     else
         rm -f "$1"
-        echo -e "${C_YELLOW}[✔] File unlinked.${C_RESET}"
+        echo -e "${C_YELLOW}[[OK]] File unlinked.${C_RESET}"
     fi
 }
 
@@ -839,7 +843,7 @@ cmd_rootkit() {
     else
         echo -e "${C_GRAY}[*] Checking hidden processes in /proc...${C_RESET}"
         ps -ef | grep -E "\[.*\]" | head -n 15
-        echo -e "${C_GREEN}[✔] Basic kernel checks completed.${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] Basic kernel checks completed.${C_RESET}"
     fi
 }
 
@@ -900,7 +904,7 @@ cmd_audit() {
         find /etc -maxdepth 2 -perm -o+w 2>/dev/null || echo "None found"
         echo -e "  [2] Unowned Files:"
         find / -nouser 2>/dev/null | head -n 10 || echo "None found"
-        echo -e "\n${C_GREEN}[✔] Basic security check done.${C_RESET}"
+        echo -e "\n${C_GREEN}[[OK]] Basic security check done.${C_RESET}"
     fi
 }
 
@@ -1090,12 +1094,12 @@ cmd_anti_rev() {
     if grep -qi "TracerPid:[[:space:]]*[1-9]" /proc/self/status 2>/dev/null; then
         echo -e "  ${C_RED}[!!] Process is being traced by a debugger!${C_RESET}"
     else
-        echo -e "  ${C_GREEN}[✔] Zero ptrace debuggers attached (TracerPid = 0).${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Zero ptrace debuggers attached (TracerPid = 0).${C_RESET}"
     fi
     if [ -n "$LD_PRELOAD" ]; then
         echo -e "  ${C_RED}[!!] Suspicious LD_PRELOAD injection detected: $LD_PRELOAD${C_RESET}"
     else
-        echo -e "  ${C_GREEN}[✔] Zero LD_PRELOAD injection vectors.${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Zero LD_PRELOAD injection vectors.${C_RESET}"
     fi
 }
 
@@ -1258,7 +1262,7 @@ cmd_defender() {
 
             echo -e "\n  ${C_WHITE}Antivirus Scan Results:${C_RESET} ${scanned} files inspected, ${threats} threats flagged."
             if [ "$threats" -eq 0 ]; then
-                echo -e "  ${C_GREEN}${C_BOLD}[✔] ZERO THREATS DETECTED. DIRECTORY SECURE.${C_RESET}\n"
+                echo -e "  ${C_GREEN}${C_BOLD}[[OK]] ZERO THREATS DETECTED. DIRECTORY SECURE.${C_RESET}\n"
             else
                 echo -e "  ${C_RED}${C_BOLD}[!] ALERT: SUSPICIOUS FILES FOUND! Run 'ax defender quarantine <path>' to isolate.${C_RESET}\n"
             fi
@@ -1275,7 +1279,7 @@ cmd_defender() {
             local q_dest="$quarantine_dir/${fname}.$(date +%s).locked"
             mv "$target" "$q_dest" 2>/dev/null || cp "$target" "$q_dest" 2>/dev/null
             chmod 000 "$q_dest" 2>/dev/null || true
-            echo -e "${C_GREEN}${C_BOLD}[✔] File safely neutralized & quarantined:${C_RESET}"
+            echo -e "${C_GREEN}${C_BOLD}[[OK]] File safely neutralized & quarantined:${C_RESET}"
             echo -e "    Original: $target"
             echo -e "    Vault:    $q_dest (Permissions revoked: 000)\n"
             ;;
@@ -1298,7 +1302,7 @@ cmd_defender() {
                     ip link set "$iface" down 2>/dev/null || true
                     echo -e "  ${C_YELLOW}[!] Interface ${iface} DOWN${C_RESET}"
                 done
-                echo -e "${C_GREEN}[✔] Network sockets severed. Host isolated.${C_RESET}\n"
+                echo -e "${C_GREEN}[[OK]] Network sockets severed. Host isolated.${C_RESET}\n"
             else
                 echo -e "  ${C_YELLOW}[!] Endpoint isolation requires root/sudo access.${C_RESET}\n"
             fi
@@ -1309,9 +1313,9 @@ cmd_defender() {
             if command -v ip >/dev/null 2>&1 && [ "$(id -u)" -eq 0 ]; then
                 for iface in $(ip -o link show 2>/dev/null | awk -F': ' '{print $2}' | grep -v 'lo'); do
                     ip link set "$iface" up 2>/dev/null || true
-                    echo -e "  ${C_GREEN}[✔] Interface ${iface} UP${C_RESET}"
+                    echo -e "  ${C_GREEN}[[OK]] Interface ${iface} UP${C_RESET}"
                 done
-                echo -e "${C_GREEN}[✔] Network restored.${C_RESET}\n"
+                echo -e "${C_GREEN}[[OK]] Network restored.${C_RESET}\n"
             else
                 echo -e "  ${C_YELLOW}[!] Network restore requires root/sudo access.${C_RESET}\n"
             fi
@@ -1357,11 +1361,11 @@ cmd_overdrive() {
     if [ -n "$script" ] && command -v node >/dev/null 2>&1; then
         local script_dir
         script_dir=$(dirname "$script")
-        echo -e "${C_CYAN}${C_BOLD}[⚡] APEX OVERDRIVE: Launching Kernel Gaming Accelerator & 60 FPS HUD...${C_RESET}"
+        echo -e "${C_CYAN}${C_BOLD}[[*]] APEX OVERDRIVE: Launching Kernel Gaming Accelerator & 60 FPS HUD...${C_RESET}"
         (cd "$script_dir" && bash "$(basename "$script")" "$@")
     else
         # Zero-Crash Native Gaming Boost & Telemetry
-        echo -e "${C_CYAN}${C_BOLD}[⚡] APEX OVERDRIVE: Native Kernel Gaming Acceleration ACTIVE${C_RESET}"
+        echo -e "${C_CYAN}${C_BOLD}[[*]] APEX OVERDRIVE: Native Kernel Gaming Acceleration ACTIVE${C_RESET}"
         cmd_game boost
         if ! command -v node >/dev/null 2>&1; then
             echo -e "  ${C_GRAY}(Note: Install Node.js v18+ if you wish to launch the browser-based HUD)${C_RESET}\n"
@@ -1384,14 +1388,14 @@ cmd_game() {
                 for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
                     [ -f "$gov" ] && echo "performance" | $SUDO tee "$gov" >/dev/null 2>&1 || true
                 done
-                echo -e "  ${C_GREEN}[✔] All CPU cores locked to high-performance frequency state.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] All CPU cores locked to high-performance frequency state.${C_RESET}"
             fi
 
             echo -e "${C_CYAN}[2/5] Purging Standby Caches & Compacting Physical Memory...${C_RESET}"
             $SUDO sync 2>/dev/null || true
             if [ -w "/proc/sys/vm/drop_caches" ] || [ "$EUID" -eq 0 ]; then
                 echo 3 | $SUDO tee /proc/sys/vm/drop_caches >/dev/null 2>&1 || true
-                echo -e "  ${C_GREEN}[✔] Standby memory fragmented pages flushed for game textures.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Standby memory fragmented pages flushed for game textures.${C_RESET}"
             fi
 
             echo -e "${C_CYAN}[3/5] Engaging Low-Latency Network Stack (TCP BBR & QuickACK)...${C_RESET}"
@@ -1399,10 +1403,10 @@ cmd_game() {
             $SUDO sysctl -w net.ipv4.tcp_low_latency=1 >/dev/null 2>&1 || true
             $SUDO sysctl -w net.ipv4.tcp_fastopen=3 >/dev/null 2>&1 || true
             $SUDO sysctl -w vm.swappiness=10 >/dev/null 2>&1 || true
-            echo -e "  ${C_GREEN}[✔] Nagle algorithm latency bypassed; TCP BBR fair queueing active.${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Nagle algorithm latency bypassed; TCP BBR fair queueing active.${C_RESET}"
 
             echo -e "${C_CYAN}[4/5] Verifying System Defense Integrity...${C_RESET}"
-            echo -e "  ${C_GREEN}[✔] ASLR, kptr_restrict, and security perimeters 100% intact (Zero Vulnerabilities).${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] ASLR, kptr_restrict, and security perimeters 100% intact (Zero Vulnerabilities).${C_RESET}"
 
             echo -e "${C_CYAN}[5/5] Checking for APEX OVERDRIVE HUD...${C_RESET}"
             local apex_launcher=""
@@ -1412,14 +1416,14 @@ cmd_game() {
                 fi
                 [ -z "$apex_launcher" ] && apex_launcher=$(find_apex_script "Launch-ApexOverdrive.sh")
                 if [ -n "$apex_launcher" ]; then
-                    echo -e "  ${C_GREEN}[✔] APEX OVERDRIVE detected. Launching background telemetry HUD at http://localhost:4888${C_RESET}"
+                    echo -e "  ${C_GREEN}[[OK]] APEX OVERDRIVE detected. Launching background telemetry HUD at http://localhost:4888${C_RESET}"
                     (cd "$(dirname "$apex_launcher")" && bash "$(basename "$apex_launcher")" "$@" >/dev/null 2>&1 &)
                 fi
             else
-                echo -e "  ${C_GREEN}[✔] Native kernel acceleration active (CPU Governors, RAM compaction & TCP BBR queueing).${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Native kernel acceleration active (CPU Governors, RAM compaction & TCP BBR queueing).${C_RESET}"
             fi
 
-            echo -e "\n${C_GREEN}${C_BOLD}[✔] ASTERIX Gaming Overdrive is LIVE. Launch your game now!${C_RESET}\n"
+            echo -e "\n${C_GREEN}${C_BOLD}[[OK]] ASTERIX Gaming Overdrive is LIVE. Launch your game now!${C_RESET}\n"
             ;;
 
         restore|reset|off|disable)
@@ -1430,7 +1434,7 @@ cmd_game() {
                 done
             fi
             $SUDO sysctl -w vm.swappiness=60 >/dev/null 2>&1 || true
-            echo -e "${C_GREEN}[✔] System restored to default balanced profiles.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] System restored to default balanced profiles.${C_RESET}"
             ;;
 
         hud|web|dashboard)
@@ -1448,7 +1452,7 @@ cmd_game() {
             if command -v nvidia-smi >/dev/null 2>&1; then
                 nvidia-smi -pm 1 >/dev/null 2>&1 || true
             fi
-            echo -e "${C_GREEN}[✔] GPU hardware pipeline optimized & corrupt shader caches purged.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] GPU hardware pipeline optimized & corrupt shader caches purged.${C_RESET}"
             ;;
 
         timer|latency)
@@ -1471,7 +1475,7 @@ cmd_game() {
             $SUDO sync 2>/dev/null || true
             if [ -w "/proc/sys/vm/drop_caches" ] || [ "$EUID" -eq 0 ]; then
                 echo 3 | $SUDO tee /proc/sys/vm/drop_caches >/dev/null 2>&1 || true
-                echo -e "${C_GREEN}[✔] Standby memory list purged successfully.${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] Standby memory list purged successfully.${C_RESET}"
             else
                 echo -e "${C_YELLOW}[!] Root privilege required to drop system caches directly.${C_RESET}"
             fi
@@ -1577,8 +1581,8 @@ cmd_snapshot() {
 }
 EOF
             chmod 600 "$target_dir/manifest.sha256" "$target_dir/meta.json" 2>/dev/null || true
-            echo -e "${C_GREEN}[✔] Restore point created with ${count} system configuration artifacts.${C_RESET}"
-            echo -e "${C_GREEN}[✔] SHA-256 cryptographic verification seal attached.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] Restore point created with ${count} system configuration artifacts.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] SHA-256 cryptographic verification seal attached.${C_RESET}\n"
             ;;
 
         list|ls)
@@ -1636,7 +1640,7 @@ EOF
                 echo -e "${C_RED}[!] Rollback aborted to protect system stability.${C_RESET}"
                 return 1
             fi
-            echo -e "${C_GREEN}[✔] SHA-256 seal matches pristine state. Proceeding with atomic restore.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] SHA-256 seal matches pristine state. Proceeding with atomic restore.${C_RESET}"
 
             echo -e "${C_CYAN}[*] Creating pre-restore safeguard restore point...${C_RESET}"
             cmd_snapshot create "pre_restore_safeguard" >/dev/null 2>&1 || true
@@ -1661,7 +1665,7 @@ EOF
                     fi
                 done
             fi
-            echo -e "${C_GREEN}${C_BOLD}[✔] System Restore completed successfully to point: ${target_id}${C_RESET}\n"
+            echo -e "${C_GREEN}${C_BOLD}[[OK]] System Restore completed successfully to point: ${target_id}${C_RESET}\n"
             ;;
 
         delete|remove|rm)
@@ -1673,7 +1677,7 @@ EOF
             target_id=$(basename "$target_id")
             if [ -d "$SNAP_DIR/$target_id" ]; then
                 rm -rf "$SNAP_DIR/$target_id"
-                echo -e "${C_GREEN}[✔] Snapshot removed: ${target_id}${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] Snapshot removed: ${target_id}${C_RESET}"
             else
                 echo -e "${C_RED}[!] Snapshot not found: ${target_id}${C_RESET}"
             fi
@@ -1771,7 +1775,7 @@ cmd_sfc() {
         repair|fix)
             echo -e "${C_CYAN}${C_BOLD}[*] Running ASTERIX Component Store Repair (DISM & SFC Equivalent)...${C_RESET}\n"
             cmd_build
-            echo -e "${C_GREEN}[✔] All native binaries re-verified and recompiled from clean source.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] All native binaries re-verified and recompiled from clean source.${C_RESET}\n"
             ;;
 
         scan|verify|*)
@@ -1806,7 +1810,7 @@ cmd_sfc() {
 
             echo -e "\n  ${C_BOLD}Scan Results:${C_RESET} ${C_GREEN}${pass} Passed${C_RESET} / ${C_RED}${fail} Corrupted${C_RESET} of ${total} core items."
             if [ "$fail" -eq 0 ]; then
-                echo -e "  ${C_GREEN}[✔] Windows SFC Equivalent: Windows Resource Protection found no integrity violations.${C_RESET}\n"
+                echo -e "  ${C_GREEN}[[OK]] Windows SFC Equivalent: Windows Resource Protection found no integrity violations.${C_RESET}\n"
             else
                 echo -e "  ${C_RED}[!] Discrepancies detected. Run 'ax sfc repair' to rebuild corrupted components.${C_RESET}\n"
             fi
@@ -1831,22 +1835,22 @@ cmd_taskmgr() {
                 realtime|rt)
                     $SUDO renice -n -20 -p "$pid" 2>/dev/null || true
                     $SUDO ionice -c 1 -n 0 -p "$pid" 2>/dev/null || true
-                    echo -e "${C_GREEN}[✔] PID $pid set to Realtime Priority (Nice -20, Realtime I/O).${C_RESET}"
+                    echo -e "${C_GREEN}[[OK]] PID $pid set to Realtime Priority (Nice -20, Realtime I/O).${C_RESET}"
                     ;;
                 high)
                     $SUDO renice -n -10 -p "$pid" 2>/dev/null || true
                     $SUDO ionice -c 2 -n 1 -p "$pid" 2>/dev/null || true
-                    echo -e "${C_GREEN}[✔] PID $pid set to High Priority (Nice -10).${C_RESET}"
+                    echo -e "${C_GREEN}[[OK]] PID $pid set to High Priority (Nice -10).${C_RESET}"
                     ;;
                 normal)
                     $SUDO renice -n 0 -p "$pid" 2>/dev/null || true
                     $SUDO ionice -c 2 -n 4 -p "$pid" 2>/dev/null || true
-                    echo -e "${C_GREEN}[✔] PID $pid set to Normal Priority (Nice 0).${C_RESET}"
+                    echo -e "${C_GREEN}[[OK]] PID $pid set to Normal Priority (Nice 0).${C_RESET}"
                     ;;
                 eco|low|idle)
                     $SUDO renice -n 19 -p "$pid" 2>/dev/null || true
                     $SUDO ionice -c 3 -p "$pid" 2>/dev/null || true
-                    echo -e "${C_CYAN}[✔] PID $pid set to Windows EcoQoS / Efficiency Mode (Nice 19, Idle I/O).${C_RESET}"
+                    echo -e "${C_CYAN}[[OK]] PID $pid set to Windows EcoQoS / Efficiency Mode (Nice 19, Idle I/O).${C_RESET}"
                     ;;
                 *)
                     echo -e "${C_YELLOW}[!] Unknown priority level: $level. Use realtime|high|normal|eco.${C_RESET}"
@@ -1862,7 +1866,7 @@ cmd_taskmgr() {
             fi
             $SUDO renice -n 19 -p "$pid" 2>/dev/null || true
             $SUDO ionice -c 3 -p "$pid" 2>/dev/null || true
-            echo -e "${C_CYAN}[✔] PID $pid placed in Windows EcoQoS Efficiency Mode.${C_RESET}"
+            echo -e "${C_CYAN}[[OK]] PID $pid placed in Windows EcoQoS Efficiency Mode.${C_RESET}"
             ;;
 
         kill)
@@ -1872,7 +1876,7 @@ cmd_taskmgr() {
                 return 1
             fi
             kill -15 "$pid" 2>/dev/null || kill -9 "$pid" 2>/dev/null
-            echo -e "${C_GREEN}[✔] Terminated PID $pid.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] Terminated PID $pid.${C_RESET}"
             ;;
 
         audit|security)
@@ -1891,7 +1895,7 @@ cmd_taskmgr() {
                 fi
             done
             if [ "$suspicious" -eq 0 ]; then
-                echo -e "  ${C_GREEN}[✔] Zero anomalous executables running from temporary directories.${C_RESET}\n"
+                echo -e "  ${C_GREEN}[[OK]] Zero anomalous executables running from temporary directories.${C_RESET}\n"
             else
                 echo -e "  ${C_RED}[!] Found ${suspicious} anomalous processes. Inspect with 'ax taskmgr kill <PID>'.${C_RESET}\n"
             fi
@@ -1944,8 +1948,8 @@ net.ipv4.icmp_echo_ignore_broadcasts = 1
 net.ipv4.conf.all.log_martians = 1
 EOF
             fi
-            echo -e "${C_GREEN}[✔] All 11 kernel parameters enforced to Maximum Defense State.${C_RESET}"
-            echo -e "${C_GREEN}[✔] System locked down with Zero Room for Kernel Vulnerabilities.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] All 11 kernel parameters enforced to Maximum Defense State.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] System locked down with Zero Room for Kernel Vulnerabilities.${C_RESET}\n"
             ;;
 
         audit|report|*)
@@ -2026,7 +2030,7 @@ cmd_sandbox() {
                     cd "$HOME" && bash -c "$cmd"
                 )
             fi
-            echo -e "\n${C_GREEN}[✔] Sandbox session terminated. All ephemeral data obliterated.${C_RESET}\n"
+            echo -e "\n${C_GREEN}[[OK]] Sandbox session terminated. All ephemeral data obliterated.${C_RESET}\n"
             ;;
 
         launch|shell|*)
@@ -2072,7 +2076,7 @@ cmd_sandbox() {
             fi
 
             rm -rf "$sb_tmp" 2>/dev/null || true
-            echo -e "\n${C_GREEN}[✔] Sandbox successfully destroyed. Zero artifacts left on host system.${C_RESET}\n"
+            echo -e "\n${C_GREEN}[[OK]] Sandbox successfully destroyed. Zero artifacts left on host system.${C_RESET}\n"
             ;;
     esac
 }
@@ -2362,12 +2366,12 @@ cmd_applocker() {
         lockdown|enforce)
             echo -e "${C_CYAN}${C_BOLD}[*] Enforcing Application Whitelisting & Mount Lockdown...${C_RESET}\n"
             if [ "$EUID" -eq 0 ]; then
-                mount -o remount,noexec,nosuid,nodev /tmp 2>/dev/null && echo -e "  ${C_GREEN}[✔] /tmp remounted with noexec,nosuid,nodev.${C_RESET}" || echo -e "  ${C_GRAY}[i] /tmp remount skipped.${C_RESET}"
-                mount -o remount,noexec,nosuid,nodev /dev/shm 2>/dev/null && echo -e "  ${C_GREEN}[✔] /dev/shm remounted with noexec,nosuid,nodev.${C_RESET}" || echo -e "  ${C_GRAY}[i] /dev/shm remount skipped.${C_RESET}"
+                mount -o remount,noexec,nosuid,nodev /tmp 2>/dev/null && echo -e "  ${C_GREEN}[[OK]] /tmp remounted with noexec,nosuid,nodev.${C_RESET}" || echo -e "  ${C_GRAY}[i] /tmp remount skipped.${C_RESET}"
+                mount -o remount,noexec,nosuid,nodev /dev/shm 2>/dev/null && echo -e "  ${C_GREEN}[[OK]] /dev/shm remounted with noexec,nosuid,nodev.${C_RESET}" || echo -e "  ${C_GRAY}[i] /dev/shm remount skipped.${C_RESET}"
             else
                 echo -e "  ${C_YELLOW}[!] Root privilege required to remount filesystems with noexec.${C_RESET}"
             fi
-            echo -e "${C_GREEN}[✔] AppLocker lockdown sequence completed.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] AppLocker lockdown sequence completed.${C_RESET}\n"
             ;;
 
         whitelist|add)
@@ -2381,7 +2385,7 @@ cmd_applocker() {
             local hash
             hash=$(sha256sum "$target" 2>/dev/null | cut -d' ' -f1)
             echo "$hash  $target" >> "$ledger"
-            echo -e "${C_GREEN}[✔] Whitelisted binary:${C_RESET} ${C_WHITE}${target}${C_RESET} (SHA-256: ${hash:0:16}...)"
+            echo -e "${C_GREEN}[[OK]] Whitelisted binary:${C_RESET} ${C_WHITE}${target}${C_RESET} (SHA-256: ${hash:0:16}...)"
             ;;
 
         audit|scan|*)
@@ -2422,7 +2426,7 @@ cmd_applocker() {
                 fi
             done
             if [ "$suspicious" -eq 0 ]; then
-                echo -e "  ${C_GREEN}[✔] Zero active processes running from untrusted temporary directories.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Zero active processes running from untrusted temporary directories.${C_RESET}"
             fi
 
             echo -e "\n  ${C_YELLOW}Commands:${C_RESET}"
@@ -2502,9 +2506,9 @@ cmd_cred_guard() {
             if [ "$EUID" -eq 0 ]; then
                 chmod 600 /etc/shadow /etc/gshadow 2>/dev/null || true
                 chown root:root /etc/shadow /etc/gshadow 2>/dev/null || true
-                echo -e "  ${C_GREEN}[✔] /etc/shadow and /etc/gshadow locked to 0600 (root:root).${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] /etc/shadow and /etc/gshadow locked to 0600 (root:root).${C_RESET}"
             fi
-            echo -e "${C_GREEN}[✔] Credential Guard anti-dumping protections enforced.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] Credential Guard anti-dumping protections enforced.${C_RESET}\n"
             ;;
 
         audit|status|*)
@@ -2567,9 +2571,9 @@ cmd_exploit_guard() {
                     echo "install $mod /bin/true" > "/etc/modprobe.d/disable-${mod}.conf" 2>/dev/null || true
                 fi
             done
-            echo -e "  ${C_GREEN}[✔] Unprivileged eBPF disabled.${C_RESET}"
-            echo -e "  ${C_GREEN}[✔] Obsolete network protocols (DCCP, SCTP, RDS, TIPC) blacklisted.${C_RESET}"
-            echo -e "${C_GREEN}[✔] Attack Surface Reduction rules enforced.${C_RESET}\n"
+            echo -e "  ${C_GREEN}[[OK]] Unprivileged eBPF disabled.${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Obsolete network protocols (DCCP, SCTP, RDS, TIPC) blacklisted.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] Attack Surface Reduction rules enforced.${C_RESET}\n"
             ;;
 
         audit|status|*)
@@ -2651,7 +2655,7 @@ cmd_undercover() {
             echo "off" > "$STATE_FILE"
             printf "\033]0;ASTERIX OS // CYBERNETIC COMMAND CENTER\007" 2>/dev/null || true
             print_banner 2>/dev/null || true
-            echo -e "${C_GREEN}[✔] Undercover mode disabled. Returned to Cybernetic Neon Command Core.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] Undercover mode disabled. Returned to Cybernetic Neon Command Core.${C_RESET}\n"
             ;;
 
         status)
@@ -2685,25 +2689,25 @@ cmd_nuke() {
             echo -e "${C_YELLOW}[!] INITIATING EMERGENCY ANTI-FORENSIC OBLITERATION...${C_RESET}\n"
             if command -v ssh-add >/dev/null 2>&1; then
                 ssh-add -D >/dev/null 2>&1 || true
-                echo -e "  ${C_GREEN}[✔] In-memory SSH identities purged.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] In-memory SSH identities purged.${C_RESET}"
             fi
             for f in "$HOME/.bash_history" "$HOME/.zsh_history" "$HOME/.lesshst" "$HOME/.viminfo"; do
                 if [ -f "$f" ]; then
                     shred -u -z -n 3 "$f" 2>/dev/null || rm -f "$f"
                 fi
             done
-            echo -e "  ${C_GREEN}[✔] Shell history and terminal sessions cryptographically shredded.${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Shell history and terminal sessions cryptographically shredded.${C_RESET}"
             if [ -d "$HOME/.asterix/quarantine" ]; then
                 find "$HOME/.asterix/quarantine" -type f -exec shred -u -z -n 2 {} + 2>/dev/null || true
                 rm -rf "$HOME/.asterix/quarantine" 2>/dev/null || true
-                echo -e "  ${C_GREEN}[✔] Quarantine vault neutralized.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Quarantine vault neutralized.${C_RESET}"
             fi
             $SUDO sync 2>/dev/null || true
             if [ -w "/proc/sys/vm/drop_caches" ] || [ "$EUID" -eq 0 ]; then
                 echo 3 | $SUDO tee /proc/sys/vm/drop_caches >/dev/null 2>&1 || true
-                echo -e "  ${C_GREEN}[✔] RAM standby caches flushed.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] RAM standby caches flushed.${C_RESET}"
             fi
-            echo -e "\n${C_RED}${C_BOLD}[✔] Emergency sanitization complete. Zero evidentiary traces remain.${C_RESET}\n"
+            echo -e "\n${C_RED}${C_BOLD}[[OK]] Emergency sanitization complete. Zero evidentiary traces remain.${C_RESET}\n"
             ;;
 
         test|dry-run)
@@ -2711,7 +2715,7 @@ cmd_nuke() {
             echo -e "  ${C_WHITE}Target History Files:${C_RESET}     ~/.bash_history, ~/.zsh_history (Will be shredded)"
             echo -e "  ${C_WHITE}Target Quarantine Vault:${C_RESET}  ~/.asterix/quarantine (Will be neutralized)"
             echo -e "  ${C_WHITE}Memory State:${C_RESET}             SSH Agent keys and RAM buffers (Will be dropped)"
-            echo -e "\n${C_GREEN}[✔] Duress wipe simulation passed. System ready for emergency execution.${C_RESET}\n"
+            echo -e "\n${C_GREEN}[[OK]] Duress wipe simulation passed. System ready for emergency execution.${C_RESET}\n"
             ;;
 
         help|*)
@@ -2737,14 +2741,14 @@ cmd_tweaks() {
                 $SUDO ip link set dev "$iface" down 2>/dev/null || true
                 $SUDO macchanger -r "$iface" 2>/dev/null || true
                 $SUDO ip link set dev "$iface" up 2>/dev/null || true
-                echo -e "  ${C_GREEN}[✔] MAC address randomized for ${iface}.${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] MAC address randomized for ${iface}.${C_RESET}"
             else
                 local new_mac
                 new_mac=$(printf '02:%02x:%02x:%02x:%02x:%02x\n' $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)))
                 $SUDO ip link set dev "$iface" down 2>/dev/null || true
                 $SUDO ip link set dev "$iface" address "$new_mac" 2>/dev/null || true
                 $SUDO ip link set dev "$iface" up 2>/dev/null || true
-                echo -e "  ${C_GREEN}[✔] Spoofed MAC for ${iface} to: ${new_mac}${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Spoofed MAC for ${iface} to: ${new_mac}${C_RESET}"
             fi
             echo ""
             ;;
@@ -2753,11 +2757,11 @@ cmd_tweaks() {
             local toggle="${1:-disable}"
             if [ "$toggle" = "enable" ]; then
                 $SUDO sysctl -w net.ipv6.conf.all.disable_ipv6=0 >/dev/null 2>&1 || true
-                echo -e "${C_GREEN}[✔] IPv6 stack enabled.${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] IPv6 stack enabled.${C_RESET}"
             else
                 $SUDO sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1 || true
                 $SUDO sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
-                echo -e "${C_GREEN}[✔] IPv6 stack disabled (VPN & DNS leak prevention active).${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] IPv6 stack disabled (VPN & DNS leak prevention active).${C_RESET}"
             fi
             ;;
 
@@ -2770,7 +2774,7 @@ nameserver 9.9.9.9
 nameserver 1.1.1.1
 nameserver 149.112.112.112
 EOF
-                echo -e "${C_GREEN}[✔] /etc/resolv.conf locked to Quad9 (9.9.9.9) and Cloudflare (1.1.1.1).${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] /etc/resolv.conf locked to Quad9 (9.9.9.9) and Cloudflare (1.1.1.1).${C_RESET}"
             else
                 echo -e "${C_YELLOW}[!] Root privilege required to update /etc/resolv.conf.${C_RESET}"
             fi
@@ -2822,21 +2826,21 @@ cmd_forensic_mode() {
             echo -e "${C_CYAN}${C_BOLD}[*] Engaging ASTERIX Forensic Protection Mode (Read-Only Host Guard)...${C_RESET}\n"
             if command -v swapoff >/dev/null 2>&1; then
                 $SUDO swapoff -a 2>/dev/null || true
-                echo -e "  ${C_GREEN}[✔] Swap disabled (systemd.swap=no equivalent).${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Swap disabled (systemd.swap=no equivalent).${C_RESET}"
             fi
             if command -v blockdev >/dev/null 2>&1; then
                 for dev in /dev/sd[a-z] /dev/nvme[0-9]n[0-9]; do
                     if [ -b "$dev" ]; then
                         $SUDO blockdev --setro "$dev" 2>/dev/null || true
-                        echo -e "  ${C_GREEN}[✔] Hardware write-blocker applied to: ${dev}${C_RESET}"
+                        echo -e "  ${C_GREEN}[[OK]] Hardware write-blocker applied to: ${dev}${C_RESET}"
                     fi
                 done
             fi
             if command -v systemctl >/dev/null 2>&1; then
                 $SUDO systemctl stop udisks2 2>/dev/null || true
-                echo -e "  ${C_GREEN}[✔] Auto-mount daemon stopped (noautomount equivalent).${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Auto-mount daemon stopped (noautomount equivalent).${C_RESET}"
             fi
-            echo -e "\n${C_GREEN}${C_BOLD}[✔] Forensic Write-Blocking is ACTIVE. Host storage cannot be altered.${C_RESET}\n"
+            echo -e "\n${C_GREEN}${C_BOLD}[[OK]] Forensic Write-Blocking is ACTIVE. Host storage cannot be altered.${C_RESET}\n"
             ;;
 
         disable|unlock)
@@ -2848,7 +2852,7 @@ cmd_forensic_mode() {
                     fi
                 done
             fi
-            echo -e "${C_GREEN}[✔] Read-write access restored to block devices.${C_RESET}\n"
+            echo -e "${C_GREEN}[[OK]] Read-write access restored to block devices.${C_RESET}\n"
             ;;
 
         status|*)
@@ -2932,7 +2936,7 @@ cmd_power_governor() {
                 fi
             done
             if [ "$changed" -gt 0 ]; then
-                echo -e "  ${C_GREEN}[✔] Set $changed CPU core(s) to 'powersave'${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Set $changed CPU core(s) to 'powersave'${C_RESET}"
             else
                 echo -e "  ${C_GRAY}(Governor write requires root or cpufreq driver support)${C_RESET}"
             fi
@@ -2946,7 +2950,7 @@ cmd_power_governor() {
                 fi
             done
             if [ "$changed" -gt 0 ]; then
-                echo -e "  ${C_GREEN}[✔] Set $changed CPU core(s) to 'performance'${C_RESET}"
+                echo -e "  ${C_GREEN}[[OK]] Set $changed CPU core(s) to 'performance'${C_RESET}"
             else
                 echo -e "  ${C_GRAY}(Governor write requires root or cpufreq driver support)${C_RESET}"
             fi
@@ -3024,10 +3028,10 @@ cmd_disk_clean() {
 
     echo -e "${C_YELLOW}[1/4] Cleaning Package Manager Archives & Caches...${C_RESET}"
     if command -v apt-get >/dev/null 2>&1; then
-        apt-get clean 2>/dev/null && echo -e "  ${C_GREEN}[✔] Purged apt package archives${C_RESET}" || true
+        apt-get clean 2>/dev/null && echo -e "  ${C_GREEN}[[OK]] Purged apt package archives${C_RESET}" || true
     fi
     if command -v pkg >/dev/null 2>&1; then
-        pkg clean 2>/dev/null && echo -e "  ${C_GREEN}[✔] Cleaned Termux pkg cache${C_RESET}" || true
+        pkg clean 2>/dev/null && echo -e "  ${C_GREEN}[[OK]] Cleaned Termux pkg cache${C_RESET}" || true
     fi
 
     echo -e "\n${C_YELLOW}[2/4] Evicting Volatile User & Temporary Artifacts...${C_RESET}"
@@ -3038,7 +3042,7 @@ cmd_disk_clean() {
             count=$((count + 1))
         fi
     done
-    echo -e "  ${C_GREEN}[✔] Cleaned aged temporary files across $count locations${C_RESET}"
+    echo -e "  ${C_GREEN}[[OK]] Cleaned aged temporary files across $count locations${C_RESET}"
 
     echo -e "\n${C_YELLOW}[3/4] Optimizing Storage Health & SSD / UFS Wear Leveling (TRIM)...${C_RESET}"
     if command -v fstrim >/dev/null 2>&1 && [ "$(id -u)" -eq 0 ]; then
@@ -3049,7 +3053,7 @@ cmd_disk_clean() {
 
     echo -e "\n${C_YELLOW}[4/4] Free Storage Status Report:${C_RESET}"
     df -h / "$HOME" 2>/dev/null | awk 'NR==1 || /dev|data|storage/'
-    echo -e "\n${C_GREEN}${C_BOLD}[✔] Storage deduplication & purge complete.${C_RESET}\n"
+    echo -e "\n${C_GREEN}${C_BOLD}[[OK]] Storage deduplication & purge complete.${C_RESET}\n"
 }
 
 cmd_net_flow() {
@@ -3109,7 +3113,7 @@ cmd_ssl_audit() {
     local cert_output
     cert_output=$(echo | openssl s_client -servername "$target" -connect "${target}:${port}" 2>/dev/null)
     if [ -z "$cert_output" ] || ! echo "$cert_output" | grep -q "BEGIN CERTIFICATE"; then
-        echo -e "${C_RED}[✘] Failed to retrieve TLS certificate from ${target}:${port}${C_RESET}"
+        echo -e "${C_RED}[[FAIL]] Failed to retrieve TLS certificate from ${target}:${port}${C_RESET}"
         return 1
     fi
 
@@ -3179,7 +3183,7 @@ cmd_hashdeep() {
                 fi
             done < <(find "$scan_dir" -maxdepth 2 -type f 2>/dev/null)
             chmod 600 "$baseline_file" 2>/dev/null || true
-            echo -e "  ${C_GREEN}${C_BOLD}[✔] Baseline Generated: ${count} binaries fingerprinted & sealed.${C_RESET}\n"
+            echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Baseline Generated: ${count} binaries fingerprinted & sealed.${C_RESET}\n"
             ;;
         audit|verify)
             if [ ! -f "$baseline_file" ]; then
@@ -3212,7 +3216,7 @@ cmd_hashdeep() {
             echo -e "    ${C_RED}Tampered Binaries:${C_RESET}  $failed"
             echo -e "    ${C_YELLOW}Missing Binaries:${C_RESET}   $missing"
             if [ "$failed" -eq 0 ] && [ "$missing" -eq 0 ]; then
-                echo -e "\n  ${C_GREEN}${C_BOLD}[✔] ZERO INTEGRITY VIOLATIONS DETECTED. SYSTEM AUTHENTIC.${C_RESET}\n"
+                echo -e "\n  ${C_GREEN}${C_BOLD}[[OK]] ZERO INTEGRITY VIOLATIONS DETECTED. SYSTEM AUTHENTIC.${C_RESET}\n"
             else
                 echo -e "\n  ${C_RED}${C_BOLD}[!] ALERT: POTENTIAL SYSTEM BINARY TAMPERING DETECTED!${C_RESET}\n"
             fi
@@ -3299,7 +3303,7 @@ cmd_yara_scan() {
     echo -e "    ${C_CYAN}Files Inspected:${C_RESET}     $scanned"
     echo -e "    ${C_RED}Threat Signatures:${C_RESET}   $threats"
     if [ "$threats" -eq 0 ]; then
-        echo -e "\n  ${C_GREEN}${C_BOLD}[✔] CLEAN. NO KNOWN MALWARE OR C2 BEACONS IDENTIFIED.${C_RESET}\n"
+        echo -e "\n  ${C_GREEN}${C_BOLD}[[OK]] CLEAN. NO KNOWN MALWARE OR C2 BEACONS IDENTIFIED.${C_RESET}\n"
     else
         echo -e "\n  ${C_RED}${C_BOLD}[!] SUSPICIOUS ARTIFACTS IDENTIFIED. IMMEDIATE TRIAGE RECOMMENDED.${C_RESET}\n"
     fi
@@ -3373,7 +3377,7 @@ cmd_forensic_timeline() {
     done < <(find "$target" -maxdepth 2 -type f 2>/dev/null | head -n 30)
 
     if [ "$future_files" -eq 0 ]; then
-        echo -e "  ${C_GREEN}[✔] No timestamp anomalies or timestomping detected.${C_RESET}\n"
+        echo -e "  ${C_GREEN}[[OK]] No timestamp anomalies or timestomping detected.${C_RESET}\n"
     fi
 }
 
@@ -3391,7 +3395,7 @@ cmd_trash() {
     case "$action" in
         list|show|ls)
             if [ ! -f "$manifest" ] || [ ! -s "$manifest" ]; then
-                echo -e "  ${C_GREEN}[✔] Recycle Bin is empty. No quarantined deleted media or files.${C_RESET}\n"
+                echo -e "  ${C_GREEN}[[OK]] Recycle Bin is empty. No quarantined deleted media or files.${C_RESET}\n"
                 return 0
             fi
             echo -e "  ${C_BOLD}DELETED FILES & PRESERVED MEDIA IN RECYCLE BIN:${C_RESET}"
@@ -3426,7 +3430,7 @@ cmd_trash() {
                     if [ -f "$src_file" ]; then
                         mkdir -p "$(dirname "$orig_path")" 2>/dev/null || true
                         mv "$src_file" "$orig_path" 2>/dev/null
-                        echo -e "  ${C_GREEN}${C_BOLD}[✔] File restored to:${C_RESET} ${orig_path}\n"
+                        echo -e "  ${C_GREEN}${C_BOLD}[[OK]] File restored to:${C_RESET} ${orig_path}\n"
                     else
                         echo -e "  ${C_RED}[!] Trashed file missing from storage.${C_RESET}\n"
                     fi
@@ -3444,13 +3448,13 @@ cmd_trash() {
             local count
             count=$(find "$trash_dir" -type f ! -name ".manifest" 2>/dev/null | wc -l)
             if [ "$count" -eq 0 ]; then
-                echo -e "  ${C_GREEN}[✔] Recycle Bin is already empty.${C_RESET}\n"
+                echo -e "  ${C_GREEN}[[OK]] Recycle Bin is already empty.${C_RESET}\n"
                 return 0
             fi
             echo -e "  ${C_YELLOW}[*] Permanently sanitizing and purging ${count} item(s) from Recycle Bin...${C_RESET}"
             find "$trash_dir" -type f ! -name ".manifest" -exec rm -f {} + 2>/dev/null || true
             > "$manifest"
-            echo -e "  ${C_GREEN}${C_BOLD}[✔] Recycle Bin emptied. Storage reclaimed.${C_RESET}\n"
+            echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Recycle Bin emptied. Storage reclaimed.${C_RESET}\n"
             ;;
 
         put|delete|rm|*)
@@ -3478,7 +3482,7 @@ cmd_trash() {
 
             mv "$abs_path" "$trash_dir/$trash_fname" 2>/dev/null
             echo "${stamp}|${abs_path}|${fsize}|${fhash}|${trash_fname}" >> "$manifest"
-            echo -e "  ${C_GREEN}${C_BOLD}[✔] Safely moved to Recycle Bin:${C_RESET} ${fname}"
+            echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Safely moved to Recycle Bin:${C_RESET} ${fname}"
             echo -e "      Preserved at: ${trash_dir}/${trash_fname}"
             echo -e "      (Restore anytime with: ${C_CYAN}ax trash restore <ID>${C_RESET})\n"
             ;;
@@ -3512,18 +3516,18 @@ cmd_carve() {
 
     # 1. If foremost is available, invoke professional carver
     if command -v foremost >/dev/null 2>&1; then
-        echo -e "${C_GREEN}[✔] Hardware-accelerated Foremost carving engine detected!${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] Hardware-accelerated Foremost carving engine detected!${C_RESET}"
         echo -e "${C_YELLOW}[*] Carving deleted media streams...${C_RESET}"
         foremost -t jpg,png,gif,mp4,pdf,zip -i "$target" -o "$output_dir/foremost_$(date +%s)" 2>/dev/null || true
-        echo -e "${C_GREEN}${C_BOLD}[✔] Foremost carving pass completed. Inspect ${output_dir}.${C_RESET}\n"
+        echo -e "${C_GREEN}${C_BOLD}[[OK]] Foremost carving pass completed. Inspect ${output_dir}.${C_RESET}\n"
         return 0
     fi
 
     # 2. If scalpel is available
     if command -v scalpel >/dev/null 2>&1; then
-        echo -e "${C_GREEN}[✔] Scalpel forensic carver detected! Executing...${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] Scalpel forensic carver detected! Executing...${C_RESET}"
         scalpel -o "$output_dir/scalpel_$(date +%s)" "$target" 2>/dev/null || true
-        echo -e "${C_GREEN}${C_BOLD}[✔] Scalpel carving pass completed.${C_RESET}\n"
+        echo -e "${C_GREEN}${C_BOLD}[[OK]] Scalpel carving pass completed.${C_RESET}\n"
         return 0
     fi
 
@@ -3555,7 +3559,7 @@ cmd_carve() {
         done < <(find "$target" -type f 2>/dev/null | head -n 150)
     fi
 
-    echo -e "  ${C_GREEN}${C_BOLD}[✔] Carving complete.${C_RESET} ${recovered} media artifact(s) indexed into ${output_dir}\n"
+    echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Carving complete.${C_RESET} ${recovered} media artifact(s) indexed into ${output_dir}\n"
 }
 
 cmd_ai() {
@@ -3616,7 +3620,66 @@ cmd_autocompile() {
     fi
 }
 
+cmd_cluster() {
+    local ax_root
+    ax_root=$(find_asterix_root)
+    [ -z "$ax_root" ] && ax_root="$(pwd)"
+    local rust_bin=""
+    if [ -x "${ax_root}/bin/asterix-cluster.exe" ]; then
+        rust_bin="${ax_root}/bin/asterix-cluster.exe"
+    elif [ -x "${ax_root}/bin/asterix-cluster" ]; then
+        rust_bin="${ax_root}/bin/asterix-cluster"
+    elif [ -x "${ax_root}/core-utils-rust/target/release/asterix-cluster.exe" ]; then
+        rust_bin="${ax_root}/core-utils-rust/target/release/asterix-cluster.exe"
+    elif [ -x "${ax_root}/core-utils-rust/target/release/asterix-cluster" ]; then
+        rust_bin="${ax_root}/core-utils-rust/target/release/asterix-cluster"
+    elif command -v asterix-cluster >/dev/null 2>&1; then
+        rust_bin="asterix-cluster"
+    fi
+
+    if [ -n "$rust_bin" ]; then
+        "$rust_bin" "$@"
+        return $?
+    fi
+
+    # Fallback to Python companion cluster engine
+    local py_cmd=""
+    if [ -f "$HOME/.local/bin/python3.14.exe" ]; then
+        py_cmd="$HOME/.local/bin/python3.14.exe"
+    elif command -v python3.14 >/dev/null 2>&1; then
+        py_cmd="python3.14"
+    elif command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
+        py_cmd="python3"
+    elif command -v py >/dev/null 2>&1 && py -3 --version >/dev/null 2>&1; then
+        py_cmd="py -3"
+    elif command -v python >/dev/null 2>&1 && python --version >/dev/null 2>&1; then
+        py_cmd="python"
+    fi
+
+    if [ -n "$py_cmd" ] && [ -f "${ax_root}/os-computing/os_cluster.py" ]; then
+        $py_cmd "${ax_root}/os-computing/os_cluster.py" "$@"
+        return $?
+    fi
+
+    echo -e "${C_RED}[!] Error: asterix-cluster engine could not be located or executed.${C_RESET}"
+    return 1
+}
+
+cmd_gaming() {
+    cmd_cluster gaming "$@"
+}
+
 cmd_os_computing() {
+    if [ "$1" = "cluster" ] || [ "$1" = "os-cluster" ] || [ "$1" = "cluster-computing" ]; then
+        shift
+        cmd_cluster "$@"
+        return $?
+    elif [ "$1" = "gaming" ] || [ "$1" = "game-mode" ] || [ "$1" = "game" ]; then
+        shift
+        cmd_gaming "$@"
+        return $?
+    fi
+
     local ax_root
     ax_root=$(find_asterix_root)
     local osc_dir=""
@@ -4258,7 +4321,7 @@ print(f'Entropy: {ent:.4f} / 8.0000')
 if ent > 7.2:
     print('\033[38;5;196m[!] High Entropy: Binary appears encrypted, obfuscated, or compressed.\033[0m')
 else:
-    print('\033[38;5;46m[✔] Normal Entropy: Uncompressed plaintext or standard binary.\033[0m')
+    print('\033[38;5;46m[[OK]] Normal Entropy: Uncompressed plaintext or standard binary.\033[0m')
 "
 }
 
@@ -4339,7 +4402,7 @@ n = 1000000
 sum_val = sum(math.sqrt(i) for i in range(n))
 dt = time.time() - t0
 mops = (n / dt) / 1000000.0 if dt > 0 else 0
-print(f'  [✔] Computed {n:,} square roots in {dt:.3f}s ({mops:.2f} Mops/sec)')
+print(f'  [[OK]] Computed {n:,} square roots in {dt:.3f}s ({mops:.2f} Mops/sec)')
 " 2>/dev/null || true
     fi
 }
@@ -4416,7 +4479,7 @@ cmd_wallpaper() {
             if command -v xfconf-query >/dev/null 2>&1; then
                 xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$chosen" 2>/dev/null || true
             fi
-            echo -e "${C_GREEN}[✔] Wallpaper updated!${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] Wallpaper updated!${C_RESET}"
         fi
     else
         echo -e "${C_YELLOW}[!] Wallpapers directory not found.${C_RESET}"
@@ -4432,14 +4495,14 @@ cmd_hud() {
         stop|off)
             echo -e "${C_YELLOW}[*] Stopping ASTERIX HUD...${C_RESET}"
             killall conky 2>/dev/null || true
-            echo -e "${C_GREEN}[✔] HUD terminated.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] HUD terminated.${C_RESET}"
             ;;
         start|on)
             echo -e "${C_CYAN}[*] Starting ASTERIX Cyber HUD Telemetry...${C_RESET}"
             killall conky 2>/dev/null || true
             if [ -f "$hud_conf" ] && command -v conky >/dev/null 2>&1; then
                 conky -c "$hud_conf" -d 2>/dev/null || true
-                echo -e "${C_GREEN}[✔] HUD started!${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] HUD started!${C_RESET}"
             else
                 echo -e "${C_RED}[!] Conky or HUD config not available.${C_RESET}"
             fi
@@ -4449,7 +4512,7 @@ cmd_hud() {
             killall conky 2>/dev/null || true
             if [ -f "$hud_conf" ] && command -v conky >/dev/null 2>&1; then
                 conky -c "$hud_conf" -d 2>/dev/null || true
-                echo -e "${C_GREEN}[✔] HUD active!${C_RESET}"
+                echo -e "${C_GREEN}[[OK]] HUD active!${C_RESET}"
             fi
             ;;
     esac
@@ -4468,7 +4531,7 @@ cmd_compress() {
     fi
     echo -e "${C_CYAN}[*] Compressing ${target} into ${archive}...${C_RESET}"
     tar -czf "$archive" "$target"
-    echo -e "${C_GREEN}[✔] Archive created: ${archive}${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Archive created: ${archive}${C_RESET}"
 }
 
 cmd_extract() {
@@ -4486,7 +4549,7 @@ cmd_extract() {
         *.zip)            unzip "$archive" ;;
         *)                echo -e "${C_RED}[!] Unrecognized archive format.${C_RESET}" ;;
     esac
-    echo -e "${C_GREEN}[✔] Extracted successfully.${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Extracted successfully.${C_RESET}"
 }
 
 cmd_find_large() {
@@ -4565,7 +4628,7 @@ cmd_matrix() {
     done
     
     echo -ne "\033[?25h\033[0m\033[2J\033[H"
-    echo -e "${C_CYAN}[✔] Neural stream disconnected.${C_RESET}"
+    echo -e "${C_CYAN}[[OK]] Neural stream disconnected.${C_RESET}"
 }
 
 cmd_stealth() {
@@ -4573,7 +4636,7 @@ cmd_stealth() {
     
     echo -e "${C_CYAN}[1/6] Purging volatile memory and temporary directories...${C_RESET}"
     run_as_root rm -rf /tmp/* /var/tmp/* /dev/shm/* 2>/dev/null || true
-    echo -e "${C_GREEN}      [✔] /tmp, /var/tmp, /dev/shm wiped.${C_RESET}"
+    echo -e "${C_GREEN}      [[OK]] /tmp, /var/tmp, /dev/shm wiped.${C_RESET}"
     
     echo -e "${C_CYAN}[2/6] Shredding shell command histories...${C_RESET}"
     history -c 2>/dev/null || true
@@ -4583,14 +4646,14 @@ cmd_stealth() {
     export HISTFILE=/dev/null
     export HISTSIZE=0
     set +o history 2>/dev/null || true
-    echo -e "${C_GREEN}      [✔] Shell history obliterated. HISTFILE=/dev/null active.${C_RESET}"
+    echo -e "${C_GREEN}      [[OK]] Shell history obliterated. HISTFILE=/dev/null active.${C_RESET}"
     
     echo -e "${C_CYAN}[3/6] Purging systemd journal logs & auth caches...${C_RESET}"
     if command -v journalctl >/dev/null 2>&1; then
         run_as_root journalctl --rotate 2>/dev/null || true
         run_as_root journalctl --vacuum-time=1s 2>/dev/null || true
     fi
-    echo -e "${C_GREEN}      [✔] System journal rotated and purged.${C_RESET}"
+    echo -e "${C_GREEN}      [[OK]] System journal rotated and purged.${C_RESET}"
     
     echo -e "${C_CYAN}[4/6] Flushing DNS resolver caches...${C_RESET}"
     if command -v resolvectl >/dev/null 2>&1; then
@@ -4598,23 +4661,23 @@ cmd_stealth() {
     elif command -v systemd-resolve >/dev/null 2>&1; then
         run_as_root systemd-resolve --flush-caches 2>/dev/null || true
     fi
-    echo -e "${C_GREEN}      [✔] DNS caches flushed.${C_RESET}"
+    echo -e "${C_GREEN}      [[OK]] DNS caches flushed.${C_RESET}"
     
     echo -e "${C_CYAN}[5/6] Clearing clipboard and screen buffers...${C_RESET}"
     if command -v xclip >/dev/null 2>&1; then
         echo -n "" | xclip -selection clipboard 2>/dev/null || true
         echo -n "" | xclip -selection primary 2>/dev/null || true
     fi
-    echo -e "${C_GREEN}      [✔] Clipboard scrubbed.${C_RESET}"
+    echo -e "${C_GREEN}      [[OK]] Clipboard scrubbed.${C_RESET}"
     
     echo -e "${C_CYAN}[6/6] Syncing disk and clearing RAM pagecache...${C_RESET}"
     run_as_root sync
     if [ -w "/proc/sys/vm/drop_caches" ]; then
         run_as_root sh -c 'echo 3 > /proc/sys/vm/drop_caches' 2>/dev/null || true
     fi
-    echo -e "${C_GREEN}      [✔] Memory buffers cleared.${C_RESET}"
+    echo -e "${C_GREEN}      [[OK]] Memory buffers cleared.${C_RESET}"
     
-    echo -e "\n${C_PURPLE}${C_BOLD}[★] GHOST MODE ENGAGED. Digital footprint scrubbed.${C_RESET}\n"
+    echo -e "\n${C_PURPLE}${C_BOLD}[[*]] GHOST MODE ENGAGED. Digital footprint scrubbed.${C_RESET}\n"
 }
 
 cmd_killswitch() {
@@ -4630,7 +4693,7 @@ cmd_killswitch() {
         if command -v nmcli >/dev/null 2>&1; then
             run_as_root nmcli networking on 2>/dev/null || true
         fi
-        echo -e "${C_GREEN}[✔] Network stack restored to normal operational state.${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] Network stack restored to normal operational state.${C_RESET}"
         return 0
     fi
 
@@ -4663,7 +4726,7 @@ EOF
     echo -e "${C_YELLOW}[!] Terminating active remote sessions (SSH/Telnet)...${C_RESET}"
     pkill -9 sshd 2>/dev/null || true
     
-    echo -e "\n${C_RED}${C_BOLD}[☠] SYSTEM ISOLATED. All RF & Ethernet links severed.${C_RESET}"
+    echo -e "\n${C_RED}${C_BOLD}[] SYSTEM ISOLATED. All RF & Ethernet links severed.${C_RESET}"
     echo -e "${C_GRAY}To restore network connectivity, execute: ${C_WHITE}ax killswitch restore${C_RESET}\n"
 }
 
@@ -4763,15 +4826,15 @@ cmd_subdomains() {
     else
         local count
         count=$(echo "$results" | wc -l)
-        echo -e "${C_GREEN}[✔] Discovered ${count} unique subdomains:${C_RESET}\n"
+        echo -e "${C_GREEN}[[OK]] Discovered ${count} unique subdomains:${C_RESET}\n"
         echo "$results" | while read -r sub; do
             [ -z "$sub" ] && continue
             local ip
             ip=$(dig +short "$sub" 2>/dev/null | head -n 1 || true)
             if [ -n "$ip" ]; then
-                echo -e "  ${C_CYAN}➜${C_RESET} ${C_WHITE}${sub}${C_RESET} -> ${C_GREEN}${ip}${C_RESET}"
+                echo -e "  ${C_CYAN}${C_RESET} ${C_WHITE}${sub}${C_RESET} -> ${C_GREEN}${ip}${C_RESET}"
             else
-                echo -e "  ${C_GRAY}➜ ${sub}${C_RESET}"
+                echo -e "  ${C_GRAY} ${sub}${C_RESET}"
             fi
         done
     fi
@@ -4807,7 +4870,7 @@ cmd_malware_scan() {
         echo "$p_evals"
         found=$((found + 1))
     else
-        echo -e "${C_GREEN}      [✔] No base64 decode evals detected.${C_RESET}"
+        echo -e "${C_GREEN}      [[OK]] No base64 decode evals detected.${C_RESET}"
     fi
     
     echo -e "${C_CYAN}[2/4] Scanning for Web Command Wrappers (system, shell_exec, passthru)...${C_RESET}"
@@ -4818,7 +4881,7 @@ cmd_malware_scan() {
         echo "$p_execs"
         found=$((found + 1))
     else
-        echo -e "${C_GREEN}      [✔] Clean.${C_RESET}"
+        echo -e "${C_GREEN}      [[OK]] Clean.${C_RESET}"
     fi
     
     echo -e "${C_CYAN}[3/4] Scanning for Hidden / World-Writable Binaries...${C_RESET}"
@@ -4828,7 +4891,7 @@ cmd_malware_scan() {
         echo -e "${C_YELLOW}[!] Discovered hidden executable files:${C_RESET}"
         echo "$p_hidden"
     else
-        echo -e "${C_GREEN}      [✔] Clean.${C_RESET}"
+        echo -e "${C_GREEN}      [[OK]] Clean.${C_RESET}"
     fi
     
     echo -e "${C_CYAN}[4/4] Auditing Local Cron Schedules & System Timers...${C_RESET}"
@@ -4852,10 +4915,10 @@ cmd_exif() {
         echo -e "${C_YELLOW}[*] Stripping metadata from ${target}...${C_RESET}"
         if command -v exiftool >/dev/null 2>&1; then
             exiftool -all= -overwrite_original "$target"
-            echo -e "${C_GREEN}[✔] Metadata obliterated via ExifTool.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] Metadata obliterated via ExifTool.${C_RESET}"
         elif command -v mogrify >/dev/null 2>&1; then
             mogrify -strip "$target"
-            echo -e "${C_GREEN}[✔] Image metadata stripped via ImageMagick.${C_RESET}"
+            echo -e "${C_GREEN}[[OK]] Image metadata stripped via ImageMagick.${C_RESET}"
         else
             echo -e "${C_RED}[!] Please install exiftool or imagemagick (ax install exiftool).${C_RESET}"
         fi
@@ -4902,7 +4965,7 @@ cmd_docker_audit() {
     local engine="docker"
     command -v podman >/dev/null 2>&1 && engine="podman"
     
-    echo -e "${C_GREEN}[✔] Engine detected: ${engine}${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Engine detected: ${engine}${C_RESET}"
     echo -e "\n${C_WHITE}${C_BOLD}Active Containers:${C_RESET}"
     $engine ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}" 2>/dev/null || echo "Daemon not running."
     
@@ -4911,11 +4974,11 @@ cmd_docker_audit() {
         echo -e "  ${C_RED}[!] Docker socket (/var/run/docker.sock) exists and is accessible!${C_RESET}"
         ls -la /var/run/docker.sock
     else
-        echo -e "  ${C_GREEN}[✔] No exposed local docker.sock socket in /var/run.${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] No exposed local docker.sock socket in /var/run.${C_RESET}"
     fi
     
     if [ -f "/.dockerenv" ] || grep -q 'docker\|containerd' /proc/1/cgroup 2>/dev/null; then
-        echo -e "  ${C_PURPLE}[★] CURRENT SESSION IS EXECUTING INSIDE A CONTAINER ENVIRONMENT!${C_RESET}"
+        echo -e "  ${C_PURPLE}[[*]] CURRENT SESSION IS EXECUTING INSIDE A CONTAINER ENVIRONMENT!${C_RESET}"
     else
         echo -e "  ${C_CYAN}[i] Running on host bare metal or VM.${C_RESET}"
     fi
@@ -4926,7 +4989,7 @@ cmd_tor_status() {
     echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX ONION ROUTING & PRIVACY AUDIT...${C_RESET}\n"
     
     if pgrep -x tor >/dev/null 2>&1; then
-        echo -e "${C_GREEN}[✔] Tor daemon is active (PID: $(pgrep -x tor | head -n 1))${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] Tor daemon is active (PID: $(pgrep -x tor | head -n 1))${C_RESET}"
     else
         echo -e "${C_YELLOW}[!] Tor daemon is not currently running.${C_RESET}"
     fi
@@ -4938,7 +5001,7 @@ cmd_tor_status() {
     if [[ "$tor_check" == *"IsTor\":true"* ]]; then
         local ip
         ip=$(echo "$tor_check" | grep -o '"IP":"[^"]*"' | cut -d'"' -f4)
-        echo -e "${C_GREEN}${C_BOLD}[✔] SECURE: Connected through Tor Network! Exit IP: ${C_WHITE}${ip}${C_RESET}"
+        echo -e "${C_GREEN}${C_BOLD}[[OK]] SECURE: Connected through Tor Network! Exit IP: ${C_WHITE}${ip}${C_RESET}"
     else
         echo -e "${C_RED}[!] Direct connection: Tor proxy is not routing traffic.${C_RESET}"
         local pub_ip
@@ -4998,7 +5061,7 @@ cmd_quote() {
         "\"In the empire of code, the one who audits the memory controls the reality.\" — ASTERIX OS"
     )
     local idx=$((RANDOM % ${#quotes[@]}))
-    echo -e "${C_PURPLE}${C_BOLD}🌌 ASTERIX CYBERNETIC ETHOS:${C_RESET}"
+    echo -e "${C_PURPLE}${C_BOLD}[ASTERIX] ASTERIX CYBERNETIC ETHOS:${C_RESET}"
     echo -e "${C_CYAN}${quotes[$idx]}${C_RESET}\n"
 }
 
@@ -5011,7 +5074,7 @@ cmd_encrypt() {
     local out="${file}.axenc"
     echo -e "${C_CYAN}[*] Encrypting ${file} -> ${out} with AES-256-CBC (PBKDF2)...${C_RESET}"
     openssl enc -aes-256-cbc -pbkdf2 -salt -in "$file" -out "$out"
-    echo -e "${C_GREEN}[✔] File encrypted: ${out}${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] File encrypted: ${out}${C_RESET}"
 }
 
 cmd_decrypt() {
@@ -5024,7 +5087,7 @@ cmd_decrypt() {
     [ "$out" = "$file" ] && out="${file}.dec"
     echo -e "${C_CYAN}[*] Decrypting ${file} -> ${out}...${C_RESET}"
     openssl enc -d -aes-256-cbc -pbkdf2 -in "$file" -out "$out"
-    echo -e "${C_GREEN}[✔] Decrypted successfully: ${out}${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Decrypted successfully: ${out}${C_RESET}"
 }
 
 cmd_sniff_live() {
@@ -5129,7 +5192,7 @@ cmd_fim_init() {
 
     local count
     count=$(wc -l < "$db" 2>/dev/null || echo 0)
-    echo -e "${C_GREEN}[✔] Baseline recorded for ${count} critical system files.${C_RESET}\n"
+    echo -e "${C_GREEN}[[OK]] Baseline recorded for ${count} critical system files.${C_RESET}\n"
 }
 
 cmd_fim_check() {
@@ -5157,7 +5220,7 @@ cmd_fim_check() {
     done < "$db"
 
     if [ "$mismatches" -eq 0 ]; then
-        echo -e "${C_GREEN}[✔] All monitored system files match cryptographic baseline. Zero tampering detected.${C_RESET}\n"
+        echo -e "${C_GREEN}[[OK]] All monitored system files match cryptographic baseline. Zero tampering detected.${C_RESET}\n"
     else
         echo -e "\n${C_RED}${C_BOLD}[ALERT] ${mismatches} integrity violation(s) identified!${C_RESET}\n"
     fi
@@ -5225,7 +5288,7 @@ cmd_git_secrets() {
     fi
 
     if [ "$hits" -eq 0 ]; then
-        echo -e "${C_GREEN}[✔] No critical credential leaks or uncommitted keys detected.${C_RESET}\n"
+        echo -e "${C_GREEN}[[OK]] No critical credential leaks or uncommitted keys detected.${C_RESET}\n"
     fi
 }
 
@@ -5392,8 +5455,8 @@ cmd_cert_create() {
     if command -v openssl >/dev/null 2>&1; then
         openssl req -x509 -nodes -newkey rsa:4096 -keyout "$key_file" -out "$crt_file" -days "$days" \
             -subj "/C=US/ST=Cyber/L=Metropolis/O=ASTERIX OS/CN=${domain}" 2>/dev/null
-        echo -e "  ${C_GREEN}[✔] Private Key generated: ${key_file}${C_RESET}"
-        echo -e "  ${C_GREEN}[✔] Public Cert generated: ${crt_file}${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Private Key generated: ${key_file}${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Public Cert generated: ${crt_file}${C_RESET}"
         local sha256
         sha256=$(openssl x509 -noout -fingerprint -sha256 -in "$crt_file" 2>/dev/null | cut -d= -f2)
         echo -e "  ${C_CYAN}SHA-256 Fingerprint:${C_RESET} ${sha256}"
@@ -5547,13 +5610,13 @@ cmd_pkg_verify() {
     echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SYSTEM PACKAGE INTEGRITY VERIFICATION...${C_RESET}\n"
     if command -v debsums >/dev/null 2>&1; then
         echo -e "${C_YELLOW}[*] Auditing installed Debian packages for file alterations via debsums...${C_RESET}"
-        run_as_root debsums -c 2>/dev/null || echo -e "${C_GREEN}[✔] All package checksums verified.${C_RESET}"
+        run_as_root debsums -c 2>/dev/null || echo -e "${C_GREEN}[[OK]] All package checksums verified.${C_RESET}"
     elif command -v pacman >/dev/null 2>&1; then
         echo -e "${C_YELLOW}[*] Auditing Pacman packages for file alterations...${C_RESET}"
-        pacman -Qk 2>/dev/null | grep -v '0 missing files' || echo -e "${C_GREEN}[✔] All packages intact.${C_RESET}"
+        pacman -Qk 2>/dev/null | grep -v '0 missing files' || echo -e "${C_GREEN}[[OK]] All packages intact.${C_RESET}"
     elif command -v rpm >/dev/null 2>&1; then
         echo -e "${C_YELLOW}[*] Auditing RPM packages for file alterations...${C_RESET}"
-        rpm -Va 2>/dev/null | head -n 25 || echo -e "${C_GREEN}[✔] All packages intact.${C_RESET}"
+        rpm -Va 2>/dev/null | head -n 25 || echo -e "${C_GREEN}[[OK]] All packages intact.${C_RESET}"
     else
         echo -e "${C_YELLOW}[!] Package integrity tool (debsums/pacman -Qk/rpm -Va) not installed.${C_RESET}"
         echo -e "${C_GRAY}[i] Install debsums: ax install debsums${C_RESET}"
@@ -5581,7 +5644,7 @@ cmd_ssh_audit() {
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- ACTIVE SSH SESSIONS ---${C_RESET}"
     if command -v ss >/dev/null 2>&1; then
-        ss -tnp | grep ':22 ' 2>/dev/null || echo -e "${C_GREEN}[✔] No active SSH sessions on port 22.${C_RESET}"
+        ss -tnp | grep ':22 ' 2>/dev/null || echo -e "${C_GREEN}[[OK]] No active SSH sessions on port 22.${C_RESET}"
     fi
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- AUTHORIZED KEYS (ALL USERS) ---${C_RESET}"
@@ -5610,7 +5673,7 @@ cmd_arp_detect() {
         awk 'NR>1 {print $4}' /proc/net/arp | sort | uniq -d | while read -r mac; do
             echo -e "${C_RED}[!!] DUPLICATE MAC DETECTED: $mac — Possible ARP poisoning!${C_RESET}"
         done
-        awk 'NR>1 {print $4}' /proc/net/arp | sort | uniq -D | grep -qv 'DUPLICATE' || echo -e "${C_GREEN}[✔] No duplicate MACs found in ARP cache.${C_RESET}"
+        awk 'NR>1 {print $4}' /proc/net/arp | sort | uniq -D | grep -qv 'DUPLICATE' || echo -e "${C_GREEN}[[OK]] No duplicate MACs found in ARP cache.${C_RESET}"
     fi
     echo ""
 }
@@ -5686,10 +5749,10 @@ cmd_usb_audit() {
 cmd_dmesg_watch() {
     echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX KERNEL RING BUFFER MONITOR...${C_RESET}\n"
     echo -e "${C_WHITE}${C_BOLD}--- RECENT KERNEL SECURITY EVENTS ---${C_RESET}"
-    dmesg 2>/dev/null | grep -Ei 'error|fail|warn|oom|killed|segfault|null pointer|panic|attack|denied|blocked|firewall|iptable|nftable|audit' | tail -n 40 || echo -e "${C_GREEN}[✔] No critical kernel events found.${C_RESET}"
+    dmesg 2>/dev/null | grep -Ei 'error|fail|warn|oom|killed|segfault|null pointer|panic|attack|denied|blocked|firewall|iptable|nftable|audit' | tail -n 40 || echo -e "${C_GREEN}[[OK]] No critical kernel events found.${C_RESET}"
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- HARDWARE ERRORS ---${C_RESET}"
-    dmesg 2>/dev/null | grep -i 'hardware error\|mce\|ecc\|edac' | tail -n 10 || echo -e "${C_GREEN}[✔] No hardware errors detected.${C_RESET}"
+    dmesg 2>/dev/null | grep -i 'hardware error\|mce\|ecc\|edac' | tail -n 10 || echo -e "${C_GREEN}[[OK]] No hardware errors detected.${C_RESET}"
     echo ""
 }
 
@@ -5787,7 +5850,7 @@ cmd_container_escape() {
     if grep -q 'docker\|lxc\|containerd\|kubepods' /proc/1/cgroup 2>/dev/null; then
         echo -e "  ${C_RED}[!!] cgroup fingerprint indicates container environment${C_RESET}"; in_container=1
     fi
-    [ "$in_container" -eq 0 ] && echo -e "  ${C_GREEN}[✔] Not running inside a container.${C_RESET}"
+    [ "$in_container" -eq 0 ] && echo -e "  ${C_GREEN}[[OK]] Not running inside a container.${C_RESET}"
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- PRIVILEGED/CAPABILITY CHECKS ---${C_RESET}"
     if command -v capsh >/dev/null 2>&1; then capsh --print 2>/dev/null | head -n 10; fi
@@ -5817,7 +5880,7 @@ cmd_port_knock() {
         fi
         sleep 0.5
     done
-    echo -e "\n${C_GREEN}[✔] Port knock sequence complete.${C_RESET}\n"
+    echo -e "\n${C_GREEN}[[OK]] Port knock sequence complete.${C_RESET}\n"
 }
 
 cmd_mem_regions() {
@@ -5850,7 +5913,7 @@ cmd_kmod_audit() {
     if [ -f /proc/sys/kernel/tainted ]; then
         local taint; taint=$(cat /proc/sys/kernel/tainted 2>/dev/null)
         if [ "$taint" -eq 0 ] 2>/dev/null; then
-            echo -e "  ${C_GREEN}[✔] Kernel is clean (Taint value: 0 - Pristine state)${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Kernel is clean (Taint value: 0 - Pristine state)${C_RESET}"
         else
             echo -e "  ${C_RED}[!!] Kernel is TAINTED (Bitmask: $taint)${C_RESET}"
             [ $((taint & 1)) -ne 0 ] && echo -e "    ${C_YELLOW}-> Proprietary module loaded (P)${C_RESET}"
@@ -5869,7 +5932,7 @@ cmd_kmod_audit() {
     if [ -f /proc/sys/kernel/modules_disabled ]; then
         local mod_dis; mod_dis=$(cat /proc/sys/kernel/modules_disabled 2>/dev/null)
         if [ "$mod_dis" -eq 1 ]; then
-            echo -e "  ${C_GREEN}[✔] kernel.modules_disabled = 1 (LKM loading permanently locked)${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] kernel.modules_disabled = 1 (LKM loading permanently locked)${C_RESET}"
         else
             echo -e "  ${C_YELLOW}[!] kernel.modules_disabled = 0 (Runtime module insertion allowed)${C_RESET}"
         fi
@@ -5886,7 +5949,7 @@ cmd_kmod_audit() {
                 anomalous=1
             fi
         done
-        [ "$anomalous" -eq 0 ] && echo -e "  ${C_GREEN}[✔] Sampled LKMs correspond to official module tree.${C_RESET}"
+        [ "$anomalous" -eq 0 ] && echo -e "  ${C_GREEN}[[OK]] Sampled LKMs correspond to official module tree.${C_RESET}"
         echo -e "\n  ${C_CYAN}Total active modules in kernel:${C_RESET} $(wc -l < /proc/modules 2>/dev/null)"
     fi
     echo ""
@@ -5910,7 +5973,7 @@ cmd_deleted_procs() {
         fi
     done
     if [ "$count" -eq 0 ]; then
-        echo -e "  ${C_GREEN}[✔] No ghost processes running from unlinked binaries detected.${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] No ghost processes running from unlinked binaries detected.${C_RESET}"
     else
         echo -e "\n  ${C_RED}[!] Total stealth deleted processes found: $count${C_RESET}"
     fi
@@ -5930,7 +5993,7 @@ cmd_cap_audit() {
             fi
             found=1
         done
-        [ "$found" -eq 0 ] && echo -e "  ${C_GREEN}[✔] No abnormal file capabilities discovered.${C_RESET}"
+        [ "$found" -eq 0 ] && echo -e "  ${C_GREEN}[[OK]] No abnormal file capabilities discovered.${C_RESET}"
     else
         echo -e "${C_YELLOW}[!] getcap utility not available. ax install libcap2-bin${C_RESET}"
     fi
@@ -5950,7 +6013,7 @@ cmd_ebpf_audit() {
     if [ -f /proc/sys/kernel/unprivileged_bpf_disabled ]; then
         local bpf_dis; bpf_dis=$(cat /proc/sys/kernel/unprivileged_bpf_disabled 2>/dev/null)
         if [ "$bpf_dis" -ge 1 ] 2>/dev/null; then
-            echo -e "  ${C_GREEN}[✔] unprivileged_bpf_disabled = $bpf_dis (Restricted to privileged admin)${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] unprivileged_bpf_disabled = $bpf_dis (Restricted to privileged admin)${C_RESET}"
         else
             echo -e "  ${C_RED}[!] unprivileged_bpf_disabled = 0 (Unprivileged users can load eBPF bytecode!)${C_RESET}"
         fi
@@ -5975,7 +6038,7 @@ cmd_root_persistence() {
         echo -e "  ${C_RED}[!!] WARNING: /etc/ld.so.preload exists!${C_RESET}"
         cat /etc/ld.so.preload 2>/dev/null
     else
-        echo -e "  ${C_GREEN}[✔] No /etc/ld.so.preload detected (clean).${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] No /etc/ld.so.preload detected (clean).${C_RESET}"
     fi
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- 2. SYSTEMD SYSTEM GENERATORS ---${C_RESET}"
@@ -5990,7 +6053,7 @@ cmd_root_persistence() {
     ls -la /etc/cron.d /etc/cron.daily /etc/cron.hourly 2>/dev/null | head -n 25
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- 4. PAM AUTHENTICATION HOOKS ---${C_RESET}"
-    grep -rn "pam_exec" /etc/pam.d/ 2>/dev/null || echo -e "  ${C_GREEN}[✔] No pam_exec backdoor triggers discovered.${C_RESET}"
+    grep -rn "pam_exec" /etc/pam.d/ 2>/dev/null || echo -e "  ${C_GREEN}[[OK]] No pam_exec backdoor triggers discovered.${C_RESET}"
     echo ""
 }
 
@@ -5998,7 +6061,7 @@ cmd_seccomp_audit() {
     echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX SECCOMP-BPF SANDBOX ISOLATION AUDITOR...${C_RESET}\n"
     echo -e "${C_WHITE}${C_BOLD}--- SECCOMP SUPPORT STATUS ---${C_RESET}"
     if [ -f /proc/sys/kernel/seccomp ]; then
-        echo -e "  ${C_GREEN}[✔] Kernel Seccomp subsystem active.${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Kernel Seccomp subsystem active.${C_RESET}"
     fi
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- PROCESS SECCOMP ENFORCEMENT SAMPLER ---${C_RESET}"
@@ -6023,7 +6086,7 @@ cmd_tty_snoop_detect() {
     if [ -f /proc/sys/dev/tty/legacy_tiocsti ]; then
         local val; val=$(cat /proc/sys/dev/tty/legacy_tiocsti 2>/dev/null)
         if [ "$val" -eq 0 ]; then
-            echo -e "  ${C_GREEN}[✔] legacy_tiocsti = 0 (TIOCSTI injection disabled - Protected)${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] legacy_tiocsti = 0 (TIOCSTI injection disabled - Protected)${C_RESET}"
         else
             echo -e "  ${C_RED}[!] legacy_tiocsti = $val (TIOCSTI injection enabled - Vulnerable to TTY hijacking)${C_RESET}"
         fi
@@ -6047,7 +6110,7 @@ cmd_kexec_lockdown() {
         local lstate; lstate=$(cat /sys/kernel/security/lockdown 2>/dev/null)
         echo -e "  Lockdown mode: ${C_YELLOW}$lstate${C_RESET}"
         if echo "$lstate" | grep -q '\[integrity\]\|\[confidentiality\]'; then
-            echo -e "  ${C_GREEN}[✔] Kernel lockdown is active.${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Kernel lockdown is active.${C_RESET}"
         else
             echo -e "  ${C_YELLOW}[!] Kernel lockdown is in 'none' state.${C_RESET}"
         fi
@@ -6059,7 +6122,7 @@ cmd_kexec_lockdown() {
     if [ -f /proc/sys/kernel/kexec_load_disabled ]; then
         local kdis; kdis=$(cat /proc/sys/kernel/kexec_load_disabled 2>/dev/null)
         if [ "$kdis" -eq 1 ]; then
-            echo -e "  ${C_GREEN}[✔] kexec_load_disabled = 1 (Kernel cannot be replaced in memory)${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] kexec_load_disabled = 1 (Kernel cannot be replaced in memory)${C_RESET}"
         else
             echo -e "  ${C_RED}[!] kexec_load_disabled = 0 (kexec_load syscall enabled)${C_RESET}"
         fi
@@ -6073,11 +6136,11 @@ cmd_mem_protect_audit() {
     if [ -f /proc/cpuinfo ]; then
         local flags; flags=$(grep -m 1 "^flags" /proc/cpuinfo 2>/dev/null || echo "")
         echo -n "  SMEP (Supervisor Execution Prevention): "
-        echo "$flags" | grep -qw "smep" && echo -e "${C_GREEN}[✔] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
+        echo "$flags" | grep -qw "smep" && echo -e "${C_GREEN}[[OK]] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
         echo -n "  SMAP (Supervisor Access Prevention):    "
-        echo "$flags" | grep -qw "smap" && echo -e "${C_GREEN}[✔] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
+        echo "$flags" | grep -qw "smap" && echo -e "${C_GREEN}[[OK]] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
         echo -n "  NX/XD (No-Execute Memory Pages):        "
-        echo "$flags" | grep -qw "nx" && echo -e "${C_GREEN}[✔] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
+        echo "$flags" | grep -qw "nx" && echo -e "${C_GREEN}[[OK]] ENABLED${C_RESET}" || echo -e "${C_RED}[!] MISSING${C_RESET}"
     fi
     echo ""
     echo -e "${C_WHITE}${C_BOLD}--- SYSFS VULNERABILITY STATUS ---${C_RESET}"
@@ -6086,7 +6149,7 @@ cmd_mem_protect_audit() {
             local vname; vname=$(basename "$vuln")
             local vstat; vstat=$(cat "$vuln" 2>/dev/null)
             if echo "$vstat" | grep -qi 'mitigation\|not affected'; then
-                echo -e "  ${C_GREEN}[✔] $vname:${C_RESET} $vstat"
+                echo -e "  ${C_GREEN}[[OK]] $vname:${C_RESET} $vstat"
             else
                 echo -e "  ${C_RED}[!!] $vname:${C_RESET} $vstat"
             fi
@@ -6103,9 +6166,9 @@ cmd_mount_hardening() {
             local mnt; mnt=$(grep -E " $dir " /proc/mounts 2>/dev/null | tail -1 || true)
             if [ -n "$mnt" ]; then
                 echo -e "  ${C_YELLOW}$dir:${C_RESET} $mnt"
-                echo "$mnt" | grep -q "nosuid" && echo -e "    ${C_GREEN}[✔] nosuid enforced${C_RESET}" || echo -e "    ${C_RED}[!] Missing nosuid${C_RESET}"
-                echo "$mnt" | grep -q "noexec" && echo -e "    ${C_GREEN}[✔] noexec enforced${C_RESET}" || echo -e "    ${C_YELLOW}[!] Missing noexec${C_RESET}"
-                echo "$mnt" | grep -q "nodev" && echo -e "    ${C_GREEN}[✔] nodev enforced${C_RESET}" || echo -e "    ${C_RED}[!] Missing nodev${C_RESET}"
+                echo "$mnt" | grep -q "nosuid" && echo -e "    ${C_GREEN}[[OK]] nosuid enforced${C_RESET}" || echo -e "    ${C_RED}[!] Missing nosuid${C_RESET}"
+                echo "$mnt" | grep -q "noexec" && echo -e "    ${C_GREEN}[[OK]] noexec enforced${C_RESET}" || echo -e "    ${C_YELLOW}[!] Missing noexec${C_RESET}"
+                echo "$mnt" | grep -q "nodev" && echo -e "    ${C_GREEN}[[OK]] nodev enforced${C_RESET}" || echo -e "    ${C_RED}[!] Missing nodev${C_RESET}"
             else
                 echo -e "  ${C_YELLOW}$dir:${C_RESET} Not on separate mount partition."
             fi
@@ -6139,7 +6202,7 @@ cmd_dmesg_exploit() {
         echo -e "  ${C_RED}[!!] DETECTED $exp_log SUSPICIOUS MEMORY/EXPLOIT EVENTS IN DMESG!${C_RESET}\n"
         dmesg 2>/dev/null | grep -Ei 'general protection fault|kernel stack corrupted|stack-protector|refcount_t overflow|poison overwritten|Slab corruption|unable to handle kernel paging' | tail -n 25
     else
-        echo -e "  ${C_GREEN}[✔] Zero kernel memory corruption / exploit patterns detected in ring buffer.${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Zero kernel memory corruption / exploit patterns detected in ring buffer.${C_RESET}"
     fi
     echo ""
 }
@@ -6154,7 +6217,7 @@ cmd_root_jail() {
     unshare --mount --uts --ipc --pid --fork --mount-proc /bin/bash 2>/dev/null || \
         unshare --user --mount --pid --fork /bin/bash 2>/dev/null || \
         echo -e "${C_RED}[!] Could not create isolated namespace jail (needs root or user namespaces).${C_RESET}"
-    echo -e "\n${C_GREEN}[✔] Namespace sandbox session terminated.${C_RESET}\n"
+    echo -e "\n${C_GREEN}[[OK]] Namespace sandbox session terminated.${C_RESET}\n"
 }
 
 cmd_core_dump_audit() {
@@ -6166,7 +6229,7 @@ cmd_core_dump_audit() {
         if echo "$pattern" | grep -q '^|'; then
             echo -e "  ${C_YELLOW}[*] Core dumps piped to userland handler.${C_RESET}"
         elif [ -z "$pattern" ]; then
-            echo -e "  ${C_GREEN}[✔] Core dumps disabled.${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Core dumps disabled.${C_RESET}"
         fi
     fi
     echo ""
@@ -6174,7 +6237,7 @@ cmd_core_dump_audit() {
     if [ -f /proc/sys/fs/suid_dumpable ]; then
         local sd; sd=$(cat /proc/sys/fs/suid_dumpable 2>/dev/null)
         if [ "$sd" -eq 0 ]; then
-            echo -e "  ${C_GREEN}[✔] fs.suid_dumpable = 0 (SUID processes cannot be dumped - Secure)${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] fs.suid_dumpable = 0 (SUID processes cannot be dumped - Secure)${C_RESET}"
         else
             echo -e "  ${C_RED}[!] fs.suid_dumpable = $sd (SUID core dumping enabled - Memory leak risk!)${C_RESET}"
         fi
@@ -6199,8 +6262,8 @@ cmd_list() {
     echo -e "  ${C_CYAN}${C_BOLD}[8] Vault & Workspace:${C_RESET} backup, loot, scaffold, env, wallpaper, hud, top, compress, extract, find-large"
     echo -e "  ${C_CYAN}${C_BOLD}[9] Cyber Subsystems:${C_RESET}  recon, web, exploit, crack, sniff, wifi, forensics, rev, dev, quad, portal, discord, cloud, vault, shell"
     echo -e "  ${C_CYAN}${C_BOLD}[10] Expert AI & SOC:${C_RESET}  ai (audit, ask, rules)"
-    echo -e "  ${C_CYAN}${C_BOLD}[11] Autonomous Engines:${C_RESET}auto-compile, os-computing"
-    echo -e "\n  ${C_YELLOW}${C_BOLD}⚡ OMNI-DISPATCHER:${C_RESET} Any standard tool (e.g. 'ax nmap', 'ax curl', 'ax git', 'ax hydra') is automatically wrapped and executed!"
+    echo -e "  ${C_CYAN}${C_BOLD}[11] Autonomous Engines:${C_RESET}auto-compile, os-computing, cluster, gaming"
+    echo -e "\n  ${C_YELLOW}${C_BOLD}[*] OMNI-DISPATCHER:${C_RESET} Any standard tool (e.g. 'ax nmap', 'ax curl', 'ax git', 'ax hydra') is automatically wrapped and executed!"
     echo ""
 }
 
@@ -6265,6 +6328,8 @@ cmd_help() {
     echo -e "  ${C_CYAN}ax black-hole [status|scan|--json]${C_RESET} Privacy hardening suite: DNS/IP protection, local surveillance & hidden cam/mic checks"
     echo -e "  ${C_CYAN}ax auto-compile <src>${C_RESET}   Autonomous self-healing compiler (auto-patches broken code)"
     echo -e "  ${C_CYAN}ax os-computing [sub]${C_RESET}   Dual-boot & host OS bridge (assimilates tools & wordlists)"
+    echo -e "  ${C_CYAN}ax cluster [action]${C_RESET}     Bare-metal Rust/C/Assembly distributed cluster engine"
+    echo -e "  ${C_CYAN}ax gaming [nodes]${C_RESET}       Symmetrical unified gaming cluster mode (2 to 50+ PCs)"
     echo -e "  ${C_CYAN}ax proxychains [scan|status]${C_RESET} Validate SOCKS4/5 proxies & synthesize dynamic chain"
     echo -e "  ${C_CYAN}ax auto-update [on|off|start|stop|check|status|log]${C_RESET}  F-Droid-style live repo sync daemon"
     echo -e "  ${C_CYAN}ax secure-chat [start|lan|client|status]${C_RESET} Zero-knowledge E2EE localhost chat vault"
@@ -6443,7 +6508,7 @@ dynamic_system_exec() {
         local end_ts
         end_ts=$(date +%s%N 2>/dev/null || date +%s)
         if [ $rc -eq 0 ]; then
-            echo -e "\n${C_GREEN}[✔] ${cmd} finished successfully.${C_RESET}"
+            echo -e "\n${C_GREEN}[[OK]] ${cmd} finished successfully.${C_RESET}"
         else
             echo -e "\n${C_YELLOW}[!] ${cmd} exited with status ${rc}.${C_RESET}"
         fi
@@ -7244,6 +7309,14 @@ case "$SUBCOMMAND" in
         shift
         cmd_os_computing "$@"
         ;;
+    cluster|os-cluster|cluster-computing)
+        shift
+        cmd_cluster "$@"
+        ;;
+    gaming|game-mode|game)
+        shift
+        cmd_gaming "$@"
+        ;;
     merge|os-merge|merge-os|fuse-os)
         shift
         cmd_os_computing merge "$@"
@@ -7355,6 +7428,37 @@ case "$SUBCOMMAND" in
     boot-tool|live-boot|usb-boot|rufus-prep|downloads|iso)
         shift
         cmd_boot_tool "$@"
+        ;;
+    kernel|kernel-build|microkernel)
+        shift
+        _kernel_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../kernel" && pwd)"
+        if [ -f "$_kernel_dir/build-kernel.sh" ] && command -v bash >/dev/null 2>&1; then
+            bash "$_kernel_dir/build-kernel.sh" "$@"
+        elif [ -f "$_kernel_dir/build-kernel.ps1" ]; then
+            powershell.exe -ExecutionPolicy Bypass -File "$_kernel_dir/build-kernel.ps1" "$@"
+        else
+            echo -e "${C_RED}[!] Kernel build script not found.${C_RESET}"
+        fi
+        ;;
+    offload|cluster-offload|gaming-offload)
+        shift
+        _root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+        if [ -f "$_root_dir/bin/asterix-cluster.exe" ]; then
+            "$_root_dir/bin/asterix-cluster.exe" gaming --nodes 4 "$@"
+        elif [ -f "$_root_dir/bin/asterix-cluster" ]; then
+            "$_root_dir/bin/asterix-cluster" gaming --nodes 4 "$@"
+        else
+            echo -e "${C_RED}[!] bin/asterix-cluster not found.${C_RESET}"
+        fi
+        ;;
+    mobile|mobile-bridge|mobile-hud)
+        shift
+        _root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+        if [ -f "$_root_dir/scripts-hub/ax-mobile-bridge.py" ]; then
+            python3 "$_root_dir/scripts-hub/ax-mobile-bridge.py" "$@" 2>/dev/null || python "$_root_dir/scripts-hub/ax-mobile-bridge.py" "$@"
+        else
+            echo -e "${C_RED}[!] scripts-hub/ax-mobile-bridge.py not found.${C_RESET}"
+        fi
         ;;
     arsenal|tools|tool-registry|packages-all)
         shift

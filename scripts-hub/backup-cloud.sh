@@ -21,12 +21,12 @@ ARCHIVE="/tmp/asterix_vault_${TIMESTAMP}.tar.gz"
 echo -e "${C_CYAN}${C_BOLD}[*] ASTERIX OS Cloud Vault Sync${C_RESET}"
 echo -e "${C_YELLOW}[*] Compressing: ${PERSIST_DIR}${C_RESET}"
 tar -czf "$ARCHIVE" -C "$PERSIST_DIR" . 2>/dev/null && \
-    echo -e "${C_GREEN}[✔] Archive created: ${ARCHIVE}${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Archive created: ${ARCHIVE}${C_RESET}"
 
 # Sync via as-cloud if panel is configured
 if command -v as-cloud >/dev/null 2>&1; then
     echo -e "${C_CYAN}[*] Uploading to Cloud Panel...${C_RESET}"
-    as-cloud push "$ARCHIVE" && echo -e "${C_GREEN}[✔] Cloud panel upload done!${C_RESET}"
+    as-cloud push "$ARCHIVE" && echo -e "${C_GREEN}[[OK]] Cloud panel upload done!${C_RESET}"
 elif [ -f /etc/asterix/ui-core/asterix-cloud.sh ]; then
     /etc/asterix/ui-core/asterix-cloud.sh push "$ARCHIVE"
 fi
@@ -40,4 +40,4 @@ elif [ -f /etc/asterix/ui-core/asterix-discord.sh ]; then
 fi
 
 rm -f "$ARCHIVE"
-echo -e "${C_GREEN}[✔] Backup cloud sync complete!${C_RESET}"
+echo -e "${C_GREEN}[[OK]] Backup cloud sync complete!${C_RESET}"

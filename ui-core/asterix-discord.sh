@@ -65,15 +65,15 @@ EOF
         chmod 600 "${PERSIST_CONFIG}"
     fi
 
-    echo -e "${C_GREEN}[✔] Discord Webhook saved successfully!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Discord Webhook saved successfully!${C_RESET}"
     
     # Send test ping
     curl -s -H "Content-Type: application/json" \
          -X POST \
-         -d '{"username":"ASTERIX OS NODE","avatar_url":"https://raw.githubusercontent.com/alexhack235-code/ASTERIX-BOOTING-SEQUENCE/main/assets/iso-branding/asterix_boot_01_electric_cyan_1788292127536.jpg","embeds":[{"title":"⚡ ASTERIX OS Node Online","description":"Discord Webhook & Cloud Storage Bridge successfully linked to this ASTERIX node.","color":65535,"footer":{"text":"ASTERIX Cybernetic Platform"}}]}' \
+         -d '{"username":"ASTERIX OS NODE","avatar_url":"https://raw.githubusercontent.com/alexhack235-code/ASTERIX-BOOTING-SEQUENCE/main/assets/iso-branding/asterix_boot_01_electric_cyan_1788292127536.jpg","embeds":[{"title":"[*] ASTERIX OS Node Online","description":"Discord Webhook & Cloud Storage Bridge successfully linked to this ASTERIX node.","color":65535,"footer":{"text":"ASTERIX Cybernetic Platform"}}]}' \
          "${input_url}" >/dev/null
 
-    echo -e "${C_CYAN}[✔] Test payload transmitted to Discord channel!${C_RESET}"
+    echo -e "${C_CYAN}[[OK]] Test payload transmitted to Discord channel!${C_RESET}"
 }
 
 cmd_notify() {
@@ -88,10 +88,10 @@ cmd_notify() {
     host=$(hostname 2>/dev/null || echo "asterix-node")
     local payload
     payload=$(jq -n --arg m "$msg" --arg h "$host" \
-      '{"username":"ASTERIX OS ALERT","embeds":[{"title":"⚡ Task Notification","description":$m,"color":32768,"fields":[{"name":"Node Host","value":$h,"inline":true},{"name":"Timestamp","value":(now|todate),"inline":true}],"footer":{"text":"ASTERIX OS System Dispatcher"}}]}')
+      '{"username":"ASTERIX OS ALERT","embeds":[{"title":"[*] Task Notification","description":$m,"color":32768,"fields":[{"name":"Node Host","value":$h,"inline":true},{"name":"Timestamp","value":(now|todate),"inline":true}],"footer":{"text":"ASTERIX OS System Dispatcher"}}]}')
 
     curl -s -H "Content-Type: application/json" -X POST -d "$payload" "$DISCORD_WEBHOOK_URL" >/dev/null
-    echo -e "${C_GREEN}[✔] Notification dispatched to Discord!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Notification dispatched to Discord!${C_RESET}"
 }
 
 cmd_send() {
@@ -116,10 +116,10 @@ cmd_send() {
     filename=$(basename "$file_path")
 
     curl -s -F "file1=@${file_path}" \
-         -F "content=💾 **ASTERIX CLOUD STORAGE ARTIFACT**\n📄 File: \`${filename}\`\n📝 Note: *${note}*\n⏱️ $(date)" \
+         -F "content=[DISK] **ASTERIX CLOUD STORAGE ARTIFACT**\n File: \`${filename}\`\n Note: *${note}*\n[TIME] $(date)" \
          "$DISCORD_WEBHOOK_URL" >/dev/null
 
-    echo -e "${C_GREEN}[✔] File uploaded to Discord storage channel successfully!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] File uploaded to Discord storage channel successfully!${C_RESET}"
 }
 
 cmd_backup() {
@@ -154,10 +154,10 @@ cmd_status() {
 
     local payload
     payload=$(jq -n --arg h "$host" --arg k "$kernel" --arg ip "$ip" --arg mem "$mem" \
-      '{"username":"ASTERIX OS TELEMETRY","embeds":[{"title":"📊 Node Health & Telemetry Report","color":16711807,"fields":[{"name":"Hostname","value":$h,"inline":true},{"name":"Kernel","value":$k,"inline":true},{"name":"Public IP","value":$ip,"inline":true},{"name":"Memory Usage","value":$mem,"inline":true},{"name":"Persistence","value":"ACTIVE","inline":true}],"footer":{"text":"ASTERIX OS Telemetry Core"}}]}')
+      '{"username":"ASTERIX OS TELEMETRY","embeds":[{"title":"[STATS] Node Health & Telemetry Report","color":16711807,"fields":[{"name":"Hostname","value":$h,"inline":true},{"name":"Kernel","value":$k,"inline":true},{"name":"Public IP","value":$ip,"inline":true},{"name":"Memory Usage","value":$mem,"inline":true},{"name":"Persistence","value":"ACTIVE","inline":true}],"footer":{"text":"ASTERIX OS Telemetry Core"}}]}')
 
     curl -s -H "Content-Type: application/json" -X POST -d "$payload" "$DISCORD_WEBHOOK_URL" >/dev/null
-    echo -e "${C_GREEN}[✔] Telemetry report posted to Discord!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Telemetry report posted to Discord!${C_RESET}"
 }
 
 case "$1" in

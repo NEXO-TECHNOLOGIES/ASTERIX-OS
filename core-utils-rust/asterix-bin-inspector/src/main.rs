@@ -515,14 +515,14 @@ fn print_report(report: &BinaryReport) {
     println!(" {C_CYAN}► Shannon Entropy:{C_RESET} {entropy_color}{:.4} / 8.0000{C_RESET}", report.overall_entropy);
 
     if !report.suspicious_flags.is_empty() {
-        println!("\n{C_RED}{C_BOLD} ⚠ SECURITY & PACKING ALERTS:{C_RESET}");
+        println!("\n{C_RED}{C_BOLD} [!] SECURITY & PACKING ALERTS:{C_RESET}");
         for flag in &report.suspicious_flags {
-            println!("  {C_RED}✖{C_RESET} {C_YELLOW}{flag}{C_RESET}");
+            println!("  {C_RED}[FAIL]{C_RESET} {C_YELLOW}{flag}{C_RESET}");
         }
     }
 
     if !report.sections.is_empty() {
-        println!("\n{C_CYAN}{C_BOLD} 📁 SECTION BREAKDOWN & ENTROPY MAP:{C_RESET}");
+        println!("\n{C_CYAN}{C_BOLD}  SECTION BREAKDOWN & ENTROPY MAP:{C_RESET}");
         println!("  {C_GRAY}{:<18} {:<14} {:<12} {:<10} {:<8} {}{C_RESET}",
             "NAME", "V-ADDR", "SIZE", "ENTROPY", "FLAGS", "STATUS");
         println!("  {C_GRAY}{}{C_RESET}", "─".repeat(74));
@@ -700,7 +700,7 @@ fn main() {
     }
 
     if show_strings {
-        println!("{C_CYAN}{C_BOLD} 🔤 FORENSIC STRINGS EXTRACTION (Min Length: {}):{C_RESET}", min_str_len);
+        println!("{C_CYAN}{C_BOLD}  FORENSIC STRINGS EXTRACTION (Min Length: {}):{C_RESET}", min_str_len);
         if let Ok(mut file) = File::open(path) {
             let mut buf = Vec::new();
             if file.read_to_end(&mut buf).is_ok() {
@@ -738,7 +738,7 @@ fn main() {
     }
 
     if show_hex {
-        println!("{C_CYAN}{C_BOLD} 🔍 COLORIZED HEXADECIMAL DUMP (Offset: 0x{:X}, Length: {} bytes):{C_RESET}", hex_offset, hex_len);
+        println!("{C_CYAN}{C_BOLD} [SCAN] COLORIZED HEXADECIMAL DUMP (Offset: 0x{:X}, Length: {} bytes):{C_RESET}", hex_offset, hex_len);
         if let Ok(mut file) = File::open(path) {
             let mut buf = Vec::new();
             if file.read_to_end(&mut buf).is_ok() {

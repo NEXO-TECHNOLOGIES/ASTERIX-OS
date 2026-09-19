@@ -340,7 +340,7 @@ class TakeoverSentinel:
                     break
 
         if takeover_vulnerable and active_finding:
-            print(f"\n  {C_RED}{C_BOLD}🚨 CRITICAL: HIGH-CONFIDENCE SUBDOMAIN TAKEOVER DETECTED!{C_RESET}")
+            print(f"\n  {C_RED}{C_BOLD}[ALERT] CRITICAL: HIGH-CONFIDENCE SUBDOMAIN TAKEOVER DETECTED!{C_RESET}")
             print(f"  {C_RED}Adversaries can claim this domain and seize full corporate identity!{C_RESET}\n")
             print(f"  {C_BOLD}Vulnerable Target:{C_RESET}   {clean_target}")
             print(f"  {C_BOLD}Targeted Service:{C_RESET}    {C_YELLOW}{active_finding['provider']}{C_RESET}")
@@ -352,7 +352,7 @@ class TakeoverSentinel:
             print(f"  1. {active_finding['remediation']}")
             print(f"  2. Delete dangling DNS CNAME record from DNS registrar/Route53/Cloudflare zone immediately.\n")
         else:
-            print(f"\n  {C_GREEN}{C_BOLD}✓ SECURE: No dangling cloud takeover signatures detected.{C_RESET}")
+            print(f"\n  {C_GREEN}{C_BOLD}[OK] SECURE: No dangling cloud takeover signatures detected.{C_RESET}")
             if cname:
                 print(f"  {C_DIM}CNAME points to active or secured provider endpoint (HTTP {http_code}).{C_RESET}\n")
             else:
@@ -496,7 +496,7 @@ class SSRFGuard:
                 risks.append(f"RESERVED SUBNET VIOLATION: Access to special-purpose IANA space via {origin} [{ip_str}]")
 
         if risks:
-            print(f"  {C_RED}{C_BOLD}🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!{C_RESET}\n")
+            print(f"  {C_RED}{C_BOLD}[ALERT] EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!{C_RESET}\n")
             print(f"  {C_WHITE}{C_BOLD}Identified Threat Violations:{C_RESET}")
             for r in risks:
                 print(f"    • {C_RED}{C_BOLD}{r}{C_RESET}")
@@ -515,7 +515,7 @@ def is_safe_outbound_url(url: str) -> bool:
         return False
 {C_RESET}""")
         else:
-            print(f"  {C_GREEN}{C_BOLD}✓ SAFE EGRESS: URL resolves exclusively to public, routable IP space.{C_RESET}")
+            print(f"  {C_GREEN}{C_BOLD}[OK] SAFE EGRESS: URL resolves exclusively to public, routable IP space.{C_RESET}")
             print(f"  {C_DIM}Destination '{hostname}' passed RFC 1918, IMDS cloud metadata, and loopback checks.{C_RESET}\n")
 
 
@@ -627,29 +627,29 @@ class APISentinel:
                 sev = f"{C_RED}[CRITICAL]{C_RESET}" if code == 200 and "security" not in route else f"{C_YELLOW}[WARNING]{C_RESET}"
                 print(f"    {sev} Route {C_BOLD}{route}{C_RESET} returned HTTP {code} ({ctype})")
         else:
-            print(f"    {C_GREEN}✓ No unauthenticated Swagger, OpenAPI, or actuator routes exposed.{C_RESET}")
+            print(f"    {C_GREEN}[OK] No unauthenticated Swagger, OpenAPI, or actuator routes exposed.{C_RESET}")
 
         print(f"\n  {C_WHITE}{C_BOLD}2. CORS CROSS-ORIGIN POLICY AUDIT:{C_RESET}")
         if cors_creds:
-            print(f"    {C_RED}{C_BOLD}🚨 CRITICAL VULNERABILITY: Arbitrary Origin Reflection with Credentials!{C_RESET}")
+            print(f"    {C_RED}{C_BOLD}[ALERT] CRITICAL VULNERABILITY: Arbitrary Origin Reflection with Credentials!{C_RESET}")
             print(f"    ↳ Access-Control-Allow-Origin: {acao}")
             print(f"    ↳ Access-Control-Allow-Credentials: true (Permits cross-site session theft!)")
         elif cors_reflected and acao == "*":
-            print(f"    {C_YELLOW}⚠ Wildcard CORS: 'Access-Control-Allow-Origin: *' allows any website to read API data.{C_RESET}")
+            print(f"    {C_YELLOW}[!] Wildcard CORS: 'Access-Control-Allow-Origin: *' allows any website to read API data.{C_RESET}")
         else:
-            print(f"    {C_GREEN}✓ Secure CORS: External attacker origin was not reflected.{C_RESET}")
+            print(f"    {C_GREEN}[OK] Secure CORS: External attacker origin was not reflected.{C_RESET}")
 
         print(f"\n  {C_WHITE}{C_BOLD}3. DEFENSIVE SECURITY HEADERS POSTURE:{C_RESET}")
         if missing_headers:
             for h, desc in missing_headers:
-                print(f"    {C_RED}✗ Missing:{C_RESET} {C_BOLD}{h}{C_RESET} — {C_DIM}{desc}{C_RESET}")
+                print(f"    {C_RED} Missing:{C_RESET} {C_BOLD}{h}{C_RESET} — {C_DIM}{desc}{C_RESET}")
         else:
-            print(f"    {C_GREEN}✓ Perfect score: All standard defensive headers configured.{C_RESET}")
+            print(f"    {C_GREEN}[OK] Perfect score: All standard defensive headers configured.{C_RESET}")
 
         if leaks:
             print(f"\n  {C_WHITE}{C_BOLD}4. SENSITIVE INFRASTRUCTURE LEAKAGE:{C_RESET}")
             for l in leaks:
-                print(f"    {C_YELLOW}⚠ Header Leak:{C_RESET} {l}")
+                print(f"    {C_YELLOW}[!] Header Leak:{C_RESET} {l}")
 
         host_name = parsed.netloc.split(":")[0]
         print(f"\n  {C_CYAN}{C_BOLD}========================================================================={C_RESET}")

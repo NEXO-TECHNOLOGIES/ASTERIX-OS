@@ -70,7 +70,7 @@ case "$cmd" in
                 dest="$PERSIST/projects/$target_name"
                 mkdir -p "$dest"/{scans,loot,notes,reports,scripts} 2>/dev/null || true
                 chmod -R 755 "$dest" 2>/dev/null || true
-                echo -e "${GREEN}✔ Created resilient folder:${NC} $dest"
+                echo -e "${GREEN}[OK] Created resilient folder:${NC} $dest"
                 ;;
             *)
                 echo -e "${CYAN}Persistent Folders at: $PERSIST${NC}"
@@ -81,7 +81,7 @@ case "$cmd" in
     doctor|check)
         echo -e "${CYAN}[*] Debian Rootless Quick Diagnostic:${NC}"
         which proot proot-distro 2>/dev/null || echo -e "${RED}[!] proot-distro missing. Run: pkg install proot proot-distro${NC}"
-        [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/debian" ] && echo -e "${GREEN}[✔] Debian Rootfs installed${NC}" || echo -e "${YELLOW}[!] Debian Rootfs missing${NC}"
+        [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/debian" ] && echo -e "${GREEN}[[OK]] Debian Rootfs installed${NC}" || echo -e "${YELLOW}[!] Debian Rootfs missing${NC}"
         ;;
     fix|repair)
         echo -e "${CYAN}[*] Repairing Debian Rootless Configuration...${NC}"
@@ -99,7 +99,7 @@ case "$cmd" in
             # Fix /dev/shm and /tmp
             mkdir -p "$deb_root/dev/shm" "$deb_root/tmp" 2>/dev/null || true
             chmod 1777 "$deb_root/dev/shm" "$deb_root/tmp" 2>/dev/null || true
-            echo -e "${GREEN}[✔] Rootless Debian configuration repaired.${NC}"
+            echo -e "${GREEN}[[OK]] Rootless Debian configuration repaired.${NC}"
         fi
         ;;
     *)

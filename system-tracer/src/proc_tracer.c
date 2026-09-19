@@ -86,7 +86,7 @@ void print_header() {
     printf("\033[H\033[J");
     printf("%s%s", C_CYAN, C_BOLD);
     printf("┌──────────────────────────────────────────────────────────────────────────┐\n");
-    printf("│         ASTERIX OS ⚡ PROCESS & KERNEL TELEMETRY TRACER                 │\n");
+    printf("│         ASTERIX OS [*] PROCESS & KERNEL TELEMETRY TRACER                 │\n");
     printf("│  Press Ctrl+C to exit   |   Refresh Rate: 1s   |   /proc Filesystem     │\n");
     printf("└──────────────────────────────────────────────────────────────────────────┘\n");
     printf("%s", C_RESET);
@@ -180,6 +180,6 @@ int main(int argc, char **argv) {
         sleep(1);
     }
 
-    printf("\n%s[✔] ASTERIX Process Tracer exited.%s\n", C_GREEN, C_RESET);
+    printf("\n%s[[OK]] ASTERIX Process Tracer exited.%s\n", C_GREEN, C_RESET);
     return 0;
 }

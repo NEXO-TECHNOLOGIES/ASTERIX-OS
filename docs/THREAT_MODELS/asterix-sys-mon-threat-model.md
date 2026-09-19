@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-sys-mon`
+# [SEC] Threat Model: `asterix-sys-mon`
 ## Real-Time Microsecond Kernel & Process Telemetry Engine
 
 ### 1. Component Overview

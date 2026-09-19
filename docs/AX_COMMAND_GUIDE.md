@@ -1,9 +1,9 @@
-# 🌌 ASTERIX OS: Master `ax` / `asterix` Command Architecture & Operational Guide
+# [ASTERIX] ASTERIX OS: Master `ax` / `asterix` Command Architecture & Operational Guide
 ### Comprehensive Reference for the Cybernetic Operating Engine & Omni-Dispatcher
 
 ---
 
-## 📑 Table of Contents
+##  Table of Contents
 1. [Architectural Overview](#1-architectural-overview)
 2. [Dual-Core Execution Pipeline](#2-dual-core-execution-pipeline)
 3. [Multi-Environment Awareness (Live ISO, Desktop & Termux)](#3-multi-environment-awareness)
@@ -117,7 +117,7 @@ dynamic_system_exec() {
         "$cmd" "$@"
         local rc=$?
         if [ $rc -eq 0 ]; then
-            echo -e "\n${C_GREEN}[✔] ${cmd} finished successfully.${C_RESET}"
+            echo -e "\n${C_GREEN}[[OK]] ${cmd} finished successfully.${C_RESET}"
         else
             echo -e "\n${C_YELLOW}[!] ${cmd} exited with status ${rc}.${C_RESET}"
         fi

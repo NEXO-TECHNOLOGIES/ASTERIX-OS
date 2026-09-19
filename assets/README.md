@@ -7,7 +7,7 @@ Rust loader will automatically pick them up and bind them into the OS.
 
 ---
 
-## 📁 Directory Structure & Supported Formats
+##  Directory Structure & Supported Formats
 
 ### 1. `assets/wallpapers/`
 * **Purpose:** High-resolution wallpapers for the desktop environment and terminal backgrounds.
@@ -36,7 +36,7 @@ Rust loader will automatically pick them up and bind them into the OS.
 
 ---
 
-## 🚀 How to Drop Your Assets
+## [RUN] How to Drop Your Assets
 Simply drag and drop your files into these folders:
 ```
 ASTERIX OS/

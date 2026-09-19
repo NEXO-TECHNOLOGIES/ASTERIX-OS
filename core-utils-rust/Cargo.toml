@@ -9,6 +9,7 @@ members = [
     "asterix-log-hunter",
     "asterix-defender-core",
     "asterix-code-repair",
+    "asterix-cluster",
 ]
 resolver = "2"
 

@@ -247,7 +247,7 @@ def render_feature_video(spec: Dict[str, Any], output_file: Path, duration: int 
         print(f"{C_RED}[!] Error rendering {output_file.name}:\n{proc.stderr}{C_RESET}")
         return False
 
-    print(f"{C_GREEN}[✓] Rendered: {output_file.name} ({os.path.getsize(output_file) // 1024} KB){C_RESET}")
+    print(f"{C_GREEN}[[OK]] Rendered: {output_file.name} ({os.path.getsize(output_file) // 1024} KB){C_RESET}")
     return True
 
 
@@ -272,8 +272,8 @@ def render_master_showcase(rendered_files: List[Path], master_output: Path):
         list_file.unlink()
 
     if proc.returncode == 0 and master_output.exists():
-        print(f"{C_GREEN}{C_BOLD}[✓] Master Compilation Trailer Rendered Successfully:{C_RESET}")
-        print(f"    🎬 {master_output} ({os.path.getsize(master_output) // 1024} KB)")
+        print(f"{C_GREEN}{C_BOLD}[[OK]] Master Compilation Trailer Rendered Successfully:{C_RESET}")
+        print(f"     {master_output} ({os.path.getsize(master_output) // 1024} KB)")
         return True
     else:
         print(f"{C_RED}[!] Master concatenation error: {proc.stderr}{C_RESET}")
@@ -301,8 +301,8 @@ def main():
         master_file = OUTPUT_DIR / "ASTERIX_OS_BREAKTHROUGH_MASTER_SHOWCASE_1080p.mp4"
         render_master_showcase(rendered, master_file)
 
-    print(f"\n{C_GREEN}{C_BOLD}[✓] All {len(rendered)} Feature Videos Generated in:{C_RESET}")
-    print(f"    📁 {OUTPUT_DIR.resolve()}")
+    print(f"\n{C_GREEN}{C_BOLD}[[OK]] All {len(rendered)} Feature Videos Generated in:{C_RESET}")
+    print(f"     {OUTPUT_DIR.resolve()}")
 
 
 if __name__ == "__main__":

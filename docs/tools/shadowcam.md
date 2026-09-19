@@ -1,10 +1,10 @@
-# 📹 `shadowcam` — Local RTSP & ONVIF Stream Discovery
+#  `shadowcam` — Local RTSP & ONVIF Stream Discovery
 
 A network inspection tool designed to identify IP surveillance endpoints, RTSP media streams, and ONVIF device service ports on authorized local subnets.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax shadowcam discover
@@ -14,7 +14,7 @@ ax shadowcam audit <ip> [port]
 
 ---
 
-## ⚙️ How It Works
+## [*] How It Works
 
 - **Discovery (`discover`)**: Automatically identifies the local subnet (`/24`) and probes hosts for standard video surveillance ports:
   - `554` (RTSP - Real Time Streaming Protocol)
@@ -26,6 +26,6 @@ ax shadowcam audit <ip> [port]
 
 ---
 
-## ⚠️ Safety Boundaries & Limitations
+## [!] Safety Boundaries & Limitations
 - **Read-Only Probe**: `shadowcam` only checks for open TCP connection states. It does not attempt credential bruteforcing, exploit execution, or unauthorized stream interception.
 - **Local Networks Only**: Designed exclusively for assessing security camera posture on authorized private local area networks.

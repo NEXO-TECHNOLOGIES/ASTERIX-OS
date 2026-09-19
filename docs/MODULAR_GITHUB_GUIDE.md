@@ -4,7 +4,7 @@ This guide details how to split and host the **ASTERIX OS** ecosystem across mul
 
 ---
 
-## 🏛️ Repository Separation Architecture
+## [BANK] Repository Separation Architecture
 
 ```mermaid
 graph TD
@@ -16,7 +16,7 @@ graph TD
 
 ---
 
-## 📦 Breakdown of the 3 Repositories
+## [PKG] Breakdown of the 3 Repositories
 
 ### Repository 1: `asterix-iso-engine` (Main Build Engine)
 * **Target Account:** GitHub Account A (Engine)
@@ -90,7 +90,7 @@ graph TD
 
 ---
 
-## 🔗 How They Connect Together
+##  How They Connect Together
 
 Users can install the Termux mobile version with a single command pulling from your Termux repo:
 

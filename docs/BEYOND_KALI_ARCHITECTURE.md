@@ -1,10 +1,10 @@
-# 🚀 Beyond Kali: The ASTERIX OS Architecture Specification
+# [RUN] Beyond Kali: The ASTERIX OS Architecture Specification
 
 > **Mission**: Building an operating system and mobile security environment that moves beyond traditional 2010s pentest distribution models (like Kali Linux) by engineering first-class architecture, security-first defaults, reproducibility, workflow automation, and mobile optimization.
 
 ---
 
-## 🏛️ Executive Architectural Overview
+## [BANK] Executive Architectural Overview
 
 Traditional security distributions evolved from live CDs (Whoppix, BackTrack, Kali). While they aggregate hundreds of tools, their architecture remains rooted in legacy patterns:
 - Flat `root` shell habits across the entire session.

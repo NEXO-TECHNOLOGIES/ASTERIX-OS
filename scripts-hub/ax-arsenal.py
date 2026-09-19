@@ -269,9 +269,9 @@ def cmd_list(category_filter=None):
         cat = t["category"]
         itype = t["install_type"].upper()
         if t.get("preinstalled"):
-            status = f"{C_GREEN}✔ PRE-INSTALLED{C_RESET}"
+            status = f"{C_GREEN}[OK] PRE-INSTALLED{C_RESET}"
         else:
-            status = f"{C_YELLOW}⚡ ON-DEMAND{C_RESET}"
+            status = f"{C_YELLOW}[*] ON-DEMAND{C_RESET}"
 
         print(f"{C_BOLD}{name:<22}{C_RESET} | {cat:<28} | {status:<27} | {itype}")
 
@@ -314,9 +314,9 @@ def cmd_info(tool_name):
     print(f"  • GitHub Source:  {C_CYAN}{match['github']}{C_RESET}")
     print(f"  • Install Method: {match['install_type'].upper()}")
     if match.get("preinstalled"):
-        print(f"  • Status:         {C_GREEN}✔ Pre-installed in ASTERIX OS Base ISO{C_RESET}")
+        print(f"  • Status:         {C_GREEN}[OK] Pre-installed in ASTERIX OS Base ISO{C_RESET}")
     else:
-        print(f"  • Status:         {C_YELLOW}⚡ Available for On-Demand Persistent Install{C_RESET}")
+        print(f"  • Status:         {C_YELLOW}[*] Available for On-Demand Persistent Install{C_RESET}")
 
     print(f"\n{C_BOLD}[INSTALLATION RECIPE]{C_RESET}")
     print(f"  {C_YELLOW}$ {match['cmd']}{C_RESET}")
@@ -336,7 +336,7 @@ def cmd_install(tool_name, execute=False):
         return
 
     if match.get("preinstalled"):
-        print(f"{C_GREEN}✔ '{match['name']}' is ALREADY pre-installed in the ASTERIX OS base system.{C_RESET}")
+        print(f"{C_GREEN}[OK] '{match['name']}' is ALREADY pre-installed in the ASTERIX OS base system.{C_RESET}")
         print(f"  Launch command directly: {C_CYAN}{match['name']}{C_RESET}\n")
         return
 
@@ -353,9 +353,9 @@ def cmd_install(tool_name, execute=False):
     print(f"{C_CYAN}[*] Executing persistent package install...{C_RESET}")
     try:
         subprocess.run(match['cmd'], shell=True, check=True)
-        print(f"\n{C_GREEN}✔ Successfully installed '{match['name']}'!{C_RESET}\n")
+        print(f"\n{C_GREEN}[OK] Successfully installed '{match['name']}'!{C_RESET}\n")
     except Exception as e:
-        print(f"\n{C_RED}✗ Installation encountered an error: {e}{C_RESET}\n")
+        print(f"\n{C_RED} Installation encountered an error: {e}{C_RESET}\n")
 
 
 def main():

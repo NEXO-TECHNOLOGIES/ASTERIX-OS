@@ -69,14 +69,14 @@ class PortUnblocker:
         if not pids:
             # Check if port can be bound right now
             if PortUnblocker._is_port_free(port):
-                print(f"  {C_GREEN}✓ Port {port} is already completely FREE and available!{C_RESET}")
+                print(f"  {C_GREEN}[OK] Port {port} is already completely FREE and available!{C_RESET}")
                 print(f"  {C_DIM}No processes holding socket 0.0.0.0:{port} or 127.0.0.1:{port}.{C_RESET}\n")
                 return
             else:
                 print(f"  {C_YELLOW}[!] Port {port} cannot be bound, but no user PID was identified (system or kernel lock).{C_RESET}\n")
                 return
 
-        print(f"  {C_YELLOW}⚠ Detected {len(pids)} process(es) holding port {port}:{C_RESET}")
+        print(f"  {C_YELLOW}[!] Detected {len(pids)} process(es) holding port {port}:{C_RESET}")
 
         for pid in pids:
             proc_info = PortUnblocker._get_process_info(pid)
@@ -94,7 +94,7 @@ class PortUnblocker:
 
         time.sleep(0.3)
         if PortUnblocker._is_port_free(port):
-            print(f"\n  {C_GREEN}{C_BOLD}✓ SUCCESS: Port {port} has been completely freed!{C_RESET}")
+            print(f"\n  {C_GREEN}{C_BOLD}[OK] SUCCESS: Port {port} has been completely freed!{C_RESET}")
             print(f"  {C_DIM}You can now start your dev server, Flask, Express, or Docker container.{C_RESET}\n")
         else:
             print(f"\n  {C_YELLOW}[!] Port {port} is releasing (may take a few seconds for TIME_WAIT socket teardown).{C_RESET}\n")
@@ -250,10 +250,10 @@ class SecretSentinel:
         print(f"  • Files Scanned: {C_BOLD}{files_scanned}{C_RESET}")
 
         if not findings:
-            print(f"  {C_GREEN}{C_BOLD}✓ CLEAN: Zero exposed API tokens or private keys detected!{C_RESET}\n")
+            print(f"  {C_GREEN}{C_BOLD}[OK] CLEAN: Zero exposed API tokens or private keys detected!{C_RESET}\n")
             return
 
-        print(f"  {C_RED}{C_BOLD}⚠ WARNING: Detected {len(findings)} exposed secret(s)!{C_RESET}\n")
+        print(f"  {C_RED}{C_BOLD}[!] WARNING: Detected {len(findings)} exposed secret(s)!{C_RESET}\n")
         print(f"  {'File Path':<35} {'Line':<6} {'Secret Type':<30} {'Masked Token':<20}")
         print(f"  {'-'*95}")
 

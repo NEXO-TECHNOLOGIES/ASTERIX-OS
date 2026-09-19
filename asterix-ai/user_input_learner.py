@@ -722,7 +722,7 @@ def main():
         if len(args) > 1:
             fact = " ".join(args[1:])
             count = teach_fact(fact)
-            print(f"\n  {C_GREEN}{C_BOLD}[✔] ASTERIX AI Learned New Fact [Total Memory: {count} Facts]:{C_RESET}")
+            print(f"\n  {C_GREEN}{C_BOLD}[[OK]] ASTERIX AI Learned New Fact [Total Memory: {count} Facts]:{C_RESET}")
             print(f"  {C_CYAN}\"{fact}\"{C_RESET}\n")
             print(f"  {C_WHITE}This rule will adapt future AI responses and threat models.{C_RESET}\n")
         else:
@@ -733,7 +733,7 @@ def main():
     elif args[0] == "reset":
         if os.path.exists(PROFILE_FILE):
             os.remove(PROFILE_FILE)
-        print(f"{C_GREEN}[✔] AI user memory profile reset to default.{C_RESET}")
+        print(f"{C_GREEN}[[OK]] AI user memory profile reset to default.{C_RESET}")
 
 if __name__ == "__main__":
     main()

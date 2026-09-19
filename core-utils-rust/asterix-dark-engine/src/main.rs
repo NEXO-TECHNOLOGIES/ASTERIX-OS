@@ -150,7 +150,7 @@ fn cmd_mem() {
     let proc_path = Path::new("/proc");
     if !proc_path.exists() {
         println!("{C_YELLOW}[!] /proc filesystem not available on this platform.{C_RESET}");
-        println!("{C_GREEN}[✔] Host platform memory protection active.{C_RESET}\n");
+        println!("{C_GREEN}[[OK]] Host platform memory protection active.{C_RESET}\n");
         return;
     }
 
@@ -208,9 +208,9 @@ fn cmd_mem() {
     println!("  {}", "═".repeat(60));
 
     if rwx_count == 0 && deleted_count == 0 {
-        println!("\n  {C_GREEN}[✔] Clean process memory state. Zero W^X violations detected.{C_RESET}\n");
+        println!("\n  {C_GREEN}[[OK]] Clean process memory state. Zero W^X violations detected.{C_RESET}\n");
     } else {
-        println!("\n  {C_RED}[✖] Security Warning: Anomalous process memory structures identified!{C_RESET}\n");
+        println!("\n  {C_RED}[[FAIL]] Security Warning: Anomalous process memory structures identified!{C_RESET}\n");
     }
 }
 
@@ -236,7 +236,7 @@ fn cmd_radar() {
         sleep(Duration::from_millis(180));
     }
 
-    println!("\n\n  {C_GREEN}[✔] Radar Sweep Complete.{C_RESET}");
+    println!("\n\n  {C_GREEN}[[OK]] Radar Sweep Complete.{C_RESET}");
     println!("  {C_CYAN}Stealth Index:{C_RESET}      {C_GREEN}98.4 / 100 [MAXIMUM STEALTH]{C_RESET}");
     println!("  {C_CYAN}Promiscuous Sniff:{C_RESET}  {C_GREEN}INACTIVE (Zero rogue taps){C_RESET}");
     println!("  {C_CYAN}Entropy Threshold:{C_RESET}  {C_YELLOW}NOMINAL (7.12 bits safe margin){C_RESET}\n");
@@ -296,7 +296,7 @@ fn main() {
                                         println!("  {C_RED}[!] HIGH ENTROPY ({:.3}):{C_RESET} {}", ent, path.display());
                                         flagged += 1;
                                     } else {
-                                        println!("  {C_GREEN}[✔] NORMAL ({:.3}):{C_RESET}      {}", ent, path.display());
+                                        println!("  {C_GREEN}[[OK]] NORMAL ({:.3}):{C_RESET}      {}", ent, path.display());
                                     }
                                 }
                             }

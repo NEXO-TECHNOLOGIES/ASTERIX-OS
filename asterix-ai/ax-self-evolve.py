@@ -336,7 +336,7 @@ def run_evolution_cycle(verbose: bool = True) -> Dict:
     banner()
 
     if not is_online():
-        print(f"  {C_YELLOW}[⚡] OFFLINE MODE — No internet connection detected.{C_RESET}")
+        print(f"  {C_YELLOW}[[*]] OFFLINE MODE — No internet connection detected.{C_RESET}")
         print(f"  {C_WHITE}Performing local knowledge graph audit and pattern consolidation...{C_RESET}\n")
         return _run_offline_consolidation()
 
@@ -360,7 +360,7 @@ def run_evolution_cycle(verbose: bool = True) -> Dict:
         raw = http_get(furl, timeout=12)
 
         if not raw:
-            print(f"      {C_YELLOW}⚠ Feed unreachable (offline or server error){C_RESET}")
+            print(f"      {C_YELLOW}[!] Feed unreachable (offline or server error){C_RESET}")
             cycle_report["feeds_processed"].append({"feed": fname, "status": "unreachable", "new_rules": 0})
             continue
 
@@ -381,7 +381,7 @@ def run_evolution_cycle(verbose: bool = True) -> Dict:
                 new_items.append(item)
 
         if not new_items:
-            print(f"      {C_GRAY}✓ No new items since last cycle{C_RESET}")
+            print(f"      {C_GRAY}[OK] No new items since last cycle{C_RESET}")
             cycle_report["feeds_processed"].append({"feed": fname, "status": "up_to_date", "new_rules": 0})
             continue
 
@@ -394,7 +394,7 @@ def run_evolution_cycle(verbose: bool = True) -> Dict:
         if critical_count > 0:
             print(f"      {C_RED}[!] {critical_count} CRITICAL threat(s) absorbed into knowledge base{C_RESET}")
 
-        print(f"      {C_GREEN}✔ {added} new intelligence rules distilled & saved{C_RESET}")
+        print(f"      {C_GREEN}[OK] {added} new intelligence rules distilled & saved{C_RESET}")
         cycle_report["feeds_processed"].append({"feed": fname, "status": "updated", "new_rules": added})
 
     # Save updated seen hashes
@@ -432,7 +432,7 @@ def _run_offline_consolidation() -> Dict:
             deduped.append(r)
     save_json_file(rules_path, deduped)
     removed = before - len(deduped)
-    print(f"  {C_GREEN}✔ Offline consolidation: {len(deduped)} rules retained, {removed} duplicates removed.{C_RESET}\n")
+    print(f"  {C_GREEN}[OK] Offline consolidation: {len(deduped)} rules retained, {removed} duplicates removed.{C_RESET}\n")
     return {"mode": "offline", "rules_retained": len(deduped), "duplicates_removed": removed}
 
 
@@ -440,10 +440,10 @@ def _print_evolution_summary(kb: Dict, new_count: int):
     print(f"\n{C_CYAN}{C_BOLD}─────────────────────────────────────────────────────────{C_RESET}")
     print(f"{C_WHITE}{C_BOLD}  ASTERIX AI EVOLUTION CYCLE COMPLETE{C_RESET}")
     print(f"{C_CYAN}─────────────────────────────────────────────────────────{C_RESET}")
-    print(f"  {C_GREEN}✔ New Intelligence Rules Distilled:{C_RESET} {C_BOLD}{new_count}{C_RESET}")
-    print(f"  {C_CYAN}✔ Total AI Knowledge Base Size:{C_RESET}     {C_BOLD}{kb.get('total_rules', 0)} rules{C_RESET}")
-    print(f"  {C_CYAN}✔ Total Evolution Cycles Run:{C_RESET}        {C_BOLD}{kb.get('cycles', 0)}{C_RESET}")
-    print(f"  {C_YELLOW}✔ Last Updated:{C_RESET}                     {kb.get('last_updated', 'N/A')}")
+    print(f"  {C_GREEN}[OK] New Intelligence Rules Distilled:{C_RESET} {C_BOLD}{new_count}{C_RESET}")
+    print(f"  {C_CYAN}[OK] Total AI Knowledge Base Size:{C_RESET}     {C_BOLD}{kb.get('total_rules', 0)} rules{C_RESET}")
+    print(f"  {C_CYAN}[OK] Total Evolution Cycles Run:{C_RESET}        {C_BOLD}{kb.get('cycles', 0)}{C_RESET}")
+    print(f"  {C_YELLOW}[OK] Last Updated:{C_RESET}                     {kb.get('last_updated', 'N/A')}")
     print(f"  {C_GRAY}  Knowledge stored: {RULES_DIR / 'evolving_threats.json'}{C_RESET}\n")
 
 
@@ -499,7 +499,7 @@ def run_daemon(interval_hours: float = 12.0):
         try:
             time.sleep(interval_hours * 3600)
         except KeyboardInterrupt:
-            print(f"\n  {C_YELLOW}[✔] Daemon stopped gracefully. Knowledge preserved.{C_RESET}\n")
+            print(f"\n  {C_YELLOW}[[OK]] Daemon stopped gracefully. Knowledge preserved.{C_RESET}\n")
             break
 
 
@@ -513,7 +513,7 @@ def wipe_evolved_knowledge():
         os.remove(KNOWLEDGE_DB)
     if SEEN_HASHES.exists():
         os.remove(SEEN_HASHES)
-    print(f"  {C_GREEN}[✔] Auto-evolved knowledge wiped. {len(static_only)} static rules preserved.{C_RESET}\n")
+    print(f"  {C_GREEN}[[OK]] Auto-evolved knowledge wiped. {len(static_only)} static rules preserved.{C_RESET}\n")
 
 
 def print_help():

@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-defender-core`
+# [SEC] Threat Model: `asterix-defender-core`
 ## Target Hardening Assessment & Active Endpoint Defense Engine
 
 ### 1. Component Overview

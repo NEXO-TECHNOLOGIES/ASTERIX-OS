@@ -125,7 +125,7 @@ def main():
     args = parser.parse_args()
 
     print(f"\n{C_CYAN}{C_BOLD}╔══════════════════════════════════════════════════════════════════════╗{C_RESET}")
-    print(f"{C_CYAN}{C_BOLD}║   📱 ASTERIX MOBILE SYSTEM CENTER & HARDWARE TELEMETRY               ║{C_RESET}")
+    print(f"{C_CYAN}{C_BOLD}║   [MOBILE] ASTERIX MOBILE SYSTEM CENTER & HARDWARE TELEMETRY               ║{C_RESET}")
     print(f"{C_CYAN}{C_BOLD}╚══════════════════════════════════════════════════════════════════════╝{C_RESET}\n")
 
     if args.action in ["all", "battery"]:
@@ -156,7 +156,7 @@ def main():
                         cleaned += 1
                 except Exception:
                     pass
-        print(f"  {C_GREEN}[✔] Optimization complete. Purged {cleaned} temporary files.{C_RESET}\n")
+        print(f"  {C_GREEN}[[OK]] Optimization complete. Purged {cleaned} temporary files.{C_RESET}\n")
 
 if __name__ == "__main__":
     main()

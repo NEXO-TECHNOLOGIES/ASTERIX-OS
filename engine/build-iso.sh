@@ -119,7 +119,7 @@ nameserver 8.8.8.8
 DNS_EOF
 fi
 
-echo "[✔] Accounts and networking hooks installed successfully."
+echo "[[OK]] Accounts and networking hooks installed successfully."
 ACCOUNT_HOOK
 chmod +x config/hooks/normal/0050-setup-accounts.hook.chroot
 
@@ -147,7 +147,7 @@ if [ -d "../../core-utils-rust" ]; then
             if [ -f "target/release/${eng}" ]; then
                 cp "target/release/${eng}" "$WORK_DIR/config/includes.chroot/usr/local/bin/${eng}"
                 chmod 755 "$WORK_DIR/config/includes.chroot/usr/local/bin/${eng}"
-                echo -e "${GREEN}  [✔] ${eng} baked into live ISO${NC}"
+                echo -e "${GREEN}  [[OK]] ${eng} baked into live ISO${NC}"
             fi
         done
     fi
@@ -232,7 +232,7 @@ if [ -d /etc/asterix/core-utils-c ]; then
     cd /etc/asterix/core-utils-c
     if command -v gcc >/dev/null 2>&1; then
         ./build.sh
-        echo "[✔] Native C utilities compiled and installed."
+        echo "[[OK]] Native C utilities compiled and installed."
     fi
 fi
 HOOK
@@ -251,7 +251,7 @@ if [ -d /etc/asterix/core-utils-cpp ]; then
     if command -v g++ >/dev/null 2>&1; then
         make all
         make install
-        echo "[✔] Native C++ cyber utilities compiled and installed."
+        echo "[[OK]] Native C++ cyber utilities compiled and installed."
     fi
 fi
 HOOK
@@ -270,7 +270,7 @@ if [ -d /etc/asterix/boot-asm ]; then
     if command -v nasm >/dev/null 2>&1; then
         make all
         make install
-        echo "[✔] Assembly tools assembled and installed."
+        echo "[[OK]] Assembly tools assembled and installed."
     fi
 fi
 HOOK
@@ -289,7 +289,7 @@ if [ -d /etc/asterix/core-utils-go/asterix-webrecon ]; then
     if command -v go >/dev/null 2>&1; then
         go build -ldflags="-s -w" -o /usr/local/bin/asterix-webrecon .
         chmod 755 /usr/local/bin/asterix-webrecon
-        echo "[✔] Go Web Recon compiled and installed."
+        echo "[[OK]] Go Web Recon compiled and installed."
     fi
 fi
 HOOK
@@ -379,7 +379,7 @@ if [ -x "../../kernel/build-kernel.sh" ]; then
     mkdir -p config/includes.binary/boot
     cp "../../kernel-build/out/vmlinuz-asterix" "config/includes.binary/boot/vmlinuz-asterix"
     cp "../../kernel-build/out/initrd-asterix.img" "config/includes.binary/boot/initrd-asterix.img"
-    echo -e "${GREEN}[✔] Custom ASTERIX kernel and initramfs bundled into live ISO payload.${NC}"
+    echo -e "${GREEN}[[OK]] Custom ASTERIX kernel and initramfs bundled into live ISO payload.${NC}"
 else
     echo -e "${CYAN}[i] No custom kernel builder found at ../../kernel/build-kernel.sh; using the default Debian kernel path.${NC}"
 fi
@@ -432,7 +432,7 @@ lb build
 
 if [ -f "live-image-amd64.hybrid.iso" ]; then
     mv "live-image-amd64.hybrid.iso" "../${IMAGE_NAME}"
-    echo -e "${GREEN}${BOLD}[✔] SUCCESS: Built ASTERIX OS ISO: ../${IMAGE_NAME}${NC}"
+    echo -e "${GREEN}${BOLD}[[OK]] SUCCESS: Built ASTERIX OS ISO: ../${IMAGE_NAME}${NC}"
 else
     echo -e "${RED}[!] Notice: Check build logs for artifact output.${NC}"
 fi

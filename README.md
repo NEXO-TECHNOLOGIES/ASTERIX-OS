@@ -224,16 +224,16 @@ The project emphasizes:
 ASTERIX OS is distributed under the terms of the project license in [LICENSE](LICENSE).
 
 > [!NOTE]
-> 🎯 **ASTERIX OS v2.0 "Phantom" Restructure**: Strategic architecture upgrade establishing **3 Product Tiers**, elevating the **8 Pure-Rust Security Engines** to center stage, adding formal [Threat Models](docs/THREAT_MODELS/), [Attack Playbooks](docs/ATTACK_PLAYBOOKS/), and [Performance Benchmarks](BENCHMARK_RESULTS.md). See [ASTERIX_OS_RESTRUCTURE_GUIDE.md](ASTERIX_OS_RESTRUCTURE_GUIDE.md) and [VERSION.toml](VERSION.toml).
-> 🛡️ **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#️-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across 13 enterprise defense suites (Anti-Ransomware, Supply Chain, SSRF, Cloud Takeover, Lossless Media Scrubbing, DoH, WebRTC Leaks, VoIP Wiretap/Ultrasonic, Steganography & AI Biometric Cloaking, and Anti-Fingerprinting).
-> 🚀 **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
-> 📥 **Official Downloads & Rufus Setup**: See [DOWNLOADS.md](DOWNLOADS.md) for ISO releases (Full Cyber Suite, Stealth Undercover, Netinstall), P2P Torrents, SHA-256 checksums, and Rufus persistent USB setup guide.
-> 🛠️ **180+ Cybersecurity & Pentest Arsenal Registry**: See [TOOLS_REGISTRY.md](docs/TOOLS_REGISTRY.md) for offline metadata, categories, official GitHub links, and on-demand installation recipes onto persistent storage.
-> 🗺️ **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
+> [TARGET] **ASTERIX OS v2.0 "Phantom" Restructure**: Strategic architecture upgrade establishing **3 Product Tiers**, elevating the **8 Pure-Rust Security Engines** to center stage, adding formal [Threat Models](docs/THREAT_MODELS/), [Attack Playbooks](docs/ATTACK_PLAYBOOKS/), and [Performance Benchmarks](BENCHMARK_RESULTS.md). See [ASTERIX_OS_RESTRUCTURE_GUIDE.md](ASTERIX_OS_RESTRUCTURE_GUIDE.md) and [VERSION.toml](VERSION.toml).
+> [SEC] **Enterprise Threat Defense & Proofs**: See [Enterprise Cyber Threat & Defense (Verified Proof)](#-enterprise-cyber-threat--supply-chain-defense-verified-proof) for live terminal proof across 13 enterprise defense suites (Anti-Ransomware, Supply Chain, SSRF, Cloud Takeover, Lossless Media Scrubbing, DoH, WebRTC Leaks, VoIP Wiretap/Ultrasonic, Steganography & AI Biometric Cloaking, and Anti-Fingerprinting).
+> [RUN] **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
+>  **Official Downloads & Rufus Setup**: See [DOWNLOADS.md](DOWNLOADS.md) for ISO releases (Full Cyber Suite, Stealth Undercover, Netinstall), P2P Torrents, SHA-256 checksums, and Rufus persistent USB setup guide.
+>  **180+ Cybersecurity & Pentest Arsenal Registry**: See [TOOLS_REGISTRY.md](docs/TOOLS_REGISTRY.md) for offline metadata, categories, official GitHub links, and on-demand installation recipes onto persistent storage.
+>  **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
 
 ---
 
-## 🎨 Visual Theme Matrix & Hacking Modes
+##  Visual Theme Matrix & Hacking Modes
 
 ASTERIX OS is not just a toolkit; it is a full cyber aesthetic platform with adaptive boot themes, layered UI profiles, and mood-driven interface behavior.
 
@@ -277,7 +277,7 @@ This makes the launcher feel like a cinematic cyber operating system instead of 
 
 ---
 
-## 💾 Bootable Image Sizes & Hardware Requirements
+## [DISK] Bootable Image Sizes & Hardware Requirements
 
 | Edition | Image File Size | Min. USB Flash Drive | Rec. USB Drive | RAM Requirements | Architecture | Included Subsystems & Capabilities |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -286,16 +286,16 @@ This makes the launcher feel like a cinematic cyber operating system instead of 
 | **ASTERIX OS Minimal Netinstall ISO** | **650 MB** | **2 GB** | **4 GB+** | 1 GB+ (512 MB min) | `x86_64` (AMD64) | Minimal headless core, Debian netinstall base, on-demand network package builder |
 | **ASTERIX OS ARM64 Mobile PRoot** | **380 MB** | N/A | **MicroSD / Internal** | 1.5 GB+ | `aarch64` (ARM64) | Android Termux PRoot container, mobile cybernetic pentesting shell, persistent `/sdcard` storage bridge |
 
-### ⚡ Rufus USB Drive & Persistence Capacity Calculator:
+### [*] Rufus USB Drive & Persistence Capacity Calculator:
 * **8 GB USB Drive**: Fits the **Stealth Undercover ISO** (1.8 GB) + **5 GB** Ext4 persistence partition.
 * **16 GB USB Drive**: Fits the **Full Cyber Suite ISO** (4.2 GB) + **10 GB** Ext4 persistence partition *(Recommended)*.
 * **32 GB USB Drive**: Fits the **Full Cyber Suite ISO** (4.2 GB) + **26 GB** Ext4 persistence partition *(Ideal for large wordlists, PCAP logs, and project vaults)*.
 
-> 📥 **Full ISO Release Matrix & Checksums**: See [DOWNLOADS.md](DOWNLOADS.md) for direct HTTPS links, P2P Torrents, and SHA-256 verification.
+>  **Full ISO Release Matrix & Checksums**: See [DOWNLOADS.md](DOWNLOADS.md) for direct HTTPS links, P2P Torrents, and SHA-256 verification.
 
 ---
 
-## 🎯 The 3 Product Tiers of ASTERIX OS v2.0
+## [TARGET] The 3 Product Tiers of ASTERIX OS v2.0
 
 ```
 TIER 1: CORE OFFENSIVE & TELEMETRY ENGINES (Pure Rust, Ultra-Fast)
@@ -325,18 +325,18 @@ TIER 3: INTEGRATED SECURITY SUITES
 └── ANTI-NETWORK ATTACK       → ARP poisoning defense, TCP SYN shield & DNS lock
 ```
 
-## ⚡ Core Features
+## [*] Core Features
 
-* 🌌 **Master Command & Control Core (12 Subsystems in Pure Rust):**
+* [ASTERIX] **Master Command & Control Core (12 Subsystems in Pure Rust):**
   - Instant one-touch access to **Reconnaissance**, **Web Security**, **Exploitation**, **Password Auditing**, **Sniffing**, **Wireless Warfare**, **Forensics**, **Reverse Engineering**, **Developer Studio**, **Persistence Vault**, **Quad-Grid Tmux**, and **System Telemetry**.
-* 🪟 **Ultimate Multi-Terminal Quad-Grid Multiplexer Studio:**
+*  **Ultimate Multi-Terminal Quad-Grid Multiplexer Studio:**
   - 4-way balanced cyber workspace (<kbd>Ctrl+A</kbd> <kbd>q</kbd>, `ax-quad`, or `asterix-quad`) running Sniffer, Scanner, Shell, and Monitor simultaneously.
   - Mouse scroll up to **100,000 lines**, pane synchronization toggle (<kbd>Ctrl+A</kbd> <kbd>y</kbd>), and cyber neon telemetry status bar.
-* ⚡ **Supercharged Cyber Shell Environment (`ax-shell` / `asterix-shell`):**
+* [*] **Supercharged Cyber Shell Environment (`ax-shell` / `asterix-shell`):**
   - High-tech dynamic prompt for Bash & Zsh with Git branch, root badge, execution timer, and IP badge.
   - **FZF Fuzzy Search Suite:** <kbd>Ctrl+R</kbd> (history), <kbd>Ctrl+T</kbd> (files), <kbd>Alt+C</kbd> (directory jumping).
   - Fast domain shortcuts (`ax-*` & `asterix-*`): `ax-recon`, `ax-web`, `ax-sniff`, `ax-crack`, `ax-wifi`, `ax-rev`, `ax-forensic`, `ax-dev`, `ax-quad`, `ax-cipher`, `ax-crypto`, `ax-sysmon`, `ax-guard`, `ax-bininspect`.
-* 🛡️ **Enterprise Sovereign Master Security Toolchain:**
+* [SEC] **Enterprise Sovereign Master Security Toolchain:**
   - **Recon & OSINT:** Nmap, Masscan, Amass, TheHarvester, DnsRecon, Whois, Netdiscover.
   - **Web Application Auditing:** SQLMap, Gobuster, Nikto, FFUF, WPScan, Commix, WhatWeb, Wafw00f.
   - **Exploitation & Payloads:** Metasploit Framework (`msfconsole`), SearchSploit, Socat, Netcat.
@@ -345,15 +345,15 @@ TIER 3: INTEGRATED SECURITY SUITES
   - **Wireless & Radio Warfare:** Aircrack-ng, Wifite, Reaver, Kismet, PixieWPS, Bully.
   - **Forensics & Steganography:** Binwalk, Foremost, Scalpel, Steghide, Exiftool, Chkrootkit.
   - **Reverse Engineering & Disassembly:** Radare2 / R2, GDB, Valgrind, Strace, Hexedit, XXD.
-* 🛠️ **Full-Stack Developer & Build Toolchain:**
+*  **Full-Stack Developer & Build Toolchain:**
   - Rust (`rustc`, `cargo`), Go (`golang-go`), C/C++ (`gcc`, `clang`, `cmake`, `make`), Python 3 (`python3-dev`, `pip`, `ipython`), Node.js (`npm`), LazyGit, SQLite3, PostgreSQL, Redis-cli, HTTPie.
-* 💾 **Dual-Layer Data Persistence (`ASTERIX PERSISTENCE`):**
+* [DISK] **Dual-Layer Data Persistence (`ASTERIX PERSISTENCE`):**
   - **Live USB Mode:** Dedicated `persistence.conf` partition overlay preserving all user files across reboots.
   - **Termux Mobile Mode:** Automated bridge binding `$HOME/asterix_persistent` directly to Android internal storage `/sdcard/ASTERIX_PERSISTENCE`.
 
 ---
 
-## 📁 Repository Layout
+##  Repository Layout
 
 ```
 ASTERIX OS/
@@ -440,7 +440,7 @@ ASTERIX OS/
 
 ---
 
-## ⚡ Master Unified CLI: `ax` & `asterix`
+## [*] Master Unified CLI: `ax` & `asterix`
 
 ASTERIX OS features a unified command interface accessible interchangeably as **`ax`** or **`asterix`**:
 
@@ -677,11 +677,11 @@ ax vault                # Quick jump to /asterix_persistent storage
 ax shell                # Launch enhanced cyber shell
 ```
 > [!TIP]
-> **⚡ Universal Omni-Dispatcher (Thousands of Tools):** Any Linux tool (e.g., `ax nmap -sV target`, `ax curl`, `ax git status`, `ax hydra`, `ax aircrack-ng`) is dynamically wrapped, executed, and monitored with status telemetry! Both `ax` and `asterix` work identically everywhere: Live USB, Linux Desktop, PRoot sandbox, and Android Termux!
+> **[*] Universal Omni-Dispatcher (Thousands of Tools):** Any Linux tool (e.g., `ax nmap -sV target`, `ax curl`, `ax git status`, `ax hydra`, `ax aircrack-ng`) is dynamically wrapped, executed, and monitored with status telemetry! Both `ax` and `asterix` work identically everywhere: Live USB, Linux Desktop, PRoot sandbox, and Android Termux!
 
 ---
 
-## 🛡️ Enterprise Cyber Threat & Supply Chain Defense (Verified Proof)
+## [SEC] Enterprise Cyber Threat & Supply Chain Defense (Verified Proof)
 
 ASTERIX OS features enterprise-grade autonomous threat defense mechanisms engineered to counter the top attack vectors identified by leading cybersecurity frameworks (Ransomware, Supply Chain Poisoning, Brand Phishing/Homoglyphs, and Memory Corruption):
 
@@ -690,11 +690,11 @@ Deploys decoy cryptographic tripwires across storage partitions, monitors baseli
 
 ```text
 $ ax canary deploy /var/asterix/secure_vault
-  ✓ Planted Tripwire Decoy: !_00_ASTERIX_FINANCIAL_CANARY.docx (SHA-256: 0f1d4c434a0f1089...)
-  ✓ Planted Tripwire Decoy: !_00_ASTERIX_VAULT_BACKUP.xlsx     (SHA-256: ec78c38944e817e9...)
-  ✓ Planted Tripwire Decoy: !_00_ASTERIX_CONFIDENTIAL_KEY.pdf  (SHA-256: 24f24aa7e44fff24...)
-  ✓ Planted Tripwire Decoy: !_00_ASTERIX_DATABASE_DUMP.sql     (SHA-256: 671ab26e14090d70...)
-  ✓ SUCCESS: 4 tripwires deployed and armed.
+  [OK] Planted Tripwire Decoy: !_00_ASTERIX_FINANCIAL_CANARY.docx (SHA-256: 0f1d4c434a0f1089...)
+  [OK] Planted Tripwire Decoy: !_00_ASTERIX_VAULT_BACKUP.xlsx     (SHA-256: ec78c38944e817e9...)
+  [OK] Planted Tripwire Decoy: !_00_ASTERIX_CONFIDENTIAL_KEY.pdf  (SHA-256: 24f24aa7e44fff24...)
+  [OK] Planted Tripwire Decoy: !_00_ASTERIX_DATABASE_DUMP.sql     (SHA-256: 671ab26e14090d70...)
+  [OK] SUCCESS: 4 tripwires deployed and armed.
 
 # Active Ransomware Attack Simulation (Encrypted payload injected into canary):
 $ ax canary check
@@ -702,7 +702,7 @@ $ ax canary check
   • Total Monitored Tripwires: 4
   • Intact & Secure:           2
 
-  🚨 SECURITY ALERT: 2 CANARY TRIPWIRE(S) TRIGGERED!
+  [ALERT] SECURITY ALERT: 2 CANARY TRIPWIRE(S) TRIGGERED!
   Potential malicious ransomware process activity detected!
     • !_00_ASTERIX_FINANCIAL_CANARY.docx
       ↳ ACTIVE ENCRYPTION DETECTED (High Shannon Entropy: 7.92)
@@ -718,7 +718,7 @@ Scans package manifests (`requirements.txt`, `package.json`, Cargo, Go) for Leve
 $ ax supply-chain .
   [SUPPLY CHAIN AUDITOR] Scanning dependencies in: /workspace/project
 
-  ⚠ DETECTED SUPPLY-CHAIN RISKS / VULNERABILITIES:
+  [!] DETECTED SUPPLY-CHAIN RISKS / VULNERABILITIES:
   Severity   Manifest              Line     Finding Details                              
   -----------------------------------------------------------------------------------------------
   HIGH       package.json          deps     Potential Typosquatting: 'expresss' closely resembles 'express'
@@ -734,7 +734,7 @@ Unmasks internationalized domain name (IDN) spoofing, Cyrillic/Greek homoglyph s
 # Homoglyph / Punycode Deception Analysis
 $ ax phish-shield "xn--pple-43d.com"
   [PHISHING & HOMOGLYPH SHIELD] Analyzing domain: xn--pple-43d.com
-  🚨 DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!
+  [ALERT] DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!
   Target Domain:  xn--pple-43d.com
   Punycode View:  аpple.com
   Risk Level:     CRITICAL (Phishing / Brand Spoofing)
@@ -745,7 +745,7 @@ $ ax phish-shield "xn--pple-43d.com"
 
 # Brand Typosquatting Analysis
 $ ax phish-shield "paypa1.com"
-  🚨 DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!
+  [ALERT] DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!
   • Brand Typosquatting Deception: 'paypa1' is visually spoofing 'paypal'
 ```
 
@@ -787,7 +787,7 @@ Scans DNS CNAME records across 25+ cloud providers (AWS S3/CloudFront, GitHub Pa
 $ ax takeover "api.enterprise-domain.com"
   [SUBDOMAIN TAKEOVER SENTINEL] Auditing Target: api.enterprise-domain.com
   • Discovered CNAME Pointer: target-bucket.s3.amazonaws.com
-  ✓ SECURE: No dangling cloud takeover signatures detected.
+  [OK] SECURE: No dangling cloud takeover signatures detected.
 ```
 
 ### 6. SSRF & Cloud Metadata Credential Shield (`ax ssrf-guard`)
@@ -796,18 +796,18 @@ Intercepts Server-Side Request Forgery (SSRF) and prevents exfiltration of AWS/G
 ```text
 # Intercepting AWS EC2 / Azure IMDS Metadata Theft:
 $ ax ssrf-guard "http://169.254.169.254/latest/meta-data/"
-  🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
+  [ALERT] EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
   • CRITICAL CLOUD METADATA ENDPOINT: '169.254.169.254' (AWS EC2 / Azure / GCP IMDS)
   • CLOUD METADATA THEFT (IMDSv1/v2): Targets AWS/GCP/Azure credential service
 
 # Unmasking Obfuscated Hexadecimal IP Evasion:
 $ ax ssrf-guard "http://0x7f000001/"
-  🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
+  [ALERT] EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
   • LOOPBACK / LOCALHOST FORGERY: Direct host exploitation attempt via Hexadecimal IP (0x7f000001) [127.0.0.1]
 
 # Intercepting GCP Internal Cloud Metadata Hostname:
 $ ax ssrf-guard "http://metadata.google.internal/computeMetadata/v1/"
-  🚨 EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
+  [ALERT] EGRESS BLOCKED: DANGEROUS SSRF / CLOUD THEFT THREAT DETECTED!
   • CRITICAL CLOUD METADATA ENDPOINT: 'metadata.google.internal' (Google Cloud Platform Metadata)
 ```
 
@@ -819,18 +819,18 @@ $ ax api-sentinel "https://target-service.internal"
   [API DEFENSE SENTINEL] Auditing API Endpoint: https://target-service.internal
 
   1. SHADOW API & DOCUMENTATION PROBE:
-    ✓ No unauthenticated Swagger, OpenAPI, or actuator routes exposed.
+    [OK] No unauthenticated Swagger, OpenAPI, or actuator routes exposed.
 
   2. CORS CROSS-ORIGIN POLICY AUDIT:
-    🚨 CRITICAL VULNERABILITY: Arbitrary Origin Reflection with Credentials!
+    [ALERT] CRITICAL VULNERABILITY: Arbitrary Origin Reflection with Credentials!
     ↳ Access-Control-Allow-Origin: https://evil-attacker.com
     ↳ Access-Control-Allow-Credentials: true (Permits cross-site session theft!)
 
   3. DEFENSIVE SECURITY HEADERS POSTURE:
-    ✗ Missing: Strict-Transport-Security — Enforces HTTPS, prevents MITM
-    ✗ Missing: Content-Security-Policy — Restricts scripts, prevents XSS
-    ✗ Missing: X-Content-Type-Options — Prevents MIME-sniffing
-    ✗ Missing: X-Frame-Options — Prevents Clickjacking UI redressing
+     Missing: Strict-Transport-Security — Enforces HTTPS, prevents MITM
+     Missing: Content-Security-Policy — Restricts scripts, prevents XSS
+     Missing: X-Content-Type-Options — Prevents MIME-sniffing
+     Missing: X-Frame-Options — Prevents Clickjacking UI redressing
 
   =========================================================================
   AUTOMATED NGINX / CADDY HARDENING REMEDIATION CONFIGURATION
@@ -851,18 +851,18 @@ Losslessly excises EXIF binary segments (`APP1`), embedded GPS coordinates, came
 # Pre-Sanitization Forensic Audit:
 $ ax scrub /media/field_evidence.jpg --audit
   • field_evidence.jpg:
-    ↳ ⚠ EXIF Metadata Block (Camera model, software, timestamps)
-    ↳ 🚨 CRITICAL: Embedded GPS Geolocation Coordinates
+    ↳ [!] EXIF Metadata Block (Camera model, software, timestamps)
+    ↳ [ALERT] CRITICAL: Embedded GPS Geolocation Coordinates
 
 # Lossless Binary Metadata Stripping:
 $ ax scrub /media/field_evidence.jpg
   • field_evidence.jpg:
-    ✓ Stripped 77 bytes of tracking metadata (Lossless).
-  ✓ SUCCESS: All media assets have been anonymized for zero-trace sharing.
+    [OK] Stripped 77 bytes of tracking metadata (Lossless).
+  [OK] SUCCESS: All media assets have been anonymized for zero-trace sharing.
 
 # Post-Sanitization Verification Audit:
 $ ax scrub /media/field_evidence.jpg --audit
-  • field_evidence.jpg: ✓ No tracking metadata present (Clean).
+  • field_evidence.jpg: [OK] No tracking metadata present (Clean).
   • Contained Metadata: 0
 ```
 
@@ -877,7 +877,7 @@ $ ax dns-shield audit
   2. ENCRYPTED DNS-OVER-HTTPS (DoH) BENCHMARK:
     • Cloudflare (Ultra-Fast 1.1.1.1):  Latency: 629.5 ms (HTTPS TLS 1.3)
     • Quad9 (Zero-Logs & Threat Block): Encrypted TLS 1.3 Stream
-  ✓ Hardening: Enforce DoH in browser & drop outbound cleartext UDP 53 traffic.
+  [OK] Hardening: Enforce DoH in browser & drop outbound cleartext UDP 53 traffic.
 ```
 
 ### 10. Real-Time WebRTC & IPv6 Leak Sentinel (`ax ip-shield`)
@@ -891,10 +891,10 @@ $ ax ip-shield audit
   2. WEBRTC STUN LEAK SIMULATION (UDP 19302):
     ↳ Tested STUN Server: stun.l.google.com:19302
     ↳ Mapped Public IP:   198.51.100.25
-    🚨 VULNERABLE: Direct STUN queries expose your exact public IP!
+    [ALERT] VULNERABLE: Direct STUN queries expose your exact public IP!
     Any website using WebRTC JavaScript can reveal this IP without VPN protection.
   3. IPV6 DUAL-STACK LEAK AUDIT:
-    ✓ SECURE: Zero unencapsulated global IPv6 egress detected.
+    [OK] SECURE: Zero unencapsulated global IPv6 egress detected.
   =========================================================================
   DIGITAL PRIVACY SCORECARD: 65/100 (Hardening: Block WebRTC STUN queries)
   =========================================================================
@@ -910,16 +910,16 @@ $ ax call-shield scan /var/asterix/audio/confidential_briefing.wav
   • Channels: 1 | Sample Rate: 44100 Hz | Bit Depth: 16-bit PCM
 
 [FREQUENCY SPECTRUM ENERGY SCAN]
-  • 18000 Hz: ✓ Normal background floor (6.89e-14)
-  • 18500 Hz: ✓ Normal background floor (9.17e-14)
-  • 19000 Hz: ✓ Normal background floor (6.48e-14)
-  • 19500 Hz: 🚨 CRITICAL SPIKE detected (Power: 5.24e-02)
-  • 20000 Hz: ✓ Normal background floor (1.19e-12)
-  • 20500 Hz: ✓ Normal background floor (1.36e-14)
-  • 21000 Hz: ✓ Normal background floor (2.27e-12)
+  • 18000 Hz: [OK] Normal background floor (6.89e-14)
+  • 18500 Hz: [OK] Normal background floor (9.17e-14)
+  • 19000 Hz: [OK] Normal background floor (6.48e-14)
+  • 19500 Hz: [ALERT] CRITICAL SPIKE detected (Power: 5.24e-02)
+  • 20000 Hz: [OK] Normal background floor (1.19e-12)
+  • 20500 Hz: [OK] Normal background floor (1.36e-14)
+  • 21000 Hz: [OK] Normal background floor (2.27e-12)
 
 [SURVEILLANCE BEACON EVALUATION]
-🚨 THREAT IDENTIFIED: Active Ultrasonic Tracking Beacon Detected!
+[ALERT] THREAT IDENTIFIED: Active Ultrasonic Tracking Beacon Detected!
   ↳ Emitting frequencies: 19500 Hz
   ↳ Vector: Cross-device ultrasonic beaconing (e.g. SilverPush / Lisnr / Ad-tracking).
   ↳ Impact: Unpaired devices sharing this room can correlate identities via microphone!
@@ -928,12 +928,12 @@ $ ax call-shield scan /var/asterix/audio/confidential_briefing.wav
 # VoIP SIP/RTP Eavesdropping Sentinel:
 $ ax call-shield voip sip.telecom.internal
   [1. VOIP SIGNALING SECURITY (SIP LAYER)]
-    • Protocol:    🚨 VULNERABLE: Cleartext SIP (UDP/TCP Port 5060)
+    • Protocol:    [ALERT] VULNERABLE: Cleartext SIP (UDP/TCP Port 5060)
     • Risk:        ISPs and network taps can extract Caller ID, Dialed Numbers, and Call Duration.
   [2. AUDIO MEDIA ENCRYPTION (RTP vs SRTP)]
-    • Media Type:  🚨 CRITICAL: Unencrypted RTP/AVP Stream (High Wiretap Risk!)
+    • Media Type:  [ALERT] CRITICAL: Unencrypted RTP/AVP Stream (High Wiretap Risk!)
   [3. NETWORK LEAKAGE & PRIVATE IP RECONNAISSANCE]
-    • Internal IP: 🚨 LEAKED: Private LAN IPs exposed in SIP/SDP headers (192.168.1.105)
+    • Internal IP: [ALERT] LEAKED: Private LAN IPs exposed in SIP/SDP headers (192.168.1.105)
   =========================================================================
   VOIP WIRETAP DEFENSE SCORE: 0/100 (Hardening: Enforce SIPS + RFC 3711 SRTP)
   =========================================================================
@@ -954,7 +954,7 @@ $ ax vision-shield stego /var/asterix/vault/suspect_image.bmp
   • Chi-Square Pair Discrepancy:   χ² = 109.55 (Deg of Freedom: 100)
 
 [SURVEILLANCE WATERMARK & STEGO VERDICT]
-🚨 CRITICAL: High Probability of Hidden Steganographic Payload / Tracking Watermark!
+[ALERT] CRITICAL: High Probability of Hidden Steganographic Payload / Tracking Watermark!
   ↳ The LSB distribution exhibits maximum artificial randomization (Entropy: 1.00000).
   ↳ Vector: Covert payload injection, encrypted watermark, or Machine Identification Code.
   ↳ Remediation: Re-encode or sanitize through ASTERIX Vision Cloaker.
@@ -964,10 +964,10 @@ $ ax vision-shield cloak /var/asterix/vault/id_badge.bmp --output /var/asterix/v
   • Perturbation:     Targeted adversarial frequency shift (ε = ±3)
   • Altered Pixels:   15,765
   • Visual Degradation: 0.00% (Indistinguishable to human eye)
-  • AI Facial Feature Vectors: 🚨 DISRUPTED
+  • AI Facial Feature Vectors: [ALERT] DISRUPTED
     ↳ Feature map embeddings (FaceNet / InsightFace / ResNet-50) shifted off-manifold.
     ↳ Mass surveillance crawlers fail to correlate this image with your biometric database identity.
-  ✓ SUCCESS: Biometrically cloaked image saved to: /var/asterix/vault/cloaked_badge.bmp
+  [OK] SUCCESS: Biometrically cloaked image saved to: /var/asterix/vault/cloaked_badge.bmp
 ```
 
 ### 13. Hardware/Browser Anti-Fingerprinting & TLS JA3 Sentinel (`ax stealth-trace`)
@@ -986,8 +986,8 @@ $ ax stealth-trace all
   TOTAL SYSTEM IDENTIFYING ENTROPY: 49.6 BITS
   GLOBAL UNIQUENESS RATIO:          1 in 853,272,570,516,940 devices
   =========================================================================
-  🚨 SURVEILLANCE RISK: Websites calculating these 6 hashes track your machine across all IPs!
-  ✓ ASTERIX Defense: Inject subpixel noise, spoof WebGL to Mesa Offscreen & quantize audio DAC.
+  [ALERT] SURVEILLANCE RISK: Websites calculating these 6 hashes track your machine across all IPs!
+  [OK] ASTERIX Defense: Inject subpixel noise, spoof WebGL to Mesa Offscreen & quantize audio DAC.
 
   [TLS CLIENT SIGNATURE & DPI PROFILING]
     • JA3 Fingerprint Hash: 61daa2d6570100343096039f7b3bd763
@@ -997,7 +997,7 @@ $ ax stealth-trace all
   [TRAFFIC CORRELATION & PACKET PADDING DEFENSE]
     • Unpadded Packet Entropy: 2.948 bits (Vulnerable to website traffic fingerprinting)
     • Padded Packet Burst (RFC 8446 MTU): 0.000 bits (Zero variance / Flat profile)
-    ✓ PROTECTED: Side-channel packet size correlation completely neutralized.
+    [OK] PROTECTED: Side-channel packet size correlation completely neutralized.
 ```
 
 ### 14. Tactical Stealth Bootloader & Undercover Camouflage (`ax undercover`)
@@ -1027,7 +1027,7 @@ $ ax undercover bootloader
 
 # Enabling Stealth Camouflage (Anti-Shoulder Surfing):
 $ ax undercover on
-  ✓ Stealth Camouflage Enabled:
+  [OK] Stealth Camouflage Enabled:
     • Terminal Splash Banners:   SUPPRESSED (Silent minimal prompt)
     • Matrix Rain & Glitch HUD:  DISABLED on startup
     • Shell Identifier:          Masquerading as standard system shell
@@ -1057,13 +1057,13 @@ ASTERIX OS ARM64 Mobile PRoot              | 2026.09.07 | aarch64  | 380 MB   | 
 
 # Generating Rufus 1-Click Automation Profile:
 $ ax boot-tool rufus
-  ✓ Created Rufus configuration file: rufus.ini
+  [OK] Created Rufus configuration file: rufus.ini
   ↳ Pre-configures MBR/UEFI dual target, 4GB-16GB Ext4 persistence slider, and volume label.
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## [RUN] Quick Start Guide
 
 ### 1. Launching the Cyber Command Center
 Type `ax` or `asterix` anywhere in the terminal to launch the interactive Rust Command & Control Hub.
@@ -1137,7 +1137,7 @@ bash setup.sh
 
 ---
 
-## ✅ Validation Checklist (Linux Host + Termux Stability)
+## [OK] Validation Checklist (Linux Host + Termux Stability)
 
 Use this checklist in order. Stop at the first failing stage and fix only that layer before continuing.
 
@@ -1226,7 +1226,7 @@ Always repair package state before adding build tools on Termux. If `dpkg` is br
 
 ---
 
-## 💾 Full OS Distribution & Downloads (Resolving the 33 MB GitHub Issue)
+## [DISK] Full OS Distribution & Downloads (Resolving the 33 MB GitHub Issue)
 
 > [!TIP]
 > **Why does GitHub's "Download ZIP" only give ~33 MB when the repo is 188+ MB?**
@@ -1236,10 +1236,10 @@ Always repair package state before adding build tools on Termux. If `dpkg` is br
 
 ### Option 1: Official GitHub Releases (Up to 2.0 GB per file)
 Download the full pre-packaged release archive directly from our GitHub Releases page:
-- 📦 **GitHub Releases Download**: `https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases` (or your fork's `/releases/latest`)
+- [PKG] **GitHub Releases Download**: `https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases` (or your fork's `/releases/latest`)
 
 ### Option 2: Full Package via Google Drive
-- ☁️ **Google Drive Direct Download**: `[Download ASTERIX-OS-FULL-PACKAGE.zip from Google Drive]` *(Paste your shared Google Drive link here after uploading)*
+-  **Google Drive Direct Download**: `[Download ASTERIX-OS-FULL-PACKAGE.zip from Google Drive]` *(Paste your shared Google Drive link here after uploading)*
 
 ### Option 3: Package the Entire OS Locally (1-Click PowerShell)
 To bundle the complete repository into a distribution ZIP on your machine:
@@ -1251,24 +1251,24 @@ powershell -ExecutionPolicy Bypass -File "scripts-hub\package-full-os.ps1" -Excl
 
 ---
 
-## 📚 Detailed Documentation & Restructure Roadmap
-* 🎯 [ASTERIX OS v2.0 Restructure Guide](ASTERIX_OS_RESTRUCTURE_GUIDE.md) — Architectural roadmap & toolchain optimization
-* 📋 [Single Source of Truth Versioning](VERSION.toml) — Official semantic version matrix (Phantom)
-* ⚡ [Official Performance Benchmarks](BENCHMARK_RESULTS.md) — Rust vs Nmap, readelf & GNU tools (3-7x speedup)
-* 🛡️ [Threat Models & Detection Analysis](docs/THREAT_MODELS/) — Detection limits, stealth & operational security
-* 🏹 [Offensive Security Playbooks](docs/ATTACK_PLAYBOOKS/) — Reconnaissance, web, binary & mobile workflows
-* 🚀 [New Updates & Releases Guide (Defender, APEX, Windows Features)](UPDATES.md)
-* 🗺️ [Master Visual Architecture Diagram](ASTERIX_OS_DIAGRAM.png)
-* 🌌 [Master Toolchain & Command Encyclopedia](docs/MASTER_TOOLCHAIN_MANUAL.md)
-* 🛠️ [Developer Toolchain & Engineering Guide](docs/DEVELOPER_TOOLCHAIN_GUIDE.md)
-* 📖 [Multi-Repository GitHub Deployment Guide](docs/MODULAR_GITHUB_GUIDE.md)
-* 🖥️ [ASTERIX Terminal, Splitting & Scrolling Guide](docs/ASTERIX_TERMINAL_AND_WORKFLOW_GUIDE.md)
-* 📱 [Android Rooting & Architecture Guide](docs/ROOTING_AND_DEVICE_GUIDE.md)
-* 🖼️ [Media & Asset Drop Instructions](assets/README.md)
+##  Detailed Documentation & Restructure Roadmap
+* [TARGET] [ASTERIX OS v2.0 Restructure Guide](ASTERIX_OS_RESTRUCTURE_GUIDE.md) — Architectural roadmap & toolchain optimization
+*  [Single Source of Truth Versioning](VERSION.toml) — Official semantic version matrix (Phantom)
+* [*] [Official Performance Benchmarks](BENCHMARK_RESULTS.md) — Rust vs Nmap, readelf & GNU tools (3-7x speedup)
+* [SEC] [Threat Models & Detection Analysis](docs/THREAT_MODELS/) — Detection limits, stealth & operational security
+*  [Offensive Security Playbooks](docs/ATTACK_PLAYBOOKS/) — Reconnaissance, web, binary & mobile workflows
+* [RUN] [New Updates & Releases Guide (Defender, APEX, Windows Features)](UPDATES.md)
+*  [Master Visual Architecture Diagram](ASTERIX_OS_DIAGRAM.png)
+* [ASTERIX] [Master Toolchain & Command Encyclopedia](docs/MASTER_TOOLCHAIN_MANUAL.md)
+*  [Developer Toolchain & Engineering Guide](docs/DEVELOPER_TOOLCHAIN_GUIDE.md)
+*  [Multi-Repository GitHub Deployment Guide](docs/MODULAR_GITHUB_GUIDE.md)
+* [SCREEN] [ASTERIX Terminal, Splitting & Scrolling Guide](docs/ASTERIX_TERMINAL_AND_WORKFLOW_GUIDE.md)
+* [MOBILE] [Android Rooting & Architecture Guide](docs/ROOTING_AND_DEVICE_GUIDE.md)
+*  [Media & Asset Drop Instructions](assets/README.md)
 
 ---
 
-## ⚖️ License & Software Freedom
+##  License & Software Freedom
 
 ASTERIX OS is developed by **NEXO TECHNOLOGIES GROUP** and dual-licensed under:
 

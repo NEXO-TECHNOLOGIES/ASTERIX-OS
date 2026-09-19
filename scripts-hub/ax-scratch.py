@@ -334,7 +334,7 @@ def watch_scratchpad(lang: str, scratch_file: Path):
             current_mtime = scratch_file.stat().st_mtime
             if current_mtime != last_mtime:
                 last_mtime = current_mtime
-                print(f"\n  {C_YELLOW}[⚡ CHANGE DETECTED] Reloading...{C_RESET}")
+                print(f"\n  {C_YELLOW}[[*] CHANGE DETECTED] Reloading...{C_RESET}")
                 execute_scratchpad(lang, scratch_file)
     except KeyboardInterrupt:
         print(f"\n  {C_CYAN}[*] Scratchpad studio closed.{C_RESET}\n")

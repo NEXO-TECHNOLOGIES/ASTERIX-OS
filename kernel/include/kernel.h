@@ -1,6 +1,6 @@
 /*
  * ==============================================================================
- * 🌌 ASTERIX OS — Cyber Microkernel Core Header
+ * ASTERIX OS - Cyber Microkernel Core Header
  * High-Security Microkernel: Paging, Memory Allocator, Task Scheduler & Syscalls
  * SPDX-License-Identifier: MIT OR Apache-2.0
  * ==============================================================================
@@ -38,13 +38,14 @@ static inline void io_wait(void) {
 
 /* Microkernel System Call Identifiers */
 typedef enum {
-    SYS_EXIT    = 0,
-    SYS_WRITE   = 1,
-    SYS_READ    = 2,
-    SYS_YIELD   = 3,
-    SYS_GETPID  = 4,
-    SYS_AUDIT   = 5,
-    SYS_SECLOG  = 6,
+    SYS_EXIT            = 0,
+    SYS_WRITE           = 1,
+    SYS_READ            = 2,
+    SYS_YIELD           = 3,
+    SYS_GETPID          = 4,
+    SYS_AUDIT           = 5,
+    SYS_SECLOG          = 6,
+    SYS_CLUSTER_OFFLOAD = 7,
 } syscall_t;
 
 /* Process / Task Execution State */

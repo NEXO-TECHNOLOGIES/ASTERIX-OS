@@ -341,7 +341,7 @@ def listen_beacons(manager: TeamMeshManager, port: int, timeout: float = 3.0):
                         }
                         manager.save_state()
                         discovered += 1
-                        print(f"  {C_GREEN}⚡ Discovered Peer: {C_BOLD}{callsign}{C_RESET} at {addr[0]}:{payload.get('port')}")
+                        print(f"  {C_GREEN}[*] Discovered Peer: {C_BOLD}{callsign}{C_RESET} at {addr[0]}:{payload.get('port')}")
             except socket.timeout:
                 break
             except Exception:
@@ -377,7 +377,7 @@ def main():
         mesh_name = args.mesh or "asterix-alpha-squad"
         passphrase = args.passphrase or "asterix-p2p-mesh-secret"
         mgr.init_mesh(mesh_name, passphrase, args.callsign)
-        print(f"{C_GREEN}[✓] Initialized Team Mesh '{mesh_name}'{C_RESET}")
+        print(f"{C_GREEN}[[OK]] Initialized Team Mesh '{mesh_name}'{C_RESET}")
         print(f"  • Operator Callsign: {C_BOLD}{mgr.state['operator_callsign']}{C_RESET}")
         print(f"  • Node UUID:         {mgr.state['node_id']}")
         print(f"  • HMAC Passphrase:   {'*' * len(passphrase)} (Hash verified)")
@@ -388,7 +388,7 @@ def main():
             sys.exit(1)
         ok, msg = mgr.lock_target(args.target, args.reason, args.ttl)
         if ok:
-            print(f"{C_GREEN}[✓] {msg}{C_RESET}")
+            print(f"{C_GREEN}[[OK]] {msg}{C_RESET}")
         else:
             print(f"{C_RED}[!] LOCK COLLISION DETECTED:{C_RESET} {msg}")
 
@@ -398,7 +398,7 @@ def main():
             sys.exit(1)
         ok, msg = mgr.unlock_target(args.target)
         if ok:
-            print(f"{C_GREEN}[✓] {msg}{C_RESET}")
+            print(f"{C_GREEN}[[OK]] {msg}{C_RESET}")
         else:
             print(f"{C_RED}[!] {msg}{C_RESET}")
 
@@ -414,7 +414,7 @@ def main():
                 rem_mins = max(0, int(info.get("expires_at", 0) - now) // 60)
                 is_mine = info.get("operator") == mgr.state["operator_callsign"]
                 owner_str = f"{C_GREEN}[YOU]{C_RESET}" if is_mine else f"{C_YELLOW}[{info.get('operator')}]{C_RESET}"
-                print(f"  🔒 {C_BOLD}{tgt}{C_RESET} ── {owner_str} Reason: \"{info.get('reason')}\" (TTL: {rem_mins}m remaining)")
+                print(f"  [LOCK] {C_BOLD}{tgt}{C_RESET} ── {owner_str} Reason: \"{info.get('reason')}\" (TTL: {rem_mins}m remaining)")
 
     elif args.command == "peers":
         peers = mgr.state["peers"]
@@ -425,7 +425,7 @@ def main():
             now = time.time()
             for cs, p in peers.items():
                 ago = int(now - p.get("last_seen", now))
-                print(f"  👥 {C_BOLD}{cs}{C_RESET} ── IP: {p.get('ip')}:{p.get('port')} (Seen {ago}s ago)")
+                print(f"   {C_BOLD}{cs}{C_RESET} ── IP: {p.get('ip')}:{p.get('port')} (Seen {ago}s ago)")
 
     elif args.command == "beacon":
         send_beacon(mgr, DEFAULT_BROADCAST_PORT)

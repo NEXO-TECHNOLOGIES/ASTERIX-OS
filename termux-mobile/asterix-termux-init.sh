@@ -262,9 +262,9 @@ _tool_check() {
     local i=0
     for t in "${tools[@]}"; do
         if command -v "$t" &>/dev/null; then
-            printf "  ${FG_GREEN}✔${R} ${FG_WHITE}%-16s${R}" "$t"
+            printf "  ${FG_GREEN}[OK]${R} ${FG_WHITE}%-16s${R}" "$t"
         else
-            printf "  ${FG_RED}✖${R} ${FG_GRAY}%-16s${R}" "$t"
+            printf "  ${FG_RED}[FAIL]${R} ${FG_GRAY}%-16s${R}" "$t"
         fi
         i=$(( i + 1 ))
         (( i % 3 == 0 )) && echo ""

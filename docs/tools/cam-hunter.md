@@ -1,10 +1,10 @@
-# 🏨 `cam-hunter` — Technical Surveillance Counter-Measures (TSCM)
+#  `cam-hunter` — Technical Surveillance Counter-Measures (TSCM)
 
 A defensive privacy suite for detecting unauthorized Wi-Fi IoT cameras, surveillance streams, and RF beacon transmitters in hotel rooms, rental spaces, and sensitive facilities.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax cam-hunter [hotel|scan|rf|guide]
@@ -12,7 +12,7 @@ ax cam-hunter [hotel|scan|rf|guide]
 
 ---
 
-## ⚙️ Technical Methodology
+## [*] Technical Methodology
 
 1. **Passive Wi-Fi Device Discovery (`scan`)**:
    - Inspects the local network for MAC OUI vendors matching known IP camera manufacturers (Tuya, Hikvision, Dahua, Wyze, Xiongmai).
@@ -29,5 +29,5 @@ ax cam-hunter [hotel|scan|rf|guide]
 
 ---
 
-## ⚖️ Legal & Operational Safety
+##  Legal & Operational Safety
 - **No Signal Jamming**: `cam-hunter` does NOT transmit RF jamming signals. RF jamming is illegal under FCC and ITU international regulations and does not disable offline SD-card recording devices. All detection is **100% passive and defensive**.

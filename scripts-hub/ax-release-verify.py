@@ -71,13 +71,13 @@ def verify_manifest(repo_root: Path) -> Tuple[int, int, int]:
     """Verifies all cryptographic signatures in BUILD_MANIFEST.json."""
     manifest_path = repo_root / "BUILD_MANIFEST.json"
     if not manifest_path.exists():
-        print(f"{C_RED}[✖] Error: BUILD_MANIFEST.json not found at {manifest_path}{C_RESET}")
+        print(f"{C_RED}[[FAIL]] Error: BUILD_MANIFEST.json not found at {manifest_path}{C_RESET}")
         return 0, 0, 1
 
     try:
         data = json.loads(manifest_path.read_text(encoding="utf-8"))
     except Exception as e:
-        print(f"{C_RED}[✖] Error parsing BUILD_MANIFEST.json: {e}{C_RESET}")
+        print(f"{C_RED}[[FAIL]] Error parsing BUILD_MANIFEST.json: {e}{C_RESET}")
         return 0, 0, 1
 
     signatures: Dict[str, str] = data.get("cryptographic_signatures", {})
@@ -116,7 +116,7 @@ def verify_manifest(repo_root: Path) -> Tuple[int, int, int]:
     print(f"  Summary: {C_GREEN}{passed} Valid{C_RESET} | {C_YELLOW}{modified} Modified{C_RESET} | {C_RED}{missing} Missing{C_RESET} (Total: {len(signatures)})\n")
 
     if missing == 0 and modified == 0:
-        print(f"  {C_GREEN}{C_BOLD}✓ 100% VERIFIED: Zero supply chain tampering or unverified modifications.{C_RESET}\n")
+        print(f"  {C_GREEN}{C_BOLD}[OK] 100% VERIFIED: Zero supply chain tampering or unverified modifications.{C_RESET}\n")
     else:
         print(f"  {C_CYAN}[i] Tip: Run with '--update' to recalculate signatures after deliberate codebase changes.{C_RESET}\n")
 
@@ -127,7 +127,7 @@ def update_manifest(repo_root: Path) -> None:
     """Updates signatures in BUILD_MANIFEST.json with current file hashes."""
     manifest_path = repo_root / "BUILD_MANIFEST.json"
     if not manifest_path.exists():
-        print(f"{C_RED}[✖] BUILD_MANIFEST.json not found.{C_RESET}")
+        print(f"{C_RED}[[FAIL]] BUILD_MANIFEST.json not found.{C_RESET}")
         return
 
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -141,7 +141,7 @@ def update_manifest(repo_root: Path) -> None:
             updated += 1
 
     manifest_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
-    print(f"{C_GREEN}✔ Updated {updated} cryptographic signature(s) in BUILD_MANIFEST.json.{C_RESET}")
+    print(f"{C_GREEN}[OK] Updated {updated} cryptographic signature(s) in BUILD_MANIFEST.json.{C_RESET}")
 
 
 def hash_single_file(path_str: str) -> None:

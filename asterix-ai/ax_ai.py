@@ -205,7 +205,7 @@ except ImportError:
 def interactive_chat():
     """Starts an interactive cybernetic conversational session with Asterix Peak AI."""
     print("\n╔══════════════════════════════════════════════════════════════════════╗")
-    print("║   🌌 ASTERIX AI // PEAK CONVERSATIONAL COGNITIVE CONSOLE v3.5        ║")
+    print("║   [ASTERIX] ASTERIX AI // PEAK CONVERSATIONAL COGNITIVE CONSOLE v3.5        ║")
     print("║   [ Cloud & Vector Memory Active • Type 'exit' or 'quit' to close ]  ║")
     print("╚══════════════════════════════════════════════════════════════════════╝\n")
     if memory_hub:
@@ -215,7 +215,7 @@ def interactive_chat():
 
     while True:
         try:
-            prompt = input("asterix-ai ❯ ").strip()
+            prompt = input("asterix-ai  ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nSession ended.")
             break
@@ -249,14 +249,14 @@ def main() -> int:
         url, key = args.cloud_setup
         if memory_hub:
             memory_hub.save_config(url, key)
-            print(f"[✔] Supabase Cloud Memory configured for {url}")
+            print(f"[[OK]] Supabase Cloud Memory configured for {url}")
             return 0
 
     if args.cloud_sync:
         if memory_hub:
             print("[*] Synchronizing cognitive memory with Supabase Cloud...")
             res = memory_hub.sync_cloud()
-            print(f"[✔] Cloud Sync Result: {res}")
+            print(f"[[OK]] Cloud Sync Result: {res}")
             return 0
 
     if args.memory:

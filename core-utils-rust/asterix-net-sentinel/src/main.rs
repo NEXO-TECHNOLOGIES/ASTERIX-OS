@@ -216,7 +216,7 @@ fn scan_ports_concurrent(
 }
 
 fn measure_latency_jitter(target: &str, port: u16, count: usize) {
-    println!("{C_CYAN}{C_BOLD} 📶 MEASURING SOCKET RTT & JITTER TO {}:{}{C_RESET}", target, port);
+    println!("{C_CYAN}{C_BOLD}  MEASURING SOCKET RTT & JITTER TO {}:{}{C_RESET}", target, port);
     println!("{C_GRAY}{}{C_RESET}", "─".repeat(60));
 
     let addr_str = format!("{}:{}", target, port);
@@ -275,7 +275,7 @@ fn measure_latency_jitter(target: &str, port: u16, count: usize) {
 }
 
 fn calculate_subnet(ip_str: &str, mask_bits: u8) {
-    println!("{C_CYAN}{C_BOLD} 🌐 ASTERIX CIDR SUBNET CALCULATOR{C_RESET}");
+    println!("{C_CYAN}{C_BOLD} [NET] ASTERIX CIDR SUBNET CALCULATOR{C_RESET}");
     println!("{C_GRAY}{}{C_RESET}", "─".repeat(60));
 
     let ip: Ipv4Addr = match ip_str.parse() {
@@ -496,7 +496,7 @@ fn main() {
     }
 
     println!("\n{C_BLUE}{}{C_RESET}", "═".repeat(78));
-    println!(" {C_GREEN}✔ Scan Completed:{C_RESET} {C_WHITE}{} open ports found{C_RESET} in {C_CYAN}{:.2}s{C_RESET}",
+    println!(" {C_GREEN}[OK] Scan Completed:{C_RESET} {C_WHITE}{} open ports found{C_RESET} in {C_CYAN}{:.2}s{C_RESET}",
         open_ports.len(), duration.as_secs_f64());
     println!("{C_BLUE}{}{C_RESET}\n", "═".repeat(78));
 }

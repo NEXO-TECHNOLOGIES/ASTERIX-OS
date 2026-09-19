@@ -394,6 +394,34 @@ switch ($Action.ToLower()) {
     "rebuild"     { Invoke-RebuildAsterix }
     "os-rebuild"  { Invoke-RebuildAsterix }
     "build-all"   { Invoke-RebuildAsterix }
+    "cluster"     {
+        $rustBin = Join-Path $PSScriptRoot "..\bin\asterix-cluster.exe"
+        $pyBin = Join-Path $PSScriptRoot "os_cluster.py"
+        if (Test-Path $rustBin) { & $rustBin $args }
+        elseif (Test-Path $pyBin) { python $pyBin $args }
+        else { Write-Host "  [!] Error: asterix-cluster executable not found." -ForegroundColor Red }
+    }
+    "os-cluster"  {
+        $rustBin = Join-Path $PSScriptRoot "..\bin\asterix-cluster.exe"
+        $pyBin = Join-Path $PSScriptRoot "os_cluster.py"
+        if (Test-Path $rustBin) { & $rustBin $args }
+        elseif (Test-Path $pyBin) { python $pyBin $args }
+        else { Write-Host "  [!] Error: asterix-cluster executable not found." -ForegroundColor Red }
+    }
+    "gaming"      {
+        $rustBin = Join-Path $PSScriptRoot "..\bin\asterix-cluster.exe"
+        $pyBin = Join-Path $PSScriptRoot "os_cluster.py"
+        if (Test-Path $rustBin) { & $rustBin gaming $args }
+        elseif (Test-Path $pyBin) { python $pyBin gaming $args }
+        else { Write-Host "  [!] Error: asterix-cluster executable not found." -ForegroundColor Red }
+    }
+    "game-mode"   {
+        $rustBin = Join-Path $PSScriptRoot "..\bin\asterix-cluster.exe"
+        $pyBin = Join-Path $PSScriptRoot "os_cluster.py"
+        if (Test-Path $rustBin) { & $rustBin gaming $args }
+        elseif (Test-Path $pyBin) { python $pyBin gaming $args }
+        else { Write-Host "  [!] Error: asterix-cluster executable not found." -ForegroundColor Red }
+    }
     "compute"     { Invoke-MaxCompute }
     "synergy"     { Invoke-MaxCompute }
     "imitate"     { Show-Imitate }
@@ -408,6 +436,8 @@ switch ($Action.ToLower()) {
         Write-Host "USAGE:" -ForegroundColor White
         Write-Host "  .\os_bridge.ps1 probe        - Detect host OS, hardware topology, GPUs & toolchains"
         Write-Host "  .\os_bridge.ps1 collaborate  - Bridge host tools & wordlists into ASTERIX"
+        Write-Host "  .\os_bridge.ps1 cluster      - Bare-metal Rust/C/Assembly distributed cluster engine"
+        Write-Host "  .\os_bridge.ps1 gaming       - Symmetrical unified gaming cluster mode (2 to 50+ PCs)"
         Write-Host "  .\os_bridge.ps1 merge        - Merge Host OS & ASTERIX OS into unified virtual system"
         Write-Host "  .\os_bridge.ps1 rebuild      - Clean multi-language compilation & system seal"
         Write-Host "  .\os_bridge.ps1 compute      - Maximize CPU/GPU compute synergy with live benchmarking"

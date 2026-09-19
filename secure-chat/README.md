@@ -21,11 +21,11 @@
    - When creating a vault, the creator sets a custom secret password.
    - Joining operatives must authenticate with the exact password to enter.
 
-4. **🚨 3-Strike Intrusion Detection System (IDS) & OS Alerts:**
+4. **[ALERT] 3-Strike Intrusion Detection System (IDS) & OS Alerts:**
    - Tracks failed password attempts per remote IP.
    - If an unauthorized snooper fails authentication **3 times**:
      - An **OS-level alarm banner** is triggered in the terminal:  
-       `🚨 [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
+       `[ALERT] [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
      - Displays the attacker's **Target IP and Port**, targeted room, and timestamp.
      - Outlines recommended countermeasures with preinstalled tools:
        - `ax nmap -sV -O <IP>` — Fingerprint & vulnerability scan
@@ -34,7 +34,7 @@
        - `ax traceroute <IP>` — Geolocation & routing trace
      - Pushes a real-time flashing **INTRUSION ALERT** to all connected web room members.
 
-5. **👑 Group Admin Controls:**
+5. ** Group Admin Controls:**
    - The creator receives a cryptographically secure `admin_token`.
    - **Kick:** Force-disconnect and remove suspicious members.
    - **Mute/Unmute:** Prevent specific members from transmitting messages.
@@ -44,7 +44,7 @@
 6. **Anti-Forensics & Ephemeral RAM:**
    - 100% In-Memory RAM storage (zero disk logs, zero database).
    - Message self-destruct timers (5s, 15s, 30s, 60s) with visual countdown bars.
-   - ☣ 1-Click **Panic Burn** killswitch immediately destroys the room from RAM and redirects to `about:blank`.
+   -  1-Click **Panic Burn** killswitch immediately destroys the room from RAM and redirects to `about:blank`.
 
 7. **Synthesized Web Audio API SFX:**
    - Mathematically generated audio for message transmit, receive, and intrusion alarm siren.

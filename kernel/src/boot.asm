@@ -1,5 +1,5 @@
 ; =====================================================================
-; 🌌 ASTERIX OS — Freestanding Multiboot Kernel Bootstrap Stub (x86)
+; ASTERIX OS - Freestanding Multiboot Kernel Bootstrap Stub (x86)
 ; Architecture: 32-bit Protected Mode (i386 / x86_32)
 ; Conforms to Multiboot v1 Specification (GNU GRUB & QEMU direct boot)
 ; Assembler: NASM (nasm -f elf32 boot.asm -o boot.o)

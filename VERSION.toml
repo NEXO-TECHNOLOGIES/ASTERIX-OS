@@ -25,6 +25,7 @@ defender-core   = "0.7.2"   # Target hardening assessment & active endpoint defe
 sys-mon         = "0.7.1"   # Microsecond real-time system & kernel telemetry HUD
 code-repair     = "0.6.0"   # AST-level autonomous code defect healing engine
 guard-engine    = "0.7.0"   # Security compliance scoring & hardening benchmark
+cluster-engine  = "4.5.0"   # Bare-metal Rust/C/Assembly distributed cluster & symmetrical gaming engine
 
 [platform]
 # Tier 2: Deployment & Orchestration Infrastructure
@@ -34,8 +35,9 @@ quad-grid       = "2.0.0"   # 4-pane balanced multiplexer workspace with telemet
 desktop-env     = "2.0.0"   # Lightweight high-performance cybernetic desktop & HUD
 ai-engine       = "3.0.0"   # Rule-based threat inference & hardware sensor bridge
 auto-compiler   = "2.0.0"   # Heuristic self-healing compiler & header resolver
-os-collab       = "3.5.0"   # Universal host OS collaboration, Dual-OS Merge & Rebuild Pipeline
+os-collab       = "4.5.0"   # Universal host OS collaboration, Cluster Computing & Gaming Mode
 rebuild-engine  = "3.5.0"   # 8-phase automated multi-language rebuild & SHA-256 seal
+microkernel     = "3.5.0"   # Freestanding 32-bit Multiboot microkernel, IDT, PMM & Ring-0 scheduler
 build-manifest  = "BUILD_MANIFEST.json"
 
 [suites]

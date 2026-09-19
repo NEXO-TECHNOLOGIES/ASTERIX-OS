@@ -1,4 +1,4 @@
-# ⚡ ASTERIX OS v2.0 - Official Performance Benchmarks
+# [*] ASTERIX OS v2.0 - Official Performance Benchmarks
 ## High-Performance Pure-Rust Engines vs Traditional Toolchains
 
 Comprehensive benchmarking of ASTERIX OS Tier-1 native Rust engines against standard Linux and security platform utilities. All tests conducted under standardized hardware:
@@ -14,13 +14,13 @@ Benchmark measuring TCP SYN & connect scan times across 1,000 top ports and full
 
 | Metric | Nmap v7.94 | ASTERIX Net Sentinel v1.0.2 | Differential | Winner |
 |---|---|---|---|---|
-| **Scan Time (Top 1,000 Ports)** | 45.2s | **12.1s** | **3.74x faster** | 🚀 **ASTERIX** |
-| **Scan Time (65,535 Full Sweep)** | 14m 12s | **3m 18s** | **4.30x faster** | 🚀 **ASTERIX** |
-| **Active Memory Footprint** | 85.4 MB | **11.8 MB** | **7.2x lower RAM** | 🚀 **ASTERIX** |
-| **Thread Pooling Model** | OS-level spawn | Lock-free worker channels | Microsecond latency | 🚀 **ASTERIX** |
-| **Banner Grabbing Throughput** | 120 req/s | **480 req/s** | **4x throughput** | 🚀 **ASTERIX** |
-| **Zero External Deps** | ✗ (Requires OpenSSL/libpcap) | **✓ (100% Native Safe Rust)** | Portable anywhere | 🚀 **ASTERIX** |
-| **Structured JSON Output** | ✓ (XML default) | **✓ (Native streaming JSON)** | Immediate parsing | 🤝 **Tie** |
+| **Scan Time (Top 1,000 Ports)** | 45.2s | **12.1s** | **3.74x faster** | [RUN] **ASTERIX** |
+| **Scan Time (65,535 Full Sweep)** | 14m 12s | **3m 18s** | **4.30x faster** | [RUN] **ASTERIX** |
+| **Active Memory Footprint** | 85.4 MB | **11.8 MB** | **7.2x lower RAM** | [RUN] **ASTERIX** |
+| **Thread Pooling Model** | OS-level spawn | Lock-free worker channels | Microsecond latency | [RUN] **ASTERIX** |
+| **Banner Grabbing Throughput** | 120 req/s | **480 req/s** | **4x throughput** | [RUN] **ASTERIX** |
+| **Zero External Deps** |  (Requires OpenSSL/libpcap) | **[OK] (100% Native Safe Rust)** | Portable anywhere | [RUN] **ASTERIX** |
+| **Structured JSON Output** | [OK] (XML default) | **[OK] (Native streaming JSON)** | Immediate parsing |  **Tie** |
 
 > **Key Takeaway**: By avoiding runtime C bindings and utilizing a pure-Rust asynchronous channel pipeline, `asterix-net-sentinel` achieves over 3.7x scan speed while consuming less than 12 MB of memory, making it exceptionally suited for mobile Termux and embedded reconnaissance.
 
@@ -32,11 +32,11 @@ Benchmark parsing a set of 100 test binaries (ELF 64-bit and PE32+ files) to ide
 
 | Metric | GNU `strings` + `file` + `readelf` | ASTERIX Bin Inspector v1.0.1 | Differential | Winner |
 |---|---|---|---|---|
-| **Execution Time (100 Binaries)** | 8.14s | **1.21s** | **6.72x faster** | 🚀 **ASTERIX** |
-| **Entropy Calculation (Shannon)** | Manual script required | **Automated (per-section)** | Instant entropy HUD | 🚀 **ASTERIX** |
-| **Packed/Obfuscated Detection** | Manual inspection | **Automatic heuristic flag** | UPX / XOR / Crypter | 🚀 **ASTERIX** |
-| **Multi-Architecture Support** | ELF / PE separately | **ELF, PE32+, Mach-O Unified** | Single binary | 🚀 **ASTERIX** |
-| **Memory Allocation** | Multiple process forks | **Single zero-copy buffer** | Negligible overhead | 🚀 **ASTERIX** |
+| **Execution Time (100 Binaries)** | 8.14s | **1.21s** | **6.72x faster** | [RUN] **ASTERIX** |
+| **Entropy Calculation (Shannon)** | Manual script required | **Automated (per-section)** | Instant entropy HUD | [RUN] **ASTERIX** |
+| **Packed/Obfuscated Detection** | Manual inspection | **Automatic heuristic flag** | UPX / XOR / Crypter | [RUN] **ASTERIX** |
+| **Multi-Architecture Support** | ELF / PE separately | **ELF, PE32+, Mach-O Unified** | Single binary | [RUN] **ASTERIX** |
+| **Memory Allocation** | Multiple process forks | **Single zero-copy buffer** | Negligible overhead | [RUN] **ASTERIX** |
 
 > **Key Takeaway**: Combining header parsing, section entropy calculation, and signature heuristics into a single zero-copy memory pass allows `asterix-bin-inspector` to outperform chained bash utilities by nearly 7x.
 
@@ -48,10 +48,10 @@ Benchmark hashing a 1.0 GB binary dataset and performing hash identification and
 
 | Metric | Standard Tools (`sha256sum`, `hashid`) | ASTERIX Crypto Core v0.9.5 | Differential | Winner |
 |---|---|---|---|---|
-| **1 GB SHA-256 Throughput** | 2.82s (354 MB/s) | **2.61s (383 MB/s)** | **8% faster throughput** | 🚀 **ASTERIX** |
-| **Hash Identification Speed** | 450 hashes/s (`hashid` Python) | **82,000 hashes/s** | **182x faster** | 🚀 **ASTERIX** |
-| **Memory Consumption** | 35 MB (Python runtime) | **3.8 MB** | **9.2x lighter** | 🚀 **ASTERIX** |
-| **Algorithm Coverage** | MD5, SHA-1, SHA-256 | MD5, SHA-1, SHA-256, SHA-512 | Full suite | 🤝 **Tie** |
+| **1 GB SHA-256 Throughput** | 2.82s (354 MB/s) | **2.61s (383 MB/s)** | **8% faster throughput** | [RUN] **ASTERIX** |
+| **Hash Identification Speed** | 450 hashes/s (`hashid` Python) | **82,000 hashes/s** | **182x faster** | [RUN] **ASTERIX** |
+| **Memory Consumption** | 35 MB (Python runtime) | **3.8 MB** | **9.2x lighter** | [RUN] **ASTERIX** |
+| **Algorithm Coverage** | MD5, SHA-1, SHA-256 | MD5, SHA-1, SHA-256, SHA-512 | Full suite |  **Tie** |
 
 ---
 
@@ -61,9 +61,9 @@ Benchmark processing a 500 MB Apache/Syslog dataset containing 2.4 million log l
 
 | Metric | GNU `grep` + `awk` | ASTERIX Log Hunter v1.0.0 | Differential | Winner |
 |---|---|---|---|---|
-| **Processing Time (500 MB Log)** | 14.8s | **3.9s** | **3.79x faster** | 🚀 **ASTERIX** |
-| **Simultaneous Regex Signatures** | 1 at a time (chained) | **16 parallel threat rules** | Concurrent pass | 🚀 **ASTERIX** |
-| **Structured Incident Report** | Requires post-processing | **Instant JSON / Terminal Matrix** | Ready for SOC | 🚀 **ASTERIX** |
+| **Processing Time (500 MB Log)** | 14.8s | **3.9s** | **3.79x faster** | [RUN] **ASTERIX** |
+| **Simultaneous Regex Signatures** | 1 at a time (chained) | **16 parallel threat rules** | Concurrent pass | [RUN] **ASTERIX** |
+| **Structured Incident Report** | Requires post-processing | **Instant JSON / Terminal Matrix** | Ready for SOC | [RUN] **ASTERIX** |
 
 ---
 

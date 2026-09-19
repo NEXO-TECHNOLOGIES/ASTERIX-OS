@@ -63,7 +63,7 @@ case "$action" in
             if [ -d "$m" ]; then
                 if [ -f "$m/etc/os-release" ]; then
                     part_name=$(grep -E "^PRETTY_NAME=" "$m/etc/os-release" | cut -d= -f2 | tr -d '"' || basename "$m")
-                    echo -e "    • ${C_GREEN}[✔] Discovered: ${C_WHITE}${part_name}${C_RESET} at ${C_CYAN}${m}${C_RESET}"
+                    echo -e "    • ${C_GREEN}[[OK]] Discovered: ${C_WHITE}${part_name}${C_RESET} at ${C_CYAN}${m}${C_RESET}"
                     found_mounts=$((found_mounts + 1))
                 fi
             fi
@@ -108,7 +108,7 @@ case "$action" in
             fi
         done
 
-        echo -e "  ${C_GREEN}${C_BOLD}[✔] Cross-OS Collaboration Bridge Active!${C_RESET}"
+        echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Cross-OS Collaboration Bridge Active!${C_RESET}"
         echo -e "    • Bridged Tools:     ${C_CYAN}${linked}${C_RESET} binaries linked into ${BIN_BRIDGE}"
         echo -e "    • Bridged Wordlists: ${C_CYAN}${wl_linked}${C_RESET} wordlist references mapped"
         echo -e "    • To activate now:   ${C_YELLOW}export PATH=\"${BIN_BRIDGE}:\$PATH\"${C_RESET}\n"
@@ -123,7 +123,7 @@ case "$action" in
             echo -e "  ${C_CYAN}[*] Synthesizing Dual-OS Virtual Environment...${C_RESET}"
             mkdir -p "$HOME/.asterix_vault/merged_os/bin" "$HOME/.asterix_vault/merged_os/wordlists"
             cp -r "$BIN_BRIDGE"/* "$HOME/.asterix_vault/merged_os/bin/" 2>/dev/null || true
-            echo -e "  ${C_GREEN}[✔] Dual-OS Merged Environment Active!${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] Dual-OS Merged Environment Active!${C_RESET}"
         fi
         ;;
 
@@ -135,7 +135,7 @@ case "$action" in
         else
             echo -e "  ${C_CYAN}[*] Rebuilding ASTERIX OS Core Systems...${C_RESET}"
             bash "$0" merge
-            echo -e "  ${C_GREEN}[✔] ASTERIX OS System Rebuilt & Verified!${C_RESET}"
+            echo -e "  ${C_GREEN}[[OK]] ASTERIX OS System Rebuilt & Verified!${C_RESET}"
         fi
         ;;
 
@@ -144,7 +144,7 @@ case "$action" in
         cores=$(nproc 2>/dev/null || grep -c ^processor /proc/cpuinfo 2>/dev/null || echo "1")
         echo -e "  • Hardware Concurrency:  ${C_GREEN}${cores} Threads Allocated${C_RESET}"
         echo -e "  • Dynamic OS Coupling:   ${C_CYAN}ASTERIX OS + Host Arsenal Interlinked${C_RESET}"
-        echo -e "\n  ${C_GREEN}[✔] Compute synergy configured for maximum throughput.${C_RESET}\n"
+        echo -e "\n  ${C_GREEN}[[OK]] Compute synergy configured for maximum throughput.${C_RESET}\n"
         ;;
 
     imitate|persona)

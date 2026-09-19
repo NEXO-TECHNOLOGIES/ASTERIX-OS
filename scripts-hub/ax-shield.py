@@ -124,11 +124,11 @@ class CanaryGuard:
                 "entropy": round(CanaryGuard._calculate_entropy(content), 4)
             }
             planted += 1
-            print(f"  {C_GREEN}✓ Planted Tripwire Decoy:{C_RESET} {file_path.name}")
+            print(f"  {C_GREEN}[OK] Planted Tripwire Decoy:{C_RESET} {file_path.name}")
             print(f"    ↳ SHA-256: {C_DIM}{sha[:32]}...{C_RESET}")
 
         manifest_path.write_text(json.dumps(records, indent=2), encoding="utf-8")
-        print(f"\n  {C_GREEN}{C_BOLD}✓ SUCCESS: {planted} tripwires deployed and armed.{C_RESET}")
+        print(f"\n  {C_GREEN}{C_BOLD}[OK] SUCCESS: {planted} tripwires deployed and armed.{C_RESET}")
         print(f"  {C_DIM}Run 'ax canary status' or 'ax canary check' to audit tripwire integrity.{C_RESET}\n")
 
     @staticmethod
@@ -176,7 +176,7 @@ class CanaryGuard:
         print(f"  • Intact & Secure:           {C_GREEN}{intact}{C_RESET}")
 
         if breaches:
-            print(f"\n  {C_RED}{C_BOLD}🚨 SECURITY ALERT: {len(breaches)} CANARY TRIPWIRE(S) TRIGGERED!{C_RESET}")
+            print(f"\n  {C_RED}{C_BOLD}[ALERT] SECURITY ALERT: {len(breaches)} CANARY TRIPWIRE(S) TRIGGERED!{C_RESET}")
             print(f"  {C_RED}Potential malicious ransomware process activity detected!{C_RESET}\n")
             for b in breaches:
                 print(f"    • {C_BOLD}{Path(b['path']).name}{C_RESET}")
@@ -184,7 +184,7 @@ class CanaryGuard:
                 print(f"      Location: {b['path']}")
             print(f"\n  {C_YELLOW}[ACTION] Review active running processes and isolate affected directory.{C_RESET}\n")
         else:
-            print(f"\n  {C_GREEN}{C_BOLD}✓ ALL CANARIES UNTOUCHED: Zero malicious encryption detected.{C_RESET}\n")
+            print(f"\n  {C_GREEN}{C_BOLD}[OK] ALL CANARIES UNTOUCHED: Zero malicious encryption detected.{C_RESET}\n")
 
 
 # =============================================================================
@@ -320,10 +320,10 @@ class SupplyChainAuditor:
         print(f"  • Dependency Manifests Audited: {C_BOLD}{manifests_found}{C_RESET}")
 
         if not findings:
-            print(f"  {C_GREEN}{C_BOLD}✓ CLEAN: No typosquats or malicious lifecycle hooks detected.{C_RESET}\n")
+            print(f"  {C_GREEN}{C_BOLD}[OK] CLEAN: No typosquats or malicious lifecycle hooks detected.{C_RESET}\n")
             return
 
-        print(f"\n  {C_YELLOW}{C_BOLD}⚠ DETECTED {len(findings)} SUPPLY-CHAIN RISKS / VULNERABILITIES:{C_RESET}\n")
+        print(f"\n  {C_YELLOW}{C_BOLD}[!] DETECTED {len(findings)} SUPPLY-CHAIN RISKS / VULNERABILITIES:{C_RESET}\n")
         print(f"  {'Severity':<10} {'Manifest':<28} {'Line':<8} {'Finding Details':<45}")
         print(f"  {'-'*95}")
         for f in findings:
@@ -408,7 +408,7 @@ class PhishShield:
 
         # Display verdict
         if deceptions:
-            print(f"  {C_RED}{C_BOLD}🚨 DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!{C_RESET}\n")
+            print(f"  {C_RED}{C_BOLD}[ALERT] DANGER: HIGH-CONFIDENCE PHISHING DECEPTION DETECTED!{C_RESET}\n")
             print(f"  {C_BOLD}Target Domain:{C_RESET}  {domain}")
             if is_punycode:
                 print(f"  {C_BOLD}Punycode View:{C_RESET}  {decoded_domain}")
@@ -418,7 +418,7 @@ class PhishShield:
                 print(f"    • {C_RED}{d}{C_RESET}")
             print(f"\n  {C_YELLOW}[!] WARNING: Never submit credentials or two-factor tokens to this destination.{C_RESET}\n")
         else:
-            print(f"  {C_GREEN}{C_BOLD}✓ CLEAN: No homoglyphs, Punycode tricks, or brand typosquats detected.{C_RESET}")
+            print(f"  {C_GREEN}{C_BOLD}[OK] CLEAN: No homoglyphs, Punycode tricks, or brand typosquats detected.{C_RESET}")
             print(f"  {C_DIM}Domain '{domain}' passes standard visual and structural deception heuristics.{C_RESET}\n")
 
 

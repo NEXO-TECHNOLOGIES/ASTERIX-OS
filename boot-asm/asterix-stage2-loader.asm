@@ -1,5 +1,5 @@
 ; ==============================================================================
-; 🌌 ASTERIX OS — Stage 2 Bare-Metal Bootloader & Long Mode Bootstrap
+; [ASTERIX] ASTERIX OS — Stage 2 Bare-Metal Bootloader & Long Mode Bootstrap
 ; Transition Architecture: 16-bit Real Mode -> 32-bit Protected -> 64-bit Long Mode
 ; Features:
 ;   - INT 0x15 E820 Memory Map Query & Parsing

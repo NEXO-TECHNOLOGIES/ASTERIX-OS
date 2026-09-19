@@ -24,7 +24,7 @@ banner() {
 
 check_python() {
     if ! command -v python3 >/dev/null 2>&1; then
-        echo -e "  ${C_RED}[✘] Error: Python 3 is required to launch the Secure Chat Vault server.${C_RESET}"
+        echo -e "  ${C_RED}[[FAIL]] Error: Python 3 is required to launch the Secure Chat Vault server.${C_RESET}"
         echo -e "  ${C_GRAY}Install with: sudo apt install python3  or  pkg install python${C_RESET}\n"
         exit 1
     fi

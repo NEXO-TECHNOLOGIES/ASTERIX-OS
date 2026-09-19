@@ -1,5 +1,5 @@
 ---
-name: 🔒 Security Vulnerability Report
+name: [LOCK] Security Vulnerability Report
 about: Privately report a security vulnerability or supply chain risk
 title: "[SECURITY]: "
 labels: ["security"]

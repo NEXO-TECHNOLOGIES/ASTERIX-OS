@@ -108,19 +108,19 @@ def print_jammer_doctrine():
     """Explains why RF jamming is illegal, hazardous, and ineffective vs TSCM."""
     banner("HOTEL & TRAVEL ANTI-SURVEILLANCE DOCTRINE", "Why Signal Jamming Fails & How Real Counter-Surveillance Works")
     print(f"{C_BOLD}[THE REALITY OF SIGNAL JAMMING VS. COVERT CAMERAS]{C_RESET}")
-    print(f"  {C_RED}{C_BOLD}✖ WHY RF JAMMING IS ILLEGAL & HARMFUL:{C_RESET}")
+    print(f"  {C_RED}{C_BOLD}[FAIL] WHY RF JAMMING IS ILLEGAL & HARMFUL:{C_RESET}")
     print(f"    • Emitting radio frequency interference violates telecommunications laws worldwide (FCC, ITU).")
     print(f"    • It indiscriminately blocks life-critical emergency communications (911/112 cellular calls,")
     print(f"      hospital equipment, aviation, and emergency responder dispatch).")
     print(f"    • Standard PC and smartphone wireless chips physically lack RF amplification to emit jamming.")
     print()
-    print(f"  {C_YELLOW}{C_BOLD}⚠ WHY RF JAMMING DOES NOT STOP HIDDEN CAMERAS:{C_RESET}")
+    print(f"  {C_YELLOW}{C_BOLD}[!] WHY RF JAMMING DOES NOT STOP HIDDEN CAMERAS:{C_RESET}")
     print(f"    • Over 70% of covert spy cameras (smoke detector cams, clock cams, USB chargers) record directly")
     print(f"      to {C_BOLD}internal MicroSD cards or offline flash memory{C_RESET}.")
     print(f"    • Jamming the airwaves does {C_RED}NOT{C_RESET} stop a camera from recording video to an SD card!")
     print(f"    • If a camera does stream, jamming alerts the attacker and locks your own devices out.")
     print()
-    print(f"  {C_GREEN}{C_BOLD}✔ THE PROFESSIONAL SOVEREIGN SOLUTION (TSCM AUDITING):{C_RESET}")
+    print(f"  {C_GREEN}{C_BOLD}[OK] THE PROFESSIONAL SOVEREIGN SOLUTION (TSCM AUDITING):{C_RESET}")
     print(f"    • {C_BOLD}1. LAN IoT Video Sweep:{C_RESET} Detect active IP cameras streaming over the hotel Wi-Fi.")
     print(f"    • {C_BOLD}2. Hardware Vendor OUI Audit:{C_RESET} Flag Espressif (ESP32-CAM) & Tuya covert modules.")
     print(f"    • {C_BOLD}3. Passive RF & BLE Beacon Sweep:{C_RESET} Scan for ad-hoc camera APs without transmitting.")
@@ -247,10 +247,10 @@ def scan_network_for_cameras(quick: bool = False):
 
     print(f"\n{C_BOLD}[NETWORK SCAN SUMMARY]{C_RESET}")
     if suspicious_findings:
-        print(f"  {C_RED}{C_BOLD}⚠ WARNING: {len(suspicious_findings)} suspicious video or surveillance device(s) identified on this network!{C_RESET}")
+        print(f"  {C_RED}{C_BOLD}[!] WARNING: {len(suspicious_findings)} suspicious video or surveillance device(s) identified on this network!{C_RESET}")
         print(f"  {C_YELLOW}Recommendation: Inspect the physical room, check open ports with VLC (rtsp://<IP>:554/live), or disconnect.{C_RESET}\n")
     else:
-        print(f"  {C_GREEN}{C_BOLD}✔ No streaming video endpoints or known spy camera MACs found on this Wi-Fi network.{C_RESET}\n")
+        print(f"  {C_GREEN}{C_BOLD}[OK] No streaming video endpoints or known spy camera MACs found on this Wi-Fi network.{C_RESET}\n")
 
 
 def scan_wireless_beacons():
@@ -303,7 +303,7 @@ def scan_wireless_beacons():
             print(f"    • Threat Profile:  Ad-hoc Wi-Fi camera broadcasting its own setup/streaming beacon.")
         print()
     else:
-        print(f"  {C_GREEN}✔ Audited {len(found_beacons)} wireless networks in range. Zero covert camera SSIDs detected.{C_RESET}\n")
+        print(f"  {C_GREEN}[OK] Audited {len(found_beacons)} wireless networks in range. Zero covert camera SSIDs detected.{C_RESET}\n")
 
 
 def print_optical_and_ir_guide():

@@ -53,7 +53,7 @@ class UndercoverEngine:
         print(f"{BOLD}{CYAN}  ASTERIX OS :: STEALTH UNDERCOVER & CAMOUFLAGE ACTIVE{RESET}")
         print(f"{DIM}  Discreet Operational Mode (Minimal Visibility / Anti-Shoulder Surfing){RESET}")
         print(f"{BOLD}{CYAN}========================================================================={RESET}\n")
-        print(f"{GREEN}✓ Stealth Camouflage Enabled:{RESET}")
+        print(f"{GREEN}[OK] Stealth Camouflage Enabled:{RESET}")
         print(f"  • Terminal Splash Banners:   {DIM}SUPPRESSED (Silent minimal prompt){RESET}")
         print(f"  • Matrix Rain & Glitch HUD:  {DIM}DISABLED on startup{RESET}")
         print(f"  • Shell Identifier:          {DIM}Masquerading as standard system shell{RESET}")
@@ -71,7 +71,7 @@ class UndercoverEngine:
         print(f"{BOLD}{CYAN}  ASTERIX OS :: CYBERNETIC COMMAND HUD RESTORED{RESET}")
         print(f"{DIM}  Full Animated HUD, Telemetry & Cyberpunk Theme Active{RESET}")
         print(f"{BOLD}{CYAN}========================================================================={RESET}\n")
-        print(f"{GREEN}✓ Standard Cybernetic Mode Re-engaged.{RESET}")
+        print(f"{GREEN}[OK] Standard Cybernetic Mode Re-engaged.{RESET}")
         print(f"  • Animated Boot Banners:   ACTIVE")
         print(f"  • Real-Time Hardware HUD:  ACTIVE\n")
 

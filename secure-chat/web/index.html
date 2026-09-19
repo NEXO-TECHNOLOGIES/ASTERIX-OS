@@ -233,7 +233,7 @@
   <!-- Intrusion Alert Banner -->
   <div class="intrusion-banner" id="intrusionBanner">
     <div>
-      <span style="font-size: 14px;">🚨 [ASTERIX IDS ALERT]</span>
+      <span style="font-size: 14px;">[ALERT] [ASTERIX IDS ALERT]</span>
       <span id="intrusionText">CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!</span>
     </div>
     <div style="font-size: 11px; opacity: 0.9;">
@@ -254,18 +254,18 @@
     <div class="hud-controls">
       <div class="badge" id="roomBadge">ROOM: --</div>
       <div class="badge badge-operatives" id="peersBadge">OPERATIVES: 1 ACTIVE</div>
-      <div class="badge badge-admin" id="adminBadge">👑 VAULT ADMIN</div>
+      <div class="badge badge-admin" id="adminBadge"> VAULT ADMIN</div>
 
       <button class="btn-hud" id="btnMembers" style="display: none;" title="Manage Connected Operatives">
-        👥 MEMBERS (<span id="memberCount">1</span>)
+         MEMBERS (<span id="memberCount">1</span>)
       </button>
 
       <button class="btn-hud" id="btnPurge" style="display: none; color: var(--yellow);" title="Purge All Chat Messages">
-        🔥 PURGE
+        [FIRE] PURGE
       </button>
 
       <button class="btn-hud" id="btnFingerprint" title="View Cryptographic Safety Fingerprint">
-        🔑 FINGERPRINT
+        [KEY] FINGERPRINT
       </button>
 
       <select class="burn-select" id="burnSelect" title="Self-Destruct Timer">
@@ -277,7 +277,7 @@
       </select>
 
       <button class="btn-panic" id="btnPanic" title="Permanently Eradicate Vault From Memory">
-        ☣ PANIC / BURN
+         PANIC / BURN
       </button>
     </div>
   </header>
@@ -290,16 +290,16 @@
   <!-- Input Bar -->
   <footer>
     <div class="input-box">
-      <span class="prompt-label" id="promptLabel">user ❯</span>
+      <span class="prompt-label" id="promptLabel">user </span>
       <textarea id="inputMsg" placeholder="Type encrypted message... (Enter to send, Shift+Enter for newline)" rows="1"></textarea>
-      <button class="btn-send" id="btnSend">🔒 ENCRYPT & SEND</button>
+      <button class="btn-send" id="btnSend">[LOCK] ENCRYPT & SEND</button>
     </div>
   </footer>
 
   <!-- Setup Modal (Create or Join) -->
   <div class="modal-overlay" id="setupModal">
     <div class="modal-box">
-      <div class="modal-title">🔐 ASTERIX SECURE LOCAL VAULT</div>
+      <div class="modal-title"> ASTERIX SECURE LOCAL VAULT</div>
       
       <div class="modal-tabs">
         <button class="tab-btn active" id="tabCreate" type="button">CREATE NEW VAULT</button>
@@ -340,7 +340,7 @@
         <div class="modal-field">
           <label>Secret Vault Password</label>
           <input class="modal-input" type="password" id="joinPass" placeholder="Enter room password...">
-          <span style="font-size: 10px; color: var(--red)">⚠️ WARNING: 3 failed attempts trigger full OS Intrusion Alert & target lockdown.</span>
+          <span style="font-size: 10px; color: var(--red)">[!] WARNING: 3 failed attempts trigger full OS Intrusion Alert & target lockdown.</span>
         </div>
         <div class="modal-field">
           <label>Your Codename</label>
@@ -354,7 +354,7 @@
   <!-- Admin Members Modal -->
   <div class="modal-overlay" id="membersModal" style="display: none;">
     <div class="modal-box" style="max-width: 600px;">
-      <div class="modal-title">👥 CONNECTED OPERATIVES & ADMIN CONTROLS</div>
+      <div class="modal-title"> CONNECTED OPERATIVES & ADMIN CONTROLS</div>
       <table class="members-table">
         <thead>
           <tr>
@@ -374,7 +374,7 @@
   <!-- Fingerprint Modal -->
   <div class="modal-overlay" id="fpModal" style="display: none;">
     <div class="modal-box">
-      <div class="modal-title">🔑 CRYPTOGRAPHIC SAFETY NUMBERS</div>
+      <div class="modal-title">[KEY] CRYPTOGRAPHIC SAFETY NUMBERS</div>
       <p style="font-size: 12px; color: var(--text-dim);">
         Compare this visual fingerprint with other group operatives over an out-of-band channel. If identical, you are mathematically guaranteed to share the exact same E2EE key with zero MITM eavesdropping.
       </p>
@@ -477,7 +477,7 @@
         const plaintextBuf = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, aesKey, ciphertext);
         return new TextDecoder().decode(plaintextBuf);
       } catch (err) {
-        return "[⚠️ DECRYPTION FAILED - INVALID KEY OR CORRUPT CIPHERTEXT]";
+        return "[[!] DECRYPTION FAILED - INVALID KEY OR CORRUPT CIPHERTEXT]";
       }
     }
 
@@ -500,7 +500,7 @@
       meta.className = "msg-meta";
       const ts = new Date().toLocaleTimeString();
       const adminTag = isAdmin ? `<span style="color: var(--gold); font-weight: 800;">[ADMIN]</span> ` : "";
-      meta.innerHTML = `${adminTag}<span class="sender ${isAdmin ? 'sender-admin' : ''}">${escapeHtml(senderName)}</span> <span>${ts}</span> ${burnSecs > 0 ? `<span style="color: var(--yellow)">🔥 ${burnSecs}s</span>` : ''}`;
+      meta.innerHTML = `${adminTag}<span class="sender ${isAdmin ? 'sender-admin' : ''}">${escapeHtml(senderName)}</span> <span>${ts}</span> ${burnSecs > 0 ? `<span style="color: var(--yellow)">[FIRE] ${burnSecs}s</span>` : ''}`;
 
       const bubble = document.createElement("div");
       bubble.className = "msg-bubble";
@@ -578,7 +578,7 @@
       const data = await res.json();
       if (!res.ok || data.error) {
         if (data.intruder_detected) {
-          alert(`🚨 INTRUSION ALERT:\n${data.error}`);
+          alert(`[ALERT] INTRUSION ALERT:\n${data.error}`);
         } else {
           alert("Authentication failed: " + (data.error || "Wrong password"));
         }
@@ -606,7 +606,7 @@
         document.getElementById("btnPurge").style.display = "inline-flex";
       }
 
-      appendEvent(`[✔] SECURE E2EE SESSION INITIALIZED [Mode: ${mode.toUpperCase()}]`);
+      appendEvent(`[[OK]] SECURE E2EE SESSION INITIALIZED [Mode: ${mode.toUpperCase()}]`);
       initEventStream();
     }
 
@@ -622,7 +622,7 @@
           if (payload.type === "peer_joined") {
             document.getElementById("peersBadge").innerText = `OPERATIVES: ${payload.peers_count} ACTIVE`;
             document.getElementById("memberCount").innerText = payload.peers_count;
-            appendEvent(`[🔔] Operative '${payload.name}' authenticated into vault.`);
+            appendEvent(`[] Operative '${payload.name}' authenticated into vault.`);
             playSfx("receive");
           } else if (payload.type === "peer_left") {
             document.getElementById("peersBadge").innerText = `OPERATIVES: ${payload.peers_count} ACTIVE`;
@@ -630,31 +630,31 @@
             appendEvent(`[!] Operative '${payload.name}' disconnected.`);
           } else if (payload.type === "peer_kicked") {
             document.getElementById("peersBadge").innerText = `OPERATIVES: ${payload.peers_count} ACTIVE`;
-            appendEvent(`[⛔] Operative '${payload.name}' was removed by administrator.`, true);
+            appendEvent(`[] Operative '${payload.name}' was removed by administrator.`, true);
           } else if (payload.type === "kicked") {
-            alert("⛔ You have been kicked from this vault by the administrator.");
+            alert(" You have been kicked from this vault by the administrator.");
             triggerLocalNuke();
           } else if (payload.type === "mute_state") {
             VAULT.isMuted = payload.muted;
             document.getElementById("inputMsg").disabled = payload.muted;
             document.getElementById("btnSend").disabled = payload.muted;
             if (payload.muted) {
-              appendEvent("[⚠️] You have been muted by the administrator.", true);
+              appendEvent("[[!]] You have been muted by the administrator.", true);
             } else {
-              appendEvent("[✔] You have been unmuted.");
+              appendEvent("[[OK]] You have been unmuted.");
             }
           } else if (payload.type === "purge") {
             document.getElementById("messages").innerHTML = "";
-            appendEvent("[🔥] Chat history purged by administrator.", true);
+            appendEvent("[[FIRE]] Chat history purged by administrator.", true);
           } else if (payload.type === "intrusion_alert") {
-            // 🚨 THIEF CAUGHT ALERT
+            // [ALERT] THIEF CAUGHT ALERT
             playSfx("alarm");
             const banner = document.getElementById("intrusionBanner");
             banner.style.display = "flex";
             document.getElementById("intrusionText").innerText = 
               `CAUGHT A THIEF SNOOPING! IP: ${payload.attacker_ip} | Port: ${payload.attacker_port} (Attempts: ${payload.attempts})`;
             document.getElementById("targetIp").innerText = payload.attacker_ip;
-            appendEvent(`🚨 [SECURITY BREACH ATTEMPT] Intruder caught snooping at ${payload.attacker_ip}:${payload.attacker_port}! Eliminate target via 'ax nmap -sV ${payload.attacker_ip}' or 'ax killswitch'.`, true);
+            appendEvent(`[ALERT] [SECURITY BREACH ATTEMPT] Intruder caught snooping at ${payload.attacker_ip}:${payload.attacker_port}! Eliminate target via 'ax nmap -sV ${payload.attacker_ip}' or 'ax killswitch'.`, true);
           } else if (payload.type === "message") {
             const plaintext = await decryptMessage(payload.iv, payload.ciphertext, VAULT.aesKey);
             appendMessage(payload.sender_name, plaintext, false, payload.msg_id, payload.burn_secs, payload.is_admin);
@@ -712,7 +712,7 @@
         tr.innerHTML = `
           <td style="font-weight: 700; color: ${m.is_admin ? 'var(--gold)' : 'var(--cyan)'}">${escapeHtml(m.name)} ${isSelf ? '(You)' : ''}</td>
           <td style="color: var(--text-dim); font-size: 11px;">${m.ip}:${m.port}</td>
-          <td>${m.is_admin ? '<span style="color: var(--gold)">👑 Admin</span>' : 'Operative'}</td>
+          <td>${m.is_admin ? '<span style="color: var(--gold)"> Admin</span>' : 'Operative'}</td>
           <td>${m.muted ? '<span style="color: var(--red)">Muted</span>' : '<span style="color: var(--green)">Active</span>'}</td>
           <td>
             ${!isSelf ? `
@@ -746,7 +746,7 @@
     };
 
     async function purgeChat() {
-      if (!confirm("🔥 PURGE CHAT 🔥\n\nThis will permanently delete all messages for ALL connected operatives.\n\nProceed?")) return;
+      if (!confirm("[FIRE] PURGE CHAT [FIRE]\n\nThis will permanently delete all messages for ALL connected operatives.\n\nProceed?")) return;
       await fetch("/api/admin/purge", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -755,7 +755,7 @@
     }
 
     async function triggerPanic() {
-      if (!confirm("☣ EMERGENCY PANIC KILLSWITCH ☣\n\nInstantly eradicates this vault room from server RAM and purges all keys.\n\nProceed?")) return;
+      if (!confirm(" EMERGENCY PANIC KILLSWITCH \n\nInstantly eradicates this vault room from server RAM and purges all keys.\n\nProceed?")) return;
       try {
         await fetch("/api/panic", {
           method: "POST",
@@ -771,7 +771,7 @@
       if (VAULT.eventSource) VAULT.eventSource.close();
       document.body.innerHTML = `
         <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#ff2255; font-family:monospace; text-align:center;">
-          <h1 style="font-size:32px; letter-spacing:4px; margin-bottom:12px;">☣ VAULT ERADICATED ☣</h1>
+          <h1 style="font-size:32px; letter-spacing:4px; margin-bottom:12px;"> VAULT ERADICATED </h1>
           <p style="color:#738096; font-size:14px;">All memory keys and ephemeral buffers have been purged from existence.</p>
         </div>
       `;

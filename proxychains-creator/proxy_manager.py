@@ -240,7 +240,7 @@ def cmd_scan(target_file=None):
     display_proxy_table(results)
 
     alive_proxies = [p for p in results if p["alive"]]
-    print(f"  {C_GREEN}{C_BOLD}[✔] SCAN COMPLETE:{C_RESET} {alive_count}/{len(results)} Proxies Active and Verified.\n")
+    print(f"  {C_GREEN}{C_BOLD}[[OK]] SCAN COMPLETE:{C_RESET} {alive_count}/{len(results)} Proxies Active and Verified.\n")
 
     if alive_proxies:
         conf_file = generate_proxychains_conf(alive_proxies)
@@ -278,14 +278,14 @@ def cmd_create_single(ip, port, proto="socks5"):
 
     if ok:
         conf_file = generate_proxychains_conf(results)
-        print(f"  {C_GREEN}{C_BOLD}[✔] Single Proxy Verified & Configured in: {conf_file}{C_RESET}\n")
+        print(f"  {C_GREEN}{C_BOLD}[[OK]] Single Proxy Verified & Configured in: {conf_file}{C_RESET}\n")
     else:
         print(f"  {C_RED}[!] Proxy {ip}:{port} failed connectivity handshake.{C_RESET}\n")
 
 def cmd_status():
     print(f"\n{BANNER}\n")
     if os.path.exists(CONFIG_OUT):
-        print(f"  {C_GREEN}{C_BOLD}[✔] Active ProxyChains Configuration Located:{C_RESET} {CONFIG_OUT}\n")
+        print(f"  {C_GREEN}{C_BOLD}[[OK]] Active ProxyChains Configuration Located:{C_RESET} {CONFIG_OUT}\n")
         with open(CONFIG_OUT, "r") as f:
             for line in f:
                 if line.strip() and not line.startswith("#"):

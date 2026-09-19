@@ -357,7 +357,7 @@ def run_bounty(target_raw: str):
                 print(f"  {sev_color}[!] FOUND {res['severity']} EXPOSURE:{C_RESET} {C_WHITE}{res['path']}{C_RESET} ({res['desc']}) [{res['status']}]")
 
     if not leaks:
-        print(f"  {C_GREEN}[✓] No baseline secrets or misconfigured repository paths exposed.{C_RESET}")
+        print(f"  {C_GREEN}[[OK]] No baseline secrets or misconfigured repository paths exposed.{C_RESET}")
 
     # ── Phase 6: Save Dossier ─────────────────────────────────────────────────
     vault = Path.home() / ".asterix_vault" / "bounty" / domain
@@ -419,7 +419,7 @@ def run_bounty(target_raw: str):
     md_path.write_text("\n".join(md_lines), encoding="utf-8")
 
     print(f"\n{SEP}")
-    print(f"  {C_GREEN}{C_BOLD}[✓] RECON DOSSIER READY:{C_RESET}")
+    print(f"  {C_GREEN}{C_BOLD}[[OK]] RECON DOSSIER READY:{C_RESET}")
     print(f"    • Markdown Report: {C_WHITE}{md_path}{C_RESET}")
     print(f"    • JSON Data:       {C_WHITE}{json_path}{C_RESET}")
     print(f"{SEP}\n")

@@ -253,7 +253,7 @@ def main():
 
         try:
             proof_file = seal_artifact(args.target, args.engagement_id, args.operator, args.key)
-            print(f"{C_GREEN}{C_BOLD}[✓] EVIDENCE ARTIFACT CRYPTOGRAPHICALLY SEALED:{C_RESET}")
+            print(f"{C_GREEN}{C_BOLD}[[OK]] EVIDENCE ARTIFACT CRYPTOGRAPHICALLY SEALED:{C_RESET}")
             print(f"  • Source File:    {args.target}")
             print(f"  • Proof Envelope: {proof_file}")
             print(f"  • Operator:       {args.operator}")
@@ -270,7 +270,7 @@ def main():
 
         res = verify_artifact(args.target, args.key)
         if res.get("valid"):
-            print(f"{C_GREEN}{C_BOLD}[✓] VERIFICATION PASSED: CHAIN OF CUSTODY INTACT!{C_RESET}")
+            print(f"{C_GREEN}{C_BOLD}[[OK]] VERIFICATION PASSED: CHAIN OF CUSTODY INTACT!{C_RESET}")
             print(f"  • Envelope ID:      {res['envelope_id']}")
             print(f"  • Sealed UTC Time:  {res['timestamp']}")
             print(f"  • Sealed By:        {res['operator']} ({res['engagement_id']})")
@@ -278,7 +278,7 @@ def main():
             print(f"  • File Integrity:   Bit-for-Bit Verified (Non-Tampered)")
             print(f"  • Digital Sig:      HMAC Verified with Custody Key")
         else:
-            print(f"{C_RED}{C_BOLD}[🚨 CRITICAL ALERT] EVIDENCE INTEGRITY TAMPERED OR CORRUPTED!{C_RESET}")
+            print(f"{C_RED}{C_BOLD}[[ALERT] CRITICAL ALERT] EVIDENCE INTEGRITY TAMPERED OR CORRUPTED!{C_RESET}")
             print(f"  • Reason:           {res.get('reason', 'Signature or Hash mismatch')}")
             if "hash_valid" in res:
                 print(f"  • Hash Check:       {'PASSED' if res['hash_valid'] else 'FAILED (File modified after sealing)'}")

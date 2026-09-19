@@ -316,24 +316,24 @@ def main():
         print("\n  PCR MEASUREMENT REGISTERS:")
         for reg, val in att["pcr_measurements"].items():
             print(f"    [{reg:<24}] = {val[:16]}...{val[-8:]}")
-        print(f"\n  {C_GREEN}✔ System verified: Zero pre-engagement kernel or manifest tampering.{C_RESET}\n")
+        print(f"\n  {C_GREEN}[OK] System verified: Zero pre-engagement kernel or manifest tampering.{C_RESET}\n")
 
     elif args.subcommand == "sbom":
         out = Path(args.out) if args.out else Path("ASTERIX_SBOM_CycloneDX.json")
         data = SbomGenerator.generate_cyclonedx(out)
-        print(f"  {C_GREEN}✔ CycloneDX SBOM generated:{C_RESET} {out} ({len(data['components'])} components)")
+        print(f"  {C_GREEN}[OK] CycloneDX SBOM generated:{C_RESET} {out} ({len(data['components'])} components)")
 
     elif args.subcommand == "transparency":
         if args.action == "verify":
             ok, count, msg = TransparencyLog.verify_log()
             if ok:
-                print(f"  {C_GREEN}✔ Transparency Log Intact:{C_RESET} {msg} ({count} entries)")
+                print(f"  {C_GREEN}[OK] Transparency Log Intact:{C_RESET} {msg} ({count} entries)")
             else:
                 print(f"  {C_RED}[!] Tampering Detected:{C_RESET} {msg}")
                 sys.exit(1)
         elif args.action == "log":
             e = TransparencyLog.append_entry(args.pkg, args.ver, args.hash)
-            print(f"  {C_GREEN}✔ Logged to Transparency Merkle Chain:{C_RESET} Entry #{e['index']} -> {e['entry_hash'][:16]}...")
+            print(f"  {C_GREEN}[OK] Logged to Transparency Merkle Chain:{C_RESET} Entry #{e['index']} -> {e['entry_hash'][:16]}...")
 
 
 if __name__ == "__main__":

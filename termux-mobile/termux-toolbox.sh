@@ -22,7 +22,7 @@ banner() {
     echo -e "${C_CYAN}${C_BOLD}"
     cat << "EOF"
   ╔══════════════════════════════════════════════════════════════════════╗
-  ║   📱 ASTERIX MOBILE SYSTEM CENTER & TERMUX TOOLBOX v2.0              ║
+  ║   [MOBILE] ASTERIX MOBILE SYSTEM CENTER & TERMUX TOOLBOX v2.0              ║
   ║   [ Battery HUD • DNS Benchmark • Storage Clean • Self-Healer ]     ║
   ╚══════════════════════════════════════════════════════════════════════╝
 EOF
@@ -126,7 +126,7 @@ cmd_clean() {
     rm -rf "${TMPDIR:-$PREFIX/tmp}"/* 2>/dev/null || true
     rm -rf "$HOME/.cache"/* 2>/dev/null || true
 
-    echo -e "  ${C_GREEN}[✔] Mobile storage optimization complete!${C_RESET}\n"
+    echo -e "  ${C_GREEN}[[OK]] Mobile storage optimization complete!${C_RESET}\n"
 }
 
 cmd_doctor() {
@@ -180,7 +180,7 @@ cmd_doctor() {
     fi
 
     if [ $issues -eq 0 ]; then
-        echo -e "\n  ${C_GREEN}${C_BOLD}[✔] All core mobile subsystems healthy and verified!${C_RESET}\n"
+        echo -e "\n  ${C_GREEN}${C_BOLD}[[OK]] All core mobile subsystems healthy and verified!${C_RESET}\n"
     else
         echo -e "\n  ${C_YELLOW}${C_BOLD}[!] $issues potential issue(s) detected. Please review recommendations above.${C_RESET}\n"
     fi
@@ -194,7 +194,7 @@ cmd_clip_copy() {
     fi
     if command -v termux-clipboard-set >/dev/null 2>&1; then
         echo -n "$text" | termux-clipboard-set
-        echo -e "  ${C_GREEN}[✔] Copied to Android clipboard.${C_RESET}"
+        echo -e "  ${C_GREEN}[[OK]] Copied to Android clipboard.${C_RESET}"
     else
         echo "termux-clipboard-set not found (install termux-api package)."
     fi
@@ -216,7 +216,7 @@ cmd_notify() {
     if command -v termux-vibrate >/dev/null 2>&1; then
         termux-vibrate -d 300 2>/dev/null || true
     fi
-    echo -e "  ${C_GREEN}[✔] Notification triggered: ${msg}${C_RESET}"
+    echo -e "  ${C_GREEN}[[OK]] Notification triggered: ${msg}${C_RESET}"
 cmd_debian_doctor() {
     if [ -f "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
         python3 "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" doctor "$@"

@@ -1,4 +1,4 @@
-# 🛠️ ASTERIX OS Developer Toolchain & Engineering Guide
+#  ASTERIX OS Developer Toolchain & Engineering Guide
 ### Complete Reference for Compilers, Runtimes, Reverse Engineering, and Databases
 
 **ASTERIX OS** comes preloaded with an extensive suite of programming language compilers, package managers, debugging suites, binary analysis frameworks, database clients, and modern terminal productivity tools.
@@ -7,7 +7,7 @@
 
 ## 1. Programming Languages & Compilers
 
-### 🦀 Rust Ecosystem
+###  Rust Ecosystem
 * **Installed Components:** `rustc`, `cargo`, `rustfmt`, `clippy`
 * **Quick Compilation:** `run-rs file.rs` (Compiles and executes in one command)
 * **Standard Cargo Project:**
@@ -18,7 +18,7 @@
   cargo run
   ```
 
-### 🐹 Go (Golang)
+###  Go (Golang)
 * **Installed Components:** `go` (Go compiler & toolchain)
 * **Execution:**
   ```bash
@@ -26,7 +26,7 @@
   go build -ldflags="-s -w" -o my_binary main.go
   ```
 
-### ⚡ C / C++ & LLVM Toolchain
+### [*] C / C++ & LLVM Toolchain
 * **Installed Compilers:** `gcc`, `g++`, `clang`, `llvm`, `make`, `cmake`, `ninja-build`
 * **Debuggers & Profilers:** `gdb`, `valgrind`, `strace`, `ltrace`
 * **Quick Compilation:** `run-c file.c`
@@ -36,7 +36,7 @@
   g++ -std=c++20 -O2 file.cpp -o file && ./file
   ```
 
-### 🐍 Python 3 & Virtual Environments
+###  Python 3 & Virtual Environments
 * **Installed Components:** `python3`, `python3-pip`, `python3-venv`, `python3-dev`, `ipython3`, `pipx`
 * **Interactive REPL:** `ipython3`
 * **Virtual Environment Setup:**
@@ -46,7 +46,7 @@
   pip install --upgrade pip
   ```
 
-### 🌐 Node.js & Web Runtimes
+### [NET] Node.js & Web Runtimes
 * **Installed Components:** `nodejs`, `npm`
 * **Run Script:** `node script.js`
 * **Package Management:** `npm init -y && npm install <package>`
@@ -68,7 +68,7 @@
 
 ## 3. Databases & API Testing Suite
 
-### 🗄️ Database Consoles
+###  Database Consoles
 * **SQLite3 (Local Relational):**
   ```bash
   sqlite3 /asterix_persistent/database.db
@@ -76,7 +76,7 @@
 * **PostgreSQL Client:** `psql -h <host> -U <user> -d <dbname>`
 * **Redis CLI:** `redis-cli -h <host>`
 
-### 📡 API & HTTP Testing (HTTPie & Socat)
+### [SIGNAL] API & HTTP Testing (HTTPie & Socat)
 * **HTTPie JSON API Request:**
   ```bash
   http GET https://httpbin.org/json

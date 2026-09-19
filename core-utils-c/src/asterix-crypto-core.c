@@ -1,6 +1,6 @@
 /*
  * ==============================================================================
- * 🌌 ASTERIX OS — High-Assurance Native C Cryptographic Core v3.5
+ * [ASTERIX] ASTERIX OS — High-Assurance Native C Cryptographic Core v3.5
  * Pure C99 • Zero External Dependencies (Zero OpenSSL / Zero libsodium)
  * Algorithms:
  *   1. ChaCha20 Stream Cipher (RFC 8439) — 256-bit key, 96-bit nonce
@@ -537,7 +537,7 @@ int run_selftest(void) {
     decrypted[pt_len] = '\0';
 
     if (dec_res == 0 && strcmp((const char*)decrypted, plaintext) == 0) {
-        printf("[✔] ChaCha20-Poly1305 AEAD Test: PASSED (Decryption verified and tag authenticated)\n");
+        printf("[[OK]] ChaCha20-Poly1305 AEAD Test: PASSED (Decryption verified and tag authenticated)\n");
     } else {
         printf("[!] ChaCha20-Poly1305 AEAD Test: FAILED!\n");
         free(ciphertext);
@@ -567,7 +567,7 @@ int run_selftest(void) {
         0x06, 0x4b, 0x5a, 0x7e, 0x3d, 0xb1, 0x81, 0xf8
     };
     if (memcmp(aes_ct, expected_aes_ct, 16) == 0) {
-        printf("[✔] AES-256 Block Cipher Test: PASSED (Matches NIST SP 800-38A test vector)\n");
+        printf("[[OK]] AES-256 Block Cipher Test: PASSED (Matches NIST SP 800-38A test vector)\n");
     } else {
         printf("[!] AES-256 Block Cipher Test: FAILED!\n");
         free(ciphertext);
@@ -577,14 +577,14 @@ int run_selftest(void) {
 
     free(ciphertext);
     free(decrypted);
-    printf("[✔] All ASTERIX Native Cryptographic Self-Tests Passed Cleanly.\n");
+    printf("[[OK]] All ASTERIX Native Cryptographic Self-Tests Passed Cleanly.\n");
     return 0;
 }
 
 int main(int argc, char **argv) {
     if (argc < 2 || strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
         printf("===============================================================================\n");
-        printf("  🌌 ASTERIX OS — High-Assurance Native C Cryptographic Core v3.5\n");
+        printf("  [ASTERIX] ASTERIX OS — High-Assurance Native C Cryptographic Core v3.5\n");
         printf("  Standalone C99 implementation of ChaCha20-Poly1305 AEAD and AES-256\n");
         printf("===============================================================================\n\n");
         printf("Usage:\n");
@@ -615,7 +615,7 @@ int main(int argc, char **argv) {
 
         double secs = (double)(end - start) / CLOCKS_PER_SEC;
         double mbps = (10.0) / (secs > 0 ? secs : 0.0001);
-        printf("[✔] ChaCha20 Native C Throughput: %.2f MB/s (Elapsed: %.3fs)\n", mbps, secs);
+        printf("[[OK]] ChaCha20 Native C Throughput: %.2f MB/s (Elapsed: %.3fs)\n", mbps, secs);
         free(buffer);
         return 0;
     }

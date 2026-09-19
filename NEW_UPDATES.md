@@ -1,22 +1,22 @@
-# 🌌 ASTERIX OS — New Updates & Architectural Enhancements
+# [ASTERIX] ASTERIX OS — New Updates & Architectural Enhancements
 > **Next-Generation Cybernetic Operating System & High-Performance Security Platform**  
 > *Latest Update Release | Web Code Structure Engine & Termux Max-Tier Upgrade*
 
 ---
 
-## 📑 Overview of Recent Upgrades
+##  Overview of Recent Upgrades
 
 This update cycle introduces high-impact architectural enhancements:
-1. **🌌 Peak Cognitive Neural AI & Supabase Cloud Memory (`ax ai` / `asterix-ai`)** — Upgraded from offline-only placeholder to a multi-tiered cognitive reasoning engine with persistent Supabase Cloud Memory, SQLite local caching, vector similarity search, and a deep offline knowledge matrix covering microkernels, assembly, C, and cybersecurity.
-2. **🛡️ ASTERIX Cyber Microkernel in C and Assembly (`kernel/`)** — Freestanding bare-metal microkernel with Multiboot v1 bootstrap (`boot.asm`), CPU exception and IRQ interrupt stubs (`isr.asm`), memory-mapped VGA console driver (`vga.h`), 8259 PIC remapping and IDT (`idt.h`), physical frame memory allocator (`kernel.h`), round-robin scheduler, and `int 0x80` syscall gateway.
-3. **⚡ Stage 2 Bootloader & SIMD Crypto Assembly Engine (`boot-asm/`)** — Transitions 16-bit real mode to 32-bit protected mode and 64-bit long mode (`asterix-stage2-loader.asm`), INT 0x15 E820 system memory probe, dual A20 line gate, 4-level paging, and AVX2/SSE2 vectorized cryptographic accelerator (`asterix-simd-crypto.asm`).
-4. **🔐 Native C Standalone Cryptography & Raw Socket Packet Engine (`core-utils-c/`)** — Zero-dependency standalone implementations of ChaCha20-Poly1305 AEAD and AES-256 (`asterix-crypto-core.c`), plus raw socket packet decoder and stealth scan anomaly detector (`asterix-packet-engine.c`).
-5. **🌐 Web Code Structure & Deep Source Extraction Engine (`ax web-structure` / `ax curl-tree` / `ax webdump`)** — Next-Gen `curl` alternative that parses full DOM trees, JavaScript bundles and extracted internal APIs, CSS stylesheets, form endpoints, tech stack and security posture, and exports the complete offline code structure with zero external pip dependencies.
-6. **📱 Termux Mobile System Center & Toolbox (`ax mobile-sys` / `termux-toolbox`)** — Dedicated hardware HUD, battery health metrics, multi-DNS resolver latency benchmarking, storage cache purging, and Termux self-healing diagnostics.
+1. **[ASTERIX] Peak Cognitive Neural AI & Supabase Cloud Memory (`ax ai` / `asterix-ai`)** — Upgraded from offline-only placeholder to a multi-tiered cognitive reasoning engine with persistent Supabase Cloud Memory, SQLite local caching, vector similarity search, and a deep offline knowledge matrix covering microkernels, assembly, C, and cybersecurity.
+2. **[SEC] ASTERIX Cyber Microkernel in C and Assembly (`kernel/`)** — Freestanding bare-metal microkernel with Multiboot v1 bootstrap (`boot.asm`), CPU exception and IRQ interrupt stubs (`isr.asm`), memory-mapped VGA console driver (`vga.h`), 8259 PIC remapping and IDT (`idt.h`), physical frame memory allocator (`kernel.h`), round-robin scheduler, and `int 0x80` syscall gateway.
+3. **[*] Stage 2 Bootloader & SIMD Crypto Assembly Engine (`boot-asm/`)** — Transitions 16-bit real mode to 32-bit protected mode and 64-bit long mode (`asterix-stage2-loader.asm`), INT 0x15 E820 system memory probe, dual A20 line gate, 4-level paging, and AVX2/SSE2 vectorized cryptographic accelerator (`asterix-simd-crypto.asm`).
+4. ** Native C Standalone Cryptography & Raw Socket Packet Engine (`core-utils-c/`)** — Zero-dependency standalone implementations of ChaCha20-Poly1305 AEAD and AES-256 (`asterix-crypto-core.c`), plus raw socket packet decoder and stealth scan anomaly detector (`asterix-packet-engine.c`).
+5. **[NET] Web Code Structure & Deep Source Extraction Engine (`ax web-structure` / `ax curl-tree` / `ax webdump`)** — Next-Gen `curl` alternative that parses full DOM trees, JavaScript bundles and extracted internal APIs, CSS stylesheets, form endpoints, tech stack and security posture, and exports the complete offline code structure with zero external pip dependencies.
+6. **[MOBILE] Termux Mobile System Center & Toolbox (`ax mobile-sys` / `termux-toolbox`)** — Dedicated hardware HUD, battery health metrics, multi-DNS resolver latency benchmarking, storage cache purging, and Termux self-healing diagnostics.
 
 ---
 
-## 0. 🌌 Peak Cognitive Neural AI & Supabase Cloud Memory Bridge
+## 0. [ASTERIX] Peak Cognitive Neural AI & Supabase Cloud Memory Bridge
 
 The ASTERIX AI subsystem (`asterix-ai/`) has been upgraded to a resilient multi-tier cognitive architecture:
 
@@ -45,7 +45,7 @@ ax ai cloud-memory                                    # Inspect total and synced
 
 ---
 
-## 0.1 🛡️ ASTERIX Cyber Microkernel in C and Assembly (`kernel/`)
+## 0.1 [SEC] ASTERIX Cyber Microkernel in C and Assembly (`kernel/`)
 
 Located in `kernel/`, the ASTERIX Cyber Microkernel provides a freestanding Ring 0 bare-metal kernel foundation:
 
@@ -71,7 +71,7 @@ make qemu
 
 ---
 
-## 0.2 ⚡ Bare-Metal Assembly Systems Expansion (`boot-asm/`)
+## 0.2 [*] Bare-Metal Assembly Systems Expansion (`boot-asm/`)
 
 - **Stage 2 Loader (`boot-asm/asterix-stage2-loader.asm`)**:
   - Probes available physical memory using BIOS INT 0x15 AX=0xE820 and stores the memory map at physical address `0x9000`.
@@ -86,7 +86,7 @@ make qemu
 
 ---
 
-## 0.3 🔐 Standalone Native C Cryptographic Core & Packet Engine (`core-utils-c/`)
+## 0.3  Standalone Native C Cryptographic Core & Packet Engine (`core-utils-c/`)
 
 - **Standalone Cryptographic Core (`core-utils-c/src/asterix-crypto-core.c`)**:
   - **Zero External Dependencies**: Standard C99 implementation without OpenSSL or libsodium.
@@ -102,7 +102,7 @@ make qemu
 
 ---
 
-## 0. 🌐 Web Code Structure & Deep Source Extraction Engine (`ax web-structure` / `ax curl-tree`)
+## 0. [NET] Web Code Structure & Deep Source Extraction Engine (`ax web-structure` / `ax curl-tree`)
 
 Built with **100% Python Standard Library (Zero Pip Dependencies)**, this engine transforms basic `curl <url>` into a full architectural code analyzer and offline code structure dumper.
 
@@ -128,7 +128,7 @@ ax mobile-sys dns                             # Mobile DNS latency benchmark (1.
 
 ---
 
-## 1. 🛡️ ASTERIX Defender Core (Pure-Rust Antivirus & Host Firewall)
+## 1. [SEC] ASTERIX Defender Core (Pure-Rust Antivirus & Host Firewall)
 
 Located at `core-utils-rust/asterix-defender-core/`, this engine is built with **100% Pure Safe Rust (Zero External Crates)** for instant, zero-dependency compilation on Bare-Metal Linux, Debian Live ISOs, and Android Termux PRoot.
 
@@ -153,7 +153,7 @@ ax quarantine                # Inspect safely isolated threats in the quarantine
 
 ---
 
-## 2. ⚡ LIGHTNING Autonomous WAF & Web SOC Command Center
+## 2. [*] LIGHTNING Autonomous WAF & Web SOC Command Center
 
 Integrated into the package registry (`packages/LIGHTNING-/`), LIGHTNING delivers military-grade web defense:
 
@@ -184,7 +184,7 @@ ax soc                       # Alias for Web SOC control center
 
 ---
 
-## 3. 🎮 APEX OVERDRIVE & eSports Kernel Gaming Suite
+## 3.  APEX OVERDRIVE & eSports Kernel Gaming Suite
 
 Engineered to match and surpass Windows Game Mode, DirectX Hardware-Accelerated GPU Scheduling (HAGS), and microsecond timer tuning for ultra-low latency eSports gaming.
 
@@ -219,7 +219,7 @@ ax overdrive                 # Launch APEX OVERDRIVE 60 FPS glassmorphic HUD (po
 
 ---
 
-## 4. 🏢 Upgraded Windows Enterprise Feature Suite (Zero-Vulnerability Architecture)
+## 4.  Upgraded Windows Enterprise Feature Suite (Zero-Vulnerability Architecture)
 
 We ported core Windows administrative and reliability subsystems into native, hardened ASTERIX OS tools:
 
@@ -287,7 +287,7 @@ ax exploit-guard asr         # Apply Attack Surface Reduction rules (disable unp
 
 ---
 
-## 5. 🛡️ ASTERIX OS Tactical Stealth, Anti-Forensics & System Hardening Suite
+## 5. [SEC] ASTERIX OS Tactical Stealth, Anti-Forensics & System Hardening Suite
 
 Engineered natively for tactical field operations, cyber defense, and live incident response, these native subsystems integrate operational stealth, anti-forensics, forensic data preservation, and radio frequency reconnaissance directly into the ASTERIX OS platform:
 
@@ -364,7 +364,7 @@ ax carve <target> [out_dir]     # Foremost & Scalpel digital forensics deleted m
 
 ---
 
-## 6. ⚡ Performance, Storage & Network Diagnostics Subsystem
+## 6. [*] Performance, Storage & Network Diagnostics Subsystem
 
 Engineered for high-efficiency operation across both Android Termux mobile devices and Bare-Metal Linux servers:
 
@@ -398,7 +398,7 @@ ax ssl-audit <domain>           # Deep SSL/TLS cipher auditor, expiry tracker & 
 
 ---
 
-## 7. 📦 Modular External Package Registry Architecture
+## 7. [PKG] Modular External Package Registry Architecture
 
 To prevent repository bloat, third-party security tools are managed via automated synchronization:
 
@@ -427,7 +427,7 @@ ax pkg build                 # Rebuild native Rust/C components across all packa
 
 ---
 
-## 8. 🔒 Zero-Vulnerability Security Verification Matrix
+## 8. [LOCK] Zero-Vulnerability Security Verification Matrix
 
 | Component | Security Control Applied | Verification Result |
 | :--- | :--- | :--- |
@@ -441,7 +441,7 @@ ax pkg build                 # Rebuild native Rust/C components across all packa
 
 ---
 
-## 9. 🗺️ ASTERIX OS Visual Architecture Diagram
+## 9.  ASTERIX OS Visual Architecture Diagram
 
 The architectural filesystem layout diagram has been refreshed with all recent additions:
 - **Filesystem Root**: Saved directly in the root directory (not in subfolders):
@@ -461,7 +461,7 @@ The architectural filesystem layout diagram has been refreshed with all recent a
 
 ---
 
-## 10. 🧠 ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
+## 10.  ASTERIX AI — Rule-Based Expert System & SOC Inference Engine
 
 Located in `asterix-ai/`, this is an offline expert triage system operating with **zero cloud dependencies** and **zero GPU requirements**:
 - **Dual Runtime Architecture**:
@@ -486,7 +486,7 @@ ax ai rules                      # Display active knowledge base rules, severity
 
 ---
 
-## 11. ⚡ ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
+## 11. [*] ASTERIX Auto-Compiler // Autonomous Self-Healing Build Engine
 
 Located in `auto-compiler/`, this engine automates the entire compilation, linting, and bug-healing process with zero manual intervention:
 - **Zero-Manual Error Healing**:
@@ -504,7 +504,7 @@ ax auto-compile <dir>            # Auto-detect and build Makefile, Cargo.toml, o
 
 ---
 
-## 12. 🌐 ASTERIX OS-Computing // Universal Host Collaboration & Bridge v3.0
+## 12. [NET] ASTERIX OS-Computing // Universal Host Collaboration & Bridge v3.0
 
 Located in `os-computing/`, this framework fuses ASTERIX OS with the host operating system (Windows 10/11, Linux, macOS, Termux) and mounted dual-boot systems (Debian, Ubuntu, Arch, Fedora, and companion security partitions):
 - **Cross-OS Discovery (`ax os-computing probe`)**:
@@ -534,7 +534,7 @@ ax os-computing status           # Display complete cross-OS collaboration telem
 
 ---
 
-## 13. 🔧 ASTERIX Code-Repair Engine (Native Rust & C Self-Healing)
+## 13. [TOOL] ASTERIX Code-Repair Engine (Native Rust & C Self-Healing)
 
 Located in `core-utils-rust/asterix-code-repair/` and `core-utils-c/src/asterix-code-repair.c`:
 - **Dual-Tier Native Performance**: Tier 1 in pure Rust with zero-cost abstractions; Tier 2 in POSIX C for minimal embedded footprints.
@@ -553,7 +553,7 @@ ax code-repair fix <dir>         # Recursively heal all defects with safety back
 
 ---
 
-## 14. 🧠 Conversational ASTERIX AI v3.0 (ChatGPT-Style Copilot)
+## 14.  Conversational ASTERIX AI v3.0 (ChatGPT-Style Copilot)
 
 Located in `asterix-ai/`:
 - **Interactive Conversational Shell (`ax ai chat`)**: Provides an offline, zero-dependency natural language dialogue interface without sending queries to the cloud.
@@ -571,7 +571,7 @@ ax ai about [es|fr|de|zh|ar|ru]  # Display multilingual ASTERIX overview
 
 ---
 
-## 15. 🌐 ProxyChains Creator & Dynamic Routing Engine
+## 15. [NET] ProxyChains Creator & Dynamic Routing Engine
 
 Located in `proxychains-creator/`:
 - **Protocol Handshake Probing**: Probes SOCKS5 (RFC 1928) and SOCKS4 sockets to ensure genuine proxy availability, not just open ports.
@@ -622,7 +622,7 @@ ax proxychains status            # Display current active proxy chains configura
 - Strict 2-party limit ("u and the person")
 - 100% In-memory ephemeral storage (zero disk logs)
 - Message self-destruct timers (5s, 15s, 30s, 60s)
-- ☣ 1-click Emergency Panic Killswitch
+-  1-click Emergency Panic Killswitch
 - Cryptographic safety numbers / fingerprint
 - Synthesized Web Audio API sound effects
 - New aliases: `ax-chat`, `ax-secure-chat`, `secure-chat`, `chat-room`
@@ -630,9 +630,9 @@ ax proxychains status            # Display current active proxy chains configura
 ## UPDATE 20 — Secure Chat v2.0: Group Vaults, Admin Controls & 3-Strike IDS
 - Added **Group Vault** multi-user architecture alongside Direct 1-on-1 mode
 - Custom password creation on room setup with PBKDF2 verification
-- **🚨 3-Strike Intrusion Detection System (IDS):**
-  - Triggers OS terminal alert: `🚨 ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
+- **[ALERT] 3-Strike Intrusion Detection System (IDS):**
+  - Triggers OS terminal alert: `[ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!`
   - Logs intruder IP and Port + counter-attack tool recommendations (`ax nmap`, `ax killswitch`, `ax decoy`)
   - Real-time intrusion alarm broadcast to connected web vault users
-- **👑 Group Admin Suite:** Kick members, mute/unmute, purge chat history
+- ** Group Admin Suite:** Kick members, mute/unmute, purge chat history
 - Full CLI client integration with `/kick`, `/mute`, `/purge`, `/members`

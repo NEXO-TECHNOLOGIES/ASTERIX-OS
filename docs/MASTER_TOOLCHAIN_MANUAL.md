@@ -1,11 +1,11 @@
-# 🌌 ASTERIX OS Master Toolchain & Command Encyclopedia
+# [ASTERIX] ASTERIX OS Master Toolchain & Command Encyclopedia
 ### Maximum-Tier Reference for Penetration Testing, Reverse Engineering, and Systems Development
 
 **ASTERIX OS** is engineered as an autonomous sovereign cybernetic operating system unifying deep offensive capabilities, automated defensive shielding, a modern Rust command core, dual-layer persistent storage, and full-stack software engineering environments.
 
 ---
 
-## ⚡ Universal Command Core: `ax` & `asterix`
+## [*] Universal Command Core: `ax` & `asterix`
 
 ASTERIX OS provides a unified command line tool accessible interchangeably via **`ax`** or **`asterix`**:
 
@@ -98,7 +98,7 @@ ASTERIX OS provides a unified command line tool accessible interchangeably via *
 | `ax extract <archive>` | `ax untar` | Universal archive extractor (tar.gz, tar.bz2, zip, tar.xz) |
 | `ax find-large [dir]` | `ax bigfiles` | Identifies top 15 largest disk-consuming files |
 
-### ⚡ Universal Omni-Dispatcher (Thousands of System Tools)
+### [*] Universal Omni-Dispatcher (Thousands of System Tools)
 Any command not in the table above is automatically passed through the **Omni-Dispatcher** (`dynamic_system_exec`). If the command exists on the operating system, it is executed within the cybernetic environment with timing, status codes, and security telemetry! Examples:
 * `ax nmap -sV -sC 192.168.1.1`
 * `ax curl -IL https://example.com`
@@ -126,7 +126,7 @@ Any command not in the table above is automatically passed through the **Omni-Di
 
 ---
 
-## 🪟 Ultimate Terminal & Tmux Quad-Grid Workflow
+##  Ultimate Terminal & Tmux Quad-Grid Workflow
 
 ```
 ┌───────────────────────────────────────┬───────────────────────────────────────┐
@@ -148,7 +148,7 @@ Any command not in the table above is automatically passed through the **Omni-Di
 
 ---
 
-## ⚡ Supercharged Cyber Shell Environment
+## [*] Supercharged Cyber Shell Environment
 
 Both Bash and Zsh are pre-configured with:
 * **FZF Fuzzy History Search:** Press <kbd>Ctrl+R</kbd> to interactively search command history.
@@ -163,7 +163,7 @@ Both Bash and Zsh are pre-configured with:
 
 ---
 
-## 💾 Persistent Storage Architecture
+## [DISK] Persistent Storage Architecture
 
 All data, custom scripts, and tool repos saved in `/asterix_persistent/` remain permanent:
 * **On Live USB (PC/VM):** Stored directly on the encrypted ext4 partition labeled `persistence`.

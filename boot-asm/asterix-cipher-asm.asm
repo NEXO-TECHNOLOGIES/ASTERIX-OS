@@ -1,5 +1,5 @@
 ; =====================================================================
-; 🌌 ASTERIX OS - Pure x86-64 Assembly Cryptographic Engine (v2.0)
+; [ASTERIX] ASTERIX OS - Pure x86-64 Assembly Cryptographic Engine (v2.0)
 ; Multi-Round ARX-512 Block-Stream Cipher & Cryptographic Container
 ; Features:
 ;   - 512-bit Internal Permutation Matrix (16 x 32-bit registers)
@@ -72,11 +72,11 @@ section .rodata
     msg_proc_len equ $ - msg_proc
 
     msg_enc_ok:
-        db " [✔] SUCCESS: File encrypted into ASTERIX Binary Container (.axc)!", 10, 0
+        db " [[OK]] SUCCESS: File encrypted into ASTERIX Binary Container (.axc)!", 10, 0
     msg_enc_ok_len equ $ - msg_enc_ok
 
     msg_dec_ok:
-        db " [✔] SUCCESS: Binary container authenticated & decrypted cleanly!", 10, 0
+        db " [[OK]] SUCCESS: Binary container authenticated & decrypted cleanly!", 10, 0
     msg_dec_ok_len equ $ - msg_dec_ok
 
     err_header:
@@ -192,7 +192,7 @@ _start:
     jmp do_decrypt
 
 ; =====================================================================
-; 🔒 ENCRYPTION PIPELINE
+; [LOCK] ENCRYPTION PIPELINE
 ; =====================================================================
 do_encrypt:
     ; Print encryption start notification
@@ -319,7 +319,7 @@ do_encrypt:
     syscall
 
 ; =====================================================================
-; 🔓 DECRYPTION PIPELINE
+;  DECRYPTION PIPELINE
 ; =====================================================================
 do_decrypt:
     ; Print decryption start notification
@@ -421,7 +421,7 @@ do_decrypt:
     syscall
 
 ; =====================================================================
-; ⚙️ SUBROUTINES & CRYPTOGRAPHIC ALGORITHMS
+; [*] SUBROUTINES & CRYPTOGRAPHIC ALGORITHMS
 ; =====================================================================
 
 ; ─────────────────────────────────────────────────────────────────────

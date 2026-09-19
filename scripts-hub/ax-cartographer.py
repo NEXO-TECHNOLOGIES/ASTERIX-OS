@@ -421,9 +421,9 @@ class CodebaseCartographer:
         
         print(f"  {C_BOLD}1. Circular Dependency Analysis:{C_RESET}")
         if not self.cycles:
-            print(f"     {C_GREEN}✓ No circular dependencies detected. Clean unidirectional flow.{C_RESET}")
+            print(f"     {C_GREEN}[OK] No circular dependencies detected. Clean unidirectional flow.{C_RESET}")
         else:
-            print(f"     {C_RED}⚠ Found {len(self.cycles)} circular dependency loops!{C_RESET}")
+            print(f"     {C_RED}[!] Found {len(self.cycles)} circular dependency loops!{C_RESET}")
             for idx, cycle in enumerate(self.cycles[:10], 1):
                 chain = " -> ".join(cycle)
                 print(f"     [{idx}] {chain}")
@@ -431,7 +431,7 @@ class CodebaseCartographer:
 
         print(f"  {C_BOLD}2. Orphan Modules (No Inbound Imports):{C_RESET}")
         if not self.orphans:
-            print(f"     {C_GREEN}✓ All files are referenced within the codebase.{C_RESET}")
+            print(f"     {C_GREEN}[OK] All files are referenced within the codebase.{C_RESET}")
         else:
             print(f"     {C_YELLOW}Found {len(self.orphans)} potentially unused / isolated files:{C_RESET}")
             for orphan in self.orphans[:15]:
@@ -729,7 +729,7 @@ class CodebaseCartographer:
 
 <div id="sidebar">
   <div class="brand">
-    <h1>⚡ ASTERIX CARTOGRAPHER</h1>
+    <h1>[*] ASTERIX CARTOGRAPHER</h1>
     <p>Autonomous Architecture Topology Engine</p>
   </div>
   <div class="search-box">
@@ -1035,7 +1035,7 @@ class {class_name}Model:
             return
 
         file_path.write_text(code, encoding="utf-8")
-        print(f"  {C_GREEN}✓ Successfully scaffolded:{C_RESET} {file_path}")
+        print(f"  {C_GREEN}[OK] Successfully scaffolded:{C_RESET} {file_path}")
         print(f"  {C_DIM}Zero boilerplate needed. Ready for immediate logic implementation.{C_RESET}\n")
 
 
@@ -1085,7 +1085,7 @@ def main():
             cartographer.print_tree()
         elif getattr(args, "html", None):
             cartographer.export_html_dashboard(args.html)
-            print(f"  {C_GREEN}✓ Interactive Architecture Dashboard saved to:{C_RESET} {args.html}")
+            print(f"  {C_GREEN}[OK] Interactive Architecture Dashboard saved to:{C_RESET} {args.html}")
         elif getattr(args, "json", None):
             data = {
                 "nodes": {k: v.to_dict() for k, v in cartographer.nodes.items()},
@@ -1094,7 +1094,7 @@ def main():
                 "bottlenecks": cartographer.bottlenecks
             }
             Path(args.json).write_text(json.dumps(data, indent=2), encoding="utf-8")
-            print(f"  {C_GREEN}✓ JSON Topology graph saved to:{C_RESET} {args.json}")
+            print(f"  {C_GREEN}[OK] JSON Topology graph saved to:{C_RESET} {args.json}")
         else:
             cartographer.print_summary()
 

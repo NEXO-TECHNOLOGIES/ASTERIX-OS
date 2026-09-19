@@ -60,7 +60,7 @@ EOF
 
     echo -e "${C_CYAN}[*] Testing connection to ${url}...${C_RESET}"
     if curl -s --max-time 5 "${url}/health" | grep -q "ONLINE"; then
-        echo -e "${C_GREEN}[✔] Cloud Node responded ONLINE!${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] Cloud Node responded ONLINE!${C_RESET}"
     else
         echo -e "${C_YELLOW}[!] Warning: Node could not be verified, saving configuration anyway...${C_RESET}"
     fi
@@ -73,7 +73,7 @@ EOF
         cp "${CONFIG_FILE}" "${PERSIST_CONFIG}"
     fi
 
-    echo -e "${C_GREEN}[✔] Cloud Compute Node linked successfully!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Cloud Compute Node linked successfully!${C_RESET}"
 }
 
 cmd_status() {
@@ -127,7 +127,7 @@ cmd_compute() {
         success=$(echo "$res" | jq -r '.success // false')
 
         if [ "$success" = "true" ]; then
-            echo -e "${C_GREEN}${C_BOLD}[✔] Cloud Task Completed Successfully in ${time_sec}s:${C_RESET}"
+            echo -e "${C_GREEN}${C_BOLD}[[OK]] Cloud Task Completed Successfully in ${time_sec}s:${C_RESET}"
             echo -e "${stdout}"
         else
             echo -e "${C_RED}[!] Cloud Task Failed in ${time_sec}s:${C_RESET}"
@@ -157,7 +157,7 @@ cmd_push() {
                  --data-binary "@${file_path}" \
                  "${ASTERIX_CLOUD_URL}/upload?file=${filename}")
 
-    echo -e "${C_GREEN}[✔] Upload response: ${res}${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Upload response: ${res}${C_RESET}"
 }
 
 cmd_pull() {
@@ -176,7 +176,7 @@ cmd_pull() {
          "${ASTERIX_CLOUD_URL}/download?file=${remote_filename}"
 
     if [ -f "${output_path}" ] && [ -s "${output_path}" ]; then
-        echo -e "${C_GREEN}[✔] File saved to ${output_path} (${remote_filename})${C_RESET}"
+        echo -e "${C_GREEN}[[OK]] File saved to ${output_path} (${remote_filename})${C_RESET}"
     else
         echo -e "${C_RED}[!] Download failed or remote file not found.${C_RESET}"
         rm -f "${output_path}" 2>/dev/null || true

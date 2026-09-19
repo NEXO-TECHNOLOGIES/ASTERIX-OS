@@ -26,7 +26,7 @@ cat << "EOF"
 EOF
 echo -e "${NC}"
 
-echo -e "${YELLOW}${BOLD}⚠ NOTICE: Strictly for Authorized Security Auditing & Defensive Research on Owned Systems.${NC}\n"
+echo -e "${YELLOW}${BOLD}[!] NOTICE: Strictly for Authorized Security Auditing & Defensive Research on Owned Systems.${NC}\n"
 
 # Step-level diagnostic tracking
 STEP_NAMES=()
@@ -52,7 +52,7 @@ apt clean 2>/dev/null || true
 echo -e "${YELLOW}[*] Step 1: Checking Android Storage Permissions...${NC}"
 if termux-setup-storage 2>/dev/null; then
     log_step "Storage Permission" "PASS" "Granted or Active"
-    echo -e "${GREEN}[✔] Storage permissions configured.${NC}"
+    echo -e "${GREEN}[[OK]] Storage permissions configured.${NC}"
 else
     log_step "Storage Permission" "PASS" "Private Storage Fallback"
     echo -e "${CYAN}[i] Storage permission already active or private sandbox active.${NC}"
@@ -62,13 +62,13 @@ echo -e "${YELLOW}[*] Step 2: Updating Termux Repositories & Installing Toolchai
 pkg update -y || apt-get update -y || true
 if pkg install -y proot proot-distro rust clang git curl wget ncurses-utils tsu; then
     log_step "Host Toolchain" "PASS" "All packages ready"
-    echo -e "${GREEN}[✔] Host toolchain installed.${NC}"
+    echo -e "${GREEN}[[OK]] Host toolchain installed.${NC}"
 elif command -v proot >/dev/null 2>&1 && command -v proot-distro >/dev/null 2>&1; then
     log_step "Host Toolchain" "WARN" "Core PRoot present, partial build tools"
     echo -e "${YELLOW}[!] PRoot detected; some secondary compiler tools were skipped.${NC}"
 else
     log_step "Host Toolchain" "FAIL" "proot/proot-distro missing"
-    echo -e "${RED}[✖] Fatal: proot-distro could not be installed. Check network/mirrors.${NC}"
+    echo -e "${RED}[[FAIL]] Fatal: proot-distro could not be installed. Check network/mirrors.${NC}"
 fi
 
 echo -e "${YELLOW}[*] Step 3: Configuring ASTERIX Resilient Local Storage & Folders...${NC}"
@@ -88,7 +88,7 @@ done
 
 if [ $mkdir_success -eq 1 ]; then
     log_step "Persistent Vault" "PASS" "10 mission stores created"
-    echo -e "${GREEN}[✔] 10 standard persistent stores configured.${NC}"
+    echo -e "${GREEN}[[OK]] 10 standard persistent stores configured.${NC}"
 else
     log_step "Persistent Vault" "WARN" "Partial directory creation"
 fi
@@ -121,7 +121,7 @@ if [ -d "/sdcard" ] && [ -w "/sdcard" ]; then
     mkdir -p "/sdcard/ASTERIX_PERSISTENCE" 2>/dev/null || true
     ln -sf "/sdcard/ASTERIX_PERSISTENCE" "$PERSIST_LOCAL/sdcard_link" 2>/dev/null || true
     ln -sf "/sdcard/ASTERIX_PERSISTENCE" "$PERSIST_MAIN/sdcard_bridge" 2>/dev/null || true
-    echo -e "${GREEN}[✔] Optional external SDCard link created at $PERSIST_LOCAL/sdcard_link${NC}"
+    echo -e "${GREEN}[[OK]] Optional external SDCard link created at $PERSIST_LOCAL/sdcard_link${NC}"
 else
     echo -e "${CYAN}[i] Using resilient Termux private storage (100% stable, zero permissions needed).${NC}"
 fi
@@ -129,7 +129,7 @@ fi
 echo -e "${YELLOW}[*] Step 4: Installing ASTERIX Rootless Linux Environment (Debian)...${NC}"
 DEBIAN_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/debian"
 if [ -d "$DEBIAN_ROOT" ] && [ -f "$DEBIAN_ROOT/bin/sh" ]; then
-    echo -e "${GREEN}[✔] Debian base environment already installed and healthy.${NC}"
+    echo -e "${GREEN}[[OK]] Debian base environment already installed and healthy.${NC}"
     log_step "Debian Rootfs" "PASS" "Verified healthy rootfs"
 elif [ -d "$DEBIAN_ROOT" ] && [ ! -f "$DEBIAN_ROOT/bin/sh" ]; then
     echo -e "${YELLOW}[!] Corrupted Debian rootfs detected (missing /bin/sh from prior full disk). Resetting...${NC}"
@@ -148,7 +148,7 @@ elif ! proot-distro list 2>/dev/null | grep -q "debian"; then
     fi
 else
     log_step "Debian Rootfs" "PASS" "Registered base rootfs"
-    echo -e "${GREEN}[✔] Debian base environment registered.${NC}"
+    echo -e "${GREEN}[[OK]] Debian base environment registered.${NC}"
 fi
 
 # Apply Zero-Crash Debian Rootless Hardening Immediately
@@ -172,7 +172,7 @@ if [ -d "$DEBIAN_ROOT" ]; then
     printf "127.0.0.1 localhost asterix-rootless\n" > "$DEBIAN_ROOT/etc/hosts" 2>/dev/null || true
     printf "asterix-rootless\n" > "$DEBIAN_ROOT/etc/hostname" 2>/dev/null || true
     log_step "Rootless Hardening" "PASS" "DNS, APT Sandbox, policy-rc.d"
-    echo -e "${GREEN}[✔] Debian Rootless hardened (APT Sandbox, DNS Failover, Daemon Blocker active).${NC}"
+    echo -e "${GREEN}[[OK]] Debian Rootless hardened (APT Sandbox, DNS Failover, Daemon Blocker active).${NC}"
 else
     log_step "Rootless Hardening" "WARN" "Deferred until rootfs available"
 fi
@@ -243,7 +243,7 @@ fn animate_subsystem(index: usize, code: &str, name: &str) {
         let _ = io::stdout().flush();
         sleep(Duration::from_millis(28));
     }
-    println!("\r  {C_GREEN}[✔]{C_RESET} {C_WHITE}{code:<18}{C_RESET} {C_GRAY}{name:<32}{C_RESET} [{C_GREEN}██████{C_RESET}] {C_GREEN}[ ONLINE ]{C_RESET}");
+    println!("\r  {C_GREEN}[[OK]]{C_RESET} {C_WHITE}{code:<18}{C_RESET} {C_GRAY}{name:<32}{C_RESET} [{C_GREEN}██████{C_RESET}] {C_GREEN}[ ONLINE ]{C_RESET}");
     let _ = io::stdout().flush();
     sleep(Duration::from_millis(20));
 }
@@ -291,7 +291,7 @@ RUST_CODE
 echo -e "${CYAN}[*] Compiling with rustc...${NC}"
 if rustc -O "$LOADER_DIR/src/main.rs" -o "$PREFIX/bin/asterix-loader" 2>/dev/null && [ -x "$PREFIX/bin/asterix-loader" ]; then
     log_step "Rust Native Loader" "PASS" "Engine compiled"
-    echo -e "${GREEN}[✔] Native Rust loader compiled.${NC}"
+    echo -e "${GREEN}[[OK]] Native Rust loader compiled.${NC}"
 else
     log_step "Rust Native Loader" "WARN" "Binary compilation skipped (fallback ready)"
 fi
@@ -315,7 +315,7 @@ if proot-distro login debian -- bash -c "
         nmap tshark tcpdump netcat-openbsd socat curl wget git sudo python3 htop
 " 2>/dev/null; then
     log_step "Debian Security Suite" "PASS" "Toolchain & metapackages active"
-    echo -e "${GREEN}[✔] Security toolchain & metapackages active inside Debian.${NC}"
+    echo -e "${GREEN}[[OK]] Security toolchain & metapackages active inside Debian.${NC}"
 else
     log_step "Debian Security Suite" "WARN" "Partial installation (offline/limited storage)"
 fi
@@ -331,7 +331,7 @@ if [ ! -d "$ASTERIX_DIR/.git" ]; then
         log_step "ASTERIX Core Repo" "WARN" "Cloning incomplete or offline"
     fi
 else
-    echo -e "${GREEN}[✔] ASTERIX-OS directory already present. Fetching latest updates...${NC}"
+    echo -e "${GREEN}[[OK]] ASTERIX-OS directory already present. Fetching latest updates...${NC}"
     (cd "$ASTERIX_DIR" && git pull 2>/dev/null || true)
     log_step "ASTERIX Core Repo" "PASS" "Local repository up to date"
 fi
@@ -380,7 +380,7 @@ elif [ "$1" = "upgrade" ]; then
 elif [ "$1" = "doctor" ]; then
     echo -e "\033[38;5;51m[*] Running Termux ASTERIX Environment Check...\033[0m"
     which rustc clang proot-distro nmap tshark 2>/dev/null || true
-    echo -e "\033[38;5;46m[✔] ASTERIX OS Core: $ASTERIX_DIR\033[0m"
+    echo -e "\033[38;5;46m[[OK]] ASTERIX OS Core: $ASTERIX_DIR\033[0m"
 elif [ -f "$ASTERIX_DIR/bin/ax" ]; then
     # Run natively in Termux with full performance and zero PRoot errors!
     exec bash "$ASTERIX_DIR/bin/ax" "$@"
@@ -418,8 +418,8 @@ chmod +x "$ASTERIX_DIR/termux-mobile/target-tracker.sh" 2>/dev/null || true
 chmod +x "$ASTERIX_DIR/termux-mobile/asterix-ai-startup.sh" 2>/dev/null || true
 log_step "Mobile Helpers" "PASS" "target-tracker, ai-startup"
 
-echo -e "${GREEN}[✔] IP and target tracking helper installed: ${YELLOW}target-tracker${NC}"
-echo -e "${GREEN}[✔] Local AI startup helper installed: ${YELLOW}asterix-ai-startup${NC}"
+echo -e "${GREEN}[[OK]] IP and target tracking helper installed: ${YELLOW}target-tracker${NC}"
+echo -e "${GREEN}[[OK]] Local AI startup helper installed: ${YELLOW}asterix-ai-startup${NC}"
 
 echo -e "${YELLOW}[*] Step 10: Triggering ASTERIX auto-heal and environment check...${NC}"
 if [ -x "$PREFIX/bin/asterix-ai-startup" ]; then
@@ -441,7 +441,7 @@ if [ -d "$ASTERIX_DIR/termux-mobile" ]; then
     chmod 755 "$ASTERIX_DIR/termux-mobile"/*.sh 2>/dev/null || true
 fi
 log_step "Supply Chain Security" "PASS" "Zero unaudited repos cloned"
-echo -e "${GREEN}[✔] Supply chain secured: External clones eliminated; local packages audited.${NC}"
+echo -e "${GREEN}[[OK]] Supply chain secured: External clones eliminated; local packages audited.${NC}"
 
 # Step 12: Registering Mobile CLI Tools & Symlinks
 for tool in web-structure.sh termux-toolbox.sh target-tracker.sh asterix-ai-startup.sh debian-rootless.sh; do
@@ -498,13 +498,13 @@ done
 echo -e "${CYAN}${BOLD}└────────────────────────────────────────┴──────────┴────────────────────┘${NC}\n"
 
 if [ "$CRITICAL_FAILURES" -gt 0 ]; then
-    echo -e "${RED}${BOLD}[✖] WARNING: $CRITICAL_FAILURES critical installation stage(s) failed.${NC}"
+    echo -e "${RED}${BOLD}[[FAIL]] WARNING: $CRITICAL_FAILURES critical installation stage(s) failed.${NC}"
     echo -e "${YELLOW}Please inspect the failures above or run 'ax debian doctor' to repair.${NC}\n"
     exit 1
 fi
 
 echo -e "${GREEN}${BOLD}══════════════════════════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}${BOLD}[✔] ASTERIX OS MOBILE INSTALLATION VERIFIED (0 ERRORS)${NC}"
+echo -e "${GREEN}${BOLD}[[OK]] ASTERIX OS MOBILE INSTALLATION VERIFIED (0 ERRORS)${NC}"
 echo -e "${CYAN}Core OS Directory:${NC}     $ASTERIX_DIR"
 echo -e "${CYAN}Safe Local Storage:${NC}    $PERSIST_LOCAL"
 echo -e "${CYAN}Launch Commands:${NC}       Type ${YELLOW}ax${NC} or ${YELLOW}asterix${NC} anywhere in Termux"

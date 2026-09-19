@@ -304,7 +304,7 @@ fn process_directory(dir: &Path, auto_fix: bool, stats: &mut ScanStats) -> io::R
                             match repair_file(&path, &lang, &defects) {
                                 Ok(healed) => {
                                     stats.defects_healed += healed;
-                                    println!("    {C_GREEN}{C_BOLD}[✔] AUTO-REPAIRED:{C_RESET} {healed} issue(s) resolved with backup (.bak)\n");
+                                    println!("    {C_GREEN}{C_BOLD}[[OK]] AUTO-REPAIRED:{C_RESET} {healed} issue(s) resolved with backup (.bak)\n");
                                 }
                                 Err(e) => {
                                     println!("    {C_RED}[!] Auto-repair error: {e}{C_RESET}\n");
@@ -352,11 +352,11 @@ fn main() {
                 if auto_fix {
                     if let Ok(healed) = repair_file(&target_dir, &lang, &defects) {
                         stats.defects_healed = healed;
-                        println!("    {C_GREEN}{C_BOLD}[✔] AUTO-REPAIRED:{C_RESET} {healed} issue(s) resolved.\n");
+                        println!("    {C_GREEN}{C_BOLD}[[OK]] AUTO-REPAIRED:{C_RESET} {healed} issue(s) resolved.\n");
                     }
                 }
             } else {
-                println!("  {C_GREEN}[✔] Clean: Zero syntax anomalies or defects detected in {}{C_RESET}\n", target_dir.display());
+                println!("  {C_GREEN}[[OK]] Clean: Zero syntax anomalies or defects detected in {}{C_RESET}\n", target_dir.display());
             }
         }
     } else {

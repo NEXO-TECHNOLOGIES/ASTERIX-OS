@@ -43,7 +43,7 @@ void handle_sig(int s) { (void)s; running = 0; }
 void print_banner() {
     printf("%s%s", C_CYAN, C_BOLD);
     printf("╔═══════════════════════════════════════════════════════════╗\n");
-    printf("║    ASTERIX OS ⚡ SYSCALL & I/O PORT MONITOR               ║\n");
+    printf("║    ASTERIX OS [*] SYSCALL & I/O PORT MONITOR               ║\n");
     printf("╚═══════════════════════════════════════════════════════════╝\n%s\n", C_RESET);
 }
 

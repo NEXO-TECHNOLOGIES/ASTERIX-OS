@@ -108,7 +108,7 @@ void audit_file(const char *filepath, int auto_fix) {
         rename(filepath, bak_name);
         rename(tmp_name, filepath);
         total_healed += file_defects;
-        printf("  %s[✔] HEALED:%s Automatically fixed %s (Backup: %s)\n", C_GREEN, C_RESET, filepath, bak_name);
+        printf("  %s[[OK]] HEALED:%s Automatically fixed %s (Backup: %s)\n", C_GREEN, C_RESET, filepath, bak_name);
     }
 }
 

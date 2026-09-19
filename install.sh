@@ -72,11 +72,11 @@ echo -e "${C_CYAN}[1/4] Detecting Runtime Environment...${C_RESET}"
 IS_TERMUX=false
 if [ -d "/data/data/com.termux/files/usr" ] || [ -n "${TERMUX_VERSION:-}" ]; then
     IS_TERMUX=true
-    echo -e "    ${C_GREEN}✔${C_RESET} Detected Android Termux User-space (Target: Debian PRoot)"
+    echo -e "    ${C_GREEN}[OK]${C_RESET} Detected Android Termux User-space (Target: Debian PRoot)"
 elif command -v apt-get >/dev/null 2>&1; then
-    echo -e "    ${C_GREEN}✔${C_RESET} Detected Host Debian/Ubuntu Linux"
+    echo -e "    ${C_GREEN}[OK]${C_RESET} Detected Host Debian/Ubuntu Linux"
 else
-    echo -e "    ${C_YELLOW}⚠${C_RESET} Generic POSIX Host (limited functionality)"
+    echo -e "    ${C_YELLOW}[!]${C_RESET} Generic POSIX Host (limited functionality)"
 fi
 
 # Step 2: Clone or Update at Pinned Version
@@ -96,19 +96,19 @@ echo -e "\n${C_CYAN}[3/4] Validating Cryptographic Integrity (SHA-256)...${C_RES
 if [ "$SKIP_VERIFY" = false ]; then
     if command -v python3 >/dev/null 2>&1; then
         python3 "$INSTALL_DIR/scripts-hub/ax-release-verify.py"
-        echo -e "    ${C_GREEN}✔ Cryptographic release verification passed.${C_RESET}"
+        echo -e "    ${C_GREEN}[OK] Cryptographic release verification passed.${C_RESET}"
     else
-        echo -e "    ${C_YELLOW}⚠ python3 not yet installed. Running bootstrap verification...${C_RESET}"
+        echo -e "    ${C_YELLOW}[!] python3 not yet installed. Running bootstrap verification...${C_RESET}"
         if [ -f "$INSTALL_DIR/BUILD_MANIFEST.json" ]; then
-            echo -e "    ${C_GREEN}✔ Release manifest confirmed present.${C_RESET}"
+            echo -e "    ${C_GREEN}[OK] Release manifest confirmed present.${C_RESET}"
         fi
     fi
 else
-    echo -e "    ${C_YELLOW}⚠ Verification skipped via --skip-verify flag.${C_RESET}"
+    echo -e "    ${C_YELLOW}[!] Verification skipped via --skip-verify flag.${C_RESET}"
 fi
 
 if [ "$VERIFY_ONLY" = true ]; then
-    echo -e "\n${C_GREEN}✔ Verification complete (--verify-only mode). Exiting without install.${C_RESET}"
+    echo -e "\n${C_GREEN}[OK] Verification complete (--verify-only mode). Exiting without install.${C_RESET}"
     exit 0
 fi
 

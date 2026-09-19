@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    printf("\n%s[✔] Probe Completed: %d open ports discovered.%s\n\n", 
+    printf("\n%s[[OK]] Probe Completed: %d open ports discovered.%s\n\n", 
            C_GREEN, open_count, C_RESET);
     return 0;
 }

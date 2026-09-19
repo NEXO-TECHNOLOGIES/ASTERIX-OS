@@ -1,4 +1,4 @@
-# 🎯 Security Playbook 05: Mobile Security Operations (Termux)
+# [TARGET] Security Playbook 05: Mobile Security Operations (Termux)
 ## Portable Security Assessment & Android Offensive Platform
 
 ### Phase Overview

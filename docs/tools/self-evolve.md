@@ -1,10 +1,10 @@
-# 🧠 `self-evolve` — Autonomous Threat Feed Ingestion Engine
+#  `self-evolve` — Autonomous Threat Feed Ingestion Engine
 
 An autonomous knowledge aggregator that updates local security rules and diagnostic signatures by ingesting public CVE feeds, CISA KEV alerts, and threat bulletins.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax self-evolve evolve
@@ -14,7 +14,7 @@ ax self-evolve daemon [hours]
 
 ---
 
-## ⚙️ Technical Architecture
+## [*] Technical Architecture
 
 1. **Threat Feed Aggregation**:
    - Parses public RSS/Atom feeds from CISA Known Exploited Vulnerabilities (KEV), NVD CVE bulletins, and security advisories.

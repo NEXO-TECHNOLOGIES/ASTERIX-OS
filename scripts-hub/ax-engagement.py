@@ -343,7 +343,7 @@ class EngagementManager:
             sev_counts[s] = sev_counts.get(s, 0) + 1
 
         md_lines = [
-            f"# 🛡️ Security Assessment & Penetration Test Report",
+            f"# [SEC] Security Assessment & Penetration Test Report",
             f"",
             f"**Client**: {client}  ",
             f"**Engagement ID**: `{job}`  ",
@@ -431,7 +431,7 @@ class EngagementManager:
             f"| :--- | :--- | :--- | :--- | :--- |",
         ])
         for t in timeline[-30:]:  # Last 30 actions
-            val_icon = "✔" if t.get("scope_validated") else "⚠ OUT-OF-SCOPE"
+            val_icon = "[OK]" if t.get("scope_validated") else "[!] OUT-OF-SCOPE"
             md_lines.append(f"| `{t.get('timestamp')[:19]}` | `{t.get('operator')}` | {t.get('action')} | `{t.get('command')}` | {val_icon} |")
 
         content = "\n".join(md_lines) + "\n"
@@ -546,13 +546,13 @@ def main():
         domains = [d.strip() for d in args.domains.split(",") if d.strip()]
         d = mgr.create_engagement(args.client, args.job_id, cidrs=cidrs, domains=domains, signed_by=args.signer)
         print(BANNER)
-        print(f"  {C_GREEN}✔ Engagement workspace created & activated:{C_RESET} {args.job_id}")
+        print(f"  {C_GREEN}[OK] Engagement workspace created & activated:{C_RESET} {args.job_id}")
         print(f"    Directory: {d}")
         print(f"    Scope Signature: Generated & signed by '{args.signer}'")
 
     elif args.subcommand == "switch":
         mgr.switch_engagement(args.job_id)
-        print(f"  {C_GREEN}✔ Switched active engagement to:{C_RESET} {args.job_id}")
+        print(f"  {C_GREEN}[OK] Switched active engagement to:{C_RESET} {args.job_id}")
 
     elif args.subcommand == "list":
         print(BANNER)
@@ -580,7 +580,7 @@ def main():
     elif args.subcommand == "mode":
         if args.new_mode:
             set_system_mode(args.new_mode)
-            print(f"  {C_GREEN}✔ System operating mode updated to:{C_RESET} {args.new_mode.upper()}")
+            print(f"  {C_GREEN}[OK] System operating mode updated to:{C_RESET} {args.new_mode.upper()}")
         else:
             cur = get_system_mode()
             print(f"  Current Mode: {cur.upper()}")
@@ -590,36 +590,36 @@ def main():
         mode = get_system_mode()
         mgr.record_action("SCOPE_CHECK", f"scope-check {args.target}", reason, target=args.target)
         if allowed:
-            print(f"  {C_GREEN}✔ SCOPE PASS:{C_RESET} {reason}")
+            print(f"  {C_GREEN}[OK] SCOPE PASS:{C_RESET} {reason}")
             sys.exit(0)
         else:
             if mode == "engagement":
-                print(f"  {C_RED}✖ SCOPE VIOLATION BLOCKED (ENGAGEMENT MODE):{C_RESET} {reason}")
+                print(f"  {C_RED}[FAIL] SCOPE VIOLATION BLOCKED (ENGAGEMENT MODE):{C_RESET} {reason}")
                 sys.exit(1)
             else:
-                print(f"  {C_YELLOW}⚠ SCOPE WARNING (LAB MODE ALLOWED):{C_RESET} {reason}")
+                print(f"  {C_YELLOW}[!] SCOPE WARNING (LAB MODE ALLOWED):{C_RESET} {reason}")
                 sys.exit(0)
 
     elif args.subcommand == "report":
         out = Path(args.out) if args.out else None
         rep_file = mgr.generate_report(out)
-        print(f"  {C_GREEN}✔ Client assessment report generated:{C_RESET} {rep_file}")
+        print(f"  {C_GREEN}[OK] Client assessment report generated:{C_RESET} {rep_file}")
 
     elif args.subcommand == "snapshot":
         out = Path(args.out) if args.out else None
         snap_file = mgr.create_snapshot(out)
-        print(f"  {C_GREEN}✔ Engagement snapshot archive created:{C_RESET} {snap_file}")
+        print(f"  {C_GREEN}[OK] Engagement snapshot archive created:{C_RESET} {snap_file}")
 
     elif args.subcommand == "add-host":
         ports = []
         if args.port:
             ports.append({"port": args.port, "proto": "tcp", "state": "open", "service": args.service})
         mgr.add_host(args.ip, hostname=args.hostname, ports=ports)
-        print(f"  {C_GREEN}✔ Host recorded in project data model:{C_RESET} {args.ip}")
+        print(f"  {C_GREEN}[OK] Host recorded in project data model:{C_RESET} {args.ip}")
 
     elif args.subcommand == "add-finding":
         f_id = mgr.add_finding(args.title, args.severity, args.target, args.desc, remediation=args.remediation)
-        print(f"  {C_GREEN}✔ Finding recorded [{f_id}]:{C_RESET} {args.title} ({args.severity.upper()})")
+        print(f"  {C_GREEN}[OK] Finding recorded [{f_id}]:{C_RESET} {args.title} ({args.severity.upper()})")
 
 
 if __name__ == "__main__":

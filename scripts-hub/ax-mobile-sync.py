@@ -222,11 +222,11 @@ class MemoryHygieneSanitizer:
             try:
                 with open("/proc/sys/vm/drop_caches", "w") as f:
                     f.write("3\n")
-                print(f"  {C_GREEN}✔ Kernel pagecache, dentries and inodes purged (/proc/sys/vm/drop_caches).{C_RESET}")
+                print(f"  {C_GREEN}[OK] Kernel pagecache, dentries and inodes purged (/proc/sys/vm/drop_caches).{C_RESET}")
             except PermissionError:
                 print(f"  {C_YELLOW}[i] Root needed to write drop_caches. Skipped kernel pagecache purge.{C_RESET}")
 
-        print(f"  {C_GREEN}✔ Memory hygiene cycle complete: RAM scrubbed of cached credential handles.{C_RESET}")
+        print(f"  {C_GREEN}[OK] Memory hygiene cycle complete: RAM scrubbed of cached credential handles.{C_RESET}")
 
 
 class MobileHandoff:
@@ -258,7 +258,7 @@ class MobileHandoff:
         with tarfile.open(bundle_path, "r:gz") as tar:
             tar.extractall(path=mgr.engagements_dir)
 
-        print(f"  {C_GREEN}✔ Engagement state successfully imported into {mgr.engagements_dir}.{C_RESET}")
+        print(f"  {C_GREEN}[OK] Engagement state successfully imported into {mgr.engagements_dir}.{C_RESET}")
         return mgr.engagements_dir
 
 
@@ -309,7 +309,7 @@ def main():
         if gpu["devices"]:
             print("  • Discovered Devices:")
             for d in gpu["devices"]:
-                print(f"    ✔ {d}")
+                print(f"    [OK] {d}")
         else:
             print("  • Discovered Devices:   (Standard Host CPU Profile)")
         print(f"  • Hashcat Tuning Flags: {C_YELLOW}{gpu['recommended_hashcat_flags']}{C_RESET}\n")
@@ -322,7 +322,7 @@ def main():
         if args.action == "export":
             out = Path(args.file)
             MobileHandoff.export_bundle(out)
-            print(f"  {C_GREEN}✔ Engagement state exported to:{C_RESET} {out.resolve()}")
+            print(f"  {C_GREEN}[OK] Engagement state exported to:{C_RESET} {out.resolve()}")
         elif args.action == "import":
             inp = Path(args.file)
             MobileHandoff.import_bundle(inp)

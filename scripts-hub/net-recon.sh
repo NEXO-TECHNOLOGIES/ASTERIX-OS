@@ -82,4 +82,4 @@ else
     echo -e "${C_YELLOW}[!] Nmap not installed. Skipping deep scan.${C_RESET}"
 fi
 
-echo -e "${C_GREEN}[✔] Recon Complete! Report saved to: ${REPORT_FILE}${C_RESET}"
+echo -e "${C_GREEN}[[OK]] Recon Complete! Report saved to: ${REPORT_FILE}${C_RESET}"

@@ -1,4 +1,4 @@
-# 📥 ASTERIX OS — Official Downloads & Live Boot Provisioning
+#  ASTERIX OS — Official Downloads & Live Boot Provisioning
 
 > **Next-Generation Cybernetic Security Operating System**  
 > Dual-Architecture: `x86_64` (UEFI / Legacy BIOS) & `aarch64` (Android Termux PRoot)  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 Release Editions & Guidance
+## [TARGET] Release Editions & Guidance
 
 For most security engineers and red teams, we recommend downloading the **Full Cyber Suite ISO** for the complete 12-subsystem arsenal, or the **Stealth & Undercover ISO** for covert red team physical audits and lightweight laptop deployments.
 
@@ -17,7 +17,7 @@ For most security engineers and red teams, we recommend downloading the **Full C
 | **ASTERIX OS 64-bit Minimal Netinstall ISO** | `2026.09.07` | `x86_64` | [Torrent](releases/asterix-os-v2.0-amd64-netinstall.iso.torrent) | [Direct](https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases/download/v2.0.0/asterix-os-v2.0-amd64-netinstall.iso) | **650 MB** | [`f5c2d11902fc...`](releases/SHA256SUMS) |
 | **ASTERIX OS ARM64 Mobile PRoot Archive** | `2026.09.07` | `aarch64` | — | [Direct](https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS/releases/download/v2.0.0/asterix-termux-v2.0.0.tar.gz) | **380 MB** | [`9c21b44218fc...`](releases/SHA256SUMS) |
 
-### 💾 USB Flash Drive & Persistence Capacity Calculator
+### [DISK] USB Flash Drive & Persistence Capacity Calculator
 
 * **8 GB USB Drive**: Suitable for **Stealth & Undercover ISO** (1.8 GB) + **5 GB** Ext4 persistence partition.
 * **16 GB USB Drive**: Suitable for **Full Cyber Suite ISO** (4.2 GB) + **10 GB** Ext4 persistence partition *(Recommended for general red team operations)*.
@@ -25,7 +25,7 @@ For most security engineers and red teams, we recommend downloading the **Full C
 
 ---
 
-## 🔑 Default Credentials
+## [KEY] Default Credentials
 
 The default authentication credentials for all Live ISOs, PRoot containers, and VM OVA appliances are:
 
@@ -42,7 +42,7 @@ Root Password:  asterix (or execute: sudo -i)
 
 ---
 
-## 🚨 Critical Notice: Do NOT Use UNetBootin
+## [ALERT] Critical Notice: Do NOT Use UNetBootin
 
 > [!CAUTION]
 > **Do NOT use UNetBootin to write ASTERIX OS ISO files to flash drives.**  
@@ -52,7 +52,7 @@ Use **Rufus** (Windows), **Ventoy** (Multi-Boot), or **`dd`** (Linux/macOS) as d
 
 ---
 
-## 💾 Official Image Writing & Live USB Setup
+## [DISK] Official Image Writing & Live USB Setup
 
 ### Option 1: Rufus (Recommended for Windows with Live Persistence)
 
@@ -67,8 +67,8 @@ Use **Rufus** (Windows), **Ventoy** (Multi-Boot), or **`dd`** (Linux/macOS) as d
 6. **Target System**: `BIOS or UEFI`
 7. Click **START** $\rightarrow$ If prompted, choose **"Write in ISO Image mode (Recommended)"**.
 8. Boot your target PC $\rightarrow$ Open the Boot Menu (F12, F11, or Esc) $\rightarrow$ Select:
-   - `💾 ASTERIX OS Live (USB Persistence Enabled)` or
-   - `🖥️ Windows Boot Manager (UEFI Stealth Camouflage)` for discreet operations.
+   - `[DISK] ASTERIX OS Live (USB Persistence Enabled)` or
+   - `[SCREEN] Windows Boot Manager (UEFI Stealth Camouflage)` for discreet operations.
 
 ---
 
@@ -120,7 +120,7 @@ ax undercover on
 
 ---
 
-## 🛡️ Integrity Verification (SHA-256 / SHA-512)
+## [SEC] Integrity Verification (SHA-256 / SHA-512)
 
 Always verify the cryptographic integrity of your downloaded ISO before flashing:
 

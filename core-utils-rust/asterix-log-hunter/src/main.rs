@@ -213,7 +213,7 @@ fn audit_system() {
 
     if !found_any {
         println!("{C_YELLOW}[!] No standard Linux log paths found in current environment.{C_RESET}");
-        println!("{C_GREEN}[✔] Host log subsystem is protected or isolated (PRoot / Sandboxed).{C_RESET}\n");
+        println!("{C_GREEN}[[OK]] Host log subsystem is protected or isolated (PRoot / Sandboxed).{C_RESET}\n");
     }
 }
 

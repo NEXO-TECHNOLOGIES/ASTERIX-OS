@@ -320,7 +320,7 @@ def build_all_metapackages(out_dir: Path, version: str = "2.1.0") -> List[Path]:
             output_path=deb_file
         )
         size_kb = deb_file.stat().st_size / 1024
-        print(f"    {C_GREEN}✔{C_RESET} {name:<26} -> {deb_file.name} ({size_kb:.1f} KB)")
+        print(f"    {C_GREEN}[OK]{C_RESET} {name:<26} -> {deb_file.name} ({size_kb:.1f} KB)")
         built_packages.append(deb_file)
 
     return built_packages
@@ -358,7 +358,7 @@ def main():
         out_dir = Path(getattr(args, "out_dir", "packages/debs"))
         ver = getattr(args, "version", "2.1.0")
         packages = build_all_metapackages(out_dir, version=ver)
-        print(f"\n  {C_BOLD}{C_GREEN}✓ Complete: Successfully generated {len(packages)} Debian metapackages in '{out_dir}'.{C_RESET}\n")
+        print(f"\n  {C_BOLD}{C_GREEN}[OK] Complete: Successfully generated {len(packages)} Debian metapackages in '{out_dir}'.{C_RESET}\n")
 
     elif args.command == "meta":
         out = Path(args.out) if args.out else Path(f"{args.name}_{args.version}_all.deb")
@@ -369,7 +369,7 @@ def main():
             depends=args.depends,
             output_path=out
         )
-        print(f"  {C_GREEN}✔ Metapackage created:{C_RESET} {deb_file} ({deb_file.stat().st_size} bytes)")
+        print(f"  {C_GREEN}[OK] Metapackage created:{C_RESET} {deb_file} ({deb_file.stat().st_size} bytes)")
 
 
 if __name__ == "__main__":

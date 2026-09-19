@@ -282,16 +282,16 @@ class PeakBrain:
         response_parts = []
 
         if context_block:
-            response_parts.append(f"🧠 {context_block}\n")
+            response_parts.append(f" {context_block}\n")
 
         if matched:
-            response_parts.append(f"🌌 [ ASTERIX PEAK INTELLIGENCE // {matched['title'].upper()} ]\n")
+            response_parts.append(f"[ASTERIX] [ ASTERIX PEAK INTELLIGENCE // {matched['title'].upper()} ]\n")
             response_parts.append(matched["content"])
             if "code_example" in matched:
                 response_parts.append(f"\n```text\n{matched['code_example']}\n```")
         else:
             # General Cyber / Operational synthesis
-            response_parts.append("🌌 [ ASTERIX PEAK INTELLIGENCE // OPERATIONAL SYNTHESIS ]\n")
+            response_parts.append("[ASTERIX] [ ASTERIX PEAK INTELLIGENCE // OPERATIONAL SYNTHESIS ]\n")
             response_parts.append(
                 f"Analyzing operational objective: '{query_clean}'\n\n"
                 "• **Recommended Action Pipeline**:\n"

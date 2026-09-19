@@ -1,6 +1,6 @@
 /*
  * ==============================================================================
- * 🌌 ASTERIX OS — Freestanding Video Graphics Array (VGA) Terminal Driver
+ * ASTERIX OS - Freestanding Video Graphics Array (VGA) Terminal Driver
  * Physical Buffer: 0x000B8000 | Text Mode 80x25 | 16 Hardware Colors
  * SPDX-License-Identifier: MIT OR Apache-2.0
  * ==============================================================================

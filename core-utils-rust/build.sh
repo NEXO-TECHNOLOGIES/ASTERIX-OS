@@ -38,7 +38,7 @@ if command -v cargo >/dev/null 2>&1; then
     for eng in "${ENGINES[@]}"; do
         if [ -f "target/release/${eng}" ]; then
             sudo cp "target/release/${eng}" "${INSTALL_DIR}/" 2>/dev/null || cp "target/release/${eng}" "${SCRIPT_DIR}/../dist/"
-            echo -e "${C_GREEN}  [✔] ${eng} built & staged${C_RESET}"
+            echo -e "${C_GREEN}  [[OK]] ${eng} built & staged${C_RESET}"
         fi
     done
 elif command -v rustc >/dev/null 2>&1; then
@@ -48,11 +48,11 @@ elif command -v rustc >/dev/null 2>&1; then
         echo -e "${C_CYAN}[*] Compiling ${eng}...${C_RESET}"
         rustc -O -C lto=yes "${eng}/src/main.rs" -o "target/release/${eng}"
         sudo cp "target/release/${eng}" "${INSTALL_DIR}/" 2>/dev/null || cp "target/release/${eng}" "${SCRIPT_DIR}/../dist/"
-        echo -e "${C_GREEN}  [✔] ${eng} built via rustc${C_RESET}"
+        echo -e "${C_GREEN}  [[OK]] ${eng} built via rustc${C_RESET}"
     done
 else
     echo -e "${C_RED}[!] Neither cargo nor rustc found in PATH!${C_RESET}"
     exit 1
 fi
 
-echo -e "${C_GREEN}${C_BOLD}[✔] All 8 ASTERIX Rust Engines compiled successfully!${C_RESET}"
+echo -e "${C_GREEN}${C_BOLD}[[OK]] All 8 ASTERIX Rust Engines compiled successfully!${C_RESET}"

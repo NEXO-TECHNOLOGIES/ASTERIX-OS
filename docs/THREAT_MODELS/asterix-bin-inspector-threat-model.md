@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-bin-inspector`
+# [SEC] Threat Model: `asterix-bin-inspector`
 ## Binary Inspection, Format Analysis & Section Entropy Engine
 
 ### 1. Component Overview

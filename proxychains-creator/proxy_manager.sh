@@ -81,13 +81,13 @@ EOF
         done
         echo -e "${C_BLUE}══════════════════════════════════════════════════════════════════════════${C_RESET}\n"
 
-        echo -e "  ${C_GREEN}${C_BOLD}[✔] Chain Configured in:${C_RESET} ${C_YELLOW}${CONFIG_OUT}${C_RESET}"
+        echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Chain Configured in:${C_RESET} ${C_YELLOW}${CONFIG_OUT}${C_RESET}"
         echo -e "  ${C_WHITE}Execute via:${C_RESET} ${C_GREEN}proxychains4 -f ${CONFIG_OUT} <command>${C_RESET}\n"
         ;;
 
     status|show)
         if [ -f "$CONFIG_OUT" ]; then
-            echo -e "  ${C_GREEN}${C_BOLD}[✔] Active ProxyChains Configuration Located:${C_RESET} ${CONFIG_OUT}\n"
+            echo -e "  ${C_GREEN}${C_BOLD}[[OK]] Active ProxyChains Configuration Located:${C_RESET} ${CONFIG_OUT}\n"
             grep -v '^#' "$CONFIG_OUT" | grep -v '^$' | while read -r line; do
                 echo -e "    ${C_CYAN}${line}${C_RESET}"
             done

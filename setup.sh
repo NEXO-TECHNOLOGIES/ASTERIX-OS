@@ -80,9 +80,9 @@ PREREQS=("git" "curl" "bash")
 MISSING_PREREQS=()
 for tool in "${PREREQS[@]}"; do
     if command -v "$tool" >/dev/null 2>&1; then
-        echo -e "  ${C_GREEN}[✔]${C_RESET} ${tool}"
+        echo -e "  ${C_GREEN}[[OK]]${C_RESET} ${tool}"
     else
-        echo -e "  ${C_RED}[✘]${C_RESET} ${tool} is missing!"
+        echo -e "  ${C_RED}[[FAIL]]${C_RESET} ${tool} is missing!"
         MISSING_PREREQS+=("$tool")
     fi
 done
@@ -117,11 +117,11 @@ if [ -f "${SCRIPT_DIR}/bin/ax" ]; then
     $SUDO cp "${SCRIPT_DIR}/bin/ax" "${INSTALL_DIR}/ax" 2>/dev/null || cp "${SCRIPT_DIR}/bin/ax" "${SCRIPT_DIR}/dist/ax"
     $SUDO chmod 755 "${INSTALL_DIR}/ax" 2>/dev/null || chmod 755 "${SCRIPT_DIR}/dist/ax" 2>/dev/null || true
     $SUDO ln -sf "${INSTALL_DIR}/ax" "${INSTALL_DIR}/asterix" 2>/dev/null || ln -sf "${SCRIPT_DIR}/dist/ax" "${SCRIPT_DIR}/dist/asterix" 2>/dev/null || true
-    echo -e "  ${C_GREEN}[✔]${C_RESET} Installed master 'ax' and 'asterix' to ${INSTALL_DIR}"
+    echo -e "  ${C_GREEN}[[OK]]${C_RESET} Installed master 'ax' and 'asterix' to ${INSTALL_DIR}"
 fi
 
 echo -e "\n${C_GREEN}${C_BOLD}══════════════════════════════════════════════════════════════════════${C_RESET}"
-echo -e "${C_GREEN}${C_BOLD}[✔] ASTERIX OS SETUP & INITIALIZATION COMPLETE!${C_RESET}"
+echo -e "${C_GREEN}${C_BOLD}[[OK]] ASTERIX OS SETUP & INITIALIZATION COMPLETE!${C_RESET}"
 echo -e "${C_CYAN}Launch the master terminal HUD:${C_RESET} ${C_YELLOW}ax${C_RESET} or ${C_YELLOW}asterix${C_RESET}"
 echo -e "${C_CYAN}Manage packages:${C_RESET}               ${C_YELLOW}ax pkg status${C_RESET} | ${C_YELLOW}ax pkg sync${C_RESET}"
 echo -e "${C_CYAN}Anti-Network Defense Suite:${C_RESET}    ${C_YELLOW}ax anti-net${C_RESET} | ${C_YELLOW}ax anti-email${C_RESET} | ${C_YELLOW}ax anti-rev${C_RESET}"

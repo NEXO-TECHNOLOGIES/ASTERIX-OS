@@ -1,6 +1,6 @@
 /*
  * ==============================================================================
- * 🌌 ASTERIX OS — Interrupt Descriptor Table (IDT) & CPU Interrupt Framework
+ * ASTERIX OS - Interrupt Descriptor Table (IDT) & CPU Interrupt Framework
  * Maps x86 Hardware Exceptions (0-31), 8259 Master/Slave PIC IRQs (32-47),
  * and Cybernetic System Call Gateway (int 0x80).
  * SPDX-License-Identifier: MIT OR Apache-2.0
@@ -33,7 +33,7 @@ typedef struct idt_ptr idt_ptr_t;
 
 /* Saved CPU registers structure pushed by isr_stub */
 typedef struct {
-    uint32_t ds;                                     /* Data segment selector */
+    uint32_t gs, fs, es, ds;                         /* Segment registers pushed by stub */
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; /* Pushed by pusha */
     uint32_t int_no, err_code;                       /* Interrupt number and error code */
     uint32_t eip, cs, eflags, useresp, ss;           /* Pushed by processor automatically */

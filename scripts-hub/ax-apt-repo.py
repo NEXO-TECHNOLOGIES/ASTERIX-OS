@@ -235,7 +235,7 @@ def generate_apt_repository(
             rel_path = fpath.relative_to(dist_dir).as_posix()
             m, s1, s256, sz = compute_hashes(fpath)
             indexed_files.append({"path": rel_path, "md5": m, "sha1": s1, "sha256": s256, "size": sz})
-            print(f"    {C_GREEN}✔{C_RESET} Generated {component}/binary-{arch}/{fpath.name} ({sz} bytes)")
+            print(f"    {C_GREEN}[OK]{C_RESET} Generated {component}/binary-{arch}/{fpath.name} ({sz} bytes)")
 
     # Generate Release file
     release_lines = [
@@ -264,7 +264,7 @@ def generate_apt_repository(
     with release_file.open("w", encoding="utf-8") as f:
         f.write(release_content)
 
-    print(f"    {C_GREEN}✔{C_RESET} Generated dists/{suite}/Release")
+    print(f"    {C_GREEN}[OK]{C_RESET} Generated dists/{suite}/Release")
 
     # Generate sources.list snippet
     sources_snippet = (
@@ -284,7 +284,7 @@ def serve_repo(repo_root: Path, port: int = 8080):
     os.chdir(str(repo_root))
     handler = http.server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", port), handler) as httpd:
-        print(f"\n  {C_BOLD}{C_GREEN}⚡ ASTERIX APT Repository Serving on http://localhost:{port}/{C_RESET}")
+        print(f"\n  {C_BOLD}{C_GREEN}[*] ASTERIX APT Repository Serving on http://localhost:{port}/{C_RESET}")
         print(f"  {C_CYAN}Add to Debian / Termux PRoot sources:{C_RESET}")
         print(f"    echo 'deb [trusted=yes] http://<YOUR-IP>:{port} stable main' > /etc/apt/sources.list.d/asterix.list")
         print(f"    apt-get update\n")
@@ -325,7 +325,7 @@ def main():
         codename = getattr(args, "codename", "phantom")
 
         repo_dir = generate_apt_repository(src, out, codename=codename, suite=suite)
-        print(f"\n  {C_BOLD}{C_GREEN}✓ Complete: APT Repository successfully indexed at '{repo_dir}'.{C_RESET}")
+        print(f"\n  {C_BOLD}{C_GREEN}[OK] Complete: APT Repository successfully indexed at '{repo_dir}'.{C_RESET}")
         print(f"  {C_WHITE}To inspect sources line: cat {repo_dir / 'asterix.list'}{C_RESET}\n")
 
     elif args.command == "serve":

@@ -84,6 +84,26 @@ switch ($Command.ToLower()) {
         }
     }
 
+    { $_ -in @("cluster", "os-cluster", "cluster-computing", "gaming", "game-mode", "game") } {
+        $rustCluster = Join-Path $AsterixRoot "bin\asterix-cluster.exe"
+        $pyCluster = Join-Path $AsterixRoot "os-computing\os_cluster.py"
+        if ($Command.ToLower() -in @("gaming", "game-mode", "game")) {
+            if (Test-Path $rustCluster) {
+                & $rustCluster gaming $RemainingArgs
+            } elseif ($RealPython -and (Test-Path $pyCluster)) {
+                & $RealPython $pyCluster gaming $RemainingArgs
+            }
+        } else {
+            if (Test-Path $rustCluster) {
+                & $rustCluster $RemainingArgs
+            } elseif ($RealPython -and (Test-Path $pyCluster)) {
+                & $RealPython $pyCluster $RemainingArgs
+            } else {
+                Write-Host "  ${C_RED}[!] Error: asterix-cluster executable not found.${C_RESET}"
+            }
+        }
+    }
+
     { $_ -in @("ai", "asterix-ai", "ask-ai") } {
         $aiScript = Join-Path $AsterixRoot "asterix-ai\engine.py"
         if ($RealPython -and (Test-Path $aiScript)) {
@@ -210,6 +230,34 @@ switch ($Command.ToLower()) {
         Write-Host "  * Crypto Core vs sha256sum/hashid:   " -ForegroundColor White -NoNewline
         Write-Host "182x FASTER hash identification (82k vs 450/sec)" -ForegroundColor Green
         Write-Host "  Detailed benchmarks documented in BENCHMARK_RESULTS.md" -ForegroundColor DarkGray
+    }
+
+    { $_ -in @("kernel", "kernel-build", "microkernel") } {
+        $kernelBuildScript = Join-Path $AsterixRoot "kernel\build-kernel.ps1"
+        if (Test-Path $kernelBuildScript) {
+            & powershell.exe -ExecutionPolicy Bypass -File $kernelBuildScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] kernel\build-kernel.ps1 not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("offload", "cluster-offload", "gaming-offload") } {
+        $clusterBinary = Join-Path $AsterixRoot "bin\asterix-cluster.exe"
+        if (Test-Path $clusterBinary) {
+            Write-Host "  [ASTERIX] Activating Ring-0 Task Migration & Cluster Offload..." -ForegroundColor Cyan
+            & $clusterBinary gaming --nodes 4 @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-cluster.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("mobile", "mobile-bridge", "mobile-hud") } {
+        $mobileScript = Join-Path $AsterixRoot "scripts-hub\ax-mobile-bridge.py"
+        if ($RealPython -and (Test-Path $mobileScript)) {
+            & $RealPython $mobileScript @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] Python runtime or ax-mobile-bridge.py not found." -ForegroundColor Red
+        }
     }
 
     { $_ -in @("-fix", "fix", "code-fix", "heal") } {
@@ -750,6 +798,7 @@ switch ($Command.ToLower()) {
             Write-Host "    ax collaborate / ax collab"
             Write-Host "    ax merge                     Merge Host OS & ASTERIX OS into unified virtual system"
             Write-Host "    ax rebuild                   End-to-end multi-language compilation & system seal"
+            Write-Host "    ax kernel [--run]            Build freestanding x86 Multiboot kernel ELF (and boot in QEMU)"
             Write-Host "    ax compute"
             Write-Host "    ax ai [chat|ask|audit]"
             Write-Host "    ax sysfetch"

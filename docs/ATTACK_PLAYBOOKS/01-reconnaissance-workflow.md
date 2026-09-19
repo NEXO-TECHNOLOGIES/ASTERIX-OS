@@ -1,4 +1,4 @@
-# 🎯 Security Playbook 01: Reconnaissance & Network Discovery
+# [TARGET] Security Playbook 01: Reconnaissance & Network Discovery
 ## Tier-1 Assessment Workflow Using `asterix-net-sentinel`
 
 ### Phase Overview

@@ -40,7 +40,7 @@ fn main() {
     println!("Hello from ASTERIX OS Rust workspace!");
 }
 EOF
-    echo -e "${C_GREEN}[✔] Rust project '${name}' scaffolded!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Rust project '${name}' scaffolded!${C_RESET}"
     echo -e "  Run: ${C_YELLOW}cd ${name} && cargo build --release${C_RESET}"
 }
 
@@ -62,7 +62,7 @@ all:
 clean:
 	rm -f ${name}
 EOF
-    echo -e "${C_GREEN}[✔] C project '${name}' scaffolded!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] C project '${name}' scaffolded!${C_RESET}"
     echo -e "  Run: ${C_YELLOW}cd ${name} && make${C_RESET}"
 }
 
@@ -83,7 +83,7 @@ module ${name}
 
 go 1.21
 EOF
-    echo -e "${C_GREEN}[✔] Go project '${name}' scaffolded!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Go project '${name}' scaffolded!${C_RESET}"
     echo -e "  Run: ${C_YELLOW}cd ${name} && go build && ./${name}${C_RESET}"
 }
 
@@ -103,7 +103,7 @@ EOF
 # Add your Python dependencies here
 EOF
     chmod +x "${name}/main.py"
-    echo -e "${C_GREEN}[✔] Python project '${name}' scaffolded!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Python project '${name}' scaffolded!${C_RESET}"
     echo -e "  Run: ${C_YELLOW}cd ${name} && python3 main.py${C_RESET}"
 }
 
@@ -130,7 +130,7 @@ EOF
   }
 }
 EOF
-    echo -e "${C_GREEN}[✔] Node.js project '${name}' scaffolded!${C_RESET}"
+    echo -e "${C_GREEN}[[OK]] Node.js project '${name}' scaffolded!${C_RESET}"
     echo -e "  Run: ${C_YELLOW}cd ${name} && node src/index.js${C_RESET}"
 }
 

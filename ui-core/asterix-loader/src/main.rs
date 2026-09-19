@@ -349,7 +349,7 @@ fn run_boot_animation(fast: bool, theme: &str) {
     println!("\n{C_CYAN}{}{C_RESET}", "─".repeat(76));
     println!(" {}", render_progress_bar(100, 48));
     println!("{C_CYAN}{}{C_RESET}", "─".repeat(76));
-    println!("\n{C_GREEN}{C_BOLD} [✔] ASTERIX OS IS ONLINE & READY FOR OPERATIONS {C_RESET}");
+    println!("\n{C_GREEN}{C_BOLD} [[OK]] ASTERIX OS IS ONLINE & READY FOR OPERATIONS {C_RESET}");
     println!(" {C_YELLOW}Persistent Storage Status: {C_GREEN}CONNECTED (ASTERIX_PERSISTENCE){C_RESET}");
     println!(" {C_YELLOW}Master Arsenal:            {C_GREEN}MAXIMUM TIER (Recon, Web, Exploit, Crypto, Dev){C_RESET}\n");
 
@@ -444,12 +444,12 @@ fn sub_menu_recon() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_CYAN}{C_BOLD} [ 01: RECONNAISSANCE & OSINT ARSENAL ] {C_RESET}\n");
-        menu_item("1", "🔍", "Nmap Stealth SYN Scan", "Port scanning, service detection & OS discovery");
-        menu_item("2", "⚡", "Masscan High-Speed Sweep", "Scan entire IP ranges at gigabit speed");
-        menu_item("3", "🌐", "DnsRecon & DNSEnum", "DNS enumeration and zone transfer checks");
-        menu_item("4", "🕵️", "Whois Domain Intelligence", "Query registrar and ASN allocation data");
-        menu_item("5", "📡", "Netdiscover ARP Sweep", "Local network active host discovery");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "[SCAN]", "Nmap Stealth SYN Scan", "Port scanning, service detection & OS discovery");
+        menu_item("2", "[*]", "Masscan High-Speed Sweep", "Scan entire IP ranges at gigabit speed");
+        menu_item("3", "[NET]", "DnsRecon & DNSEnum", "DNS enumeration and zone transfer checks");
+        menu_item("4", "", "Whois Domain Intelligence", "Query registrar and ASN allocation data");
+        menu_item("5", "[SIGNAL]", "Netdiscover ARP Sweep", "Local network active host discovery");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-RECON » {C_RESET}"));
         match choice.as_str() {
@@ -481,12 +481,12 @@ fn sub_menu_web() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_MAGENTA}{C_BOLD} [ 02: WEB APPLICATION WARFARE ] {C_RESET}\n");
-        menu_item("1", "💉", "SQLMap Automated Injector", "Database takeover and SQL injection tests");
-        menu_item("2", "📁", "Gobuster Directory Fuzzer", "High-speed URL directory brute-force");
-        menu_item("3", "🔎", "Nikto Web Vulnerability Scan", "Scan for misconfigurations and outdated web files");
-        menu_item("4", "⚡", "FFUF Fast Web Fuzzer", "High performance web fuzzing in Go");
-        menu_item("5", "🛡️", "Wafw00f Firewall Detector", "Identify web application firewalls (WAF)");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "SQLMap Automated Injector", "Database takeover and SQL injection tests");
+        menu_item("2", "", "Gobuster Directory Fuzzer", "High-speed URL directory brute-force");
+        menu_item("3", "[SCAN]", "Nikto Web Vulnerability Scan", "Scan for misconfigurations and outdated web files");
+        menu_item("4", "[*]", "FFUF Fast Web Fuzzer", "High performance web fuzzing in Go");
+        menu_item("5", "[SEC]", "Wafw00f Firewall Detector", "Identify web application firewalls (WAF)");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_MAGENTA}ASTERIX-WEB » {C_RESET}"));
         match choice.as_str() {
@@ -521,11 +521,11 @@ fn sub_menu_exploit() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_RED}{C_BOLD} [ 03: EXPLOITATION & PAYLOADS ] {C_RESET}\n");
-        menu_item("1", "💣", "Metasploit MSFConsole", "Omnipresent exploit & payload framework");
-        menu_item("2", "🔎", "SearchSploit ExploitDB", "Query offline verified exploit database");
-        menu_item("3", "🔌", "Netcat / Ncat Interactive", "Spawn TCP/UDP listeners and relays");
-        menu_item("4", "⚡", "Socat Encrypted Tunnels", "Create bidirectional SSL/TLS relays");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "Metasploit MSFConsole", "Omnipresent exploit & payload framework");
+        menu_item("2", "[SCAN]", "SearchSploit ExploitDB", "Query offline verified exploit database");
+        menu_item("3", "[PLUG]", "Netcat / Ncat Interactive", "Spawn TCP/UDP listeners and relays");
+        menu_item("4", "[*]", "Socat Encrypted Tunnels", "Create bidirectional SSL/TLS relays");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_RED}ASTERIX-EXPLOIT » {C_RESET}"));
         match choice.as_str() {
@@ -555,12 +555,12 @@ fn sub_menu_passwords() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_YELLOW}{C_BOLD} [ 04: PASSWORD & HASH AUDITING ] {C_RESET}\n");
-        menu_item("1", "⚡", "Hashcat GPU/CPU Cracker", "World's fastest rule-based password cracker");
-        menu_item("2", "🥩", "John the Ripper", "Multi-algorithm hash and shadow file cracker");
-        menu_item("3", "🐉", "Hydra Online Brute-Force", "Fast network authentication cracker (SSH, FTP)");
-        menu_item("4", "📜", "Crunch Wordlist Generator", "Generate custom wordlists and character masks");
-        menu_item("5", "❓", "HashID Identifier", "Identify unknown cryptographic hash formats");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "[*]", "Hashcat GPU/CPU Cracker", "World's fastest rule-based password cracker");
+        menu_item("2", "", "John the Ripper", "Multi-algorithm hash and shadow file cracker");
+        menu_item("3", "", "Hydra Online Brute-Force", "Fast network authentication cracker (SSH, FTP)");
+        menu_item("4", "", "Crunch Wordlist Generator", "Generate custom wordlists and character masks");
+        menu_item("5", "", "HashID Identifier", "Identify unknown cryptographic hash formats");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_YELLOW}ASTERIX-PASS » {C_RESET}"));
         match choice.as_str() {
@@ -599,12 +599,12 @@ fn sub_menu_sniffing() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_BLUE}{C_BOLD} [ 05: SNIFFING & TRAFFIC INTERCEPTION ] {C_RESET}\n");
-        menu_item("1", "🦈", "Wireshark Packet Sniffer", "Graphical deep packet inspection and filter suite");
-        menu_item("2", "📡", "TShark CLI Sniffer", "Live terminal packet capture with eBPF filter");
-        menu_item("3", "📦", "Tcpdump Hex Sniffer", "Raw packet capture stream directly to pcap");
-        menu_item("4", "🎭", "MacChanger Randomizer", "Randomize hardware MAC address on interface");
-        menu_item("5", "⚡", "Hping3 Packet Crafter", "Custom TCP/IP packet assembler and tester");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "Wireshark Packet Sniffer", "Graphical deep packet inspection and filter suite");
+        menu_item("2", "[SIGNAL]", "TShark CLI Sniffer", "Live terminal packet capture with eBPF filter");
+        menu_item("3", "[PKG]", "Tcpdump Hex Sniffer", "Raw packet capture stream directly to pcap");
+        menu_item("4", "[MASK]", "MacChanger Randomizer", "Randomize hardware MAC address on interface");
+        menu_item("5", "[*]", "Hping3 Packet Crafter", "Custom TCP/IP packet assembler and tester");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_BLUE}ASTERIX-SNIFF » {C_RESET}"));
         match choice.as_str() {
@@ -631,11 +631,11 @@ fn sub_menu_wireless() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_CYAN}{C_BOLD} [ 06: WIRELESS & RADIO WARFARE ] {C_RESET}\n");
-        menu_item("1", "📡", "Aircrack-ng Suite", "802.11 wireless WEP/WPA/WPA2 capture and cracker");
-        menu_item("2", "🤖", "Wifite Automated Auditor", "Automated attack on WPA handshakes and WPS PINs");
-        menu_item("3", "🔓", "Reaver WPS Tool", "Brute-force WPS PINs to recover WPA passwords");
-        menu_item("4", "🛰️", "Kismet Wireless Detector", "Wireless network detector, sniffer, and IDS");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "[SIGNAL]", "Aircrack-ng Suite", "802.11 wireless WEP/WPA/WPA2 capture and cracker");
+        menu_item("2", "[AI]", "Wifite Automated Auditor", "Automated attack on WPA handshakes and WPS PINs");
+        menu_item("3", "", "Reaver WPS Tool", "Brute-force WPS PINs to recover WPA passwords");
+        menu_item("4", "[SAT]", "Kismet Wireless Detector", "Wireless network detector, sniffer, and IDS");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-WIFI » {C_RESET}"));
         match choice.as_str() {
@@ -654,12 +654,12 @@ fn sub_menu_forensics() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_PURPLE}{C_BOLD} [ 07: FORENSICS & STEGANOGRAPHY ] {C_RESET}\n");
-        menu_item("1", "🔬", "Binwalk Firmware Extractor", "Analyze and extract embedded files in firmware");
-        menu_item("2", "⛏️", "Foremost File Carver", "Recover lost files based on headers and footers");
-        menu_item("3", "🖼️", "Steghide Data Hider", "Embed or extract hidden files in JPEG/BMP/WAV");
-        menu_item("4", "🏷️", "Exiftool Metadata Inspector", "Read and edit metadata in photos, PDFs, docs");
-        menu_item("5", "🛡️", "Chkrootkit System Audit", "Scan local Linux system for rootkits and backdoors");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "Binwalk Firmware Extractor", "Analyze and extract embedded files in firmware");
+        menu_item("2", "", "Foremost File Carver", "Recover lost files based on headers and footers");
+        menu_item("3", "", "Steghide Data Hider", "Embed or extract hidden files in JPEG/BMP/WAV");
+        menu_item("4", "", "Exiftool Metadata Inspector", "Read and edit metadata in photos, PDFs, docs");
+        menu_item("5", "[SEC]", "Chkrootkit System Audit", "Scan local Linux system for rootkits and backdoors");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_PURPLE}ASTERIX-FORENSIC » {C_RESET}"));
         match choice.as_str() {
@@ -691,12 +691,12 @@ fn sub_menu_reverse() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_GREEN}{C_BOLD} [ 08: REVERSE ENGINEERING & BINARY STUDIO ] {C_RESET}\n");
-        menu_item("1", "🔬", "Radare2 (R2) Disassembler", "Advanced command-line reverse engineering engine");
-        menu_item("2", "🐞", "GDB GNU Debugger", "Inspect registers, breakpoints, and memory dumps");
-        menu_item("3", "📝", "Hexedit Terminal Editor", "Direct byte-level editing of binary files");
-        menu_item("4", "📄", "XXD Hex Dumper", "Generate hexadecimal dumps and patches");
-        menu_item("5", "🔍", "Strings String Extractor", "Extract printable ASCII/Unicode strings from binary");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "Radare2 (R2) Disassembler", "Advanced command-line reverse engineering engine");
+        menu_item("2", "", "GDB GNU Debugger", "Inspect registers, breakpoints, and memory dumps");
+        menu_item("3", "", "Hexedit Terminal Editor", "Direct byte-level editing of binary files");
+        menu_item("4", "", "XXD Hex Dumper", "Generate hexadecimal dumps and patches");
+        menu_item("5", "[SCAN]", "Strings String Extractor", "Extract printable ASCII/Unicode strings from binary");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_GREEN}ASTERIX-REVERSE » {C_RESET}"));
         match choice.as_str() {
@@ -731,16 +731,16 @@ fn sub_menu_developer() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_CYAN}{C_BOLD} [ 09: FULL-STACK DEVELOPER STUDIO ] {C_RESET}\n");
-        menu_item("1", "🦀", "Rust & Cargo Studio", "rustc, cargo build, cargo run, clippy");
-        menu_item("2", "🐹", "Go (Golang) Workspace", "go build, go run, go test, go install");
-        menu_item("3", "🐍", "Python & Pip Workspace", "python3, pip, ipython, venv manager");
-        menu_item("4", "⚡", "C / C++ & Build Systems", "gcc, g++, clang, make, cmake, gdb");
-        menu_item("5", "🌐", "Node.js & Web Studio", "node, npm, npx, yarn package engine");
-        menu_item("6", "🐙", "LazyGit & VCS Hub", "Launch interactive terminal Git interface");
-        menu_item("7", "📡", "HTTPie API Workbench", "REST API, JSON debug & HTTP client");
-        menu_item("8", "🗄️", "Database Console (SQLite)", "SQLite3 interactive relational engine");
-        menu_item("9", "🚀", "CLI Power Utilities", "ripgrep (rg), fzf, bat, eza, zoxide");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "Rust & Cargo Studio", "rustc, cargo build, cargo run, clippy");
+        menu_item("2", "", "Go (Golang) Workspace", "go build, go run, go test, go install");
+        menu_item("3", "", "Python & Pip Workspace", "python3, pip, ipython, venv manager");
+        menu_item("4", "[*]", "C / C++ & Build Systems", "gcc, g++, clang, make, cmake, gdb");
+        menu_item("5", "[NET]", "Node.js & Web Studio", "node, npm, npx, yarn package engine");
+        menu_item("6", "", "LazyGit & VCS Hub", "Launch interactive terminal Git interface");
+        menu_item("7", "[SIGNAL]", "HTTPie API Workbench", "REST API, JSON debug & HTTP client");
+        menu_item("8", "", "Database Console (SQLite)", "SQLite3 interactive relational engine");
+        menu_item("9", "[RUN]", "CLI Power Utilities", "ripgrep (rg), fzf, bat, eza, zoxide");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-DEV » {C_RESET}"));
         match choice.as_str() {
@@ -785,10 +785,10 @@ fn sub_menu_persistence() {
         let _ = fs::create_dir_all(&target_dir);
 
         println!(" {C_WHITE}Persistent Storage Path:{C_RESET} {C_CYAN}{target_dir}{C_RESET}\n");
-        menu_item("1", "📁", "Browse Persistent Vault", "List all persistent stored assets");
-        menu_item("2", "💾", "Save Operational Note", "Write persistent note to storage");
-        menu_item("3", "📱", "Sync with Android /sdcard/", "Bridge to Termux external storage");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "", "Browse Persistent Vault", "List all persistent stored assets");
+        menu_item("2", "[DISK]", "Save Operational Note", "Write persistent note to storage");
+        menu_item("3", "[MOBILE]", "Sync with Android /sdcard/", "Bridge to Termux external storage");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_GREEN}ASTERIX-VAULT » {C_RESET}"));
         match choice.as_str() {
@@ -800,7 +800,7 @@ fn sub_menu_persistence() {
                         found = true;
                         let name = entry.file_name().to_string_lossy().to_string();
                         let size = entry.metadata().map(|m| m.len()).unwrap_or(0);
-                        println!("  {C_GREEN}📄 {name:<30} {C_YELLOW}({size} bytes){C_RESET}");
+                        println!("  {C_GREEN} {name:<30} {C_YELLOW}({size} bytes){C_RESET}");
                     }
                     if !found { println!("  {C_GRAY}(Vault is currently empty){C_RESET}"); }
                 }
@@ -813,7 +813,7 @@ fn sub_menu_persistence() {
                 let filepath = format!("{target_dir}/{filename}");
                 if let Ok(mut file) = fs::OpenOptions::new().create(true).append(true).open(&filepath) {
                     let _ = writeln!(file, "{content}");
-                    println!("{C_GREEN}[✔] Saved to persistent vault: {filepath}{C_RESET}");
+                    println!("{C_GREEN}[[OK]] Saved to persistent vault: {filepath}{C_RESET}");
                 }
                 sleep(Duration::from_millis(900));
             }
@@ -821,7 +821,7 @@ fn sub_menu_persistence() {
                 if Path::new("/sdcard").exists() {
                     let _ = fs::create_dir_all("/sdcard/ASTERIX_DATA");
                     let _ = Command::new("ln").args(["-s", "/sdcard/ASTERIX_DATA", &format!("{target_dir}/android_shared")]).status();
-                    println!("{C_GREEN}[✔] Linked Android /sdcard/ASTERIX_DATA to persistence vault!{C_RESET}");
+                    println!("{C_GREEN}[[OK]] Linked Android /sdcard/ASTERIX_DATA to persistence vault!{C_RESET}");
                 } else {
                     println!("{C_YELLOW}[!] Android /sdcard/ not detected in current environment.{C_RESET}");
                 }
@@ -889,9 +889,9 @@ fn run_system_doctor() {
         for tool in ["rustc", "cargo", "gcc", "g++", "go", "python3", "nmap", "tmux"] {
             let ok = Command::new(tool).arg("--version").stdout(Stdio::null()).stderr(Stdio::null()).status().map(|s| s.success()).unwrap_or(false);
             if ok {
-                println!("  {C_GREEN}✔{C_RESET} {:<16} {C_GREEN}[OK]{C_RESET}", tool);
+                println!("  {C_GREEN}[OK]{C_RESET} {:<16} {C_GREEN}[OK]{C_RESET}", tool);
             } else {
-                println!("  {C_RED}✖{C_RESET} {:<16} {C_YELLOW}[MISSING]{C_RESET}", tool);
+                println!("  {C_RED}[FAIL]{C_RESET} {:<16} {C_YELLOW}[MISSING]{C_RESET}", tool);
             }
         }
     }
@@ -1023,12 +1023,12 @@ fn sub_menu_maintenance() {
         let tel = get_system_telemetry();
         print_header(&tel);
         println!("{C_GREEN}{C_BOLD} [ 16: SYSTEM MAINTENANCE & ARSENAL UPDATE CENTER ] {C_RESET}\n");
-        menu_item("1", "🔄", "Synchronize & Update (ax update)", "Fetch repo indexes, git updates & security signatures");
-        menu_item("2", "⚡", "Comprehensive Upgrade (ax upgrade)", "Upgrade OS packages & rebuild all native tool suites");
-        menu_item("3", "🩺", "System Diagnostics (ax doctor)", "Audit compiler toolchains, reverse engineering & storage");
-        menu_item("4", "🧹", "Purge Cache & Artifacts (ax clean)", "Clean apt/pkg caches & temporary build files");
-        menu_item("5", "🔨", "Master Multi-Language Rebuild (ax build)", "Compile C, C++, Go, NASM & Rust from source");
-        menu_item("0", "🔙", "Return to Main Hub", "Back to primary command matrix");
+        menu_item("1", "[SYNC]", "Synchronize & Update (ax update)", "Fetch repo indexes, git updates & security signatures");
+        menu_item("2", "[*]", "Comprehensive Upgrade (ax upgrade)", "Upgrade OS packages & rebuild all native tool suites");
+        menu_item("3", "", "System Diagnostics (ax doctor)", "Audit compiler toolchains, reverse engineering & storage");
+        menu_item("4", "", "Purge Cache & Artifacts (ax clean)", "Clean apt/pkg caches & temporary build files");
+        menu_item("5", "[TOOL]", "Master Multi-Language Rebuild (ax build)", "Compile C, C++, Go, NASM & Rust from source");
+        menu_item("0", "", "Return to Main Hub", "Back to primary command matrix");
 
         let choice = read_user_input(&format!("\n{C_GREEN}ASTERIX-MAINTENANCE » {C_RESET}"));
         match choice.as_str() {
@@ -1426,23 +1426,23 @@ fn main() {
         print_header(&tel);
 
         println!("{C_WHITE}{C_BOLD} [ MASTER SECURITY & ENGINEERING MATRIX ] {C_RESET}\n");
-        menu_item("1",  "🔍", "01. Reconnaissance & OSINT", "Nmap, Masscan, Amass, Dnsrecon, Whois");
-        menu_item("2",  "🕷️", "02. Web Application Security", "SQLMap, Gobuster, Nikto, FFUF, Wafw00f");
-        menu_item("3",  "💣", "03. Exploitation & Payloads", "Metasploit MSF, SearchSploit, Socat");
-        menu_item("4",  "🔑", "04. Password & Hash Auditing", "Hashcat, John The Ripper, Hydra, Crunch");
-        menu_item("5",  "🦈", "05. Sniffing & Traffic Control", "Wireshark, TShark, Tcpdump, MacChanger");
-        menu_item("6",  "📡", "06. Wireless & Radio Attacks", "Aircrack-ng, Wifite, Reaver, Kismet");
-        menu_item("7",  "🔬", "07. Forensics & Steganography", "Binwalk, Foremost, Steghide, Exiftool");
-        menu_item("8",  "⚙️", "08. Reverse Engineering (R2)", "Radare2, GDB, Hexedit, XXD, Strings");
-        menu_item("9",  "🛠️", "09. Full-Stack Dev Studio", "Rust, Go, C/C++, Python, Node, LazyGit");
-        menu_item("10", "💾", "10. ASTERIX Persistent Vault", "Manage encrypted data & loot storage");
-        menu_item("11", "🤖", "11. Discord Cloud Vault Bridge", "Sync backups, loot & task alerts");
-        menu_item("12", "🌐", "12. Web Operations Portal", "Launch localhost:7777 media & HUD portal");
-        menu_item("13", "🪟", "13. Quad-Grid Tmux Studio", "4-way synchronized terminal workspace");
-        menu_item("14", "⚡", "14. Hardware & Resource HUD", "Btop, Htop, CPU & Memory Telemetry");
-        menu_item("15", "💻", "15. Superuser Shell Prompt", "Drop into enhanced cyber Zsh/Bash");
-        menu_item("16", "🔄", "16. System Maintenance & Update", "ax update, ax upgrade, ax doctor, ax clean");
-        menu_item("0",  "⛔", "Power Off / Exit System", "Terminate session or shutdown");
+        menu_item("1",  "[SCAN]", "01. Reconnaissance & OSINT", "Nmap, Masscan, Amass, Dnsrecon, Whois");
+        menu_item("2",  "", "02. Web Application Security", "SQLMap, Gobuster, Nikto, FFUF, Wafw00f");
+        menu_item("3",  "", "03. Exploitation & Payloads", "Metasploit MSF, SearchSploit, Socat");
+        menu_item("4",  "[KEY]", "04. Password & Hash Auditing", "Hashcat, John The Ripper, Hydra, Crunch");
+        menu_item("5",  "", "05. Sniffing & Traffic Control", "Wireshark, TShark, Tcpdump, MacChanger");
+        menu_item("6",  "[SIGNAL]", "06. Wireless & Radio Attacks", "Aircrack-ng, Wifite, Reaver, Kismet");
+        menu_item("7",  "", "07. Forensics & Steganography", "Binwalk, Foremost, Steghide, Exiftool");
+        menu_item("8",  "[*]", "08. Reverse Engineering (R2)", "Radare2, GDB, Hexedit, XXD, Strings");
+        menu_item("9",  "", "09. Full-Stack Dev Studio", "Rust, Go, C/C++, Python, Node, LazyGit");
+        menu_item("10", "[DISK]", "10. ASTERIX Persistent Vault", "Manage encrypted data & loot storage");
+        menu_item("11", "[AI]", "11. Discord Cloud Vault Bridge", "Sync backups, loot & task alerts");
+        menu_item("12", "[NET]", "12. Web Operations Portal", "Launch localhost:7777 media & HUD portal");
+        menu_item("13", "", "13. Quad-Grid Tmux Studio", "4-way synchronized terminal workspace");
+        menu_item("14", "[*]", "14. Hardware & Resource HUD", "Btop, Htop, CPU & Memory Telemetry");
+        menu_item("15", "[HOST]", "15. Superuser Shell Prompt", "Drop into enhanced cyber Zsh/Bash");
+        menu_item("16", "[SYNC]", "16. System Maintenance & Update", "ax update, ax upgrade, ax doctor, ax clean");
+        menu_item("0",  "", "Power Off / Exit System", "Terminate session or shutdown");
 
         let choice = read_user_input(&format!("\n{C_CYAN}ASTERIX-CONTROL » {C_RESET}"));
 

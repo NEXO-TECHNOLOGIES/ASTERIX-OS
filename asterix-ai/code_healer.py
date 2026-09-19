@@ -949,7 +949,7 @@ def print_diff(original, healed, filename="snippet"):
         else:
             print(f"{C_GRAY}{line.rstrip()}{C_RESET}")
     if not has_diff:
-        print(f"  {C_GREEN}[✔] Code already structurally clean and aligned.{C_RESET}")
+        print(f"  {C_GREEN}[[OK]] Code already structurally clean and aligned.{C_RESET}")
 
 def main():
     if len(sys.argv) < 2:
@@ -1005,7 +1005,7 @@ def main():
         healed, mods, _ = heal_code(target, forced_lang=forced_lang)
 
         if not mods:
-            print(f"\n  {C_GREEN}[✔] Zero defects detected. File syntax is clean.{C_RESET}\n")
+            print(f"\n  {C_GREEN}[[OK]] Zero defects detected. File syntax is clean.{C_RESET}\n")
             return
 
         print(f"\n  {C_YELLOW}[!] Detected {len(mods)} Syntax / AST Defect(s):{C_RESET}")
@@ -1022,7 +1022,7 @@ def main():
         with open(target, "w", encoding="utf-8") as f:
             f.write(healed)
 
-        print(f"\n  {C_GREEN}{C_BOLD}[✔] Code successfully healed and applied!{C_RESET}")
+        print(f"\n  {C_GREEN}{C_BOLD}[[OK]] Code successfully healed and applied!{C_RESET}")
         print(f"\n  {C_CYAN}--- UNIFIED DIFF PREVIEW ---{C_RESET}")
         print_diff(original, healed, os.path.basename(target))
         print()

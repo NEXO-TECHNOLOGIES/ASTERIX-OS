@@ -1,4 +1,4 @@
-# 🎯 ASTERIX OS v2.0 RESTRUCTURE GUIDE
+# [TARGET] ASTERIX OS v2.0 RESTRUCTURE GUIDE
 ## Complete Strategic Fix (Text-Based Roadmap)
 
 ---
@@ -53,19 +53,19 @@ WHY: Modular, versioned, user chooses their attack path.
 ```
 
 **What to KEEP & AMPLIFY:**
-- `ax payload` (reverse shell generator) ✅ — Make it better
-- `ax web` (web app exploitation) ✅ — Add more scanners
-- `ax exploit` (Metasploit integration) ✅ — Make it seamless
-- `ax wifi` (wireless attacks) ✅ — Add new techniques
-- `ax crack` (password cracking) ✅ — GPU acceleration
-- `ax scan` (reconnaissance) ✅ — Faster algorithms
-- `ax quad` (terminal multiplexing) ✅ — Already excellent
+- `ax payload` (reverse shell generator) [OK] — Make it better
+- `ax web` (web app exploitation) [OK] — Add more scanners
+- `ax exploit` (Metasploit integration) [OK] — Make it seamless
+- `ax wifi` (wireless attacks) [OK] — Add new techniques
+- `ax crack` (password cracking) [OK] — GPU acceleration
+- `ax scan` (reconnaissance) [OK] — Faster algorithms
+- `ax quad` (terminal multiplexing) [OK] — Already excellent
 
 **What to REMOVE (Distractions):**
-- `ax game` (gaming optimizer) ❌ — Off-brand
-- `ax snapshot` (Windows features) ❌ — Confusing
-- `ax overdrive` (eSports HUD) ❌ — Not pentesting
-- `ax wallpaper` (UI fluff) ❌ — Distracting
+- `ax game` (gaming optimizer) [FAIL] — Off-brand
+- `ax snapshot` (Windows features) [FAIL] — Confusing
+- `ax overdrive` (eSports HUD) [FAIL] — Not pentesting
+- `ax wallpaper` (UI fluff) [FAIL] — Distracting
 
 **What's AMBIGUOUS (Clarify):**
 - `ax defender` → "Defender Assessment" (how to test defenses, not defend)
@@ -163,14 +163,14 @@ NEXO-TECHNOLOGIES Organization
 
 Every repo needs:
 ```yaml
-✅ Build tests (cargo build --release)
-✅ Unit tests (cargo test)
-✅ Clippy linting (zero warnings)
-✅ Dependency audits (cargo audit)
-✅ Binary signing (GPG key)
-✅ Automated release on git tag
-✅ Docker image build + push
-✅ Performance benchmarks (prove it's faster than alternatives)
+[OK] Build tests (cargo build --release)
+[OK] Unit tests (cargo test)
+[OK] Clippy linting (zero warnings)
+[OK] Dependency audits (cargo audit)
+[OK] Binary signing (GPG key)
+[OK] Automated release on git tag
+[OK] Docker image build + push
+[OK] Performance benchmarks (prove it's faster than alternatives)
 ```
 
 **Why:** Proves your code is reliable. Hackers trust tested tools.
@@ -219,10 +219,10 @@ BENCHMARK_RESULTS.md
 | Metric | Nmap | ASTERIX | Winner |
 |--------|------|---------|--------|
 | Scan time (1000 ports) | 45s | 12s | ASTERIX 3.75x faster |
-| Stealth mode | ✓ | ✓ | TIE |
-| UDP scanning | ✓ | ✓ | TIE |
-| Service detection | ✓ | ✗ | Nmap |
-| JSON output | ✓ | ✓ | TIE |
+| Stealth mode | [OK] | [OK] | TIE |
+| UDP scanning | [OK] | [OK] | TIE |
+| Service detection | [OK] |  | Nmap |
+| JSON output | [OK] | [OK] | TIE |
 | Memory usage | 85MB | 12MB | ASTERIX 7x lighter |
 
 ## asterix-bin-inspector vs strings + file + readelf
@@ -290,16 +290,16 @@ Every quarter:
 ```
 WHAT ASTERIX OS IS FOR (Legitimate Offensive Security):
 ───────────────────────────────────────────────────────
-✓ Authorized penetration testing (with written permission)
-✓ Red team exercises (internal corporate security testing)
-✓ Bug bounty hunting (on platforms like HackerOne, Bugcrowd)
-✓ Security research & vulnerability discovery
-✓ Exploit development & payload creation
-✓ Reconnaissance & OSINT gathering
-✓ Post-exploitation forensics & log analysis
-✓ CTF (Capture the Flag) competitions
-✓ Educational cybersecurity courses
-✓ Authorized malware analysis
+[OK] Authorized penetration testing (with written permission)
+[OK] Red team exercises (internal corporate security testing)
+[OK] Bug bounty hunting (on platforms like HackerOne, Bugcrowd)
+[OK] Security research & vulnerability discovery
+[OK] Exploit development & payload creation
+[OK] Reconnaissance & OSINT gathering
+[OK] Post-exploitation forensics & log analysis
+[OK] CTF (Capture the Flag) competitions
+[OK] Educational cybersecurity courses
+[OK] Authorized malware analysis
 
 LICENSING:
 ───────────────────────────────────────────────────────
@@ -342,20 +342,20 @@ ASTERIX is neutral. User bears all legal responsibility.
 ASTERIX OS vs Kali Linux
 ───────────────────────────────────────
 Kali:
-✓ Massive tool collection (2000+ tools)
-✓ Well-established, trusted
-✓ Excellent documentation
-✗ SLOW (bloated)
-✗ Not optimized for Termux
-✗ Bash-based (slower)
+[OK] Massive tool collection (2000+ tools)
+[OK] Well-established, trusted
+[OK] Excellent documentation
+ SLOW (bloated)
+ Not optimized for Termux
+ Bash-based (slower)
 
 ASTERIX:
-✓ FAST (7 Rust engines, 3-7x speedup)
-✓ MOBILE (optimized for Termux on Android)
-✓ FOCUSED (best-in-class for core attacks)
-✗ Smaller tool collection (intentional)
-✗ Newer, less established
-✗ Requires buy-in to Rust ecosystem
+[OK] FAST (7 Rust engines, 3-7x speedup)
+[OK] MOBILE (optimized for Termux on Android)
+[OK] FOCUSED (best-in-class for core attacks)
+ Smaller tool collection (intentional)
+ Newer, less established
+ Requires buy-in to Rust ecosystem
 
 Target User: Elite hackers who value speed & mobile capability
 ```
@@ -509,12 +509,12 @@ PHASE 5: COMMUNITY (Weeks 15+)
 
 After this restructure, ASTERIX OS will be:
 
-✅ **FAST** — 3-7x faster than Kali's stock tools (proven by benchmarks)
-✅ **MOBILE** — Only pentesting OS optimized for Termux (Android attack platform)
-✅ **FOCUSED** — Elite tool for core offensive operations (not bloatware)
-✅ **PROFESSIONAL** — Versioned, tested, audited, documented
-✅ **MODULAR** — Use individual engines independently or together
-✅ **ELITE** — Will attract serious hackers and security professionals
+[OK] **FAST** — 3-7x faster than Kali's stock tools (proven by benchmarks)
+[OK] **MOBILE** — Only pentesting OS optimized for Termux (Android attack platform)
+[OK] **FOCUSED** — Elite tool for core offensive operations (not bloatware)
+[OK] **PROFESSIONAL** — Versioned, tested, audited, documented
+[OK] **MODULAR** — Use individual engines independently or together
+[OK] **ELITE** — Will attract serious hackers and security professionals
 
 **When discovered, it won't just "blow up"—it will be THE go-to platform for modern offensive security.**
 

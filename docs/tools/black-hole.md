@@ -1,10 +1,10 @@
-# 🕳️ `black-hole` — Defensive Privacy & Telemetry Hardener
+#  `black-hole` — Defensive Privacy & Telemetry Hardener
 
 A privacy hardening and surveillance mitigation layer that evaluates DNS/IP leak exposure, identifies suspicious local endpoints, and checks host microphone/camera status.
 
 ---
 
-## 📌 Usage
+##  Usage
 
 ```bash
 ax black-hole audit
@@ -14,7 +14,7 @@ ax black-hole report [--json]
 
 ---
 
-## ⚙️ Key Capabilities
+## [*] Key Capabilities
 
 - **DNS/IP Leak Audit**: Tests whether local DNS requests bypass encrypted DoH tunnels and leak cleartext queries to the local ISP.
 - **Hardware Sensor Exposure Check**: Probes for active recording locks or open handles on microphones and webcams.
@@ -23,5 +23,5 @@ ax black-hole report [--json]
 
 ---
 
-## ⚠️ Important Limitations
+## [!] Important Limitations
 - This is a best-effort local hardening and detection layer. It reduces network and physical exposure, but cannot guarantee protection against kernel-level telemetry or specialized hardware wiretaps.

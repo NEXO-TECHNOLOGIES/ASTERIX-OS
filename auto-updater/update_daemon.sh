@@ -128,7 +128,7 @@ cmd_enable() {
     banner
     rm -f "${DISABLED_FILE}"
     log "Auto-update ENABLED by user" "CONFIG"
-    echo -e "  ${C_GREEN}${C_BOLD}[✔] ASTERIX AUTO-UPDATE: ENABLED [ON]${C_RESET}"
+    echo -e "  ${C_GREEN}${C_BOLD}[[OK]] ASTERIX AUTO-UPDATE: ENABLED [ON]${C_RESET}"
     echo -e "  ${C_GRAY}Live repository synchronization is now active.${C_RESET}\n"
     local pid=""
     [ -f "${PID_FILE}" ] && pid=$(cat "${PID_FILE}")

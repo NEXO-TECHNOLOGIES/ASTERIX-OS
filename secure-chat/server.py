@@ -65,7 +65,7 @@ def hash_password(password, salt_hex):
 def trigger_intruder_alert(ip, port, room_id, attempt_count):
     ts = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
     print(f"\n{C_RED}{C_BOLD}╔══════════════════════════════════════════════════════════════════════════╗{C_RESET}")
-    print(f"{C_RED}║{C_WHITE}{C_BOLD}  🚨 [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!       {C_RESET}{C_RED}║{C_RESET}")
+    print(f"{C_RED}║{C_WHITE}{C_BOLD}  [ALERT] [ALERT] ASTERIX CAUGHT A THIEF SNOOPING INTO THE PRIVATE CHAT!       {C_RESET}{C_RED}║{C_RESET}")
     print(f"{C_RED}╚══════════════════════════════════════════════════════════════════════════╝{C_RESET}")
     print(f"  {C_YELLOW}{C_BOLD}TARGET INTRUDER IP :{C_RESET} {C_RED}{C_BOLD}{ip}{C_RESET}")
     print(f"  {C_YELLOW}{C_BOLD}INTRUDER PORT      :{C_RESET} {C_WHITE}{port}{C_RESET}")
@@ -393,7 +393,7 @@ class SecureChatHandler(BaseHTTPRequestHandler):
                 if fail_count >= 3:
                     trigger_intruder_alert(client_ip, client_port, room_id, fail_count)
                     self.send_json_response({
-                        "error": f"🚨 INTRUSION ALERT: 3 consecutive password failures! Target {client_ip}:{client_port} logged to OS defense systems.",
+                        "error": f"[ALERT] INTRUSION ALERT: 3 consecutive password failures! Target {client_ip}:{client_port} logged to OS defense systems.",
                         "intruder_detected": True,
                         "attacker_ip": client_ip,
                         "attacker_port": client_port
@@ -676,7 +676,7 @@ def run_server(host=DEFAULT_HOST, port=DEFAULT_PORT, use_ssl=False, open_browser
         print(f"\n  {C_RED}{C_BOLD}[!] TERMINATING SECURE CHAT VAULT...{C_RESET}")
         with ROOMS_LOCK:
             ROOMS.clear()
-        print(f"  {C_GREEN}[✔] All RAM data, rooms, and keys permanently eradicated.{C_RESET}\n")
+        print(f"  {C_GREEN}[[OK]] All RAM data, rooms, and keys permanently eradicated.{C_RESET}\n")
         server.server_close()
 
 def main():

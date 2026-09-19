@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-dark-engine`
+# [SEC] Threat Model: `asterix-dark-engine`
 ## Memory Page Inspection, W^X Analysis & Stealth Radar Telemetry
 
 ### 1. Component Overview

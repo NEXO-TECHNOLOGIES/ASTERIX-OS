@@ -31,7 +31,7 @@ case "$action" in
         echo -e "  ${C_CYAN}Ask me anything about cybersecurity, penetration testing, kernel hardening,${C_RESET}"
         echo -e "  ${C_CYAN}code repairs, proxy chains, or operating systems. Type 'exit' to quit.${C_RESET}\n"
         while true; do
-            read -r -p "$(echo -e "${C_GREEN}${C_BOLD}user ❯${C_RESET} ")" user_input || break
+            read -r -p "$(echo -e "${C_GREEN}${C_BOLD}user ${C_RESET} ")" user_input || break
             [ -z "$user_input" ] && continue
             if [[ "$user_input" =~ ^(exit|quit|bye|q)$ ]]; then
                 echo -e "\n  ${C_MAGENTA}ASTERIX AI session terminated. Stay vigilant.${C_RESET}\n"
@@ -46,12 +46,12 @@ case "$action" in
         echo -e "  ${C_CYAN}[*] Inquiring ASTERIX AI:${C_RESET} \"${query}\"\n"
 
         if [[ "$query" =~ ^([Hh]ello|[Hh]i|[Hh]ey|[Gg]reetings|[Hh]owdy|[Ss]up|[Yy]o)$ ]]; then
-            echo -e "  ${C_MAGENTA}${C_BOLD}ASTERIX AI ❯${C_RESET} Greetings! I am your resident tactical intelligence and cybersecurity copilot."
+            echo -e "  ${C_MAGENTA}${C_BOLD}ASTERIX AI ${C_RESET} Greetings! I am your resident tactical intelligence and cybersecurity copilot."
             echo -e "  I am specialized in penetration testing, kernel hardening, reverse engineering, and code healing."
             echo -e "  What cybersecurity domain or system objective are we tackling today?\n"
             exit 0
         elif [[ "$query" =~ [Ww]ho\ are\ you|[Ww]hat\ are\ you|[Ii]ntroduce\ yourself ]]; then
-            echo -e "  ${C_MAGENTA}${C_BOLD}ASTERIX AI ❯${C_RESET} I am ASTERIX AI (v3.0) — an autonomous, offline intelligence engine."
+            echo -e "  ${C_MAGENTA}${C_BOLD}ASTERIX AI ${C_RESET} I am ASTERIX AI (v3.0) — an autonomous, offline intelligence engine."
             echo -e "  I run 100% locally on your machine with zero cloud dependencies and zero data harvesting.\n"
             exit 0
         fi
@@ -291,7 +291,7 @@ case "$action" in
 
     teach|learn|remember)
         fact="$*"
-        echo -e "  ${C_GREEN}${C_BOLD}[✔] ASTERIX AI LEARNED:${C_RESET} \"${fact}\""
+        echo -e "  ${C_GREEN}${C_BOLD}[[OK]] ASTERIX AI LEARNED:${C_RESET} \"${fact}\""
         echo -e "  ${C_GRAY}[i] Persistence requires Python 3 (ax ai profile to view).${C_RESET}"
         if command -v python3 >/dev/null 2>&1; then
             _ai_dir="$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")"

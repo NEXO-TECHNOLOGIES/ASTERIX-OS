@@ -167,7 +167,7 @@ def run_decoy_generator(count: int, interval: float, jitter: float, dry_run: boo
                 print(f"  {C_RED}[WARN {ts}]{C_RESET} #{idx:02d} ──▶ {target['domain']} (Failed: {e})")
 
     duration = time.time() - start_time
-    print(f"\n{C_CYAN}{C_BOLD}[✓] Decoy Generation Completed in {duration:.1f}s:{C_RESET}")
+    print(f"\n{C_CYAN}{C_BOLD}[[OK]] Decoy Generation Completed in {duration:.1f}s:{C_RESET}")
     print(f"  • Dispatched: {successful}/{count} benign network transactions")
     print(f"  • Background Egress Blend Ratio: High-Entropy Enterprise Distribution")
 

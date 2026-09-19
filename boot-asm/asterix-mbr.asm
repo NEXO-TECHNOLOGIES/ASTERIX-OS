@@ -1,5 +1,5 @@
 ; =====================================================================
-; 🌌 ASTERIX OS - Next-Generation Master MBR Bootloader (x86 Assembly)
+; [ASTERIX] ASTERIX OS - Next-Generation Master MBR Bootloader (x86 Assembly)
 ; Dual Operation: Autonomous VBR Chainloader & Cyber Diagnostic Console
 ; Conforms to Standard PC MBR: Relocates to 0x0600, Parses Partition Table (0x01BE),
 ; Chains to Active Partition VBR at 0x7C00, and verifies 0xAA55 signature.
@@ -251,7 +251,7 @@ msg_banner:
 msg_no_active:  db " [!] Warning: No bootable partition (0x80) marked.", 13, 10, 0
 msg_bad_part:   db " [!] Error: Active partition is invalid or has a zero LBA.", 13, 10, 0
 msg_chainload:  db " [*] Active partition detected. Reading VBR sector...", 13, 10, 0
-msg_vbr_ok:     db " [✔] VBR signature (0xAA55) verified. Chainloading OS...", 13, 10, 0
+msg_vbr_ok:     db " [[OK]] VBR signature (0xAA55) verified. Chainloading OS...", 13, 10, 0
 msg_read_err:   db " [!] Error: INT 13h disk read failed.", 13, 10, 0
 msg_bad_vbr:    db " [!] Error: Missing 0xAA55 boot signature in VBR.", 13, 10, 0
 msg_menu:

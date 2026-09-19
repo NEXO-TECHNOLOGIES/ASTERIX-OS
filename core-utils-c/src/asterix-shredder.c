@@ -93,7 +93,7 @@ int shred_file(const char *path, int passes) {
     truncate(path, 0);
     unlink(path);
 
-    printf("%s[✔] File successfully shredded and unlinked from filesystem.%s\n\n", C_GREEN, C_RESET);
+    printf("%s[[OK]] File successfully shredded and unlinked from filesystem.%s\n\n", C_GREEN, C_RESET);
     return 0;
 }
 

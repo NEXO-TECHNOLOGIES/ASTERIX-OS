@@ -28,9 +28,9 @@ header() {
     hrule "═" "$FG_MAGENTA"
     echo ""
 }
-ok()   { echo -e "  ${FG_GREEN}[✔]${R} $*"; }
+ok()   { echo -e "  ${FG_GREEN}[[OK]]${R} $*"; }
 warn() { echo -e "  ${FG_YELLOW}[!]${R} $*"; }
-crit() { echo -e "  ${FG_RED}[✖]${R} $*"; }
+crit() { echo -e "  ${FG_RED}[[FAIL]]${R} $*"; }
 info() { echo -e "  ${FG_CYAN}[*]${R} $*"; }
 
 # ──────────────────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-# 🛡️ Threat Model: `asterix-code-repair`
+# [SEC] Threat Model: `asterix-code-repair`
 ## Autonomous Code Defect Healing & AST Repair Engine
 
 ### 1. Component Overview
