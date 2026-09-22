@@ -1,188 +1,77 @@
 # ASTERIX OS
-## Hardened Mobile Security Sandbox & Tactical Linux Platform
 
-> **Language / Idioma / Langue / Sprache / 语言 / لغة / Язык**: [English](README.md) | [Español](docs/locales/README.es.md) | [Français](docs/locales/README.fr.md) | [Deutsch](docs/locales/README.de.md) | [中文](docs/locales/README.zh.md) | [العربية](docs/locales/README.ar.md) | [Русский](docs/locales/README.ru.md)
+ASTERIX OS is a custom operating system project centered on a verified bare-metal kernel, a disciplined runtime model, and an extensible security-oriented architecture.
 
-> [!WARNING]
-> **Authorized Security Auditing & Defensive Research Only**: ASTERIX OS bundles defensive telemetry, network auditing, forensic tools, and packet analysis utilities (`nmap`, `tcpdump`, `tshark`). It is strictly intended for authorized penetration testing, vulnerability assessment, defensive telemetry, and research on infrastructure you own or have explicit written permission to test. See [SECURITY.md](SECURITY.md) for governance and disclosure policies.
+## Current status
 
-```
-    █████╗ ███████╗████████╗███████╗██████╗ ██╗██╗  ██╗     ██████╗ ███████╗
-   ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║╚██╗██╔╝    ██╔═══██╗██╔════╝
-   ███████║███████╗   ██║   █████╗  ██████╔╝██║ ╚███╔╝     ██║   ██║███████╗
-   ██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗██║ ██╔██╗     ██║   ██║╚════██║
-   ██║  ██║███████║   ██║   ███████╗██║  ██║██║██╔╝ ██╗    ╚██████╔╝███████║
-   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝     ╚═════╝ ╚══════╝
-                     >> NEXT-GEN CYBERNETIC PLATFORM <<
-```
+The kernel path is the only part that is currently verified end-to-end.
 
-**ASTERIX OS** is a hardened, zero-crash rootless mobile security sandbox and tactical cyber telemetry framework for Android (Termux PRoot) and Linux. It provides a verified, pre-configured Debian PRoot container with strict error handling, multi-DNS failover, a structured 10-tier persistent folder engine, and native Rust telemetry tools.
+- Verified build: the kernel in [kernel](kernel) compiles successfully from source.
+- Verified runtime: QEMU boot output in [kernel/serial.log](kernel/serial.log) reaches the interactive shell and prints the ASTERIX banner.
+- Current state: the kernel is working; packaging, ISO workflows, and full distro release automation are still in progress.
 
-It combines:
-- A hardened rootless Debian environment for Android Termux with zero-crash error handling
-- An advanced 10-tier mission folder engine (`ax debian folder` / `ax folder`)
-- An AI-guided defensive operations layer (`asterix-ai`)
-- A dual-boot compatible desktop shell and live persistence model
-- A curated security toolkit and utility registry with cryptographic verification
-- A disciplined software supply chain strictly adhering to least privilege and verified packaging
+This project is intentionally organized around evidence instead of hype. The foundation is real; the broader distro packaging must be built to match it.
 
----
+## Core architecture
 
-## Product vision
+### 1. Kernel core
+The minimal kernel layer is in [kernel](kernel) and includes:
+- bootloader assembly in [kernel/src/boot.asm](kernel/src/boot.asm)
+- main kernel logic in [kernel/src/kernel.c](kernel/src/kernel.c)
+- linker layout in [kernel/linker.ld](kernel/linker.ld)
+- build automation in [kernel/build-kernel.ps1](kernel/build-kernel.ps1) and [kernel/Makefile](kernel/Makefile)
 
-ASTERIX OS is designed for users who want a disciplined security workstation with a modern desktop experience, persistent boot workflows, and a structured AI-assisted operations model.
+This layer is responsible for:
+- multiboot startup
+- protected mode setup
+- VGA output
+- interrupt and exception flow
+- paging and memory management
+- task scheduling and syscalls
 
-The platform is built around four core pillars:
+### 2. Runtime layer
+The runtime layer sits above the kernel and provides the user-facing OS behavior needed for:
+- process handling
+- file abstraction
+- device services
+- secure execution boundaries
+- user and system services
 
-1. Professional Linux deployment
-2. Offline cybersecurity and operational tooling
-3. AI-enhanced workflow orchestration
-4. Secure, project-scoped self-evolution and automation
+### 3. Security model
+The project is intentionally designed around a security-first posture:
+- capability-aware execution model
+- rootless-by-default assumptions
+- restricted privilege boundaries
+- service isolation and policy enforcement
 
----
+### 4. Distribution and orchestration
+Above the core platform, ASTERIX includes optional layers for:
+- cluster orchestration
+- automation workflows
+- local AI support
+- tooling integration
+- mobile or edge deployment scenarios
 
-## Key capabilities
+These are layered expansions, not substitutes for the kernel.
 
-- Dual-boot ready desktop environment for ASTERIX and Kali-style workflows
-- Live USB / persistent storage support for secure, portable deployment
-- Mobile-ready Termux runtime bridge for ARM64 devices
-- Native command router through the ax shell interface
-- AI tool registry for safe internal generator workflows
-- Mood-aware, learning-capable local AI subsystem
-- Automated project-safe self-evolution for docs, UI, configuration, and tooling
-- Security audit, repair, and defensive utility stack
-
----
-
-## Quick start
-
-```bash
-./setup.sh
-ax status
-ax list
-```
-
-## Security tools index
-
-- [Black Hole](scripts-hub/BLACK_HOLE_README.md) — local privacy hardening and hostile-surveillance detection for Wi‑Fi, USB, and host-side exposure checks.
-
-
-For boot and UI theme workflows:
-
-```bash
-ax boot theme matrix
-ax boot theme neon
-ax boot theme auto
-```
-
-For the AI layer:
-
-```bash
-ax ai audit
-ax ai ask "show me the current system posture"
-```
-
----
-
-## Termux recovery: if commands stop working after install
-
-If the user installs ASTERIX on Termux and then commands like `pkg`, `curl`, `git`, or `apt` stop working, the root cause is usually a broken repository state or a corrupted `curl/libcurl` package. This is a recovery path that should be documented and used immediately.
-
-### Manual repair flow
-
-```bash
-termux-change-repo
-pkg update
-pkg upgrade
-pkg reinstall -y curl libcurl
-pkg install -y git wget openssl
-```
-
-If the repository list is stale or broken, reset it first:
-
-```bash
-termux-change-repo
-```
-
-Then re-run:
-
-```bash
-pkg update
-pkg upgrade
-```
-
-If `curl` is still failing, force a clean reinstall:
-
-```bash
-pkg reinstall -y curl libcurl
-```
-
-### Auto-heal startup script
-
-Add this to the first-boot or startup flow so the system repairs itself automatically before continuing:
-
-```bash
-#!/data/data/com.termux/files/usr/bin/bash
-set -e
-
-echo "[ASTERIX] repairing Termux package state..."
-termux-change-repo || true
-pkg update || true
-pkg upgrade -y || true
-pkg reinstall -y curl libcurl || true
-pkg install -y git wget openssl || true
-```
-
-This prevents the system from becoming a dead shell after install when a repo or library package becomes invalid.
-
----
-
-## Architecture overview
-
-```text
-ASTERIX OS
-├── core runtime and boot stack
-├── desktop environment and dual-boot shell
-├── security tooling and compliance layer
-├── AI learning, memory, and tool-generation engine
-├── project-safe governance and approval workflows
-├── live deployment and persistence tooling
-└── documentation and distro-grade user experience
-```
-
----
-
-## Security and governance model
-
-ASTERIX OS keeps its AI and automation architecture within a strict operational model:
-
-- safe internal tooling only
-- project-scoped self-evolution
-- blocked kernel, firmware, and destructive system mutation
-- approval before executing generated or risky actions
-- offline-first learning and memory model
-
-This allows the platform to feel powerful and autonomous without crossing into unsafe or hostile behavior.
-
----
-
-## Professional distro positioning
-
-ASTERIX OS is intended to be positioned as a serious platform for:
-- secure Linux deployment
-- developer workflow optimization
-- local AI-assisted operations
-- security research and defensive engineering
-- modular tooling and persistent boot environments
-
-It is not a toy environment or a casual shell script bundle. It is organized to behave like a disciplined, deployable, and extensible distro platform.
-
----
-
-## Official project structure
+## Repository layout
 
 ```text
 ASTERIX OS/
+├── README.md
+├── KERNEL-ROADMAP.md
+├── NOISE.md
+├── ANTI.md
+├── DRAFT.md
+├── RECHANGE.md
+├── DOWNLOADS.md
+├── kernel/
+│   ├── src/
+│   ├── include/
+│   ├── build-kernel.ps1
+│   ├── build-kernel.sh
+│   ├── Makefile
+│   └── bin/
 ├── asterix-ai/
 ├── auto-compiler/
 ├── auto-updater/
@@ -194,30 +83,66 @@ ASTERIX OS/
 ├── desktop-env/
 ├── docs/
 ├── engine/
+├── iso-images/
+├── releases/
+├── scripts-hub/
 ├── termux-mobile/
 ├── ui-core/
 ├── web-dashboard/
-├── scripts-hub/
-├── packages/
-├── assets/
 ├── setup.sh
-├── README.md
+├── install.sh
 ├── LICENSE
+├── SECURITY.md
 └── VERSION.toml
 ```
 
+## What is verified
+
+The following are verified from actual project output and runtime evidence:
+
+- Kernel build succeeds from source.
+- QEMU boot reaches the interactive shell.
+- The shell banner and boot messages are present in [kernel/serial.log](kernel/serial.log).
+- The project is organized around a stable minimal kernel foundation instead of a copied Ubuntu/WSL environment.
+
+## What is still pending
+
+The following are not yet complete enough to call a release:
+
+- final live ISO generation
+- full distro packaging automation
+- final install workflow for all target architectures
+- checksum verification for published artifacts
+- stable documentation alignment with every optional deployment path
+
+## Build notes
+
+The kernel build is intentionally native and source-based. The Windows environment currently requires explicit tool paths because NASM is not always exposed globally in PATH.
+
+Example build flow:
+
+```powershell
+$clang = 'C:\Program Files\LLVM\bin\clang.exe'
+$nasm  = 'C:\Users\Baha\AppData\Local\bin\NASM\nasm.exe'
+$qemu  = 'C:\Program Files\qemu\qemu-system-i386.exe'
+
+& $nasm -v
+& $clang --version
+& $qemu --version
+
+powershell -ExecutionPolicy Bypass -File .\kernel\build-kernel.ps1
+```
+
+## Working principle
+
+The project should be understood as a custom multi-purpose OS with a security-first kernel foundation, not as a cloned Linux distribution or a fake environment wrapper.
+
+The kernel is the center of gravity. Everything else is a higher layer built on top of it.
+
 ---
 
-## Release focus
+This project stays disciplined by keeping the verified core working first and by separating release polish, packaging, and optional device-specific layers from the base system itself.
 
-The project emphasizes:
-- clean boot UX and professional distro presentation
-- live persistence and mobile compatibility
-- AI operational assistance without unsafe escalation
-- modular architecture and maintainable tooling layers
-- professional long-term project evolution
-
----
 
 ## License
 
