@@ -1,121 +1,68 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# ASTERIX OS — Secure Cryptographically Verified Installer
-# Version: 2.1.0
+# ASTERIX OS — Source-first bootstrap installer
 #
-# Usage:
-#   bash install.sh [--version <tag>] [--verify-only] [--skip-verify]
-#
-# Security:
-#   • Verifies SHA-256 integrity against BUILD_MANIFEST.json before execution
-#   • Enforces semantic version pinning instead of floating branch HEAD
-#   • Prompts for mandatory Authorized Testing Only legal acknowledgment
+# This installer is intentionally simple and honest:
+# - If the project is already checked out locally, it uses that source tree.
+# - Otherwise it fetches the repo via curl or git clone from GitHub/GitLab.
+# - It then runs the project setup flow without pretending a packaged ISO exists.
 # ==============================================================================
 set -euo pipefail
 
-# ANSI Colors
 C_RESET="\033[0m"
 C_BOLD="\033[1m"
 C_RED="\033[91m"
 C_GREEN="\033[92m"
 C_YELLOW="\033[93m"
 C_CYAN="\033[96m"
-C_WHITE="\033[97m"
 
-ASTERIX_VERSION="2.1.0"
-REPO_URL="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git"
-INSTALL_DIR="$HOME/ASTERIX-OS"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/ASTERIX-OS}"
+GITHUB_URL="https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git"
+GITLAB_URL="https://gitlab.com/nexo-technologies-group/asterix-os.git"
 
 echo -e "${C_CYAN}${C_BOLD}"
-cat << 'EOF'
+cat <<'EOF'
     ___   _____ ______ ______ ____     ____  __  __
    /   | / ___//_  __// ____// __ \   / __ \/ / / /
   / /| | \__ \  / /  / __/  / /_/ /  / / / / / / / 
  / ___ |___/ / / /  / /___ / _, _/  / /_/ / /_/ /  
 /_/  |_/____/ /_/  /_____//_/ |_|   \____/\____/   
 EOF
-echo -e "  CRYPTOGRAPHICALLY VERIFIED INSTALLER v${ASTERIX_VERSION}${C_RESET}\n"
 
-# Authorized Testing Legal Warning
-echo -e "${C_YELLOW}${C_BOLD}[!] AUTHORIZED TESTING ONLY WARNING:${C_RESET}"
-echo -e "    ASTERIX OS includes network reconnaissance and security evaluation tools."
-echo -e "    Use is permitted solely on systems you own or have explicit written"
-echo -e "    authorization to assess under applicable local, national, and international law.\n"
+echo -e "  ASTERIX OS source-first installer${C_RESET}\n"
 
-# Parse arguments
-VERIFY_ONLY=false
-SKIP_VERIFY=false
+echo -e "${C_YELLOW}[!] This project is source-first. The verified kernel is built from source, not from a fake prebuilt ISO.${C_RESET}\n"
 
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --verify-only)
-            VERIFY_ONLY=true
-            shift
-            ;;
-        --skip-verify)
-            SKIP_VERIFY=true
-            shift
-            ;;
-        --version)
-            ASTERIX_VERSION="$2"
-            shift 2
-            ;;
-        *)
-            echo -e "${C_RED}[!] Unknown option: $1${C_RESET}"
-            exit 1
-            ;;
-    esac
-done
-
-# Step 1: Detect Environment
-echo -e "${C_CYAN}[1/4] Detecting Runtime Environment...${C_RESET}"
-IS_TERMUX=false
-if [ -d "/data/data/com.termux/files/usr" ] || [ -n "${TERMUX_VERSION:-}" ]; then
-    IS_TERMUX=true
-    echo -e "    ${C_GREEN}[OK]${C_RESET} Detected Android Termux User-space (Target: Debian PRoot)"
-elif command -v apt-get >/dev/null 2>&1; then
-    echo -e "    ${C_GREEN}[OK]${C_RESET} Detected Host Debian/Ubuntu Linux"
+if [ -f "${BASH_SOURCE[0]}" ] && [ -f "$(dirname "${BASH_SOURCE[0]}")/setup.sh" ]; then
+    REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    INSTALL_DIR="$REPO_ROOT"
+    echo -e "${C_GREEN}[OK]${C_RESET} Local repository detected at $INSTALL_DIR"
 else
-    echo -e "    ${C_YELLOW}[!]${C_RESET} Generic POSIX Host (limited functionality)"
-fi
-
-# Step 2: Clone or Update at Pinned Version
-echo -e "\n${C_CYAN}[2/4] Fetching ASTERIX OS (Pinned Version: v${ASTERIX_VERSION})...${C_RESET}"
-if [ -d "$INSTALL_DIR/.git" ]; then
-    echo -e "    Existing repository found at $INSTALL_DIR. Verifying..."
-    cd "$INSTALL_DIR"
-    git fetch --tags origin 2>/dev/null || true
-else
-    echo -e "    Cloning release into $INSTALL_DIR..."
-    git clone --depth 1 "$REPO_URL" "$INSTALL_DIR"
-    cd "$INSTALL_DIR"
-fi
-
-# Step 3: Cryptographic Integrity Verification
-echo -e "\n${C_CYAN}[3/4] Validating Cryptographic Integrity (SHA-256)...${C_RESET}"
-if [ "$SKIP_VERIFY" = false ]; then
-    if command -v python3 >/dev/null 2>&1; then
-        python3 "$INSTALL_DIR/scripts-hub/ax-release-verify.py"
-        echo -e "    ${C_GREEN}[OK] Cryptographic release verification passed.${C_RESET}"
+    if [ -d "$INSTALL_DIR/.git" ]; then
+        echo -e "${C_GREEN}[OK]${C_RESET} Existing repo found at $INSTALL_DIR"
     else
-        echo -e "    ${C_YELLOW}[!] python3 not yet installed. Running bootstrap verification...${C_RESET}"
-        if [ -f "$INSTALL_DIR/BUILD_MANIFEST.json" ]; then
-            echo -e "    ${C_GREEN}[OK] Release manifest confirmed present.${C_RESET}"
+        echo -e "${C_CYAN}[1/3] Cloning ASTERIX OS from GitHub...${C_RESET}"
+        if command -v curl >/dev/null 2>&1; then
+            curl -L "$GITHUB_URL" -o /tmp/asterix-os.git
+            git clone "$GITHUB_URL" "$INSTALL_DIR"
+        else
+            git clone "$GITHUB_URL" "$INSTALL_DIR"
         fi
     fi
-else
-    echo -e "    ${C_YELLOW}[!] Verification skipped via --skip-verify flag.${C_RESET}"
 fi
 
-if [ "$VERIFY_ONLY" = true ]; then
-    echo -e "\n${C_GREEN}[OK] Verification complete (--verify-only mode). Exiting without install.${C_RESET}"
-    exit 0
+cd "$INSTALL_DIR"
+
+echo -e "${C_CYAN}[2/3] Checking project files...${C_RESET}"
+if [ ! -f "$INSTALL_DIR/setup.sh" ]; then
+    echo -e "${C_RED}[!] setup.sh not found in $INSTALL_DIR${C_RESET}"
+    exit 1
 fi
 
-# Step 4: Execute Hardened Installer
-echo -e "\n${C_CYAN}[4/4] Launching Hardened Installer...${C_RESET}"
-if [ "$IS_TERMUX" = true ]; then
-    exec bash "$INSTALL_DIR/termux-mobile/install-termux.sh"
+echo -e "${C_CYAN}[3/3] Running project bootstrap...${C_RESET}"
+if [ -x "$INSTALL_DIR/setup.sh" ]; then
+    exec bash "$INSTALL_DIR/setup.sh"
 else
+    chmod +x "$INSTALL_DIR/setup.sh"
     exec bash "$INSTALL_DIR/setup.sh"
 fi

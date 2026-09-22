@@ -7484,6 +7484,15 @@ case "$SUBCOMMAND" in
         shift
         cmd_secure_chat "$@"
         ;;
+    settings|config|theme|boot-theme)
+        shift
+        _ax_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd)"
+        if [ -f "${_ax_root}/ui-core/loading_screen.sh" ]; then
+            bash "${_ax_root}/ui-core/loading_screen.sh" --settings "$@"
+        else
+            echo -e "${C_RED}[!] Boot loader settings script not found.${C_RESET}"
+        fi
+        ;;
 
     # 8. Direct Cyber Subsystem Jumpers
     recon|--recon)

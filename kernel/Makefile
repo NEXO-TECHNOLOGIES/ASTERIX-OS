@@ -6,14 +6,22 @@
 # ASTERIX kernel build
 # Requires: clang, nasm, and optionally qemu-system-i386
 
+.PHONY: all directories clean qemu
+
 CC      ?= clang
 NASM    ?= nasm
 LD      ?= ld
 QEMU    ?= qemu-system-i386
 
-CFLAGS  ?= -target i386-unknown-none-elf -ffreestanding -O2 -Wall -Wextra -fno-stack-protector -fno-builtin -fno-pie -nostdlib -mno-sse -mno-mmx -mno-sse2
+CFLAGS  ?= -target i386-unknown-none-elf -ffreestanding -O2 -Wall -Wextra -Werror=implicit-function-declaration -fno-stack-protector -fno-builtin -fno-pie -fno-common -nostdlib -mno-sse -mno-mmx -mno-sse2
 ASFLAGS ?= -f elf32
-LDFLAGS ?= -m elf_i386 -T linker.ld -nostdlib
+LDFLAGS ?= -m elf_i386 -T linker.ld -nostdlib -Wl,--no-dynamic-linker
+
+check-tools:
+	@command -v $(CC) >/dev/null 2>&1 || { echo "[ASTERIX KERNEL] ERROR: $(CC) not found. Install clang or set CC=/path/to/compiler."; exit 1; }
+	@command -v $(NASM) >/dev/null 2>&1 || { echo "[ASTERIX KERNEL] ERROR: $(NASM) not found. Install NASM or set NASM=/path/to/nasm."; exit 1; }
+	@test -f linker.ld || { echo "[ASTERIX KERNEL] ERROR: linker.ld missing from kernel root."; exit 1; }
+	@for f in $(SRC_DIR)/boot.asm $(SRC_DIR)/isr.asm $(SRC_DIR)/kernel.c; do test -f $$f || { echo "[ASTERIX KERNEL] ERROR: missing source $$f"; exit 1; }; done
 
 SRC_DIR = src
 INC_DIR = include
@@ -31,7 +39,7 @@ OBJS = $(OBJ_DIR)/boot.o \
        $(OBJ_DIR)/shell.o \
        $(OBJ_DIR)/kernel.o
 
-all: directories $(BIN_DIR)/asterix-microkernel.bin
+all: check-tools directories $(BIN_DIR)/asterix-microkernel.bin
 
 directories:
 	@mkdir -p $(BIN_DIR) $(OBJ_DIR)

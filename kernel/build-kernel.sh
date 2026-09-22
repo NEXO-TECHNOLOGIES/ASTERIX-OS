@@ -12,6 +12,25 @@ BIN_DIR="${SCRIPT_DIR}/bin"
 SRC_DIR="${SCRIPT_DIR}/src"
 INC_DIR="${SCRIPT_DIR}/include"
 
+require_tool() {
+    local tool="$1"
+    local hint="$2"
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        echo "[ASTERIX KERNEL] ERROR: required tool '$tool' not found." >&2
+        echo "[ASTERIX KERNEL] Hint: $hint" >&2
+        exit 1
+    fi
+}
+
+require_file() {
+    local path="$1"
+    local label="$2"
+    if [[ ! -f "$path" ]]; then
+        echo "[ASTERIX KERNEL] ERROR: missing $label: $path" >&2
+        exit 1
+    fi
+}
+
 mkdir -p "${BUILD_DIR}" "${BIN_DIR}"
 
 NASM="${NASM:-nasm}"
@@ -19,6 +38,32 @@ CC="${CC:-clang}"
 if ! command -v "$CC" >/dev/null 2>&1; then
     CC="gcc"
 fi
+
+require_tool "$NASM" "Install NASM or set NASM=/path/to/nasm"
+if ! command -v "$CC" >/dev/null 2>&1; then
+    echo "[ASTERIX KERNEL] ERROR: no supported C compiler detected. Tried: $CC and gcc" >&2
+    echo "[ASTERIX KERNEL] Hint: install clang or gcc for a freestanding x86 build." >&2
+    exit 1
+fi
+
+for src in \
+    "${SRC_DIR}/boot.asm" \
+    "${SRC_DIR}/isr.asm" \
+    "${SRC_DIR}/serial.c" \
+    "${SRC_DIR}/paging.c" \
+    "${SRC_DIR}/heap.c" \
+    "${SRC_DIR}/timer.c" \
+    "${SRC_DIR}/keyboard.c" \
+    "${SRC_DIR}/vfs.c" \
+    "${SRC_DIR}/shell.c" \
+    "${SRC_DIR}/kernel.c" \
+    "${SCRIPT_DIR}/linker.ld"; do
+    require_file "$src" "source file" 
+done
+
+for dir in "$BUILD_DIR" "$BIN_DIR" "$SRC_DIR" "$INC_DIR"; do
+    [[ -d "$dir" ]] || { echo "[ASTERIX KERNEL] ERROR: missing required directory: $dir" >&2; exit 1; }
+done
 
 echo "[ASTERIX KERNEL] Building custom microkernel from local sources..."
 

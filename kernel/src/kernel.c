@@ -144,6 +144,172 @@ void vga_putdec(uint32_t val) {
     }
 }
 
+static void delay_boot_ticks(int ticks) {
+    for (int i = 0; i < ticks; i++) {
+        for (volatile int j = 0; j < 220000; j++) {
+            __asm__ volatile ("nop");
+        }
+    }
+}
+
+typedef enum {
+    BOOT_THEME_BLACK_MIRROR = 0,
+    BOOT_THEME_CYBERPUNK,
+    BOOT_THEME_STEALTH,
+    BOOT_THEME_KDE_DARK,
+    BOOT_THEME_SERVER
+} boot_theme_t;
+
+typedef struct {
+    uint8_t primary;
+    uint8_t secondary;
+    uint8_t success;
+    uint8_t warning;
+    uint8_t text;
+    uint8_t dim;
+} boot_palette_t;
+
+static bool boot_match_token(const char *haystack, const char *needle) {
+    if (!haystack || !needle) {
+        return false;
+    }
+
+    while (*haystack) {
+        const char *h = haystack;
+        const char *n = needle;
+        while (*h && *n && *h == *n) {
+            h++;
+            n++;
+        }
+        if (*n == '\0') {
+            return true;
+        }
+        haystack++;
+    }
+    return false;
+}
+
+static boot_theme_t boot_resolve_theme(const char *package_name, const char *device_class) {
+    if (boot_match_token(package_name, "stealth") || boot_match_token(package_name, "secure") || boot_match_token(package_name, "black")) {
+        return BOOT_THEME_STEALTH;
+    }
+
+    if (boot_match_token(package_name, "kde") || boot_match_token(package_name, "desktop") || boot_match_token(device_class, "laptop")) {
+        return BOOT_THEME_KDE_DARK;
+    }
+
+    if (boot_match_token(package_name, "server") || boot_match_token(device_class, "server")) {
+        return BOOT_THEME_SERVER;
+    }
+
+    if (boot_match_token(package_name, "cyber") || boot_match_token(package_name, "game") || boot_match_token(package_name, "neon")) {
+        return BOOT_THEME_CYBERPUNK;
+    }
+
+    return BOOT_THEME_BLACK_MIRROR;
+}
+
+static boot_palette_t boot_palette_for_theme(boot_theme_t theme) {
+    switch (theme) {
+        case BOOT_THEME_BLACK_MIRROR:
+            return (boot_palette_t){ VGA_COLOR_CYAN, VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_BROWN, VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY };
+        case BOOT_THEME_CYBERPUNK:
+            return (boot_palette_t){ VGA_COLOR_MAGENTA, VGA_COLOR_LIGHT_CYAN, VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_BROWN, VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY };
+        case BOOT_THEME_STEALTH:
+            return (boot_palette_t){ VGA_COLOR_LIGHT_GREY, VGA_COLOR_LIGHT_CYAN, VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_BROWN, VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY };
+        case BOOT_THEME_KDE_DARK:
+            return (boot_palette_t){ VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLUE, VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_BROWN, VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY };
+        case BOOT_THEME_SERVER:
+            return (boot_palette_t){ VGA_COLOR_LIGHT_CYAN, VGA_COLOR_GREEN, VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_BROWN, VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY };
+        default:
+            return (boot_palette_t){ VGA_COLOR_CYAN, VGA_COLOR_LIGHT_MAGENTA, VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_BROWN, VGA_COLOR_WHITE, VGA_COLOR_DARK_GREY };
+    }
+}
+
+static void render_boot_sequence_stage_with_palette(const char *label, int progress, int total, const boot_palette_t *palette) {
+    static const char spinner[] = "|/-\\";
+    int slot_count = 28;
+    int filled = (progress * slot_count) / total;
+
+    vga_set_color(vga_entry_color(palette->primary, VGA_COLOR_BLACK));
+    vga_puts("\r[ ");
+
+    for (int i = 0; i < slot_count; i++) {
+        if (i < filled) {
+            vga_set_color(vga_entry_color(palette->success, VGA_COLOR_BLACK));
+            vga_putc('=');
+        } else {
+            vga_set_color(vga_entry_color(palette->dim, VGA_COLOR_BLACK));
+            vga_putc('-');
+        }
+    }
+
+    vga_set_color(vga_entry_color(palette->primary, VGA_COLOR_BLACK));
+    vga_puts(" ] ");
+    vga_set_color(vga_entry_color(palette->secondary, VGA_COLOR_BLACK));
+    vga_putc(spinner[progress % 4]);
+    vga_set_color(vga_entry_color(palette->text, VGA_COLOR_BLACK));
+    vga_puts("  ");
+    vga_puts(label);
+}
+
+static void render_boot_sequence_stage(const char *label, int progress, int total) {
+    boot_palette_t palette = boot_palette_for_theme(BOOT_THEME_CYBERPUNK);
+    render_boot_sequence_stage_with_palette(label, progress, total, &palette);
+}
+
+static void render_ascii_logo_with_palette(const boot_palette_t *palette) {
+    vga_set_color(vga_entry_color(palette->secondary, VGA_COLOR_BLACK));
+    vga_puts("\n");
+    vga_puts("   ███████╗████████╗██████╗  █████╗ ██████╗ ██╗  ██╗██╗███████╗\n");
+    vga_puts("   ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║ ██╔╝██║██╔════╝\n");
+    vga_puts("   ███████╗   ██║   ██████╔╝███████║██████╔╝█████╔╝ ██║███████╗\n");
+    vga_puts("   ╚════██║   ██║   ██╔══██╗██╔══██║██╔══██╗██╔═██╗ ██║╚════██║\n");
+    vga_puts("   ███████║   ██║   ██║  ██║██║  ██║██║  ██║██║  ██╗██║███████║\n");
+    vga_puts("   ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝\n\n");
+    vga_set_color(vga_entry_color(palette->primary, VGA_COLOR_BLACK));
+    vga_puts("                    [ ASTERIX OS // SECURE BOOT // KERNEL READY ]\n\n");
+}
+
+static void render_ascii_logo(void) {
+    boot_palette_t palette = boot_palette_for_theme(BOOT_THEME_CYBERPUNK);
+    render_ascii_logo_with_palette(&palette);
+}
+
+static void render_boot_intro_sequence(void) {
+    const char *phases[] = {
+        "BOOT HANDSHAKE",
+        "MEMORY MAP",
+        "MMU SECURITY",
+        "SHELL WAKEUP"
+    };
+
+    boot_palette_t palette = boot_palette_for_theme(boot_resolve_theme("core", "desktop"));
+
+    vga_clear();
+    render_ascii_logo_with_palette(&palette);
+
+    for (int i = 0; i < 4; i++) {
+        for (int tick = 0; tick <= 100; tick += 10) {
+            render_boot_sequence_stage_with_palette(phases[i], tick, 100, &palette);
+            delay_boot_ticks(2);
+        }
+        vga_puts("\n");
+        vga_set_color(vga_entry_color(palette.success, VGA_COLOR_BLACK));
+        vga_puts("    [OK] ");
+        vga_puts(phases[i]);
+        vga_puts(" INITIALIZED\n\n");
+    }
+
+    vga_set_color(vga_entry_color(palette.primary, VGA_COLOR_BLACK));
+    vga_puts("====================================================================\n");
+    vga_set_color(vga_entry_color(palette.success, VGA_COLOR_BLACK));
+    vga_puts("   ASTERIX READY // ENTERING INTERACTIVE SHELL\n");
+    vga_set_color(vga_entry_color(palette.primary, VGA_COLOR_BLACK));
+    vga_puts("====================================================================\n\n");
+    delay_boot_ticks(5);
+}
+
 /* =============================================================================
  * INTERRUPT DESCRIPTOR TABLE (IDT) & 8259 PIC REMAPPER
  * ============================================================================= */
@@ -631,6 +797,8 @@ void kmain(uint32_t magic, uint32_t mb_addr) {
     vga_set_color(vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK));
     vga_puts("\n[+] ASTERIX Microkernel initialization complete. Security loop running.\n");
     serial_puts("[+] ASTERIX Microkernel initialization complete. Security loop running.\n");
+
+    render_boot_intro_sequence();
 
     /* 14. Launch Dual-Console Interactive Shell (VGA + 16550 UART COM1) */
     shell_run_interactive();
