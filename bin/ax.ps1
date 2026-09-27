@@ -232,12 +232,97 @@ switch ($Command.ToLower()) {
         Write-Host "  Detailed benchmarks documented in BENCHMARK_RESULTS.md" -ForegroundColor DarkGray
     }
 
-    { $_ -in @("kernel", "kernel-build", "microkernel") } {
+    { $_ -in @("kernel", "kernel-build", "microkernel", "qemu", "boot-kernel", "run-kernel") } {
         $kernelBuildScript = Join-Path $AsterixRoot "kernel\build-kernel.ps1"
         if (Test-Path $kernelBuildScript) {
-            & powershell.exe -ExecutionPolicy Bypass -File $kernelBuildScript @RemainingArgs
+            if ($Command.ToLower() -in @("qemu", "boot-kernel", "run-kernel") -or ($RemainingArgs -contains "--run")) {
+                & powershell.exe -ExecutionPolicy Bypass -File $kernelBuildScript -Run
+            } else {
+                & powershell.exe -ExecutionPolicy Bypass -File $kernelBuildScript @RemainingArgs
+            }
         } else {
             Write-Host "  [ERROR] kernel\build-kernel.ps1 not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("inspect", "bin-inspector", "bin", "disasm") } {
+        $binInspector = Join-Path $AsterixRoot "bin\asterix-bin-inspector.exe"
+        if (Test-Path $binInspector) {
+            & $binInspector @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-bin-inspector.exe not found. Run 'build-all.ps1' or 'cargo build' in core-utils-rust." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("sentinel", "net-sentinel", "net-scan", "portscan") } {
+        $sentinel = Join-Path $AsterixRoot "bin\asterix-net-sentinel.exe"
+        if (Test-Path $sentinel) {
+            & $sentinel @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-net-sentinel.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("crypto", "crypto-core", "hasher", "hash-id") } {
+        $cryptoCore = Join-Path $AsterixRoot "bin\asterix-crypto-core.exe"
+        if (Test-Path $cryptoCore) {
+            & $cryptoCore @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-crypto-core.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("dark", "dark-engine", "stealth-scan") } {
+        $darkEngine = Join-Path $AsterixRoot "bin\asterix-dark-engine.exe"
+        if (Test-Path $darkEngine) {
+            & $darkEngine @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-dark-engine.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("hunter", "log-hunter", "loghunter") } {
+        $logHunter = Join-Path $AsterixRoot "bin\asterix-log-hunter.exe"
+        if (Test-Path $logHunter) {
+            & $logHunter @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-log-hunter.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("defender", "defender-core", "ips") } {
+        $defender = Join-Path $AsterixRoot "bin\asterix-defender-core.exe"
+        if (Test-Path $defender) {
+            & $defender @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-defender-core.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("sysmon", "sys-mon") } {
+        $sysMon = Join-Path $AsterixRoot "bin\asterix-sys-mon.exe"
+        if (Test-Path $sysMon) {
+            & $sysMon @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-sys-mon.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("guard", "guard-engine") } {
+        $guardEngine = Join-Path $AsterixRoot "bin\asterix-guard-engine.exe"
+        if (Test-Path $guardEngine) {
+            & $guardEngine @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-guard-engine.exe not found." -ForegroundColor Red
+        }
+    }
+
+    { $_ -in @("code-repair", "repair") } {
+        $codeRepair = Join-Path $AsterixRoot "bin\asterix-code-repair.exe"
+        if (Test-Path $codeRepair) {
+            & $codeRepair @RemainingArgs
+        } else {
+            Write-Host "  [ERROR] bin\asterix-code-repair.exe not found." -ForegroundColor Red
         }
     }
 
@@ -789,9 +874,19 @@ switch ($Command.ToLower()) {
         if ((Test-Path $gitBash) -and (Test-Path $bashAx)) {
             & $gitBash $bashAx $Command $RemainingArgs
         } else {
-            Write-Host "  ${C_CYAN}ASTERIX OS Master Command Dispatcher (Windows)${C_RESET}"
+            Write-Host "  ${C_CYAN}ASTERIX OS Master Command Dispatcher (Windows & Cross-Platform)${C_RESET}"
             Write-Host "  Usage: ax <command> [args...]"
-            Write-Host "  Commands:"
+            Write-Host "  Native Cyber & Systems Engines (Pure Rust, Zero Dependencies):"
+            Write-Host "    ax inspect <binary>          Binary forensics, ELF/PE parsing & Shannon entropy"
+            Write-Host "    ax sentinel <target>         High-speed TCP port scanner & service banner probe"
+            Write-Host "    ax crypto <hash|file>        Cryptographic audit, hash identification & manifests"
+            Write-Host "    ax dark                      W^X memory protection audit & stealth honeypot"
+            Write-Host "    ax hunter <scan|stream>      Threat-pattern security log hunter & brute-force detector"
+            Write-Host "    ax defender                  Host intrusion prevention & process monitor"
+            Write-Host "    ax sysmon                    Hardware metrics, CPU/RAM telemetry & process top"
+            Write-Host "    ax kernel [--run] / ax qemu  Build freestanding x86 microkernel & boot in QEMU"
+            Write-Host "    ax cluster                   Distributed compute sharding & AI coprocessor offload"
+            Write-Host "  Subsystem & Developer Commands:"
             Write-Host "    ax os-computing [probe|collaborate|compute|imitate|features|status]"
             Write-Host "    ax status"
             Write-Host "    ax probe"

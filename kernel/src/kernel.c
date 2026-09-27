@@ -253,11 +253,6 @@ static void render_boot_sequence_stage_with_palette(const char *label, int progr
     vga_puts(label);
 }
 
-static void render_boot_sequence_stage(const char *label, int progress, int total) {
-    boot_palette_t palette = boot_palette_for_theme(BOOT_THEME_CYBERPUNK);
-    render_boot_sequence_stage_with_palette(label, progress, total, &palette);
-}
-
 static void render_ascii_logo_with_palette(const boot_palette_t *palette) {
     vga_set_color(vga_entry_color(palette->secondary, VGA_COLOR_BLACK));
     vga_puts("\n");
@@ -269,11 +264,6 @@ static void render_ascii_logo_with_palette(const boot_palette_t *palette) {
     vga_puts("   ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝\n\n");
     vga_set_color(vga_entry_color(palette->primary, VGA_COLOR_BLACK));
     vga_puts("                    [ ASTERIX OS // SECURE BOOT // KERNEL READY ]\n\n");
-}
-
-static void render_ascii_logo(void) {
-    boot_palette_t palette = boot_palette_for_theme(BOOT_THEME_CYBERPUNK);
-    render_ascii_logo_with_palette(&palette);
 }
 
 static void render_boot_intro_sequence(void) {

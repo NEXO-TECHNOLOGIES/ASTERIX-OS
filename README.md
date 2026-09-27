@@ -154,7 +154,8 @@ ASTERIX OS is distributed under the terms of the project license in [LICENSE](LI
 > [RUN] **Latest Release Updates**: See [UPDATES.md](UPDATES.md) for full details on **ASTERIX Defender Core (Antivirus & Firewall)**, **APEX OVERDRIVE**, **LIGHTNING WAF & Web SOC**, and **Host Collaboration Bridge v3.0**.
 >  **Official Downloads & Rufus Setup**: See [DOWNLOADS.md](DOWNLOADS.md) for ISO releases (Full Cyber Suite, Stealth Undercover, Netinstall), P2P Torrents, SHA-256 checksums, and Rufus persistent USB setup guide.
 >  **180+ Cybersecurity & Pentest Arsenal Registry**: See [TOOLS_REGISTRY.md](docs/TOOLS_REGISTRY.md) for offline metadata, categories, official GitHub links, and on-demand installation recipes onto persistent storage.
->  **Visual Architecture Diagram**: See [ASTERIX_OS_DIAGRAM.png](ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
+>  **Visual Architecture Diagram**: See [assets/diagrams/ASTERIX_OS_DIAGRAM.png](assets/diagrams/ASTERIX_OS_DIAGRAM.png) for the updated full-system layout diagram.
+> [AUDIT] **Architectural Flaws & Resolutions**: See [ARCHITECTURAL_FLAWS_AND_RESOLUTIONS.md](docs/ARCHITECTURAL_FLAWS_AND_RESOLUTIONS.md) for the critical review of historical adoption flaws and how they were resolved.
 
 ---
 
@@ -1183,7 +1184,8 @@ powershell -ExecutionPolicy Bypass -File "scripts-hub\package-full-os.ps1" -Excl
 * [SEC] [Threat Models & Detection Analysis](docs/THREAT_MODELS/) — Detection limits, stealth & operational security
 *  [Offensive Security Playbooks](docs/ATTACK_PLAYBOOKS/) — Reconnaissance, web, binary & mobile workflows
 * [RUN] [New Updates & Releases Guide (Defender, APEX, Windows Features)](UPDATES.md)
-*  [Master Visual Architecture Diagram](ASTERIX_OS_DIAGRAM.png)
+*  [Master Visual Architecture Diagram](assets/diagrams/ASTERIX_OS_DIAGRAM.png)
+* [AUDIT] [Architectural Flaws & Resolutions](docs/ARCHITECTURAL_FLAWS_AND_RESOLUTIONS.md) — Critical review of adoption barriers & engineering fixes
 * [ASTERIX] [Master Toolchain & Command Encyclopedia](docs/MASTER_TOOLCHAIN_MANUAL.md)
 *  [Developer Toolchain & Engineering Guide](docs/DEVELOPER_TOOLCHAIN_GUIDE.md)
 *  [Multi-Repository GitHub Deployment Guide](docs/MODULAR_GITHUB_GUIDE.md)

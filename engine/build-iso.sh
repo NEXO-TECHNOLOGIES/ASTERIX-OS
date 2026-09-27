@@ -373,50 +373,49 @@ fi
 EOF
 chmod +x config/hooks/normal/0950-install-plymouth.hook.chroot
 
-echo -e "${YELLOW}[*] Step 6: Building custom ASTERIX kernel and initramfs...${NC}"
-if [ -x "../../kernel/build-kernel.sh" ]; then
-    (cd "../../" && bash kernel/build-kernel.sh)
-    mkdir -p config/includes.binary/boot
-    cp "../../kernel-build/out/vmlinuz-asterix" "config/includes.binary/boot/vmlinuz-asterix"
-    cp "../../kernel-build/out/initrd-asterix.img" "config/includes.binary/boot/initrd-asterix.img"
-    echo -e "${GREEN}[[OK]] Custom ASTERIX kernel and initramfs bundled into live ISO payload.${NC}"
-else
-    echo -e "${CYAN}[i] No custom kernel builder found at ../../kernel/build-kernel.sh; using the default Debian kernel path.${NC}"
+echo -e "${YELLOW}[*] Step 6: Building custom ASTERIX microkernel payload...${NC}"
+mkdir -p config/includes.binary/boot
+if [ -f "../../kernel/bin/asterix-microkernel.elf" ]; then
+    cp "../../kernel/bin/asterix-microkernel.elf" "config/includes.binary/boot/asterix-microkernel.elf"
+    echo -e "${GREEN}[OK] ASTERIX Freestanding Microkernel bundled into live ISO payload.${NC}"
+elif [ -x "../../kernel/build-kernel.sh" ]; then
+    (cd "../../" && bash kernel/build-kernel.sh) || true
+    if [ -f "../../kernel/bin/asterix-microkernel.elf" ]; then
+        cp "../../kernel/bin/asterix-microkernel.elf" "config/includes.binary/boot/asterix-microkernel.elf"
+        echo -e "${GREEN}[OK] ASTERIX Freestanding Microkernel built and bundled into live ISO payload.${NC}"
+    fi
 fi
 
-# Optional: ensure GRUB entries prefer the custom kernel if present.
-if [ -f "config/includes.binary/boot/vmlinuz-asterix" ] && [ -f "config/includes.binary/boot/initrd-asterix.img" ]; then
-    mkdir -p config/bootloaders/grub-pc
-    mkdir -p config/bootloaders/grub-efi
-    cat << 'KERNEL_BOOT' > config/bootloaders/grub-pc/grub.cfg
+# Configure GRUB bootloader menu with both Live Environment & Sovereign Microkernel
+mkdir -p config/bootloaders/grub-pc
+mkdir -p config/bootloaders/grub-efi
+cat << 'KERNEL_BOOT' > config/bootloaders/grub-pc/grub.cfg
 set default="0"
 set timeout=10
 
 # ASTERIX OS multi-profile boot menu
-menuentry "ASTERIX OS — Default Live Session" {
-    linux /boot/vmlinuz-asterix boot=live components username=asterix hostname=asterix quiet splash persistence
-    initrd /boot/initrd-asterix.img
+menuentry "ASTERIX OS — Default Live Session (Cyber & Dev Suite)" {
+    linux /live/vmlinuz boot=live components username=asterix hostname=asterix quiet splash persistence
+    initrd /live/initrd.img
 }
 
-menuentry "ASTERIX OS — Stealth Live Session" {
-    linux /boot/vmlinuz-asterix \
+menuentry "ASTERIX Sovereign Microkernel (Freestanding Bare-Metal Core)" {
+    multiboot /boot/asterix-microkernel.elf
+    boot
+}
+
+menuentry "ASTERIX OS — Stealth Live Session (RAM-Only)" {
+    linux /live/vmlinuz \
         boot=live components username=asterix hostname=asterix \
         quiet splash persistence loglevel=0 vt.global_cursor_default=0 asterix.stealth=1
-    initrd /boot/initrd-asterix.img
+    initrd /live/initrd.img
 }
 
-menuentry "ASTERIX OS — Forensic Live Session" {
-    linux /boot/vmlinuz-asterix \
+menuentry "ASTERIX OS — Forensic Live Session (No-Mount, No-Swap)" {
+    linux /live/vmlinuz \
         boot=live components username=asterix hostname=asterix \
         noeject noswap noautomount quiet splash persistence
-    initrd /boot/initrd-asterix.img
-}
-
-menuentry "ASTERIX OS — Dual-Boot Host Mode" {
-    linux /boot/vmlinuz-asterix \
-        boot=live components username=asterix hostname=asterix \
-        quiet splash persistence rootdelay=5
-    initrd /boot/initrd-asterix.img
+    initrd /live/initrd.img
 }
 
 menuentry "Windows 10 / 11 (Host Boot Manager)" {
@@ -425,7 +424,7 @@ menuentry "Windows 10 / 11 (Host Boot Manager)" {
     chainloader /EFI/Microsoft/Boot/bootmgfw.efi
 }
 KERNEL_BOOT
-fi
+cp config/bootloaders/grub-pc/grub.cfg config/bootloaders/grub-efi/grub.cfg 2>/dev/null || true
 
 echo -e "${YELLOW}[*] Step 7: Building ASTERIX ISO Image (this may take several minutes)...${NC}"
 lb build

@@ -3,7 +3,7 @@
   "codename": "Phantom",
   "version": "2.0.0",
   "release_stage": "production",
-  "rebuild_timestamp": "2026-09-19T09:56:26Z",
+  "rebuild_timestamp": "2026-09-27T21:23:41Z",
   "host_platform": {
     "os": "Windows 10 Pro",
     "architecture": "AMD64",
@@ -36,7 +36,7 @@
     },
     {
       "phase": "Dual-OS Bridge Fusion",
-      "status": "FUSED (13 tools, 0 wordlists)"
+      "status": "FUSED (15 tools, 0 wordlists)"
     },
     {
       "phase": "Master Seal & Manifest",
@@ -46,7 +46,7 @@
   "cryptographic_signatures": {
     "kernel/src/boot.asm": "a1fcd8414c18a2c3dd88c8bb0797af86277ffc256bd14be9b0d82924991d871b",
     "kernel/src/isr.asm": "3d7ee75358f582fa1a8d25454835af5897a496c26b5bfecc2b5aca269e27dc81",
-    "kernel/src/kernel.c": "be001eebba1813670a00a7216303911e36ed97c3aea9093703436596565701d7",
+    "kernel/src/kernel.c": "23195ccf66a8f98f57e477845dffe322e28fa0eca740ef6f602906e5b0776c96",
     "kernel/linker.ld": "cfc42dfb385acadc9a05cc405b6c4c1ccfb343ec330d4104df77174168049a6c",
     "kernel/include/kernel.h": "8f91ef02c45b4e5f621c8b167a4819f3afd6b6ed45cfca68cbde5a961486bee9",
     "boot-asm/asterix-stage2-loader.asm": "9354ce7de41086a97e8441dfae2c76603bf719ecf27d8c2cc9edf5ba9f75a75e",
@@ -61,8 +61,8 @@
     "scripts-hub/ax-mobile-toolbox.py": "dc8f0444e5d34e4ec918933721aa29b728c01780af564c686eaf4520c92b0121",
     "termux-mobile/web-structure.sh": "7aeab823d1a7bf1f21225f84e44c0d4d9a383ec4107df12c9818ffb327c6eac5",
     "termux-mobile/termux-toolbox.sh": "6374beedbe8c32bf6b8aa0621ddc1914c2b060ae63b78322366dc8d9780aaf1d",
-    "bin/ax": "ab15b2ad3dde1b14ce0345f33eed83c40eaf462ba19397ec33097e11c7c21e4f",
-    "bin/ax.ps1": "621430cb7f131977eb0c58a1592ea1215011cf3b2b9ed7eb285b26762538b9b2",
+    "bin/ax": "64bd702b157212b2dcbc1dc48a4349290d46aa385779d03bb3cb3044f572cd91",
+    "bin/ax.ps1": "5a8e0f0ac0df5d883bdf40e24e79f9692ad64aaecb9f1814d10099d7e0084a82",
     "bin/ax.cmd": "489fce590d9a98126356ab5e61c36f717aaa0e5193339958d89e0d5f70911271",
     "os-computing/os_bridge.py": "19b72a20da1a515b0e38c4efbdcf6a37d70f88de2c0f982fefbc9aed3c25e9da"
   }
