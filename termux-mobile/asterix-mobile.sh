@@ -19,6 +19,12 @@ ASTERIX Mobile Helper
 
 Usage:
   asterix-mobile start [--theme=neon]
+  asterix-mobile hud
+  asterix-mobile scan <target>
+  asterix-mobile inspect <binary>
+  asterix-mobile crypto <hash|file>
+  asterix-mobile wake [on|off]
+  asterix-mobile phantom
   asterix-mobile debian [shell|run|doctor|repair|status]
   asterix-mobile folder [create|tree|list|fix-perms]
   asterix-mobile ai
@@ -32,16 +38,14 @@ Usage:
   asterix-mobile help
 
 Examples:
+  asterix-mobile hud
+  asterix-mobile scan 192.168.1.1
+  asterix-mobile inspect sample.elf
+  asterix-mobile wake on
+  asterix-mobile phantom
   asterix-mobile debian shell
   asterix-mobile folder create my_recon --template=recon
-  asterix-mobile debian repair
   asterix-mobile start --theme=neon
-  asterix-mobile curl-tree https://example.com
-  asterix-mobile webdump https://example.com ./site_dump
-  asterix-mobile toolbox battery
-  asterix-mobile tracker 8.8.8.8 --geo
-  asterix-mobile sweep 192.168.1.0/24
-  asterix-mobile theme pulse
 USAGE
 }
 
@@ -66,6 +70,66 @@ case "$cmd" in
         else
             echo "Boot script not found: $BOOT_SCRIPT"
             exit 1
+        fi
+        ;;
+    hud|status|telemetry)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" battery "$@"
+            "$TOOLBOX_SCRIPT" net "$@"
+        else
+            echo "Toolbox script not found: $TOOLBOX_SCRIPT"
+            exit 1
+        fi
+        ;;
+    scan|netscan|portscan)
+        target="${1:-127.0.0.1}"
+        shift || true
+        if command -v asterix-net-sentinel >/dev/null 2>&1; then
+            asterix-net-sentinel "$target" --ports top20 -t 20 "$@"
+        elif [ -x "${ASTERIX_ROOT}/bin/asterix-net-sentinel" ]; then
+            "${ASTERIX_ROOT}/bin/asterix-net-sentinel" "$target" --ports top20 -t 20 "$@"
+        elif [ -f "${ASTERIX_ROOT}/scripts-hub/ax-net-probe.py" ] && command -v python3 >/dev/null 2>&1; then
+            python3 "${ASTERIX_ROOT}/scripts-hub/ax-net-probe.py" "$target" "$@"
+        else
+            echo "Port scanner: ping sweep for $target..."
+            ping -c 3 "$target"
+        fi
+        ;;
+    inspect|disasm|bin)
+        target="${1:-}"
+        if [ -z "$target" ]; then
+            echo "Usage: asterix-mobile inspect <binary_file>"
+            exit 1
+        fi
+        shift || true
+        if command -v asterix-bin-inspector >/dev/null 2>&1; then
+            asterix-bin-inspector "$target" "$@"
+        elif [ -x "${ASTERIX_ROOT}/bin/asterix-bin-inspector" ]; then
+            "${ASTERIX_ROOT}/bin/asterix-bin-inspector" "$target" "$@"
+        elif [ -f "${ASTERIX_ROOT}/scripts-hub/ax-bin-inspector.py" ] && command -v python3 >/dev/null 2>&1; then
+            python3 "${ASTERIX_ROOT}/scripts-hub/ax-bin-inspector.py" "$target" "$@"
+        else
+            echo "Binary inspector fallback (strings):"
+            strings "$target" 2>/dev/null | head -n 30
+        fi
+        ;;
+    crypto|hash|hasher)
+        if command -v asterix-crypto-core >/dev/null 2>&1; then
+            asterix-crypto-core "$@"
+        elif [ -x "${ASTERIX_ROOT}/bin/asterix-crypto-core" ]; then
+            "${ASTERIX_ROOT}/bin/asterix-crypto-core" "$@"
+        else
+            sha256sum "$@" 2>/dev/null || echo "Crypto engine not available."
+        fi
+        ;;
+    wake|wake-lock|wakelock)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" wake "$@"
+        fi
+        ;;
+    phantom|phantom-fix)
+        if [ -f "$TOOLBOX_SCRIPT" ]; then
+            "$TOOLBOX_SCRIPT" phantom "$@"
         fi
         ;;
     debian|proot|rootless)

@@ -56,9 +56,12 @@ echo -e "${YELLOW}[*] Step 1: Staging ASTERIX Termux deployment files...${NC}"
 # Core files
 cp "${ASTERIX_ROOT}/termux-mobile/asterix-termux-init.sh" "$STAGING_DIR/asterix-termux/"
 cp "${ASTERIX_ROOT}/termux-mobile/install-termux.sh"      "$STAGING_DIR/asterix-termux/"
-[ -f "${ASTERIX_ROOT}/termux-mobile/web-structure.sh" ]  && cp "${ASTERIX_ROOT}/termux-mobile/web-structure.sh" "$STAGING_DIR/asterix-termux/"
-[ -f "${ASTERIX_ROOT}/termux-mobile/termux-toolbox.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/termux-toolbox.sh" "$STAGING_DIR/asterix-termux/"
-[ -f "${ASTERIX_ROOT}/termux-mobile/asterix-mobile.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/asterix-mobile.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/web-structure.sh" ]    && cp "${ASTERIX_ROOT}/termux-mobile/web-structure.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/termux-toolbox.sh" ]   && cp "${ASTERIX_ROOT}/termux-mobile/termux-toolbox.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/asterix-mobile.sh" ]   && cp "${ASTERIX_ROOT}/termux-mobile/asterix-mobile.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/target-tracker.sh" ]   && cp "${ASTERIX_ROOT}/termux-mobile/target-tracker.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/debian-rootless.sh" ]  && cp "${ASTERIX_ROOT}/termux-mobile/debian-rootless.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/asterix-ai-startup.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/asterix-ai-startup.sh" "$STAGING_DIR/asterix-termux/"
 
 # Master command dispatcher
 mkdir -p "$STAGING_DIR/asterix-termux/bin"

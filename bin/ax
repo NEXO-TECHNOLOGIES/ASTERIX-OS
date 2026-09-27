@@ -3877,6 +3877,17 @@ cmd_web_structure() {
     fi
 }
 
+cmd_mobile() {
+    local ax_root; ax_root=$(find_asterix_root)
+    local script="${ax_root}/termux-mobile/asterix-mobile.sh"
+    [ -f "$script" ] || script="termux-mobile/asterix-mobile.sh"
+    if [ -f "$script" ]; then
+        bash "$script" "$@"
+    else
+        cmd_mobile_toolbox "$@"
+    fi
+}
+
 cmd_mobile_toolbox() {
     local ax_root; ax_root=$(find_asterix_root)
     local script="${ax_root}/termux-mobile/termux-toolbox.sh"
@@ -7357,9 +7368,9 @@ case "$SUBCOMMAND" in
         shift
         cmd_web_structure "$@"
         ;;
-    mobile-sys|termux-box|termux-doctor|mobile-toolbox)
+    mobile|termux|mobile-sys|termux-box|termux-doctor|mobile-toolbox)
         shift
-        cmd_mobile_toolbox "$@"
+        cmd_mobile "$@"
         ;;
     unblock|port-kill|kill-port)
         shift

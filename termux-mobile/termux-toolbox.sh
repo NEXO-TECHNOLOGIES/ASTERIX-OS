@@ -43,6 +43,8 @@ usage() {
     echo -e "    ${C_GREEN}clip-copy <text>${C_RESET}    Copy text to Android system clipboard"
     echo -e "    ${C_GREEN}clip-paste${C_RESET}          Print current Android clipboard contents"
     echo -e "    ${C_GREEN}notify <msg>${C_RESET}        Send native Android vibration and notification toast"
+    echo -e "    ${C_GREEN}wake [on|off]${C_RESET}       Acquire/release Android CPU wake-lock (prevent screen timeout kills)"
+    echo -e "    ${C_GREEN}phantom${C_RESET}             Diagnose & unlock Android 12+ Phantom Process Killer"
     echo -e "    ${C_GREEN}help${C_RESET}                Show this manual\n"
 }
 
@@ -217,6 +219,8 @@ cmd_notify() {
         termux-vibrate -d 300 2>/dev/null || true
     fi
     echo -e "  ${C_GREEN}[[OK]] Notification triggered: ${msg}${C_RESET}"
+}
+
 cmd_debian_doctor() {
     if [ -f "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" ] && command -v python3 >/dev/null 2>&1; then
         python3 "$HOME/ASTERIX-OS/scripts-hub/ax-debian-manager.py" doctor "$@"
@@ -245,6 +249,50 @@ cmd_debian_folder() {
     else
         echo "Debian Rootless manager not found."
     fi
+}
+
+cmd_wake() {
+    local sub="${1:-on}"
+    case "$sub" in
+        off|unlock|stop)
+            if command -v termux-wake-unlock >/dev/null 2>&1; then
+                termux-wake-unlock
+                echo -e "  ${C_YELLOW}[!] Termux CPU wake-lock RELEASED.${C_RESET}"
+            else
+                echo "termux-wake-unlock not found."
+            fi
+            ;;
+        *)
+            if command -v termux-wake-lock >/dev/null 2>&1; then
+                termux-wake-lock
+                echo -e "  ${C_GREEN}[OK] Termux CPU wake-lock ACQUIRED (CPU will stay active during screen off).${C_RESET}"
+            else
+                echo "termux-wake-lock not found (install termux-api or core package)."
+            fi
+            ;;
+    esac
+}
+
+cmd_phantom() {
+    echo -e "\n  ${C_CYAN}${C_BOLD}--- [ ANDROID PHANTOM PROCESS KILLER AUDIT ] ---${C_RESET}\n"
+    local android_ver
+    android_ver=$(getprop ro.build.version.release 2>/dev/null || echo "Unknown")
+    echo -e "    ${C_WHITE}Android OS Version:${C_RESET} ${C_CYAN}${android_ver}${C_RESET}"
+
+    if [[ "$android_ver" =~ ^(12|13|14|15|16) ]]; then
+        echo -e "    ${C_YELLOW}[!] NOTICE: Android 12+ enforces a 32-child-process limit that kills background Termux tasks.${C_RESET}"
+        echo -e "    ${C_WHITE}To disable the Phantom Process Killer permanently:${C_RESET}"
+        echo -e "    ${C_GREEN}Option A (via PC / ADB shell):${C_RESET}"
+        echo -e "      ${C_CYAN}adb shell \"/system/bin/device_config put activity_manager max_phantom_processes 2147483647\"${C_RESET}"
+        echo -e "      ${C_CYAN}adb shell \"setprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs false\"${C_RESET}"
+        if command -v su >/dev/null 2>&1; then
+            echo -e "    ${C_GREEN}Option B (Root available on this device):${C_RESET}"
+            echo -e "      ${C_CYAN}su -c '/system/bin/device_config put activity_manager max_phantom_processes 2147483647'${C_RESET}"
+        fi
+    else
+        echo -e "    ${C_GREEN}[OK] Android version < 12 does not enforce strict phantom process killing.${C_RESET}"
+    fi
+    echo ""
 }
 
 ACTION="${1:-help}"
@@ -280,6 +328,12 @@ case "$ACTION" in
         ;;
     notify|vibrate|toast)
         cmd_notify "$@"
+        ;;
+    wake|wake-lock|wakelock)
+        cmd_wake "$@"
+        ;;
+    phantom|phantom-fix|kill-phantom)
+        cmd_phantom "$@"
         ;;
     help|-h|--help)
         usage

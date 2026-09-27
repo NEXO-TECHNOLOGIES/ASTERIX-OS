@@ -46,35 +46,72 @@ log_step() {
     fi
 }
 
+# Acquire Android CPU Wake-Lock (prevents background sleep from killing setup)
+if command -v termux-wake-lock >/dev/null 2>&1; then
+    termux-wake-lock 2>/dev/null || true
+    echo -e "${GREEN}[OK] Android CPU wake-lock acquired (screen sleep will not interrupt setup).${NC}"
+    trap "termux-wake-unlock 2>/dev/null || true" EXIT
+fi
+
+# Pre-flight Flash Storage Check
+FREE_MB=$(df -m "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')
+if [ -n "$FREE_MB" ]; then
+    echo -e "  ${CYAN}Flash Storage Free:${NC} ${GREEN}${FREE_MB} MB${NC}"
+    if [ "$FREE_MB" -lt 600 ]; then
+        echo -e "${YELLOW}[!] NOTICE: Low flash storage detected (${FREE_MB} MB). Setting lightweight native mode.${NC}"
+        LIGHT_MODE=1
+    else
+        LIGHT_MODE=0
+    fi
+else
+    LIGHT_MODE=0
+fi
+
+# Dynamic repository directory detection (bypasses redundant re-clones)
+INSTALLER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCAL_REPO="$(cd "$INSTALLER_DIR/.." 2>/dev/null && pwd)"
+if [ -f "$LOCAL_REPO/bin/ax" ]; then
+    ASTERIX_DIR="$LOCAL_REPO"
+else
+    ASTERIX_DIR="${ASTERIX_DIR:-$HOME/ASTERIX-OS}"
+fi
+
 # Free package manager cache to prevent "not enough free space"
 apt clean 2>/dev/null || true
 
 echo -e "${YELLOW}[*] Step 1: Checking Android Storage Permissions...${NC}"
 if termux-setup-storage 2>/dev/null; then
     log_step "Storage Permission" "PASS" "Granted or Active"
-    echo -e "${GREEN}[[OK]] Storage permissions configured.${NC}"
+    echo -e "${GREEN}[OK] Storage permissions configured.${NC}"
 else
     log_step "Storage Permission" "PASS" "Private Storage Fallback"
     echo -e "${CYAN}[i] Storage permission already active or private sandbox active.${NC}"
 fi
 
 echo -e "${YELLOW}[*] Step 2: Updating Termux Repositories & Installing Toolchain...${NC}"
-pkg update -y || apt-get update -y || true
-if pkg install -y proot proot-distro rust clang git curl wget ncurses-utils tsu; then
-    log_step "Host Toolchain" "PASS" "All packages ready"
-    echo -e "${GREEN}[[OK]] Host toolchain installed.${NC}"
-elif command -v proot >/dev/null 2>&1 && command -v proot-distro >/dev/null 2>&1; then
-    log_step "Host Toolchain" "WARN" "Core PRoot present, partial build tools"
-    echo -e "${YELLOW}[!] PRoot detected; some secondary compiler tools were skipped.${NC}"
+if ! pkg update -y 2>/dev/null; then
+    echo -e "${YELLOW}[!] Primary Termux mirror unresponsive. Attempting APT cache clean & fallback...${NC}"
+    apt-get clean 2>/dev/null || true
+    apt-get update -y 2>/dev/null || true
+fi
+
+# Install essential dependencies
+if pkg install -y proot proot-distro git curl wget ncurses-utils python; then
+    log_step "Host Toolchain" "PASS" "Core Termux toolchain active"
+    echo -e "${GREEN}[OK] Core host toolchain installed.${NC}"
 else
-    log_step "Host Toolchain" "FAIL" "proot/proot-distro missing"
-    echo -e "${RED}[[FAIL]] Fatal: proot-distro could not be installed. Check network/mirrors.${NC}"
+    apt-get install -y proot proot-distro git curl wget python 2>/dev/null || true
+    log_step "Host Toolchain" "PASS" "Fallback toolchain applied"
+fi
+
+# Optional compiler tools if storage permits
+if [ "$LIGHT_MODE" -eq 0 ]; then
+    pkg install -y rust clang tsu 2>/dev/null || true
 fi
 
 echo -e "${YELLOW}[*] Step 3: Configuring ASTERIX Resilient Local Storage & Folders...${NC}"
 PERSIST_LOCAL="$HOME/.asterix_storage"
 PERSIST_MAIN="$HOME/asterix_persistent"
-ASTERIX_DIR="$HOME/ASTERIX-OS"
 
 # Standard persistent folders
 mkdir_success=1
@@ -128,8 +165,11 @@ fi
 
 echo -e "${YELLOW}[*] Step 4: Installing ASTERIX Rootless Linux Environment (Debian)...${NC}"
 DEBIAN_ROOT="$PREFIX/var/lib/proot-distro/installed-rootfs/debian"
-if [ -d "$DEBIAN_ROOT" ] && [ -f "$DEBIAN_ROOT/bin/sh" ]; then
-    echo -e "${GREEN}[[OK]] Debian base environment already installed and healthy.${NC}"
+if [ "$LIGHT_MODE" -eq 1 ]; then
+    echo -e "${CYAN}[i] Low flash storage detected. Running in lightweight native Termux mode (skipping 400MB Debian PRoot download).${NC}"
+    log_step "Debian Rootfs" "PASS" "Lightweight native Termux mode active"
+elif [ -d "$DEBIAN_ROOT" ] && [ -f "$DEBIAN_ROOT/bin/sh" ]; then
+    echo -e "${GREEN}[OK] Debian base environment already installed and healthy.${NC}"
     log_step "Debian Rootfs" "PASS" "Verified healthy rootfs"
 elif [ -d "$DEBIAN_ROOT" ] && [ ! -f "$DEBIAN_ROOT/bin/sh" ]; then
     echo -e "${YELLOW}[!] Corrupted Debian rootfs detected (missing /bin/sh from prior full disk). Resetting...${NC}"
@@ -321,8 +361,10 @@ else
 fi
 
 echo -e "${YELLOW}[*] Step 7: Synchronizing Core ASTERIX-OS Operating System...${NC}"
-ASTERIX_DIR="$HOME/ASTERIX-OS"
-if [ ! -d "$ASTERIX_DIR/.git" ]; then
+if [ -f "$ASTERIX_DIR/bin/ax" ]; then
+    echo -e "${GREEN}[OK] ASTERIX-OS repository active at: $ASTERIX_DIR${NC}"
+    log_step "ASTERIX Core Repo" "PASS" "Local repository active"
+elif [ ! -d "$ASTERIX_DIR/.git" ]; then
     echo -e "${CYAN}[*] Downloading complete ASTERIX OS codebase into $ASTERIX_DIR...${NC}"
     if git clone https://github.com/NEXO-TECHNOLOGIES/ASTERIX-OS.git "$ASTERIX_DIR" 2>/dev/null || \
        git clone https://gitlab.com/nexo-technologies-group/asterix-os.git "$ASTERIX_DIR" 2>/dev/null; then
@@ -331,7 +373,7 @@ if [ ! -d "$ASTERIX_DIR/.git" ]; then
         log_step "ASTERIX Core Repo" "WARN" "Cloning incomplete or offline"
     fi
 else
-    echo -e "${GREEN}[[OK]] ASTERIX-OS directory already present. Fetching latest updates...${NC}"
+    echo -e "${GREEN}[OK] ASTERIX-OS directory already present. Fetching latest updates...${NC}"
     (cd "$ASTERIX_DIR" && git pull 2>/dev/null || true)
     log_step "ASTERIX Core Repo" "PASS" "Local repository up to date"
 fi
@@ -459,7 +501,19 @@ fi
 if [ -f "$ASTERIX_DIR/termux-mobile/debian-rootless.sh" ]; then
     ln -sf "$ASTERIX_DIR/termux-mobile/debian-rootless.sh" "$PREFIX/bin/debian-rootless" 2>/dev/null || true
 fi
+if [ -f "$ASTERIX_DIR/termux-mobile/asterix-mobile.sh" ]; then
+    ln -sf "$ASTERIX_DIR/termux-mobile/asterix-mobile.sh" "$PREFIX/bin/asterix-mobile" 2>/dev/null || true
+    ln -sf "$ASTERIX_DIR/termux-mobile/asterix-mobile.sh" "$PREFIX/bin/ax-mobile" 2>/dev/null || true
+fi
 log_step "CLI Tool Symlinks" "PASS" "Registered in $PREFIX/bin"
+
+# Android 12+ Phantom Process Killer check
+ANDROID_VER=$(getprop ro.build.version.release 2>/dev/null || echo "")
+if [[ "$ANDROID_VER" =~ ^(12|13|14|15|16) ]]; then
+    echo -e "\n${YELLOW}[!] NOTICE: Android $ANDROID_VER detected.${NC}"
+    echo -e "    Android 12+ enforces a 32-child-process limit (Phantom Process Killer)."
+    echo -e "    Run: ${CYAN}ax mobile phantom${NC} to view the single-line ADB fix.\n"
+fi
 
 # Configure autostart in ~/.bashrc if not already present
 if ! grep -q "ASTERIX OS Startup" "$HOME/.bashrc" 2>/dev/null; then

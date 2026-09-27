@@ -54,6 +54,17 @@ fi
 cd "$INSTALL_DIR"
 
 echo -e "${C_CYAN}[2/3] Checking project files...${C_RESET}"
+
+# Check if running inside Android Termux
+if [ -n "${PREFIX:-}" ] && [ -d "/data/data/com.termux" ]; then
+    echo -e "${C_GREEN}[OK]${C_RESET} Android Termux environment detected."
+    if [ -f "$INSTALL_DIR/termux-mobile/install-termux.sh" ]; then
+        echo -e "${C_CYAN}[3/3] Launching Termux Mobile Deployment Engine...${C_RESET}"
+        chmod +x "$INSTALL_DIR/termux-mobile/install-termux.sh"
+        exec bash "$INSTALL_DIR/termux-mobile/install-termux.sh"
+    fi
+fi
+
 if [ ! -f "$INSTALL_DIR/setup.sh" ]; then
     echo -e "${C_RED}[!] setup.sh not found in $INSTALL_DIR${C_RESET}"
     exit 1

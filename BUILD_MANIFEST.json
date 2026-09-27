@@ -3,7 +3,7 @@
   "codename": "Phantom",
   "version": "2.0.0",
   "release_stage": "production",
-  "rebuild_timestamp": "2026-09-27T21:23:41Z",
+  "rebuild_timestamp": "2026-09-27T21:49:04Z",
   "host_platform": {
     "os": "Windows 10 Pro",
     "architecture": "AMD64",
@@ -60,8 +60,8 @@
     "scripts-hub/ax-web-structure.py": "9ad691971e9f13981588690392404fb6af2f556342d67e0d774673a5523f4bd6",
     "scripts-hub/ax-mobile-toolbox.py": "dc8f0444e5d34e4ec918933721aa29b728c01780af564c686eaf4520c92b0121",
     "termux-mobile/web-structure.sh": "7aeab823d1a7bf1f21225f84e44c0d4d9a383ec4107df12c9818ffb327c6eac5",
-    "termux-mobile/termux-toolbox.sh": "6374beedbe8c32bf6b8aa0621ddc1914c2b060ae63b78322366dc8d9780aaf1d",
-    "bin/ax": "64bd702b157212b2dcbc1dc48a4349290d46aa385779d03bb3cb3044f572cd91",
+    "termux-mobile/termux-toolbox.sh": "09181a4770344e3d3c65eecfea998f7aef002d613933062924dc25274c0e90b1",
+    "bin/ax": "73f2330b5a6a50de1c659b0399fbb23f4919e165c5cbb25c6dc74e3fa43b75e8",
     "bin/ax.ps1": "5a8e0f0ac0df5d883bdf40e24e79f9692ad64aaecb9f1814d10099d7e0084a82",
     "bin/ax.cmd": "489fce590d9a98126356ab5e61c36f717aaa0e5193339958d89e0d5f70911271",
     "os-computing/os_bridge.py": "19b72a20da1a515b0e38c4efbdcf6a37d70f88de2c0f982fefbc9aed3c25e9da"
