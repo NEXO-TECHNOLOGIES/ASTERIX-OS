@@ -3596,12 +3596,16 @@ cmd_ai() {
         return 1
     fi
 
-    if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1 && [ -f "${ai_dir}/engine.py" ]; then
-        python3 "${ai_dir}/engine.py" "$@"
+    if command -v python3 >/dev/null 2>&1 && python3 --version >/dev/null 2>&1; then
+        if [ -f "${ai_dir}/ax_ai.py" ]; then
+            python3 "${ai_dir}/ax_ai.py" "$@"
+        elif [ -f "${ai_dir}/engine.py" ]; then
+            python3 "${ai_dir}/engine.py" "$@"
+        fi
     elif [ -f "${ai_dir}/engine.sh" ]; then
         bash "${ai_dir}/engine.sh" "$@"
     else
-        echo -e "${C_RED}[!] Error: Neither engine.py nor engine.sh found in ${ai_dir}.${C_RESET}"
+        echo -e "${C_RED}[!] Error: Neither ax_ai.py, engine.py nor engine.sh found in ${ai_dir}.${C_RESET}"
         return 1
     fi
 }
@@ -7322,6 +7326,10 @@ case "$SUBCOMMAND" in
     carve|foremost|recover-media|scalpel)
         shift
         cmd_carve "$@"
+        ;;
+    script|generate|codegen|gen-script|ai-script)
+        shift
+        cmd_ai script "$@"
         ;;
     ai|asterix-ai|ask-ai|expert-system)
         shift

@@ -3,7 +3,7 @@
   "codename": "Phantom",
   "version": "2.0.0",
   "release_stage": "production",
-  "rebuild_timestamp": "2026-10-02T02:03:02Z",
+  "rebuild_timestamp": "2026-10-02T03:46:43Z",
   "host_platform": {
     "os": "Windows 10 Pro",
     "architecture": "AMD64",
@@ -55,14 +55,14 @@
     "core-utils-c/src/asterix-packet-engine.c": "17c25907a3c512fc4cc85a8fdb84f8e13ba89e8d12212dbdda8c8a4c3c8f91ae",
     "core-utils-rust/Cargo.toml": "f9ffbaf961416c3b613a39881788746ce9a1d128dfcca0e4ecd1f66502b7f7dc",
     "asterix-ai/cloud_memory.py": "9b621cfb520aa9c57ff0f92bcf8441860e9df6046d310c09969bc0095026bc4f",
-    "asterix-ai/peak_brain.py": "c59fa55381759312f51b672c0124ad83b12c952d8d025024e1e646f7acac8766",
-    "asterix-ai/engine.py": "3c19a8db2740007676089c273f01c55fd846a3bb4cd990b1adc8210cd4f72892",
+    "asterix-ai/peak_brain.py": "5ced4ddef5271c8d2278afb034bda231f0c4473f97771cb5df8dbfaeb6f85af3",
+    "asterix-ai/engine.py": "34642296662bb14cadc3eccce678d650a7af0e5b93b165bf2f51abdc502e6d14",
     "scripts-hub/ax-web-structure.py": "9ad691971e9f13981588690392404fb6af2f556342d67e0d774673a5523f4bd6",
     "scripts-hub/ax-mobile-toolbox.py": "dc8f0444e5d34e4ec918933721aa29b728c01780af564c686eaf4520c92b0121",
     "termux-mobile/web-structure.sh": "81587e48d875f89e0af7e06c1639929ce95ad2f7eb7287f61f5b163432903192",
     "termux-mobile/termux-toolbox.sh": "bb441551b8d013b0c18da4e337116468d4dea1aa398a3eaa3695ceebd5c94e17",
-    "bin/ax": "7b96dfd16c44e681b4b7ad88c8be354a96d86a63b1b7019f95575580912dc60c",
-    "bin/ax.ps1": "5a8e0f0ac0df5d883bdf40e24e79f9692ad64aaecb9f1814d10099d7e0084a82",
+    "bin/ax": "088741930ba02bcbe0f272306210d194882540870f4e425f30011fe99d294003",
+    "bin/ax.ps1": "c88aca7299782c5d75dd4e919011d2a621961ee35e38547c69f6224828e82487",
     "bin/ax.cmd": "489fce590d9a98126356ab5e61c36f717aaa0e5193339958d89e0d5f70911271",
     "os-computing/os_bridge.py": "19b72a20da1a515b0e38c4efbdcf6a37d70f88de2c0f982fefbc9aed3c25e9da"
   }

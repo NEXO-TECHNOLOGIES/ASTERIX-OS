@@ -687,6 +687,40 @@ def main():
         cmd_chat()
     elif args[0] in ("audit", "check", "scan"):
         cmd_audit()
+    elif args[0] in ("script", "generate", "codegen"):
+        if not peak_ai:
+            print(f"{C_RED}[!] Error: Peak AI brain module not available.{C_RESET}")
+            return
+        remaining = args[1:]
+        obj_parts = []
+        lang = "python"
+        out_file = None
+        i = 0
+        while i < len(remaining):
+            if remaining[i] in ("--lang", "-l") and i + 1 < len(remaining):
+                lang = remaining[i + 1]
+                i += 2
+            elif remaining[i] in ("-o", "--out") and i + 1 < len(remaining):
+                out_file = remaining[i + 1]
+                i += 2
+            else:
+                obj_parts.append(remaining[i])
+                i += 1
+        objective = " ".join(obj_parts) if obj_parts else "utility script"
+        print(f"\n{C_CYAN}[*] ASTERIX AI Engine engaging Gemini to generate professional {lang.upper()} script...{C_RESET}")
+        print(f"{C_WHITE}[*] Objective: {objective}{C_RESET}")
+        result = peak_ai.generate_script(objective, language=lang, output_path=out_file)
+        if result.get("status") == "success":
+            print(f"\n{C_GREEN}{C_BOLD}[OK] Script generated successfully:{C_RESET}")
+            print(f"     Path:      {result['file']}")
+            print(f"     Language:  {result['language']}")
+            print(f"     Lines:     {result['lines']} lines ({result['code_size']} bytes)\n")
+            print(f"{C_GRAY}--- Script Preview (first 25 lines) ---{C_RESET}")
+            print(result['code_preview'])
+            print(f"{C_GRAY}---------------------------------------{C_RESET}\n")
+        else:
+            print(f"{C_RED}[!] Error generating script: {result.get('error')}{C_RESET}")
+        return
     elif args[0] in ("ask", "query", "diagnose"):
         query = " ".join(args[1:]) if len(args) > 1 else "general security"
         cmd_ask(query)

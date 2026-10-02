@@ -2,6 +2,8 @@
 //! Written natively in Rust, C (Win32 / POSIX Kernel FFI), and Handcrafted x86_64 SIMD Vector Assembly.
 //! Fuses CPU cores, GPU accelerators, and RAM across plugged PCs while maintaining 100% active Windows smoothness.
 
+#![allow(dead_code)]
+
 mod assembly_kernel;
 mod c_kernel_bindings;
 mod hardware;
@@ -186,7 +188,7 @@ fn cmd_gaming(target_pcs: usize) {
             });
             topo.combined_cpu_cores += comp_cores;
             topo.combined_ram_mb += comp_ram;
-            topo.combined_free_ram_mb += (comp_ram - 4096);
+            topo.combined_free_ram_mb += comp_ram - 4096;
             topo.combined_gpu_count += 1;
             topo.combined_tflops += 9.5;
         }

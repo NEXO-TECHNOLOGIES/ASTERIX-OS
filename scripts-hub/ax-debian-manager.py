@@ -175,6 +175,160 @@ class DebianEnvironment:
                 pass
         return None
 
+    @staticmethod
+    def get_memory_telemetry() -> Dict[str, Any]:
+        """Reads /proc/meminfo and evaluates RAM, Swap and ZRAM state."""
+        mem = {
+            "ram_total_mb": 0,
+            "ram_avail_mb": 0,
+            "ram_free_mb": 0,
+            "swap_total_mb": 0,
+            "swap_free_mb": 0,
+            "zram_active": False,
+            "low_memory_warning": False,
+            "summary": "Unknown"
+        }
+        meminfo = Path("/proc/meminfo")
+        if meminfo.exists():
+            try:
+                for line in meminfo.read_text(encoding="utf-8", errors="replace").splitlines():
+                    parts = line.split(":")
+                    if len(parts) == 2:
+                        k = parts[0].strip()
+                        v = parts[1].strip().split()[0]
+                        if k == "MemTotal":
+                            mem["ram_total_mb"] = int(v) // 1024
+                        elif k == "MemAvailable":
+                            mem["ram_avail_mb"] = int(v) // 1024
+                        elif k == "MemFree":
+                            mem["ram_free_mb"] = int(v) // 1024
+                        elif k == "SwapTotal":
+                            mem["swap_total_mb"] = int(v) // 1024
+                        elif k == "SwapFree":
+                            mem["swap_free_mb"] = int(v) // 1024
+            except Exception:
+                pass
+
+        for z in [Path("/sys/block/zram0"), Path("/proc/swaps")]:
+            if z.exists():
+                try:
+                    if "zram" in z.read_text(encoding="utf-8", errors="ignore").lower() or z.is_dir():
+                        mem["zram_active"] = True
+                        break
+                except Exception:
+                    pass
+
+        avail = mem["ram_avail_mb"] or mem["ram_free_mb"]
+        if avail > 0 and avail < 350 and mem["swap_total_mb"] == 0:
+            mem["low_memory_warning"] = True
+
+        mem["summary"] = (
+            f"RAM: {avail}MB avail / {mem['ram_total_mb']}MB total | "
+            f"Swap: {mem['swap_total_mb']}MB (ZRAM: {'YES' if mem['zram_active'] else 'NO'})"
+        )
+        return mem
+
+    @staticmethod
+    def rank_dns_nameservers() -> List[Tuple[str, float]]:
+        """Probes DNS nameservers and sorts them by response latency in milliseconds."""
+        candidates = [
+            ("1.1.1.1", "Cloudflare Primary"),
+            ("1.0.0.1", "Cloudflare Secondary"),
+            ("8.8.8.8", "Google Primary"),
+            ("8.8.4.4", "Google Secondary"),
+            ("9.9.9.9", "Quad9 Primary"),
+            ("208.67.222.222", "OpenDNS Primary"),
+        ]
+        results = []
+        for ip, label in candidates:
+            t0 = time.time()
+            alive = False
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(0.6)
+                res = s.connect_ex((ip, 53))
+                s.close()
+                if res == 0:
+                    alive = True
+            except Exception:
+                pass
+            latency_ms = (time.time() - t0) * 1000.0 if alive else 9999.0
+            results.append((ip, latency_ms if alive else 999.0, label, alive))
+
+        results.sort(key=lambda x: (not x[3], x[1]))
+        return [(r[0], r[1]) for r in results]
+
+    @staticmethod
+    def clean_package_locks(custom_rootfs: Optional[Path] = None) -> List[str]:
+        """Cleans stale dpkg and apt lock files safely."""
+        cleaned = []
+        base = custom_rootfs or DebianEnvironment.get_debian_rootfs() or Path("/")
+        lock_paths = [
+            base / "var/lib/dpkg/lock",
+            base / "var/lib/dpkg/lock-frontend",
+            base / "var/lib/apt/lists/lock",
+            base / "var/cache/apt/archives/lock",
+        ]
+        for lp in lock_paths:
+            try:
+                if lp.exists():
+                    lp.unlink()
+                    cleaned.append(str(lp.name))
+            except Exception:
+                pass
+        return cleaned
+
+    @staticmethod
+    def backup_container(target_archive: Optional[Path] = None) -> Dict[str, Any]:
+        """Creates a compressed .tar.gz snapshot of persistent directories and config."""
+        import tarfile
+        import hashlib
+        pdir = DebianEnvironment.get_persistent_dir()
+        rootfs = DebianEnvironment.get_debian_rootfs()
+
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        out = target_archive or (pdir / f"debian_backup_{timestamp}.tar.gz")
+        out.parent.mkdir(parents=True, exist_ok=True)
+
+        with tarfile.open(out, "w:gz") as tar:
+            if pdir.exists():
+                tar.add(pdir, arcname="persistent")
+            if rootfs and (rootfs / "etc").exists():
+                for sub in ["apt", "resolv.conf", "environment"]:
+                    cfg_path = rootfs / "etc" / sub
+                    if cfg_path.exists():
+                        tar.add(cfg_path, arcname=f"config/{sub}")
+
+        sz = out.stat().st_size
+        h = hashlib.sha256()
+        with open(out, "rb") as f:
+            for chunk in iter(lambda: f.read(65536), b""):
+                h.update(chunk)
+
+        return {
+            "status": "ok",
+            "archive": str(out),
+            "size_bytes": sz,
+            "sha256": h.hexdigest(),
+            "timestamp": timestamp
+        }
+
+    @staticmethod
+    def restore_container(archive_path: Path) -> Dict[str, Any]:
+        """Restores a container snapshot from .tar.gz."""
+        import tarfile
+        if not archive_path.exists():
+            return {"status": "error", "message": f"Archive not found: {archive_path}"}
+
+        pdir = DebianEnvironment.get_persistent_dir()
+        pdir.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(archive_path, "r:gz") as tar:
+            tar.extractall(path=pdir.parent)
+
+        FolderEngine.ensure_standard_folders()
+        FolderEngine.fix_permissions()
+        return {"status": "ok", "archive": str(archive_path), "restored_to": str(pdir)}
+
 
 class FolderEngine:
     """High-resilience folder creation, templating, permission fixing, and visualization."""
@@ -360,8 +514,8 @@ class FolderEngine:
             count = len(entries)
             for i, entry in enumerate(entries):
                 is_last = (i == count - 1)
-                connector = "└── " if is_last else "├── "
-                sub_prefix = "    " if is_last else "│   "
+                connector = "`-- " if is_last else "|-- "
+                sub_prefix = "    " if is_last else "|   "
 
                 if entry.is_dir():
                     lines.append(f"{prefix}{connector}{C_YELLOW}{entry.name}/{C_RESET}")
@@ -500,6 +654,14 @@ class DebianHardener:
         detail_msg = f"Persistent store active with all standard folders at {pdir}" if persistent_folders_ok else f"Persistent store at {pdir} missing: {missing_std_folders}"
         add_check("Persistent Folder Architecture", persistent_folders_ok, detail_msg)
 
+        mem = DebianEnvironment.get_memory_telemetry()
+        add_check(
+            "System Memory & ZRAM",
+            not mem["low_memory_warning"],
+            mem["summary"] + (" (WARNING: Low available RAM without swap)" if mem["low_memory_warning"] else ""),
+            fixable=False
+        )
+
         if auto_fix:
             repairs = DebianHardener.repair_all(rootfs)
             results["repairs_performed"] = repairs
@@ -532,21 +694,19 @@ class DebianHardener:
         except Exception as e:
             repairs.append(f"Failed to configure APT sandbox: {e}")
 
-        # 2. Fix DNS resolv.conf
+        # 2. Fix DNS resolv.conf with ranked low-latency nameservers
         try:
             etc_dir = target_base / "etc"
             etc_dir.mkdir(parents=True, exist_ok=True)
             resolv_file = etc_dir / "resolv.conf"
-            resolv_content = (
-                "# ASTERIX OS Resilient Multi-DNS Resolver\n"
-                "nameserver 1.1.1.1\n"
-                "nameserver 8.8.8.8\n"
-                "nameserver 9.9.9.9\n"
-                "nameserver 1.0.0.1\n"
-                "options timeout:2 attempts:3 rotate\n"
-            )
-            resolv_file.write_text(resolv_content, encoding="utf-8")
-            repairs.append("Configured resilient /etc/resolv.conf (Cloudflare, Google, Quad9 failover)")
+            ranked_dns = DebianEnvironment.rank_dns_nameservers()
+            top_dns = [ip for ip, _ in ranked_dns[:4]] or ["1.1.1.1", "8.8.8.8", "9.9.9.9", "1.0.0.1"]
+            resolv_lines = ["# ASTERIX OS Resilient Multi-DNS Resolver (Ranked by Latency)"]
+            for ip in top_dns:
+                resolv_lines.append(f"nameserver {ip}")
+            resolv_lines.append("options timeout:2 attempts:3 rotate\n")
+            resolv_file.write_text("\n".join(resolv_lines), encoding="utf-8")
+            repairs.append(f"Configured resilient /etc/resolv.conf with low-latency upstreams ({', '.join(top_dns[:3])})")
         except Exception as e:
             repairs.append(f"Failed to configure resolv.conf: {e}")
 
@@ -638,6 +798,11 @@ class DebianHardener:
                 repairs.append("Ran dpkg --configure -a (repaired any interrupted package configurations)")
             except Exception:
                 pass
+
+        # 9. Clean stale package lock files
+        cleaned_locks = DebianEnvironment.clean_package_locks(target_base)
+        if cleaned_locks:
+            repairs.append(f"Cleaned {len(cleaned_locks)} stale package locks ({', '.join(cleaned_locks)})")
 
         return repairs
 
@@ -752,7 +917,9 @@ def main():
         print(f"    {C_GREEN}folder create <name>{C_RESET}      Create new resilient folder with template")
         print(f"    {C_GREEN}folder template <n> <t>{C_RESET}   Create folder with template (recon, exploit, web, dev)")
         print(f"    {C_GREEN}folder list | tree{C_RESET}        Display tree of persistent directories")
-        print(f"    {C_GREEN}folder fix-perms{C_RESET}          Fix all directory and file permissions\n")
+        print(f"    {C_GREEN}folder fix-perms{C_RESET}          Fix all directory and file permissions")
+        print(f"    {C_GREEN}backup [target.tar.gz]{C_RESET}     Create compressed snapshot of persistent vault")
+        print(f"    {C_GREEN}restore <target.tar.gz>{C_RESET}    Restore workspace snapshot\n")
         sys.exit(0)
 
     sub = sys.argv[1].lower()
@@ -827,6 +994,27 @@ def main():
             print(f"  * Folders: {', '.join(STANDARD_PERSISTENT_FOLDERS)}\n")
         else:
             print(f"Unknown folder action '{action}'. Available: create, template, tree, list, fix-perms, init")
+
+    elif sub in ("backup", "export", "snapshot"):
+        out_path = Path(sys.argv[2]) if len(sys.argv) > 2 else None
+        res = DebianEnvironment.backup_container(out_path)
+        print(BANNER)
+        print(f"  {C_GREEN}[OK] Debian Persistent Snapshot Created:{C_RESET}")
+        print(f"  * File:   {C_CYAN}{res['archive']}{C_RESET}")
+        print(f"  * Size:   {res['size_bytes'] // 1024} KB")
+        print(f"  * SHA256: {res['sha256']}\n")
+
+    elif sub in ("restore", "import"):
+        if len(sys.argv) < 3:
+            print(f"{C_RED}Error: Specify backup archive path: ax debian restore <archive.tar.gz>{C_RESET}")
+            sys.exit(1)
+        res = DebianEnvironment.restore_container(Path(sys.argv[2]))
+        if res["status"] == "ok":
+            print(BANNER)
+            print(f"  {C_GREEN}[OK] Snapshot successfully restored from {res['archive']}!{C_RESET}\n")
+        else:
+            print(BANNER)
+            print(f"  {C_RED}[!] Restore failed: {res.get('message')}{C_RESET}\n")
 
     elif sub in ("tree", "dirs"):
         print_folder_tree()

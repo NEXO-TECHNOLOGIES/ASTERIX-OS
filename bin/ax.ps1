@@ -104,12 +104,24 @@ switch ($Command.ToLower()) {
         }
     }
 
-    { $_ -in @("ai", "asterix-ai", "ask-ai") } {
-        $aiScript = Join-Path $AsterixRoot "asterix-ai\engine.py"
+    { $_ -in @("script", "generate", "codegen", "gen-script") } {
+        $aiScript = Join-Path $AsterixRoot "asterix-ai\ax_ai.py"
         if ($RealPython -and (Test-Path $aiScript)) {
-            & $RealPython $aiScript $RemainingArgs
+            & $RealPython $aiScript "script" @RemainingArgs
         } else {
-            Write-Host "  ${C_YELLOW}[!] Python runtime not ready or engine.py not found.${C_RESET}"
+            Write-Host "  ${C_YELLOW}[!] Python runtime not ready or ax_ai.py not found.${C_RESET}"
+        }
+    }
+
+    { $_ -in @("ai", "asterix-ai", "ask-ai") } {
+        $aiScript = Join-Path $AsterixRoot "asterix-ai\ax_ai.py"
+        $engineScript = Join-Path $AsterixRoot "asterix-ai\engine.py"
+        if ($RealPython -and (Test-Path $aiScript)) {
+            & $RealPython $aiScript @RemainingArgs
+        } elseif ($RealPython -and (Test-Path $engineScript)) {
+            & $RealPython $engineScript @RemainingArgs
+        } else {
+            Write-Host "  ${C_YELLOW}[!] Python runtime not ready or asterix-ai engine not found.${C_RESET}"
         }
     }
 

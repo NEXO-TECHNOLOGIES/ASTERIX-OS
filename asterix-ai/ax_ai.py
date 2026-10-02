@@ -204,18 +204,18 @@ except ImportError:
 
 def interactive_chat():
     """Starts an interactive cybernetic conversational session with Asterix Peak AI."""
-    print("\n╔══════════════════════════════════════════════════════════════════════╗")
-    print("║   [ASTERIX] ASTERIX AI // PEAK CONVERSATIONAL COGNITIVE CONSOLE v3.5        ║")
-    print("║   [ Cloud & Vector Memory Active • Type 'exit' or 'quit' to close ]  ║")
-    print("╚══════════════════════════════════════════════════════════════════════╝\n")
+    print("\n+----------------------------------------------------------------------+")
+    print("|   [ASTERIX] ASTERIX AI // PEAK CONVERSATIONAL COGNITIVE CONSOLE v3.5 |")
+    print("|   [ Cloud & Vector Memory Active * Type 'exit' or 'quit' to close ]  |")
+    print("+----------------------------------------------------------------------+\n")
     if memory_hub:
         stats = memory_hub.get_stats()
-        print(f"  • Cognitive Memories: {stats['total_memories']} ({stats['synced_to_cloud']} synced to Supabase/Cloud)")
-        print(f"  • Cloud Connection:   {'Connected' if stats['cloud_connected'] else 'Local Offline Cache'}\n")
+        print(f"  * Cognitive Memories: {stats['total_memories']} ({stats['synced_to_cloud']} synced to Supabase/Cloud)")
+        print(f"  * Cloud Connection:   {'Connected' if stats['cloud_connected'] else 'Local Offline Cache'}\n")
 
     while True:
         try:
-            prompt = input("asterix-ai  ").strip()
+            prompt = input("asterix-ai> ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nSession ended.")
             break
@@ -235,15 +235,73 @@ def interactive_chat():
 
 def main() -> int:
     """CLI entry point."""
+    raw_args = sys.argv[1:]
+    if raw_args and not raw_args[0].startswith("-"):
+        cmd = raw_args[0].lower()
+        if cmd in ("script", "generate", "codegen"):
+            # Translate 'ax ai script <objective> [--lang ...] [-o ...]'
+            remaining = raw_args[1:]
+            obj_parts = []
+            flag_parts = []
+            i = 0
+            while i < len(remaining):
+                if remaining[i].startswith("-"):
+                    flag_parts.extend(remaining[i:])
+                    break
+                else:
+                    obj_parts.append(remaining[i])
+                    i += 1
+            objective = " ".join(obj_parts) if obj_parts else "utility script"
+            sys.argv = [sys.argv[0], "--script", objective] + flag_parts
+        elif cmd in ("ask", "query", "diagnose"):
+            query = " ".join(raw_args[1:]) if len(raw_args) > 1 else "general security"
+            sys.argv = [sys.argv[0], "--ask", query]
+        elif cmd in ("chat", "interactive", "repl", "talk"):
+            sys.argv = [sys.argv[0], "--chat"]
+        elif cmd in ("security", "audit", "scan"):
+            sys.argv = [sys.argv[0], "--security"]
+        elif cmd in ("fix", "repair") and len(raw_args) > 1:
+            sys.argv = [sys.argv[0], "--fix", raw_args[1]]
+
     parser = argparse.ArgumentParser(description="ASTERIX AI Command & Intelligence Hub")
     parser.add_argument("--fix", dest="fix_file", help="Repair a source file with the local AI")
     parser.add_argument("--security", action="store_true", help="Run a security posture scan before suggesting actions")
     parser.add_argument("--chat", action="store_true", help="Launch interactive conversational chat with cognitive memory")
     parser.add_argument("--ask", type=str, help="Inquire Asterix Peak AI on any cyber vector, C/Assembly code or OS topic")
+    parser.add_argument("--script", "--generate", dest="generate_script", type=str, help="Generate a professional custom script using Gemini AI")
+    parser.add_argument("--lang", dest="script_lang", default="python", choices=["python", "bash", "sh", "c", "rust"], help="Target programming language for the generated script")
+    parser.add_argument("-o", "--out", dest="script_out", type=str, default=None, help="Output destination file path for generated script")
+    parser.add_argument("--run", action="store_true", help="Execute the generated script immediately")
     parser.add_argument("--cloud-sync", action="store_true", help="Synchronize cognitive memory with Supabase or Cloud REST API")
     parser.add_argument("--cloud-setup", nargs=2, metavar=("URL", "KEY"), help="Configure Supabase Cloud Memory (URL KEY)")
     parser.add_argument("--memory", action="store_true", help="Display cognitive memory statistics and recent items")
     args = parser.parse_args()
+
+    if args.generate_script:
+        if peak_ai:
+            print(f"\n[*] ASTERIX AI Engine engaging Gemini to generate professional {args.script_lang.upper()} script...")
+            print(f"[*] Objective: {args.generate_script}")
+            result = peak_ai.generate_script(args.generate_script, language=args.script_lang, output_path=args.script_out)
+            if result.get("status") == "success":
+                print(f"\n[OK] Script generated successfully:")
+                print(f"     Path:      {result['file']}")
+                print(f"     Language:  {result['language']}")
+                print(f"     Lines:     {result['lines']} lines ({result['code_size']} bytes)")
+                print("\n--- Script Preview (first 25 lines) ---")
+                print(result['code_preview'])
+                print("---------------------------------------")
+                if args.run:
+                    print(f"\n[*] Executing generated script ({result['file']})...\n")
+                    if args.script_lang == "python":
+                        subprocess.run([sys.executable, result["file"]])
+                    elif args.script_lang in ("bash", "sh"):
+                        subprocess.run(["bash", result["file"]])
+            else:
+                print(f"[!] Error generating script: {result.get('error')}")
+            return 0
+        else:
+            print("[!] Peak AI engine not available.")
+            return 1
 
     if args.cloud_setup:
         url, key = args.cloud_setup

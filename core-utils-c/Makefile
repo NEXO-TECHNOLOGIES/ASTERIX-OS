@@ -17,7 +17,8 @@ SRCS = src/asterix-sysinfo.c \
        src/asterix-env-dump.c \
        src/asterix-code-repair.c \
        src/asterix-crypto-core.c \
-       src/asterix-packet-engine.c
+       src/asterix-packet-engine.c \
+       src/asterix-hardware-bridge.c
 
 BINS = bin/asterix-sysinfo \
        bin/asterix-memview \
@@ -29,7 +30,8 @@ BINS = bin/asterix-sysinfo \
        bin/asterix-env-dump \
        bin/asterix-code-repair \
        bin/asterix-crypto-core \
-       bin/asterix-packet-engine
+       bin/asterix-packet-engine \
+       bin/asterix-hardware-bridge
 
 all: directories $(BINS)
 
@@ -69,11 +71,14 @@ bin/asterix-crypto-core: src/asterix-crypto-core.c
 bin/asterix-packet-engine: src/asterix-packet-engine.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
+bin/asterix-hardware-bridge: src/asterix-hardware-bridge.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
 install: all
 	@mkdir -p $(DESTDIR)
 	@cp -f bin/* $(DESTDIR)/
 	@chmod 755 $(DESTDIR)/asterix-*
-	@echo "[✔] Installed all ASTERIX native C binaries to $(DESTDIR)/"
+	@echo "[OK] Installed all ASTERIX native C binaries to $(DESTDIR)/"
 
 clean:
 	@rm -rf bin
