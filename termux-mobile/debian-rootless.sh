@@ -1,6 +1,6 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 # =====================================================================
-# ASTERIX OS — Mobile Debian Rootless Subsystem & Folder Engine CLI
+# ASTERIX OS - Mobile Debian Rootless Subsystem & Folder Engine CLI
 # Zero-crash PRoot wrapper with hardened directories, multi-DNS,
 # APT sandbox fix, and resilient folder creation.
 # =====================================================================

@@ -211,9 +211,9 @@ esac
 GEO_INFO=$(geo_style "$TARGET_IP")
 
 if [ "$SHOW_GEO" -eq 1 ]; then
-    echo -e "${CYAN}${BOLD}╔═══════════════════════════════╗${NC}"
-    echo -e "${CYAN}${BOLD}║${NC} ${YELLOW}ASTERIX GEO STYLE TRACKER${NC} ${CYAN}${BOLD}║${NC}"
-    echo -e "${CYAN}${BOLD}╚═══════════════════════════════╝${NC}"
+    echo -e "${CYAN}${BOLD}+-------------------------------+${NC}"
+    echo -e "${CYAN}${BOLD}|${NC} ${YELLOW}ASTERIX GEO STYLE TRACKER${NC} ${CYAN}${BOLD}|${NC}"
+    echo -e "${CYAN}${BOLD}+-------------------------------+${NC}"
     echo ""
     echo -e "${BOLD}TARGET:${NC} ${TARGET_CLEAN}"
     echo -e "${BOLD}IP:${NC}    ${TARGET_IP}"
@@ -225,9 +225,9 @@ if [ "$SHOW_GEO" -eq 1 ]; then
     exit 0
 fi
 
-echo -e "${CYAN}${BOLD}╔═══════════════════════════════╗${NC}"
-echo -e "${CYAN}${BOLD}║${NC} ${YELLOW}ASTERIX TARGET TRACKER${NC} ${CYAN}${BOLD}║${NC}"
-echo -e "${CYAN}${BOLD}╚═══════════════════════════════╝${NC}"
+echo -e "${CYAN}${BOLD}+-------------------------------+${NC}"
+echo -e "${CYAN}${BOLD}|${NC} ${YELLOW}ASTERIX TARGET TRACKER${NC} ${CYAN}${BOLD}|${NC}"
+echo -e "${CYAN}${BOLD}+-------------------------------+${NC}"
 echo ""
 echo -e "${BOLD}TARGET:${NC} ${TARGET_CLEAN}"
 echo -e "${BOLD}IP:${NC}    ${TARGET_IP}"

@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 # =====================================================================
 # ASTERIX OS - Termux Resilient Persistent Storage Subsystem v3.2
 # Creates zero-crash directory hierarchy on Android internal storage
@@ -56,16 +56,16 @@ fi
 cat << 'EOF' > "$LOCAL_VAULT/README.md"
 # ASTERIX OS Persistent Storage Vault
 All data placed inside this directory survives container reboots and package upgrades.
-• `projects/`  - User codebases, repositories, and tactical tools
-• `scans/`     - Nmap, Nikto, masscan, and network recon logs
-• `loot/`      - Hashes, retrieved credentials, and extracted data
-• `captures/`  - PCAP packet captures and wireless traffic dumps
-• `reports/`   - Security assessment and audit documentation
-• `notes/`     - Target tracking and engagement notes
-• `scripts/`   - Custom attack and automation scripts
-• `payloads/`  - Compiled binaries, shellcodes, and payloads
-• `wordlists/` - Dictionaries and credential lists
-• `workspace/` - Ephemeral and scratch workspace
+- `projects/`  - User codebases, repositories, and tactical tools
+- `scans/`     - Nmap, Nikto, masscan, and network recon logs
+- `loot/`      - Hashes, retrieved credentials, and extracted data
+- `captures/`  - PCAP packet captures and wireless traffic dumps
+- `reports/`   - Security assessment and audit documentation
+- `notes/`     - Target tracking and engagement notes
+- `scripts/`   - Custom attack and automation scripts
+- `payloads/`  - Compiled binaries, shellcodes, and payloads
+- `wordlists/` - Dictionaries and credential lists
+- `workspace/` - Ephemeral and scratch workspace
 EOF
 
 echo -e "${GREEN}${BOLD}[[OK]] ASTERIX Persistence is ready and hardened at: ${YELLOW}${LOCAL_VAULT}${NC}"

@@ -21,7 +21,7 @@ run_auto_fix_engine() {
     while [ "$attempt" -le "$max_attempts" ]; do
         echo "ASTERIX auto-heal: pass ${attempt}/${max_attempts}" >> "$AI_LOG_DIR/auto_heal.log" 2>/dev/null || true
 
-        if command -v termux-change-repo >/dev/null 2>&1; then
+        if [ -t 0 ] && command -v termux-change-repo >/dev/null 2>&1; then
             termux-change-repo >/dev/null 2>&1 || true
         fi
 

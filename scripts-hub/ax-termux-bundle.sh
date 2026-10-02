@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 # =====================================================================
 # ASTERIX OS — Termux Stable ARM64 Bundle Generator v1.0
 # Author: NEXO TECHNOLOGIES GROUP
@@ -62,6 +62,7 @@ cp "${ASTERIX_ROOT}/termux-mobile/install-termux.sh"      "$STAGING_DIR/asterix-
 [ -f "${ASTERIX_ROOT}/termux-mobile/target-tracker.sh" ]   && cp "${ASTERIX_ROOT}/termux-mobile/target-tracker.sh" "$STAGING_DIR/asterix-termux/"
 [ -f "${ASTERIX_ROOT}/termux-mobile/debian-rootless.sh" ]  && cp "${ASTERIX_ROOT}/termux-mobile/debian-rootless.sh" "$STAGING_DIR/asterix-termux/"
 [ -f "${ASTERIX_ROOT}/termux-mobile/asterix-ai-startup.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/asterix-ai-startup.sh" "$STAGING_DIR/asterix-termux/"
+[ -f "${ASTERIX_ROOT}/termux-mobile/setup-persistence.sh" ] && cp "${ASTERIX_ROOT}/termux-mobile/setup-persistence.sh" "$STAGING_DIR/asterix-termux/"
 
 # Master command dispatcher
 mkdir -p "$STAGING_DIR/asterix-termux/bin"
@@ -77,9 +78,8 @@ rsync -av --exclude="__pycache__" --exclude="*.pyc" \
 
 # Scripts hub (Python tools)
 mkdir -p "$STAGING_DIR/asterix-termux/scripts-hub"
-for pyfile in ax-arsenal.py ax-boot-tool.py ax-cam-hunter.py ax-undercover.py ax-privacy.py ax-doctor.py ax-shield.py ax-scratch.py ax-bounty.py ax-cartographer.py ax-intel-defense.py ax-cloud-defense.py ax-web-structure.py ax-mobile-toolbox.py; do
-    [ -f "${ASTERIX_ROOT}/scripts-hub/${pyfile}" ] && \
-        cp "${ASTERIX_ROOT}/scripts-hub/${pyfile}" "$STAGING_DIR/asterix-termux/scripts-hub/"
+for pyfile in "${ASTERIX_ROOT}/scripts-hub"/*.py; do
+    [ -f "$pyfile" ] && cp "$pyfile" "$STAGING_DIR/asterix-termux/scripts-hub/"
 done
 
 # OS Computing bridge
@@ -190,12 +190,12 @@ echo -e "${YELLOW}[*] Step 5: Cleaning up staging directory...${NC}"
 rm -rf "$STAGING_DIR"
 
 echo ""
-echo -e "${CYAN}${BOLD}══════════════════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}${BOLD}==================================================================${NC}"
 echo -e "${GREEN}${BOLD}  [OK] ASTERIX OS TERMUX ARM64 BUNDLE READY FOR DISTRIBUTION!${NC}"
-echo -e "${CYAN}══════════════════════════════════════════════════════════════════${NC}"
-echo -e "  • Bundle:    ${YELLOW}${BUNDLE_PATH}${NC}"
-echo -e "  • Size:      ${YELLOW}${BUNDLE_MB} MB${NC}"
-echo -e "  • SHA-256:   ${YELLOW}${SHA256:0:48}...${NC}"
+echo -e "${CYAN}==================================================================${NC}"
+echo -e "  * Bundle:    ${YELLOW}${BUNDLE_PATH}${NC}"
+echo -e "  * Size:      ${YELLOW}${BUNDLE_MB} MB${NC}"
+echo -e "  * SHA-256:   ${YELLOW}${SHA256:0:48}...${NC}"
 echo -e ""
 echo -e "  ${BOLD}Upload Options:${NC}"
 echo -e "    GitHub Release:  gh release upload v2.0.0 ${BUNDLE_PATH}"

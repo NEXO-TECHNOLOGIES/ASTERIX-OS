@@ -70,11 +70,26 @@ run_as_root() {
 
 # Locate ASTERIX base directory
 find_asterix_root() {
-    if [ -d "/etc/asterix" ]; then
-        echo "/etc/asterix"
+    if [ -n "${ASTERIX_ROOT:-}" ] && [ -d "$ASTERIX_ROOT" ]; then
+        echo "$ASTERIX_ROOT"
+    elif [ -n "${ASTERIX_DIR:-}" ] && [ -d "$ASTERIX_DIR" ]; then
+        echo "$ASTERIX_DIR"
+    elif [ -n "${BASH_SOURCE[0]:-}" ] && [ -d "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd)" ]; then
+        local self_candidate
+        self_candidate="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd)"
+        if [ -d "${self_candidate}/scripts-hub" ] || [ -d "${self_candidate}/ui-core" ] || [ -f "${self_candidate}/bin/ax" ]; then
+            echo "$self_candidate"
+            return
+        fi
+    elif [ -d "$HOME/ASTERIX-OS" ]; then
+        echo "$HOME/ASTERIX-OS"
+    elif [ -d "/opt/ASTERIX-OS" ]; then
+        echo "/opt/ASTERIX-OS"
     elif [ -d "$HOME/asterix" ]; then
         echo "$HOME/asterix"
-    elif [ -d "$(pwd)/ui-core" ]; then
+    elif [ -d "/etc/asterix" ]; then
+        echo "/etc/asterix"
+    elif [ -d "$(pwd)/ui-core" ] || [ -d "$(pwd)/scripts-hub" ]; then
         echo "$(pwd)"
     else
         echo ""

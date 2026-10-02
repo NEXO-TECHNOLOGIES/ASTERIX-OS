@@ -1,6 +1,6 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 # =====================================================================
-# ASTERIX OS — Termux Web Code Structure & Deep Source Extractor
+# ASTERIX OS - Termux Web Code Structure & Deep Source Extractor
 # Wrapper for ax-web-structure.py
 # Usage:
 #   web-structure <url> [--tree|--source|--endpoints|--scripts|--tech|--dump <dir>|--json]

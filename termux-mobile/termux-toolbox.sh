@@ -1,6 +1,6 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 # =====================================================================
-# ASTERIX OS — Mobile System Center & Termux Hardware Toolbox v2.0
+# ASTERIX OS - Mobile System Center & Termux Hardware Toolbox v2.0
 # Native hardware monitoring, DNS benchmark, cache cleaner, and
 # self-healing diagnostic engine for Android Termux users.
 # =====================================================================
@@ -21,10 +21,10 @@ C_WHITE='\033[38;5;231m'
 banner() {
     echo -e "${C_CYAN}${C_BOLD}"
     cat << "EOF"
-  ╔══════════════════════════════════════════════════════════════════════╗
-  ║   [MOBILE] ASTERIX MOBILE SYSTEM CENTER & TERMUX TOOLBOX v2.0              ║
-  ║   [ Battery HUD • DNS Benchmark • Storage Clean • Self-Healer ]     ║
-  ╚══════════════════════════════════════════════════════════════════════╝
+  +----------------------------------------------------------------------+
+  |   [MOBILE] ASTERIX MOBILE SYSTEM CENTER & TERMUX TOOLBOX v2.0        |
+  |   [ Battery HUD * DNS Benchmark * Storage Clean * Self-Healer ]      |
+  +----------------------------------------------------------------------+
 EOF
     echo -e "${C_RESET}"
 }
@@ -49,7 +49,7 @@ usage() {
 }
 
 cmd_battery() {
-    echo -e "\n  ${C_CYAN}${C_BOLD}─── [ ANDROID HARDWARE & BATTERY TELEMETRY ] ───${C_RESET}\n"
+    echo -e "\n  ${C_CYAN}${C_BOLD}--- [ ANDROID HARDWARE & BATTERY TELEMETRY ] ---${C_RESET}\n"
     local pct="N/A" status="N/A" temp="N/A" health="N/A" current="N/A"
 
     if command -v termux-battery-status >/dev/null 2>&1; then
@@ -75,13 +75,13 @@ cmd_battery() {
     printf "    ${C_WHITE}Percentage:${C_RESET}    %b%s%%%b\n" "$bcol" "$pct" "$C_RESET"
     printf "    ${C_WHITE}Status:${C_RESET}        ${C_CYAN}%s${C_RESET}\n" "$status"
     printf "    ${C_WHITE}Health:${C_RESET}        ${C_GREEN}%s${C_RESET}\n" "$health"
-    printf "    ${C_WHITE}Temperature:${C_RESET}   ${C_YELLOW}%s °C${C_RESET}\n" "$temp"
+    printf "    ${C_WHITE}Temperature:${C_RESET}   ${C_YELLOW}%s C${C_RESET}\n" "$temp"
     if [ "$current" != "N/A" ]; then
-        printf "    ${C_WHITE}Current Flow:${C_RESET}  ${C_MAGENTA}%s µA${C_RESET}\n" "$current"
+        printf "    ${C_WHITE}Current Flow:${C_RESET}  ${C_MAGENTA}%s uA${C_RESET}\n" "$current"
     fi
 
     # CPU & RAM telemetry
-    echo -e "\n  ${C_CYAN}${C_BOLD}─── [ SYSTEM LOAD & RESOURCE TELEMETRY ] ───${C_RESET}\n"
+    echo -e "\n  ${C_CYAN}${C_BOLD}--- [ SYSTEM LOAD & RESOURCE TELEMETRY ] ---${C_RESET}\n"
     local cores; cores=$(nproc 2>/dev/null || grep -c processor /proc/cpuinfo 2>/dev/null || echo "Unknown")
     local arch; arch=$(uname -m 2>/dev/null || echo "Unknown")
     printf "    ${C_WHITE}CPU Cores:${C_RESET}     ${C_GREEN}%s${C_RESET} ${C_GRAY}(Architecture: %s)${C_RESET}\n" "$cores" "$arch"
@@ -94,7 +94,7 @@ cmd_battery() {
 }
 
 cmd_dns() {
-    echo -e "\n  ${C_CYAN}${C_BOLD}─── [ MOBILE NETWORK & DNS LATENCY BENCHMARK ] ───${C_RESET}\n"
+    echo -e "\n  ${C_CYAN}${C_BOLD}--- [ MOBILE NETWORK & DNS LATENCY BENCHMARK ] ---${C_RESET}\n"
     local ip_addr; ip_addr=$(ip route get 1.1.1.1 2>/dev/null | awk '/src/{print $7}' | head -1 || echo "127.0.0.1")
     local iface; iface=$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/{print $5}' | head -1 || echo "unknown")
     printf "    ${C_WHITE}Active Interface:${C_RESET} ${C_CYAN}%s${C_RESET}  ${C_WHITE}Local IP:${C_RESET} ${C_GREEN}%s${C_RESET}\n\n" "$iface" "$ip_addr"
@@ -132,7 +132,7 @@ cmd_clean() {
 }
 
 cmd_doctor() {
-    echo -e "\n  ${C_CYAN}${C_BOLD}─── [ ASTERIX TERMUX ENVIRONMENT DOCTOR ] ───${C_RESET}\n"
+    echo -e "\n  ${C_CYAN}${C_BOLD}--- [ ASTERIX TERMUX ENVIRONMENT DOCTOR ] ---${C_RESET}\n"
     local issues=0
 
     # 1. Package manager state

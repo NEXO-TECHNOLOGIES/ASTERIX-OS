@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
 ===============================================================================
-  ASTERIX OS — Debian Rootless (PRoot) Subsystem & Folder Engine
+  ASTERIX OS - Debian Rootless (PRoot) Subsystem & Folder Engine
   Version: 3.2.0 (Resilient & Zero-Crash)
   Author: NEXO TECHNOLOGIES GROUP
 
   Capabilities:
-    • Advanced Folder Engine: create, template, list, tree, fix-perms
-    • Zero-Crash Debian PRoot Hardening:
+    * Advanced Folder Engine: create, template, list, tree, fix-perms
+    * Zero-Crash Debian PRoot Hardening:
         - Eliminates APT sandbox '_apt' permission denied
         - Multi-provider DNS failover (resolv.conf)
         - Service startup suppression (policy-rc.d 101)
         - Shared memory (/dev/shm) & /tmp 1777 permissions
         - Android link2symlink hardlink emulation
         - Clean UTF-8 locale & hostname resolution
-    • Comprehensive Doctor & Automated Self-Healing Repair
+    * Comprehensive Doctor & Automated Self-Healing Repair
 
   Zero Dependencies: 100% Python Standard Library
   SPDX-License-Identifier: MIT OR Apache-2.0
@@ -84,22 +84,22 @@ FOLDER_TEMPLATES: Dict[str, Dict[str, Any]] = {
     "recon": {
         "desc": "Reconnaissance & intelligence gathering engagement",
         "subdirs": ["targets", "subdomains", "portscans", "web_endpoints", "screenshots", "dns", "notes"],
-        "readme": "# Reconnaissance Mission\n\nCreated: {timestamp}\n• Store passive/active scans in portscans/\n• Store target assets in targets/\n"
+        "readme": "# Reconnaissance Mission\n\nCreated: {timestamp}\n* Store passive/active scans in portscans/\n* Store target assets in targets/\n"
     },
     "exploit": {
         "desc": "Vulnerability testing and exploit development",
         "subdirs": ["proofs", "payloads", "shellcode", "loot", "artifacts", "triggers"],
-        "readme": "# Exploit & Verification Lab\n\nCreated: {timestamp}\n• Place test payloads in payloads/\n• Document triggers in proofs/\n"
+        "readme": "# Exploit & Verification Lab\n\nCreated: {timestamp}\n* Place test payloads in payloads/\n* Document triggers in proofs/\n"
     },
     "web": {
         "desc": "Web application security assessment",
         "subdirs": ["endpoints", "burp_exports", "crawling", "fuzzing", "params", "source_dumps", "notes"],
-        "readme": "# Web Security Audit\n\nCreated: {timestamp}\n• Place API dumps in endpoints/\n• Save proxy session logs in burp_exports/\n"
+        "readme": "# Web Security Audit\n\nCreated: {timestamp}\n* Place API dumps in endpoints/\n* Save proxy session logs in burp_exports/\n"
     },
     "dev": {
         "desc": "Development environment for scripts, tools, and binaries",
         "subdirs": ["src", "bin", "tests", "docs", "config", "build"],
-        "readme": "# Development Workspace\n\nCreated: {timestamp}\n• Source code in src/\n• Compiled binaries in bin/\n"
+        "readme": "# Development Workspace\n\nCreated: {timestamp}\n* Source code in src/\n* Compiled binaries in bin/\n"
     }
 }
 
@@ -647,10 +647,10 @@ def print_doctor_report(results: Dict[str, Any]) -> None:
     print(f"  {C_CYAN}{C_BOLD}[DEBIAN ROOTLESS SUBSYSTEM DIAGNOSTIC]{C_RESET}\n")
 
     env_type = "PRoot Internal" if results["is_inside_proot"] else ("Termux Host" if results["is_termux"] else "Standard Host")
-    print(f"  • Environment Context:  {C_BOLD}{env_type}{C_RESET}")
+    print(f"  * Environment Context:  {C_BOLD}{env_type}{C_RESET}")
     if results["debian_rootfs"]:
-        print(f"  • Debian Rootfs:        {C_CYAN}{results['debian_rootfs']}{C_RESET}")
-    print(f"  • Persistent Vault:     {C_YELLOW}{DebianEnvironment.get_persistent_dir()}{C_RESET}\n")
+        print(f"  * Debian Rootfs:        {C_CYAN}{results['debian_rootfs']}{C_RESET}")
+    print(f"  * Persistent Vault:     {C_YELLOW}{DebianEnvironment.get_persistent_dir()}{C_RESET}\n")
 
     print(f"  {'SUBSYSTEM CHECK':<36} {'STATUS':<12} {'DETAILS'}")
     print(f"  {'-'*85}")
@@ -690,10 +690,10 @@ def print_status() -> None:
     pdir = DebianEnvironment.get_persistent_dir()
     sdcard = DebianEnvironment.get_sdcard_dir()
 
-    print(f"  • Mode:              {C_BOLD}{'Inside Debian PRoot' if DebianEnvironment.is_inside_proot() else 'Termux / Host'}{C_RESET}")
-    print(f"  • Debian Rootfs:     {C_CYAN}{rootfs or 'Not Installed / Built-in'}{C_RESET}")
-    print(f"  • Persistent Vault:  {C_GREEN}{pdir}{C_RESET}")
-    print(f"  • SDCard Link:       {C_YELLOW}{sdcard or 'None / Private Storage Only'}{C_RESET}")
+    print(f"  * Mode:              {C_BOLD}{'Inside Debian PRoot' if DebianEnvironment.is_inside_proot() else 'Termux / Host'}{C_RESET}")
+    print(f"  * Debian Rootfs:     {C_CYAN}{rootfs or 'Not Installed / Built-in'}{C_RESET}")
+    print(f"  * Persistent Vault:  {C_GREEN}{pdir}{C_RESET}")
+    print(f"  * SDCard Link:       {C_YELLOW}{sdcard or 'None / Private Storage Only'}{C_RESET}")
 
     try:
         stat = shutil.disk_usage(str(pdir))
@@ -701,7 +701,7 @@ def print_status() -> None:
         total_gb = stat.total / (1024 ** 3)
         used_gb = (stat.total - stat.free) / (1024 ** 3)
         pct = (used_gb / total_gb) * 100 if total_gb > 0 else 0
-        print(f"  • Storage Capacity:  {used_gb:.1f} GB used / {total_gb:.1f} GB total ({pct:.1f}% used, {free_gb:.1f} GB free)")
+        print(f"  * Storage Capacity:  {used_gb:.1f} GB used / {total_gb:.1f} GB total ({pct:.1f}% used, {free_gb:.1f} GB free)")
     except Exception:
         pass
 
@@ -709,7 +709,7 @@ def print_status() -> None:
     count = 0
     if projects_dir.exists():
         count = len([d for d in projects_dir.iterdir() if d.is_dir()])
-    print(f"  • Active Projects:   {C_BOLD}{count}{C_RESET} in {projects_dir}\n")
+    print(f"  * Active Projects:   {C_BOLD}{count}{C_RESET} in {projects_dir}\n")
 
 
 def build_proot_login_command(passthrough: List[str]) -> List[str]:
@@ -796,9 +796,9 @@ def main():
             res = FolderEngine.create_folder(fname, template=tpl)
             if res["status"] == "ok":
                 print(f"  {C_GREEN}[OK] Successfully created folder:{C_RESET} {C_YELLOW}{res['path']}{C_RESET}")
-                print(f"  • Template:     {C_CYAN}{res['template']}{C_RESET}")
-                print(f"  • Subfolders:   {C_WHITE}{', '.join(res['subdirs'])}{C_RESET}")
-                print(f"  • Write Tested: {C_GREEN}VERIFIED (100% stable){C_RESET}\n")
+                print(f"  * Template:     {C_CYAN}{res['template']}{C_RESET}")
+                print(f"  * Subfolders:   {C_WHITE}{', '.join(res['subdirs'])}{C_RESET}")
+                print(f"  * Write Tested: {C_GREEN}VERIFIED (100% stable){C_RESET}\n")
             else:
                 print(f"  {C_RED}[FAIL] Error: {res.get('message', 'Failed to create folder')}{C_RESET}\n")
 
@@ -824,7 +824,7 @@ def main():
         elif action in ("init", "setup", "standard"):
             res = FolderEngine.ensure_standard_folders()
             print(f"  {C_GREEN}[OK] Standard persistent folders initialized at:{C_RESET} {res['base']}")
-            print(f"  • Folders: {', '.join(STANDARD_PERSISTENT_FOLDERS)}\n")
+            print(f"  * Folders: {', '.join(STANDARD_PERSISTENT_FOLDERS)}\n")
         else:
             print(f"Unknown folder action '{action}'. Available: create, template, tree, list, fix-perms, init")
 

@@ -3,7 +3,7 @@
   "codename": "Phantom",
   "version": "2.0.0",
   "release_stage": "production",
-  "rebuild_timestamp": "2026-09-27T21:49:04Z",
+  "rebuild_timestamp": "2026-10-02T02:03:02Z",
   "host_platform": {
     "os": "Windows 10 Pro",
     "architecture": "AMD64",
@@ -59,9 +59,9 @@
     "asterix-ai/engine.py": "3c19a8db2740007676089c273f01c55fd846a3bb4cd990b1adc8210cd4f72892",
     "scripts-hub/ax-web-structure.py": "9ad691971e9f13981588690392404fb6af2f556342d67e0d774673a5523f4bd6",
     "scripts-hub/ax-mobile-toolbox.py": "dc8f0444e5d34e4ec918933721aa29b728c01780af564c686eaf4520c92b0121",
-    "termux-mobile/web-structure.sh": "7aeab823d1a7bf1f21225f84e44c0d4d9a383ec4107df12c9818ffb327c6eac5",
-    "termux-mobile/termux-toolbox.sh": "09181a4770344e3d3c65eecfea998f7aef002d613933062924dc25274c0e90b1",
-    "bin/ax": "73f2330b5a6a50de1c659b0399fbb23f4919e165c5cbb25c6dc74e3fa43b75e8",
+    "termux-mobile/web-structure.sh": "81587e48d875f89e0af7e06c1639929ce95ad2f7eb7287f61f5b163432903192",
+    "termux-mobile/termux-toolbox.sh": "bb441551b8d013b0c18da4e337116468d4dea1aa398a3eaa3695ceebd5c94e17",
+    "bin/ax": "7b96dfd16c44e681b4b7ad88c8be354a96d86a63b1b7019f95575580912dc60c",
     "bin/ax.ps1": "5a8e0f0ac0df5d883bdf40e24e79f9692ad64aaecb9f1814d10099d7e0084a82",
     "bin/ax.cmd": "489fce590d9a98126356ab5e61c36f717aaa0e5193339958d89e0d5f70911271",
     "os-computing/os_bridge.py": "19b72a20da1a515b0e38c4efbdcf6a37d70f88de2c0f982fefbc9aed3c25e9da"
